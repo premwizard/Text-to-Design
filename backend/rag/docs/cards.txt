@@ -1,0 +1,10 @@
+Card section patterns include grouped cards with a title, description, and optional button.
+A card component may include:
+- heading
+- text
+- icon or image
+- action label
+Example card props:
+- title: Fast performance
+- description: Built for modern web apps
+- button: Learn More

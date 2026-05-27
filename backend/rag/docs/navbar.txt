@@ -1,0 +1,6 @@
+Navbar patterns include a brand logo, link group, and optional call-to-action button.
+Use simple structure:
+- logo: MyApp
+- links: [Home, Features, Pricing, Contact]
+- action: Get Started
+A horizontal navbar works well for desktop and mobile nav menus.

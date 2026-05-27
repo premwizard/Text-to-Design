@@ -1,0 +1,6 @@
+Form section patterns include input labels, placeholders, and a submit button.
+Common form props:
+- title: Stay in touch
+- fields: [Name, Email, Message]
+- submitLabel: Send Message
+Use forms for contact, newsletter, and lead capture.

@@ -1,0 +1,7 @@
+Hero section patterns include a strong headline, supporting text, and one or two call-to-action buttons.
+Use simple structure:
+- title: Welcome to MyApp
+- subtitle: Build beautiful experiences with simple UI patterns.
+- cta: Get Started
+- ctaSecondary: Learn More
+A hero often contains a background image, illustration, or gradient.
