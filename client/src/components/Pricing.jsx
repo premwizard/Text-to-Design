@@ -1,91 +1,168 @@
-import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
+import React from 'react';
+import { useDesignSystem } from '../context/DesignSystemContext';
 
-function Pricing({ plans = [] }) {
-  const { theme } = useTheme();
-  const pricingPlans = Array.isArray(plans) && plans.length
-    ? plans
-    : [
-        {
-          title: 'Starter',
-          price: '$19',
-          period: 'month',
-          description: 'Perfect for small teams and landing pages.',
-          features: ['3 projects', 'Basic analytics', 'Email support'],
-          buttonLabel: 'Get started',
-        },
-        {
-          title: 'Growth',
-          price: '$49',
-          period: 'month',
-          description: 'For growing teams that need more power.',
-          features: ['Unlimited projects', 'Advanced analytics', 'Priority support'],
-          buttonLabel: 'Start free trial',
-        },
-        {
-          title: 'Scale',
-          price: '$99',
-          period: 'month',
-          description: 'Enterprise-grade tools and collaboration.',
-          features: ['Team seats', 'Custom reports', 'Dedicated success'],
-          buttonLabel: 'Contact sales',
-        },
-      ];
+const defaultPlans = [
+  { title: 'Starter', price: '$19', period: 'month', description: 'Perfect for small teams and landing pages.', features: ['3 projects', 'Basic analytics', 'Email support'], buttonLabel: 'Get started' },
+  { title: 'Growth', price: '$49', period: 'month', description: 'For growing teams that need more power.', features: ['Unlimited projects', 'Advanced analytics', 'Priority support'], buttonLabel: 'Start free trial', popular: true },
+  { title: 'Scale', price: '$99', period: 'month', description: 'Enterprise-grade tools and collaboration.', features: ['Team seats', 'Custom reports', 'Dedicated success'], buttonLabel: 'Contact sales' }
+];
+
+export function PricingCards({ plans = [], sectionTitle = 'PRICING OPTIONS', sectionSubtitle = 'Plans built for your business' }) {
+  const { handleAction } = useDesignSystem();
+  const pricingPlans = Array.isArray(plans) && plans.length ? plans : defaultPlans;
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: 'easeOut' }}
-      className={`relative overflow-hidden py-16 ${theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-950'}`}
-    >
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.32em] text-sky-500">Pricing</p>
-          <h2 className="mt-4 text-4xl font-bold sm:text-5xl">Plans built for your business</h2>
-          <p className="mt-4 text-base text-slate-500 dark:text-slate-400">
-            Choose the plan that fits your growth stage and get started with a beautifully designed, flexible dashboard.
-          </p>
-        </div>
+    <div className="mx-auto max-w-6xl px-4 text-[var(--text)]">
+      <div className="mx-auto max-w-3xl text-center mb-12">
+        <p className="text-xs font-bold uppercase tracking-[0.32em] text-[var(--primary)]">{sectionTitle}</p>
+        <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">{sectionSubtitle}</h2>
+      </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {pricingPlans.map((plan, index) => (
-            <div
-              key={index}
-              className={`rounded-3xl border p-8 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl ${
-                theme === 'dark'
-                  ? 'border-slate-800 bg-slate-900 text-slate-100'
-                  : 'border-slate-200 bg-white text-slate-950'
-              }`}
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-500">{plan.title}</p>
+      <div className="grid gap-6 lg:grid-cols-3 items-stretch">
+        {pricingPlans.map((plan, index) => (
+          <div
+            key={index}
+            className="p-8 shadow-xl flex flex-col justify-between transition-all duration-300 relative border border-[var(--secondary)]/20 bg-[var(--surface)] rounded-[var(--radius)] hover:-translate-y-1 hover:border-[var(--primary)]/30"
+          >
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-[var(--primary)]">{plan.title}</p>
               <div className="mt-6 flex items-end gap-2">
-                <span className="text-5xl font-bold">{plan.price}</span>
-                <span className="pb-1 text-sm text-slate-500">/{plan.period}</span>
+                <span className="text-5xl font-extrabold tracking-tight">{plan.price}</span>
+                <span className="pb-1 text-sm text-[var(--text)]/70">/{plan.period}</span>
               </div>
-              <p className="mt-4 text-slate-500 dark:text-slate-400">{plan.description}</p>
+              <p className="mt-4 text-sm leading-relaxed text-[var(--text)]/80">{plan.description}</p>
 
-              <ul className="mt-8 space-y-3 text-sm text-slate-600 dark:text-slate-300">
+              <ul className="mt-8 space-y-3.5 text-sm text-[var(--text)]/80">
                 {(plan.features || []).map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-center gap-3">
-                    <span className="text-sky-500">•</span>
+                    <span className="text-base text-[var(--primary)]">•</span>
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
-
-              <a
-                href={plan.buttonUrl || '#'}
-                className="mt-8 inline-flex w-full items-center justify-center rounded-lg bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400"
-              >
-                {plan.buttonLabel}
-              </a>
             </div>
-          ))}
-        </div>
+
+            <button
+              onClick={() => handleAction(plan.action || { type: 'navigate', target: plan.buttonUrl || '#' })}
+              className="mt-8 inline-flex w-full items-center justify-center text-sm font-semibold py-3 rounded-[var(--radius)] border border-[var(--primary)]/30 hover:bg-[var(--primary)]/10 text-[var(--text)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+            >
+              {plan.buttonLabel}
+            </button>
+          </div>
+        ))}
       </div>
-    </motion.section>
+    </div>
   );
 }
 
-export default Pricing;
+export function PricingComparison({ plans = [], sectionTitle = 'PRICING OPTIONS', sectionSubtitle = 'Compare plans' }) {
+  const { handleAction } = useDesignSystem();
+  const pricingPlans = Array.isArray(plans) && plans.length ? plans : defaultPlans;
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 text-[var(--text)]">
+      <div className="mx-auto max-w-3xl text-center mb-12">
+        <p className="text-xs font-bold uppercase tracking-[0.32em] text-[var(--primary)]">{sectionTitle}</p>
+        <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">{sectionSubtitle}</h2>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3 items-stretch">
+        {pricingPlans.map((plan, index) => {
+          const isHighlighted = plan.popular;
+          return (
+            <div
+              key={index}
+              className={`p-8 shadow-xl flex flex-col justify-between transition-all duration-300 relative border ${
+                isHighlighted
+                  ? 'border-[var(--primary)] scale-[1.03] lg:scale-[1.05] z-10 bg-[var(--surface)] ring-2 ring-[var(--primary)]/20'
+                  : 'border-[var(--secondary)]/20 bg-[var(--surface)] opacity-95'
+              } rounded-[var(--radius)]`}
+            >
+              {isHighlighted && (
+                <span className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-[var(--background)] bg-[var(--primary)]">
+                  MOST POPULAR
+                </span>
+              )}
+
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-[var(--primary)]">{plan.title}</p>
+                <div className="mt-6 flex items-end gap-2">
+                  <span className="text-5xl font-extrabold tracking-tight">{plan.price}</span>
+                  <span className="pb-1 text-sm text-[var(--text)]/70">/{plan.period}</span>
+                </div>
+                <p className="mt-4 text-sm leading-relaxed text-[var(--text)]/80">{plan.description}</p>
+
+                <ul className="mt-8 space-y-3.5 text-sm text-[var(--text)]/85">
+                  {(plan.features || []).map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center gap-3">
+                      <span className="text-base text-[var(--primary)]">•</span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <button
+                onClick={() => handleAction(plan.action || { type: 'navigate', target: plan.buttonUrl || '#' })}
+                className={`mt-8 inline-flex w-full items-center justify-center text-sm font-semibold py-3 rounded-[var(--radius)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ${
+                  isHighlighted
+                    ? 'bg-[var(--primary)] text-[var(--background)] hover:opacity-90'
+                    : 'border border-[var(--primary)]/30 hover:bg-[var(--primary)]/10 text-[var(--text)]'
+                }`}
+              >
+                {plan.buttonLabel}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export function PricingMinimalTable({ plans = [], sectionTitle = 'PRICING TABLES', sectionSubtitle = 'Flexible plans for everyone' }) {
+  const { handleAction } = useDesignSystem();
+  const pricingPlans = Array.isArray(plans) && plans.length ? plans : defaultPlans;
+
+  return (
+    <div className="mx-auto max-w-4xl px-4 text-[var(--text)]">
+      <div className="text-center mb-12">
+        <p className="text-xs font-bold uppercase tracking-[0.32em] text-[var(--primary)]">{sectionTitle}</p>
+        <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">{sectionSubtitle}</h2>
+      </div>
+
+      <div className="space-y-4">
+        {pricingPlans.map((plan, index) => (
+          <div 
+            key={index} 
+            className="flex flex-col sm:flex-row sm:items-center justify-between p-6 border border-[var(--secondary)]/20 bg-[var(--surface)] rounded-[var(--radius)]"
+          >
+            <div className="space-y-1 text-left">
+              <span className="text-xs font-bold uppercase tracking-wider text-[var(--primary)]">{plan.title}</span>
+              <h3 className="text-xl font-bold">{plan.description || 'Description of services.'}</h3>
+            </div>
+            <div className="mt-4 sm:mt-0 flex items-center gap-6">
+              <div className="text-right">
+                <span className="text-3xl font-extrabold">{plan.price}</span>
+                <span className="text-xs text-[var(--text)]/70">/{plan.period}</span>
+              </div>
+              <button
+                onClick={() => handleAction(plan.action || { type: 'navigate', target: plan.buttonUrl || '#' })}
+                className="bg-[var(--primary)] text-[var(--background)] text-sm px-5 py-2 font-semibold rounded-[var(--radius)] transition hover:opacity-90 active:scale-[0.98]"
+              >
+                {plan.buttonLabel}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function Pricing(props) {
+  const { variant = 'cards' } = props;
+  if (variant === 'minimal-table' || variant === 'table') return <PricingMinimalTable {...props} />;
+  if (variant === 'comparison' || variant === 'highlight-popular' || variant === 'highlighted') return <PricingComparison {...props} />;
+  return <PricingCards {...props} />;
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Babel Sandbox</title>
+
+  <!-- Core libraries loaded synchronously so they're available before any user code -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js" crossorigin></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide-react@0.344.0/dist/umd/lucide-react.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body { min-height: 100vh; }
+    #root { min-height: 100vh; }
+
+    /* Streaming progress pulse */
+    #loading-bar {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #38bdf8, #818cf8, #38bdf8);
+      background-size: 200% 100%;
+      animation: barPulse 1.4s ease-in-out infinite;
+      z-index: 1000;
+    }
+    @keyframes barPulse {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Error overlay */
+    #error-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      overflow: auto;
+      background: rgba(9, 9, 11, 0.97);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      padding: 32px;
+    }
+    #error-overlay h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #ef4444;
+    }
+    #error-msg {
+      white-space: pre-wrap;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: #fecdd3;
+      background: #1c0a0a;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      margin-top: 8px;
+    }
+    #error-dismiss {
+      margin-top: 10px;
+      padding: 5px 14px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <div id="loading-bar"></div>
+
+  <div id="error-overlay">
+    <div style="max-width: 860px; margin: 0 auto">
+      <h3>&#x26A0; Compilation &amp; Runtime Error</h3>
+      <pre id="error-msg"></pre>
+      <button id="error-dismiss" onclick="document.getElementById('error-overlay').style.display='none'">
+        Dismiss
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /* ══════════════════════════════════════════════════════════════════
+       SANDBOX RUNTIME
+       - Receives JSX via postMessage
+       - Compiles with Babel (react + env presets)
+       - Resolves imports via mock require()
+       - Renders via ReactDOM.createRoot
+    ══════════════════════════════════════════════════════════════════ */
+
+    var _sbRoot = null;
+
+    /* ── Message bridge ───────────────────────────────────────────── */
+    window.addEventListener('message', function(ev) {
+      if (!ev.data || ev.data.type !== 'RENDER') return;
+      renderCode(ev.data.code, !!ev.data.loading);
+    });
+
+    /* ── UI helpers ───────────────────────────────────────────────── */
+    function setLoading(on) {
+      document.getElementById('loading-bar').style.display = on ? 'block' : 'none';
+    }
+    function showError(err) {
+      var msg = String(err);
+      if (err && err.stack) msg += '\n\n' + err.stack;
+      document.getElementById('error-msg').textContent = msg;
+      document.getElementById('error-overlay').style.display = 'block';
+    }
+    function hideError() {
+      document.getElementById('error-overlay').style.display = 'none';
+    }
+
+    /* ── Markdown fence stripper ──────────────────────────────────── */
+    function stripFences(raw) {
+      return raw.trim()
+        .replace(/^```(?:jsx|javascript|js|react|tsx|ts)?[^\n]*\n?/i, '')
+        .replace(/\n?```\s*$/, '')
+        .trim();
+    }
+
+    /* ── Mock require — resolves all imports Babel converts ──────── */
+    function sandboxRequire(moduleName) {
+      // react / react-* → React
+      if (moduleName === 'react') return React;
+      if (moduleName === 'react/jsx-runtime') return React;
+
+      // lucide-react → LucideReact UMD global
+      if (moduleName === 'lucide-react' || moduleName.indexOf('lucide-react') === 0) {
+        return window.LucideReact || {};
+      }
+
+      // Anything else: warn and return empty to avoid crashes
+      console.warn('[sandbox] Unsupported import "' + moduleName + '" — returning {}');
+      return {};
+    }
+
+    /* ── Main renderer ────────────────────────────────────────────── */
+    function renderCode(rawCode, loading) {
+      try {
+        if (!rawCode || !rawCode.trim()) return;
+
+        setLoading(loading);
+
+        var cleaned = stripFences(rawCode);
+        if (!cleaned) return;
+
+        /* Babel compiles:
+             import { useState } from "react"  →  var _react = require("react")
+             export default function ...       →  exports["default"] = ...
+           The env preset handles ESM→CJS, react preset handles JSX.  */
+        var result = Babel.transform(cleaned, {
+          presets: ['react', 'env'],
+          filename: 'generated.js'
+        });
+        var transformed = result.code;
+
+        /* Execution wrapper:
+           - Exposes all React APIs as plain vars (matches LLM generated code)
+           - Provides mock require() for all module resolutions
+           - Recovers the default export as the component  */
+        var wrapper = [
+          // React APIs as globals
+          'var useState      = React.useState;',
+          'var useEffect     = React.useEffect;',
+          'var useRef        = React.useRef;',
+          'var useMemo       = React.useMemo;',
+          'var useCallback   = React.useCallback;',
+          'var useContext    = React.useContext;',
+          'var useReducer    = React.useReducer;',
+          'var useLayoutEffect = React.useLayoutEffect;',
+          'var useId         = React.useId;',
+          'var createContext = React.createContext;',
+          'var memo          = React.memo;',
+          'var forwardRef    = React.forwardRef;',
+          'var Fragment      = React.Fragment;',
+          'var cloneElement  = React.cloneElement;',
+          'var Children      = React.Children;',
+          // Lucide icons global — generated code uses bare LucideReact (no window. prefix)
+          'var LucideReact   = window.LucideReact || {};',
+          // CJS module system
+          'var exports = {};',
+          'var module  = { exports: exports };',
+          'var require = sandboxRequire;',
+          // Transformed user code
+          transformed,
+          // Component resolution
+          'var _exp = exports["default"] || module.exports["default"] || module.exports;',
+          'var _c = (typeof _exp === "function") ? _exp : null;',
+          'if (!_c && typeof GeneratedPage !== "undefined") _c = GeneratedPage;',
+          'if (!_c) throw new Error(' +
+            '"GeneratedPage not found.\\n\\n' +
+            'The component must be: export default function GeneratedPage() { ... }' +
+            '");',
+          'return _c;'
+        ].join('\n');
+
+        /* Pass globals as named args so they're unambiguous inside new Function */
+        var Comp = new Function(
+          'React', 'ReactDOM', 'sandboxRequire',
+          wrapper
+        )(React, ReactDOM, sandboxRequire);
+
+        var container = document.getElementById('root');
+        if (!_sbRoot) {
+          _sbRoot = ReactDOM.createRoot(container);
+        }
+        _sbRoot.render(React.createElement(Comp));
+        hideError();
+
+      } catch (err) {
+        console.error('[sandbox]', err);
+        if (!loading) {
+          setLoading(false);
+          showError(err);
+        }
+      } finally {
+        if (!loading) setLoading(false);
+      }
+    }
+  </script>
+</body>
+</html>

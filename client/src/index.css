@@ -48,3 +48,8 @@ input {
 .animate-fade-in {
   animation: fadeIn 0.45s ease-out both;
 }
+
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}

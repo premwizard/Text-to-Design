@@ -1,54 +1,130 @@
-import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
+import React from 'react';
+import { useDesignSystem } from '../context/DesignSystemContext';
 
-function Form({ title, description, fields = [], button }) {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  const normalizedFields = Array.isArray(fields) ? fields : [];
-  const MotionSection = motion.section;
+const defaultFields = ['Name', 'Email', 'Message'];
+
+export function FormContact({ title = 'Get in touch', description = 'Fill out the form below and we will contact you shortly.', fields = [], button = 'Submit' }) {
+  const { handleAction } = useDesignSystem();
+  const normalizedFields = Array.isArray(fields) && fields.length ? fields : defaultFields;
 
   return (
-    <MotionSection
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: 'easeOut' }}
-      className={`rounded-[2rem] p-8 shadow-2xl transition ${
-        isDark
-          ? 'bg-slate-900 border border-slate-800 text-slate-100 shadow-slate-950/30'
-          : 'bg-white border border-slate-200 text-slate-950 shadow-slate-200/60'
-      }`}
-    >
+    <div className="rounded-[var(--radius)] p-8 shadow-2xl bg-[var(--surface)] border border-[var(--secondary)]/25 text-[var(--text)]">
       <div className="max-w-3xl">
-        {title && <h2 className="text-3xl font-bold">{title}</h2>}
-        {description && <p className="mt-3 text-slate-500 dark:text-slate-400">{description}</p>}
+        <h2 className="text-3xl font-bold">{title}</h2>
+        {description && <p className="mt-3 text-[var(--text)]/85">{description}</p>}
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <form onSubmit={(e) => { e.preventDefault(); handleAction({ type: 'open-modal', target: 'form-submitted' }); }} className="mt-8 grid gap-4 sm:grid-cols-2">
         {normalizedFields.map((field, index) => {
           const label = typeof field === 'object' ? field.label || field.name || 'Field' : String(field);
           const placeholder = typeof field === 'object' ? field.placeholder || field.label || field.name || '' : String(field);
           const type = typeof field === 'object' && field.type ? field.type : 'text';
 
           return (
-            <label key={index} className="flex flex-col gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+            <label key={index} className="flex flex-col gap-2 text-sm font-medium text-[var(--text)]/85">
               <span>{label}</span>
               <input
                 type={type}
                 placeholder={placeholder}
-                className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-sky-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                className="rounded-[var(--radius)] border border-[var(--secondary)]/20 bg-[var(--background)] px-4 py-3 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
               />
             </label>
           );
         })}
-      </div>
-
-      {button && (
-        <button className="mt-8 inline-flex items-center justify-center rounded-lg bg-sky-600 px-7 py-3 text-sm font-semibold text-white transition hover:bg-sky-500">
-          {button}
-        </button>
-      )}
-    </MotionSection>
+        
+        <div className="sm:col-span-2">
+          <button type="submit" className="mt-4 inline-flex items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] px-7 py-3 text-sm font-semibold text-[var(--background)] transition hover:opacity-90 active:scale-[0.98]">
+            {button}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 
-export default Form;
+export function FormLogin({ title = 'Welcome back', description = 'Enter your credentials to access your account.', button = 'Sign In' }) {
+  const { handleAction } = useDesignSystem();
+
+  return (
+    <div className="max-w-md mx-auto rounded-[var(--radius)] p-8 shadow-2xl bg-[var(--surface)] border border-[var(--secondary)]/25 text-[var(--text)]">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold">{title}</h2>
+        {description && <p className="mt-3 text-[var(--text)]/85">{description}</p>}
+      </div>
+
+      <form onSubmit={(e) => { e.preventDefault(); handleAction({ type: 'open-modal', target: 'login-success' }); }} className="mt-8 space-y-4">
+        <label className="flex flex-col gap-2 text-sm font-medium text-[var(--text)]/85">
+          <span>Email Address</span>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            className="rounded-[var(--radius)] border border-[var(--secondary)]/20 bg-[var(--background)] px-4 py-3 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
+          />
+        </label>
+        <label className="flex flex-col gap-2 text-sm font-medium text-[var(--text)]/85">
+          <span>Password</span>
+          <input
+            type="password"
+            placeholder="••••••••"
+            className="rounded-[var(--radius)] border border-[var(--secondary)]/20 bg-[var(--background)] px-4 py-3 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
+          />
+        </label>
+        
+        <button type="submit" className="w-full inline-flex items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] px-7 py-3 text-sm font-semibold text-[var(--background)] transition hover:opacity-90 active:scale-[0.98]">
+          {button}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export function FormSignup({ title = 'Create an account', description = 'Join us today to get started.', button = 'Sign Up' }) {
+  const { handleAction } = useDesignSystem();
+
+  return (
+    <div className="max-w-md mx-auto rounded-[var(--radius)] p-8 shadow-2xl bg-[var(--surface)] border border-[var(--secondary)]/25 text-[var(--text)]">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold">{title}</h2>
+        {description && <p className="mt-3 text-[var(--text)]/85">{description}</p>}
+      </div>
+
+      <form onSubmit={(e) => { e.preventDefault(); handleAction({ type: 'open-modal', target: 'signup-success' }); }} className="mt-8 space-y-4">
+        <label className="flex flex-col gap-2 text-sm font-medium text-[var(--text)]/85">
+          <span>Full Name</span>
+          <input
+            type="text"
+            placeholder="John Doe"
+            className="rounded-[var(--radius)] border border-[var(--secondary)]/20 bg-[var(--background)] px-4 py-3 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
+          />
+        </label>
+        <label className="flex flex-col gap-2 text-sm font-medium text-[var(--text)]/85">
+          <span>Email Address</span>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            className="rounded-[var(--radius)] border border-[var(--secondary)]/20 bg-[var(--background)] px-4 py-3 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
+          />
+        </label>
+        <label className="flex flex-col gap-2 text-sm font-medium text-[var(--text)]/85">
+          <span>Password</span>
+          <input
+            type="password"
+            placeholder="••••••••"
+            className="rounded-[var(--radius)] border border-[var(--secondary)]/20 bg-[var(--background)] px-4 py-3 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
+          />
+        </label>
+        
+        <button type="submit" className="w-full inline-flex items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] px-7 py-3 text-sm font-semibold text-[var(--background)] transition hover:opacity-90 active:scale-[0.98]">
+          {button}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default function Form(props) {
+  const { variant = 'contact' } = props;
+  if (variant === 'login') return <FormLogin {...props} />;
+  if (variant === 'signup') return <FormSignup {...props} />;
+  return <FormContact {...props} />;
+}
