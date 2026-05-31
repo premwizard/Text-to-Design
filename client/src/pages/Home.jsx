@@ -45,7 +45,6 @@ function Home() {
         } else if (action.type === 'navigate') {
           window.open(action.target || '#', '_blank');
         } else if (action.type === 'scroll-to-section') {
-          // If we want to scroll inside the sandboxed preview, we can let it handle itself inside the iframe
           console.log('Scroll to section dispatched inside sandbox:', action.target);
         }
       }
@@ -103,252 +102,211 @@ function Home() {
   const handleGenerate = () => {
     const trimmed = prompt.trim();
     if (!trimmed) return;
-    // Pass existing code if any, to trigger an edit generation
     generate(trimmed, code || null);
   };
 
   return (
-    <div className="h-screen w-screen bg-[#070708] text-zinc-200 flex flex-col overflow-hidden font-sans select-none">
+    <div className="h-screen w-screen bg-[#030712] text-slate-200 flex flex-col font-sans overflow-hidden relative selection:bg-cyan-500/30">
+      {/* Background Effects */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900 via-[#030712] to-[#030712]"></div>
       
-      {/* Header Panel */}
-      <header className="h-14 border-b border-zinc-900 flex items-center justify-between px-6 bg-zinc-950/60 backdrop-blur-md shrink-0 z-20">
+      {/* Floating Header */}
+      <header className="relative z-20 mx-4 mt-4 h-14 rounded-2xl border border-slate-800/50 bg-slate-900/50 backdrop-blur-xl flex items-center justify-between px-5 shadow-2xl">
+        {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="h-7 w-7 rounded-lg bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center text-xs font-black text-slate-950 shadow-md">
-            JSX
+          <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-cyan-400 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+            <svg className="w-4 h-4 text-slate-950" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
           </div>
           <div>
-            <h1 className="text-sm font-bold tracking-tight text-white">JSX Compiler Studio</h1>
-            <span className="text-[10px] text-zinc-500 uppercase tracking-widest block">Babel Standalone Execution Sandbox</span>
+            <h1 className="text-sm font-extrabold tracking-wide text-slate-100 uppercase">Nexus<span className="text-cyan-400 font-light">Builder</span></h1>
           </div>
         </div>
 
         {/* View Layout Controls */}
-        <div className="hidden md:flex items-center gap-1 bg-zinc-900/40 p-1 border border-zinc-800 rounded-xl text-xs">
-          <button
-            onClick={() => setViewMode('editor')}
-            className={`px-3 py-1 rounded-lg transition duration-200 ${viewMode === 'editor' ? 'bg-zinc-800 text-zinc-100 shadow-sm font-semibold' : 'text-zinc-500 hover:text-zinc-300'}`}
-          >
-            Split Editor
-          </button>
-          <button
-            onClick={() => setViewMode('focus')}
-            className={`px-3 py-1 rounded-lg transition duration-200 ${viewMode === 'focus' ? 'bg-zinc-800 text-zinc-100 shadow-sm font-semibold' : 'text-zinc-500 hover:text-zinc-300'}`}
-          >
-            Focus View
-          </button>
-          <button
-            onClick={() => setViewMode('preview')}
-            className={`px-3 py-1 rounded-lg transition duration-200 ${viewMode === 'preview' ? 'bg-zinc-800 text-zinc-100 shadow-sm font-semibold' : 'text-zinc-500 hover:text-zinc-300'}`}
-          >
-            Live Fullscreen
-          </button>
+        <div className="hidden md:flex items-center gap-2 bg-slate-950/50 p-1 border border-slate-800/50 rounded-lg text-xs font-medium">
+          {['editor', 'focus', 'preview'].map(mode => (
+            <button
+              key={mode}
+              onClick={() => setViewMode(mode)}
+              className={`px-3 py-1.5 rounded-md transition-all duration-300 capitalize ${viewMode === mode ? 'bg-cyan-500/10 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)]' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
+            >
+              {mode}
+            </button>
+          ))}
         </div>
 
         {/* Status Indicators */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 bg-zinc-950 px-3 py-1.5 rounded-lg border border-zinc-900 text-xs">
-            <span className={`w-1.5 h-1.5 rounded-full ${loading ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`} />
-            <span className="text-[10px] uppercase font-bold text-zinc-550">
-              {loading ? 'Compiling' : 'Ready'}
+          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${loading ? 'border-fuchsia-500/30 bg-fuchsia-500/10' : 'border-cyan-500/30 bg-cyan-500/10'} text-xs backdrop-blur-md transition-colors duration-500`}>
+            <span className={`w-2 h-2 rounded-full shadow-[0_0_8px_currentColor] ${loading ? 'bg-fuchsia-500 animate-pulse' : 'bg-cyan-400'}`} />
+            <span className={`font-semibold tracking-wide ${loading ? 'text-fuchsia-400' : 'text-cyan-400'}`}>
+              {loading ? 'Synthesizing...' : 'System Ready'}
             </span>
           </div>
         </div>
       </header>
 
-      {/* Workspace Containers */}
-      <div className="flex-1 flex overflow-hidden relative">
+      {/* Main Workspace */}
+      <main className="flex-1 flex gap-4 p-4 overflow-hidden relative z-10">
         
-        {/* LEFT PANEL: PROMPT BUILDER */}
-        {viewMode !== 'preview' && (
-          <aside className="w-80 border-r border-zinc-900 bg-[#09090b]/80 backdrop-blur-md flex flex-col p-5 shrink-0 overflow-y-auto z-10">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-4">Prompt Instructions</h2>
+        {/* Left/Center: Live Preview & Prompt Console */}
+        <div className={`flex flex-col relative transition-all duration-500 ${viewMode === 'editor' ? 'w-full lg:w-[60%]' : 'w-full'}`}>
+          
+          {/* Preview Container */}
+          <div className="flex-1 flex flex-col bg-slate-900/40 backdrop-blur-sm border border-slate-800/60 rounded-3xl overflow-hidden shadow-2xl relative">
             
-            <div className="flex-1 flex flex-col gap-5">
-              <div className="space-y-2">
-                <label className="text-xs text-zinc-650">What would you like to build?</label>
-                <textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Describe your design requirements or request edits to the current code..."
-                  rows={6}
-                  className="w-full bg-zinc-950/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-100 outline-none transition focus:border-sky-500/50 resize-none placeholder-zinc-700"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-[10px] font-bold text-zinc-550 uppercase tracking-widest">Example Mockup Templates</h3>
-                <div className="flex flex-col gap-2">
-                  {EXAMPLE_PROMPTS.map((chip, idx) => (
+            {/* Viewport Toolbar */}
+            {viewMode !== 'preview' && (
+              <div className="h-12 border-b border-slate-800/60 bg-slate-950/40 flex items-center justify-between px-4 shrink-0">
+                <div className="flex space-x-1.5">
+                  <div className="w-3 h-3 rounded-full bg-slate-700 hover:bg-rose-500 transition-colors"></div>
+                  <div className="w-3 h-3 rounded-full bg-slate-700 hover:bg-amber-500 transition-colors"></div>
+                  <div className="w-3 h-3 rounded-full bg-slate-700 hover:bg-emerald-500 transition-colors"></div>
+                </div>
+                
+                <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-800">
+                  {['desktop', 'tablet', 'mobile'].map(vp => (
                     <button
-                      key={idx}
-                      onClick={() => setPrompt(chip.text)}
-                      className="text-left text-xs bg-zinc-950/40 border border-zinc-900 rounded-xl p-3 hover:border-zinc-800 transition hover:bg-zinc-900/30"
-                      disabled={loading}
+                      key={vp}
+                      onClick={() => setViewportMode(vp)}
+                      className={`px-3 py-1 text-[10px] uppercase tracking-widest font-bold rounded-md transition-all ${viewportMode === vp ? 'bg-slate-700 text-cyan-300' : 'text-slate-500 hover:text-slate-300'}`}
                     >
-                      <span className="font-semibold text-zinc-300 block mb-0.5">{chip.label}</span>
-                      <span className="text-[10px] text-zinc-500 line-clamp-2 leading-relaxed">{chip.text}</span>
+                      {vp}
                     </button>
                   ))}
                 </div>
+                
+                <div className="text-[10px] text-slate-500 font-mono hidden sm:block">live_preview_v2.1</div>
               </div>
-            </div>
+            )}
 
-            <div className="mt-5 space-y-3 border-t border-zinc-900 pt-4">
-              <button
-                onClick={handleGenerate}
-                disabled={loading}
-                className="w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 hover:from-sky-350 hover:to-indigo-400 px-4 py-3 text-sm font-bold text-zinc-950 shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4 text-zinc-950" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Streaming JSX...
-                  </span>
-                ) : code ? 'Update Code Design' : 'Stream Code Design'}
-              </button>
-              
-              {error && (
-                <div className="rounded-xl bg-rose-500/10 p-3 border border-rose-500/20 text-xs text-rose-350 leading-normal">
-                  {error}
-                </div>
-              )}
-            </div>
-          </aside>
-        )}
-
-        {/* CENTER PANEL: LIVE PREVIEW IFRAME */}
-        <main className="flex-1 flex flex-col bg-[#070708] overflow-hidden relative">
-          
-          {/* Frame control toolbar */}
-          {viewMode !== 'preview' && (
-            <div className="h-12 border-b border-zinc-900 flex items-center justify-between px-6 bg-zinc-950/20 shrink-0 z-10 select-none">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Compiler Sandbox viewport</span>
-              </div>
-
-              {/* Viewport Dimension switches */}
-              <div className="flex items-center gap-1 bg-zinc-900/60 p-0.5 border border-zinc-800 rounded-lg text-xs">
-                <button
-                  onClick={() => setViewportMode('desktop')}
-                  className={`px-2.5 py-1 rounded transition duration-200 ${viewportMode === 'desktop' ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'text-zinc-500 hover:text-zinc-300'}`}
-                >
-                  Desktop
-                </button>
-                <button
-                  onClick={() => setViewportMode('tablet')}
-                  className={`px-2.5 py-1 rounded transition duration-200 ${viewportMode === 'tablet' ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'text-zinc-500 hover:text-zinc-300'}`}
-                >
-                  Tablet
-                </button>
-                <button
-                  onClick={() => setViewportMode('mobile')}
-                  className={`px-2.5 py-1 rounded transition duration-200 ${viewportMode === 'mobile' ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'text-zinc-500 hover:text-zinc-300'}`}
-                >
-                  Mobile
-                </button>
-              </div>
-
-              {/* Fullscreen shortcut */}
-              {code && (
-                <button
-                  onClick={() => setViewMode('preview')}
-                  className="text-xs text-sky-400 font-semibold hover:text-sky-300 flex items-center gap-1"
-                >
-                  Fullscreen Preview &rarr;
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Core viewport frame */}
-          <div className="flex-1 p-6 flex justify-center overflow-y-auto bg-dot-grid relative">
-            <div className={`transition-all duration-300 h-full ${viewportMode === 'desktop' || viewMode === 'preview' ? 'w-full' : viewportMode === 'tablet' ? 'w-[768px]' : 'w-[375px]'} flex flex-col justify-start`}>
-              
-              {/* Browser bar mockup */}
-              {viewMode !== 'preview' && (
-                <div className="w-full bg-zinc-950 border border-zinc-900 border-b-0 rounded-t-2xl px-4 py-3 flex items-center gap-3 shrink-0">
-                  <div className="flex gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-850" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-850" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-850" />
-                  </div>
-                  <div className="flex-1 max-w-sm mx-auto bg-zinc-900/60 border border-zinc-800 rounded-lg text-[10px] text-zinc-500 text-center py-1 truncate">
-                    localhost:3000/generated-page
-                  </div>
-                </div>
-              )}
-
-              {/* Live standalone iframe container */}
-              <div className={`flex-1 flex flex-col bg-zinc-950 ${viewMode === 'preview' ? 'rounded-none border-none' : 'rounded-b-2xl border border-zinc-900'}`}>
+            {/* Canvas */}
+            <div className="flex-1 overflow-auto flex justify-center bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
+              <div className={`transition-all duration-500 ease-out h-full ${viewportMode === 'desktop' || viewMode === 'preview' ? 'w-full' : viewportMode === 'tablet' ? 'w-[768px]' : 'w-[375px]'} shadow-[0_0_50px_rgba(0,0,0,0.5)]`}>
                 {code ? (
                   <LivePreview code={code} loading={loading} />
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center p-8 text-zinc-650 text-center">
-                    <div className="h-10 w-10 rounded-full border border-dashed border-zinc-800 flex items-center justify-center text-sm font-semibold mb-4">
-                      +
+                  <div className="flex-1 h-full flex flex-col items-center justify-center p-8 text-center">
+                    <div className="w-24 h-24 mb-6 rounded-full bg-gradient-to-tr from-cyan-500/20 to-fuchsia-500/20 border border-cyan-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+                      <svg className="w-10 h-10 text-cyan-400 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                      </svg>
                     </div>
-                    <p className="text-sm font-medium text-zinc-550">Empty Sandbox Preview</p>
-                    <p className="text-xs text-zinc-600 max-w-xs mt-1.5">Enter a design description on the left panel to compile and execute raw React code dynamically in this sandboxed window.</p>
+                    <h2 className="text-xl font-light text-slate-200 mb-2">Awaiting Instructions</h2>
+                    <p className="text-sm text-slate-500 max-w-sm">Initialize the generative engine by providing a prompt in the command console below.</p>
                   </div>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Floating Exit overlay capsule */}
-          {viewMode === 'preview' && (
-            <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-zinc-900/80 backdrop-blur-md px-4 py-2 border border-zinc-800 rounded-full shadow-2xl z-50 flex items-center gap-3">
-              <span className="text-[10px] font-bold text-sky-400 uppercase tracking-widest">Fullscreen Sandbox</span>
-              <span className="text-zinc-650">|</span>
-              <button
-                onClick={() => setViewMode('editor')}
-                className="text-xs font-semibold hover:text-white transition"
-              >
-                Exit Preview
-              </button>
+          {/* Floating Command Console (Bottom) */}
+          {viewMode !== 'preview' && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[95%] sm:w-[90%] max-w-3xl flex flex-col gap-2 z-30">
+              
+              {/* Examples Chips */}
+              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide px-2">
+                {EXAMPLE_PROMPTS.map((chip, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setPrompt(chip.text)}
+                    className="shrink-0 text-[10px] font-bold uppercase tracking-wider bg-slate-900/90 backdrop-blur-md border border-slate-700/50 text-slate-300 px-4 py-2 rounded-full hover:bg-cyan-900/40 hover:text-cyan-300 hover:border-cyan-500/50 transition-all shadow-lg"
+                    disabled={loading}
+                  >
+                    {chip.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Input Area */}
+              <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-700/60 p-2 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-end gap-2 focus-within:border-cyan-500/50 focus-within:shadow-[0_0_20px_rgba(6,182,212,0.15)] transition-all">
+                <textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="Design a cyberpunk dashboard with neon graphs..."
+                  className="flex-1 bg-transparent border-none outline-none text-sm text-slate-100 placeholder-slate-500 px-4 py-3 max-h-32 min-h-[52px] resize-none"
+                  disabled={loading}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleGenerate();
+                    }
+                  }}
+                />
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading || !prompt.trim()}
+                  className="shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
+                >
+                  {loading ? (
+                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  )}
+                </button>
+              </div>
+              
+              {error && (
+                <div className="mx-auto mt-2 bg-rose-950/80 backdrop-blur-md border border-rose-500/50 text-rose-300 text-xs px-4 py-2 rounded-xl text-center shadow-lg">
+                  {error}
+                </div>
+              )}
             </div>
           )}
-        </main>
+        </div>
 
-        {/* RIGHT PANEL: CODE PANEL EDITOR */}
+        {/* Right: Code Editor */}
         {viewMode === 'editor' && (
-          <aside className="w-96 border-l border-zinc-900 bg-[#09090b]/80 backdrop-blur-md flex flex-col p-5 shrink-0 z-10 overflow-hidden">
-            <CodePanel code={code} onChange={(newVal) => setCode(newVal)} />
-          </aside>
+          <div className="w-full lg:w-[40%] flex flex-col bg-[#0d1117] border border-slate-800/60 rounded-3xl overflow-hidden shadow-2xl relative z-10 transition-all duration-500">
+            <div className="h-12 border-b border-slate-800 bg-slate-900/50 flex items-center px-5 shrink-0 justify-between">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-fuchsia-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                <span className="text-xs font-bold text-slate-300 tracking-wider">SOURCE_CODE</span>
+              </div>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <CodePanel code={code} onChange={(newVal) => setCode(newVal)} />
+            </div>
+          </div>
         )}
+      </main>
 
-      </div>
+      {/* Exit Fullscreen Floating Button */}
+      {viewMode === 'preview' && (
+        <button
+          onClick={() => setViewMode('editor')}
+          className="fixed top-20 right-8 z-50 bg-slate-900/80 backdrop-blur-xl border border-slate-700 text-slate-200 px-6 py-3 rounded-full shadow-2xl font-semibold text-xs hover:bg-slate-800 hover:text-cyan-400 transition-all flex items-center gap-2"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+          Exit Fullscreen
+        </button>
+      )}
 
       {/* Action modal popups */}
       {modalContent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-3xl p-8 border border-zinc-800 bg-[#0c0c0e] text-zinc-150 shadow-2xl relative">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+          <div className="w-full max-w-md rounded-3xl p-8 border border-cyan-500/20 bg-slate-900 shadow-[0_0_50px_rgba(6,182,212,0.1)] relative transform transition-all">
             <button 
               onClick={() => setModalContent(null)}
-              className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 text-lg"
+              className="absolute top-5 right-5 text-slate-500 hover:text-cyan-400 transition-colors"
             >
-              ✕
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
             <div className="text-center space-y-4">
-              <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 font-bold text-lg">
-                ✓
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/30">
+                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
               </div>
-              <h3 className="text-lg font-bold capitalize">
+              <h3 className="text-xl font-bold text-slate-100 capitalize tracking-wide">
                 {modalContent.replace('-', ' ')}
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Action trigger Simulation for "{modalContent}" modal overlay.
+              <p className="text-sm text-slate-400 leading-relaxed max-w-[250px] mx-auto">
+                Triggered action for the "{modalContent}" modal inside the sandbox iframe.
               </p>
               <button
                 onClick={() => setModalContent(null)}
-                className="mt-6 w-full py-2.5 bg-gradient-to-r from-sky-400 to-indigo-600 text-slate-950 font-bold rounded-xl transition hover:opacity-90 active:scale-[0.98]"
+                className="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold tracking-wide rounded-xl transition-all border border-slate-700 hover:border-cyan-500/50"
               >
-                Close
+                Acknowledge
               </button>
             </div>
           </div>
