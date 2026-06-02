@@ -1,18 +1,27 @@
-import Navbar from './components/Navbar';
-import HeroSection from './components/HeroSection';
-import FeatureCard from './components/FeatureCard';
+import React from 'react';
+import FloatingNavbar from './components/FloatingNavbar';
+import SplitHero from './components/SplitHero';
+import ExampleGallery from './components/ExampleGallery';
+import FeatureShowcase from './components/FeatureShowcase';
+import PricingTiers from './components/PricingTiers';
+import FAQSection from './components/FAQSection';
+import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans">
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'); body { font-family: 'Plus Jakarta Sans', sans-serif; }`}</style>
-      <Navbar />
-      <HeroSection />
-      <div className="max-w-5xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <FeatureCard title="Real React Compiler" description="Compiled via Vite dev server, allowing real imports and actual package resolving." />
-        <FeatureCard title="Vite Hot Module Reloading" description="Changes inside the source code panel immediately hot-reload the live iframe preview." />
-        <FeatureCard title="Multi-File Projects" description="Generates custom navbar, hero sections, and cards in clean individual components." />
-      </div>
+    <div className="bg-zinc-900 min-h-screen text-gray-200 antialiased">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+      `}</style>
+      <FloatingNavbar />
+      <SplitHero />
+      <ExampleGallery />
+      <FeatureShowcase />
+      <PricingTiers />
+      <FAQSection />
+      <Footer />
     </div>
   );
 }

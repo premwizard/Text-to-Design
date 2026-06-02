@@ -24,7 +24,66 @@ _vite_process: asyncio.subprocess.Process | None = None
 # Determine correct npm command name on Windows vs Unix
 NPM_CMD = "npm.cmd" if os.name == "nt" else "npm"
 
-# ─── File writing ─────────────────────────────────────────────────────────────
+# ─── File writing & Sanitization / Validation ─────────────────────────────────
+
+import re
+
+def cleanGeneratedCode(code: str) -> str:
+    if not code:
+        return ""
+    
+    # 1. First, strip leading and trailing whitespace
+    code = code.strip()
+    
+    # 2. Specifically remove markdown fences at start/end
+    code = re.sub(r'^```(?:jsx|javascript|js|react|tsx|ts|json)?\s*\n?', '', code, flags=re.IGNORECASE)
+    code = re.sub(r'\n?```\s*$', '', code)
+    
+    # 3. Specifically remove HTML comments at start/end
+    code = re.sub(r'^\s*<!--.*?-->\s*', '', code, flags=re.DOTALL)
+    code = re.sub(r'\s*<!--.*?-->\s*$', '', code, flags=re.DOTALL)
+    
+    # 4. Remove filename headers
+    code = re.sub(r'^\s*(?:File|Filename):\s*[\w\.\-/]+\s*\n?', '', code, flags=re.IGNORECASE)
+    code = re.sub(r'^\s*###\s*[\w\.\-/]+\s*\n?', '', code, flags=re.IGNORECASE)
+    
+    # 5. Remove any leading explanatory text: slice to start with the first 'import' or 'export' statement
+    match = re.search(r'^\s*(import|export\b)', code, flags=re.MULTILINE)
+    if match:
+        code = code[match.start():]
+    
+    # 6. Final strip of extra whitespace
+    code = code.strip()
+    return code
+
+
+def validateGeneratedCode(code: str, filename: str) -> bool:
+    # Reject files containing forbidden patterns
+    forbidden_tokens = ["<!--", "-->", "```", "###"]
+    for token in forbidden_tokens:
+        if token in code:
+            log_invalid_file(filename, token, code)
+            return False
+            
+    if re.search(r'\bfile:', code, re.IGNORECASE):
+        log_invalid_file(filename, "File:", code)
+        return False
+        
+    if re.search(r'\bfilename:', code, re.IGNORECASE):
+        log_invalid_file(filename, "Filename:", code)
+        return False
+        
+    return True
+
+
+def log_invalid_file(filename: str, offending_token: str, code: str):
+    first_20_lines = "\n".join(code.splitlines()[:20])
+    print("INVALID GENERATED FILE")
+    print(f"filename: {filename}")
+    print(f"offending token: {offending_token}")
+    print("first 20 lines:")
+    print(first_20_lines)
+
 
 def write_files(files: dict[str, str]) -> list[str]:
     """
@@ -32,14 +91,27 @@ def write_files(files: dict[str, str]) -> list[str]:
     Returns list of written paths for logging.
     Clears old generated component files first (keeps main.jsx, index.css).
     """
-    components_dir = SRC_DIR / "components"
-    # Clear old generated components so stale files don't linger
-    if components_dir.exists():
-        shutil.rmtree(components_dir)
-    components_dir.mkdir(parents=True, exist_ok=True)
+    # STEP 5: Files dictionary immediately before write_files()
+    print("=" * 80)
+    print("STEP 5: Files dictionary inside write_files() (before validation & write)")
+    for fname, fcontent in files.items():
+        print(f"File: {fname} (length: {len(fcontent)})")
+        print(fcontent[:300] + ("..." if len(fcontent) > 300 else ""))
+    print("=" * 80)
 
-    written = []
+    # 1. Clean every file content and validate first
+    cleaned_files = {}
     for rel_path, content in files.items():
+        cleaned_content = cleanGeneratedCode(content)
+        if not validateGeneratedCode(cleaned_content, rel_path):
+            raise ValueError(f"Generated code validation failed for {rel_path}.")
+        cleaned_files[rel_path] = cleaned_content
+
+    # 2. Write new files to disk
+    written = []
+    new_component_paths = set()
+    
+    for rel_path, content in cleaned_files.items():
         # Normalise: strip leading slash or src/
         rel_path = rel_path.lstrip("/")
         if rel_path.startswith("src/"):
@@ -47,8 +119,42 @@ def write_files(files: dict[str, str]) -> list[str]:
 
         dest = SRC_DIR / rel_path
         dest.parent.mkdir(parents=True, exist_ok=True)
+
+        if dest.parent.name == "components":
+            new_component_paths.add(dest.resolve())
+
+        # STEP 6: Actual contents written to disk
+        print("=" * 80)
+        print(f"STEP 6: Writing to disk -> {dest}")
+        print(content[:500] + ("..." if len(content) > 500 else ""))
+        print("=" * 80)
+
         dest.write_text(content, encoding="utf-8")
         written.append(str(dest.relative_to(SANDBOX_DIR)))
+
+    # 3. Clean up stale components (files in components/ that weren't generated)
+    components_dir = SRC_DIR / "components"
+    if components_dir.exists():
+        for existing_file in components_dir.glob("*.jsx"):
+            if existing_file.resolve() not in new_component_paths:
+                try:
+                    existing_file.unlink()
+                    print(f"Deleted stale component: {existing_file.name}")
+                except Exception as e:
+                    print(f"Failed to delete stale component {existing_file.name}: {e}")
+
+    # STEP 7: Read sandbox/src/App.jsx back from disk and print first 10 lines
+    app_path = SRC_DIR / "App.jsx"
+    if app_path.exists():
+        print("=" * 80)
+        print("STEP 7: Read sandbox/src/App.jsx back from disk")
+        try:
+            with open(app_path, "r", encoding="utf-8") as f:
+                lines = [f.readline() for _ in range(10)]
+                print("".join(lines))
+        except Exception as e:
+            print(f"Error reading App.jsx: {e}")
+        print("=" * 80)
 
     return written
 
@@ -140,3 +246,56 @@ async def stop_vite():
 
 def vite_is_running() -> bool:
     return _vite_process is not None and _vite_process.returncode is None
+
+
+# ─── Build Validation ────────────────────────────────────────────────────────
+
+async def run_build() -> tuple[bool, str]:
+    """Run npm run build to validate the generated code."""
+    proc = await asyncio.create_subprocess_exec(
+        NPM_CMD, "run", "build",
+        cwd=str(SANDBOX_DIR),
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.STDOUT,
+    )
+    stdout, _ = await proc.communicate()
+    output = stdout.decode(errors="replace")
+    if proc.returncode == 0:
+        return True, output
+    return False, output
+
+def extract_build_error(output: str) -> tuple[str, str]:
+    """
+    Attempt to extract the filename and error message from Vite/Rollup/esbuild output.
+    Returns (filename, error_snippet). If filename cannot be found, filename is "".
+    """
+    filename = ""
+    error_snippet = output
+    
+    # Try Rollup format: failed to resolve import "..." from ".../src/components/Bad.jsx"
+    # or "[vite]: Rollup failed to resolve import "..." from "D:/.../src/components/Testimonials.jsx""
+    rollup_match = re.search(r'from\s+["\'](.*?\.jsx?)["\']', output)
+    if rollup_match:
+        path = rollup_match.group(1).replace("\\", "/")
+        if "src/" in path:
+            filename = path[path.find("src/") + 4:]
+            
+    if not filename:
+        # Try esbuild format: /absolute/path/src/App.jsx:5:10: error: Unexpected token
+        esbuild_match = re.search(r'([A-Za-z]:[\\/].*?|/[a-zA-Z0-9_./-]+/src/[a-zA-Z0-9_./-]+):(\d+):', output)
+        if esbuild_match:
+            path = esbuild_match.group(1).replace("\\", "/")
+            if "src/" in path:
+                filename = path[path.find("src/") + 4:]
+
+    if not filename:
+        # Just scan for any src/something.jsx
+        src_match = re.search(r'(?:src/)([a-zA-Z0-9_./-]+\.jsx?)', output)
+        if src_match:
+            filename = src_match.group(1)
+            
+    # Keep the snippet manageable
+    if len(error_snippet) > 2500:
+        error_snippet = error_snippet[-2500:]
+        
+    return filename.strip(), error_snippet

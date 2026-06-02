@@ -8,7 +8,62 @@ import re
 import openai
 import anyio
 from backend.utils.env import get_env
-from backend.prompts import SYSTEM_PROMPT, EDIT_SYSTEM_PROMPT, FIX_SYSTEM_PROMPT
+from backend.prompts import PLANNER_PROMPT, BUILDER_PROMPT, EDIT_SYSTEM_PROMPT, FIX_SYSTEM_PROMPT
+
+
+def _repair_json_escapes(raw: str) -> str:
+    r"""
+    Walk the raw JSON string character-by-character and, inside string literals,
+    double-escape any backslash that is NOT already part of a valid JSON escape
+    sequence.  Valid sequences: \", \\, \/, \b, \f, \n, \r, \t, \uXXXX.
+
+    This fixes the common LLM mistake of emitting literal Python/JS escape
+    sequences (\n, \t, \d, \., \s, ...) inside JSON strings without doubling
+    them, which causes json.loads() to raise 'Invalid \escape'.
+    """
+    VALID_ESCAPES = set('"\\/' 'bfnrtu')
+    result = []
+    in_string = False
+    i = 0
+    length = len(raw)
+    while i < length:
+        ch = raw[i]
+        if in_string:
+            if ch == '\\':
+                # Look at the next character
+                if i + 1 < length:
+                    nxt = raw[i + 1]
+                    if nxt in VALID_ESCAPES:
+                        # Legal escape — copy both chars unchanged
+                        result.append(ch)
+                        result.append(nxt)
+                        i += 2
+                        continue
+                    else:
+                        # Invalid bare backslash — double it
+                        result.append('\\\\')
+                        i += 1
+                        continue
+                else:
+                    # Trailing backslash at end of input — double it
+                    result.append('\\\\')
+                    i += 1
+                    continue
+            elif ch == '"':
+                in_string = False
+                result.append(ch)
+                i += 1
+                continue
+            else:
+                result.append(ch)
+                i += 1
+                continue
+        else:
+            if ch == '"':
+                in_string = True
+            result.append(ch)
+            i += 1
+    return ''.join(result)
 
 
 def _repair_jsx(code: str) -> str:
@@ -57,6 +112,8 @@ def _repair_jsx(code: str) -> str:
     return code.strip()
 
 
+from backend.services.ai_router import generate_ai
+
 router = APIRouter()
 
 class GenerateUIRequest(BaseModel):
@@ -101,8 +158,18 @@ class SaveFilesRequest(BaseModel):
 @router.post("/save-files")
 async def save_files(request: SaveFilesRequest):
     try:
-        from backend.project_runner import write_files, start_vite, vite_is_running
-        write_files(request.files)
+        from backend.project_runner import write_files, start_vite, vite_is_running, cleanGeneratedCode
+        # STEP 8: Print the exact code passed into LivePreview/Vite
+        logging.warning("=" * 80)
+        logging.warning("STEP 8: SaveFilesRequest payload (passed to Vite)")
+        for fname, fcontent in request.files.items():
+            logging.warning(f"File: {fname} (length: {len(fcontent)})")
+            logging.warning(fcontent[:300] + ("..." if len(fcontent) > 300 else ""))
+        logging.warning("=" * 80)
+
+        # Clean every file after receiving/parsing JSON
+        cleaned_files = {k: cleanGeneratedCode(v) for k, v in request.files.items()}
+        write_files(cleaned_files)
         # Ensure Vite dev server is running
         if not vite_is_running():
             await start_vite()
@@ -117,10 +184,12 @@ async def stream_jsx(request: StreamRequest):
         try:
             groq_api_key = get_env("GROQ_API_KEY")
             openai_api_key = get_env("OPENAI_API_KEY")
+            gemini_api_key = get_env("GEMINI_API_KEY")
+            openrouter_api_key = get_env("OPENROUTER_API_KEY")
             
             from backend.project_runner import write_files, start_vite, vite_is_running
             
-            if not groq_api_key and not openai_api_key:
+            if not any([groq_api_key, openai_api_key, gemini_api_key, openrouter_api_key]):
                 # No key fallback: stream a mock React+Tailwind multi-file JSON structure
                 mock_json = """{
   "files": {
@@ -139,7 +208,10 @@ async def stream_jsx(request: StreamRequest):
                 
                 # Write files to sandbox
                 parsed_data = json.loads(mock_json)
-                write_files(parsed_data.get("files", {}))
+                from backend.project_runner import cleanGeneratedCode
+                files = parsed_data.get("files", {})
+                cleaned_files = {k: cleanGeneratedCode(v) for k, v in files.items()}
+                write_files(cleaned_files)
                 
                 # Start Vite dev server if not running
                 if not vite_is_running():
@@ -148,19 +220,7 @@ async def stream_jsx(request: StreamRequest):
                 yield "data: [DONE]\n\n"
                 return
 
-            if groq_api_key:
-                model = get_env("GROQ_MODEL", default="llama-3.3-70b-versatile")
-                client = openai.AsyncOpenAI(
-                    api_key=groq_api_key,
-                    base_url="https://api.groq.com/openai/v1"
-                )
-            elif openai_api_key:
-                model = get_env("OPENAI_MODEL", default="gpt-4o-mini")
-                client = openai.AsyncOpenAI(
-                    api_key=openai_api_key
-                )
-            else:
-                return
+            # AI Router handles client initialization based on env keys internally
 
             if request.current_code:
                 try:
@@ -177,30 +237,117 @@ async def stream_jsx(request: StreamRequest):
                 )
                 user_message = f"Edit request: {request.prompt}"
             else:
-                system_instructions = SYSTEM_PROMPT
-                user_message = request.prompt
+                # ─── 1. PLANNER CALL ────────────────────────
+                planner_prompt = PLANNER_PROMPT.format(user_prompt=request.prompt)
+                
+                try:
+                    planner_resp = await generate_ai(
+                        task_type="planner",
+                        system_prompt=None,
+                        user_prompt=planner_prompt,
+                        temperature=1.0,
+                        stream=False
+                    )
+                    planner_output = planner_resp.choices[0].message.content.strip()
+                    
+                    print("PLANNER RAW RESPONSE")
+                    print(planner_output.encode('ascii', 'replace').decode('ascii'))
+                    
+                    start_idx = planner_output.find('{')
+                    end_idx = planner_output.rfind('}')
+                    if start_idx != -1 and end_idx != -1:
+                        plan = json.loads(planner_output[start_idx:end_idx+1])
+                    else:
+                        raise ValueError("No JSON found in planner output")
+                        
+                    print("PARSED PLAN")
+                    print(str(plan).encode('ascii', 'replace').decode('ascii'))
+                except Exception as e:
+                    logging.error(f"Planner failed: {e}")
+                    raise e
+                
+                font_heading = plan.get("font_heading", "Inter")
+                font_body = plan.get("font_body", "Inter")
+                
+                sections = plan.get("sections", [])
+                if not sections:
+                    raise ValueError("Planner did not generate any sections")
+                sections_numbered = "1. App.jsx\\n"
+                for i, sec in enumerate(sections, start=2):
+                    sections_numbered += f"{i}. components/{sec}.jsx\\n"
 
-            response = await client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": system_instructions},
-                    {"role": "user", "content": user_message}
-                ],
-                temperature=0.2,
-                stream=True
-            )
+                system_instructions = BUILDER_PROMPT.format(
+                    page_type=plan.get("page_type", "landing"),
+                    product_name=plan.get("product_name", "App"),
+                    tagline=plan.get("tagline", ""),
+                    design_archetype=plan.get("design_archetype", "apple"),
+                    layout_system=plan.get("layout_system", "centered-stack"),
+                    visual_style=plan.get("visual_style", "glassmorphism"),
+                    interaction_style=plan.get("interaction_style", "hover-reveal"),
+                    design_seed=plan.get("design_seed", 1234),
+                    aesthetic=plan.get("aesthetic", "minimal"),
+                    font_heading=font_heading,
+                    font_body=font_body,
+                    font_heading_url=font_heading.replace(" ", "+"),
+                    font_body_url=font_body.replace(" ", "+"),
+                    bg_color=plan.get("bg_color", "bg-white"),
+                    primary_color=plan.get("primary_color", "blue-500"),
+                    text_color=plan.get("text_color", "text-slate-900"),
+                    layout_notes=plan.get("layout_notes", ""),
+                    sections_numbered=sections_numbered,
+                    user_prompt=request.prompt
+                )
+                
+                print("FINAL BUILDER PROMPT")
+                print(system_instructions.encode('ascii', 'replace').decode('ascii'))
+                
+                user_message = "Generate the code."
+
+            if request.current_code:
+                response = generate_ai(
+                    task_type="editor",
+                    system_prompt=system_instructions,
+                    user_prompt=user_message,
+                    temperature=1.0,
+                    stream=True
+                )
+            else:
+                response = generate_ai(
+                    task_type="builder",
+                    system_prompt=system_instructions,
+                    user_prompt=user_message,
+                    temperature=1.0,
+                    stream=True
+                )
 
             full_code = ""
             async for chunk in response:
-                content = chunk.choices[0].delta.content
+                if isinstance(chunk, dict):
+                    if chunk.get("type") == "fallback":
+                        full_code = ""
+                        yield f"data: {json.dumps({'type': 'fallback', 'message': chunk.get('message')})}\n\n"
+                        continue
+                    elif chunk.get("type") == "emergency":
+                        yield f"data: {json.dumps({'error': chunk.get('message')})}\n\n"
+                        continue
+                
+                content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
                 if content:
                     full_code += content
                     yield f"data: {json.dumps({'chunk': content})}\n\n"
 
-            # ── server-side cleanup ────────────────────────────────────────
+            # STEP 1: Raw LLM response
+            logging.warning("=" * 80)
+            logging.warning("STEP 1: Raw LLM response")
+            logging.warning(full_code[:1000] + ("..." if len(full_code) > 1000 else ""))
+            logging.warning("=" * 80)
+
             cleaned = full_code.strip()
+            # Clean markdown code fences & HTML comments wrapping the JSON
             cleaned = re.sub(r'^```(?:json|jsx|javascript|js|react|tsx|ts)?\s*\n?', '', cleaned, flags=re.IGNORECASE)
             cleaned = re.sub(r'\n?```\s*$', '', cleaned)
+            cleaned = re.sub(r'^<!--.*?-->\s*', '', cleaned, flags=re.DOTALL)
+            cleaned = re.sub(r'\s*<!--.*?-->$', '', cleaned, flags=re.DOTALL)
             cleaned = cleaned.strip()
 
             # Parse and write files
@@ -210,14 +357,108 @@ async def stream_jsx(request: StreamRequest):
                 end_idx = cleaned.rfind('}')
                 if start_idx != -1 and end_idx != -1:
                     json_str = cleaned[start_idx:end_idx+1]
-                    parsed_data = json.loads(json_str)
+                    # Repair invalid bare-backslash escapes emitted by the LLM
+                    # before attempting to parse, so json.loads never sees them.
+                    try:
+                        parsed_data = json.loads(json_str)
+                    except json.JSONDecodeError as first_err:
+                        logging.warning(f"Initial json.loads failed ({first_err}), attempting escape repair...")
+                        repaired = _repair_json_escapes(json_str)
+                        try:
+                            parsed_data = json.loads(repaired)
+                            logging.warning("Escape repair succeeded.")
+                        except json.JSONDecodeError as second_err:
+                            raise ValueError(
+                                f"JSON parse failed even after escape repair. "
+                                f"Original error: {first_err}. "
+                                f"Post-repair error: {second_err}"
+                            ) from second_err
                 else:
                     raise ValueError("No valid JSON object found in response")
                 
+                # STEP 2: Parsed JSON response
+                logging.warning("=" * 80)
+                logging.warning("STEP 2: Parsed JSON response")
+                logging.warning(str(parsed_data)[:1000] + ("..." if len(str(parsed_data)) > 1000 else ""))
+                logging.warning("=" * 80)
+
                 # Write files
                 files = parsed_data.get("files", {})
-                write_files(files)
+
+                # STEP 3: Files dictionary after JSON parsing
+                logging.warning("=" * 80)
+                logging.warning("STEP 3: Files dictionary after JSON parsing")
+                for fname, fcontent in files.items():
+                    logging.warning(f"File: {fname} (length: {len(fcontent)})")
+                    logging.warning(fcontent[:300] + ("..." if len(fcontent) > 300 else ""))
+                logging.warning("=" * 80)
+
+                from backend.project_runner import cleanGeneratedCode, write_files, start_vite, vite_is_running, run_build, extract_build_error
+                cleaned_files = {k: cleanGeneratedCode(v) for k, v in files.items()}
+
+                # STEP 4: Files dictionary after cleanGeneratedCode()
+                logging.warning("=" * 80)
+                logging.warning("STEP 4: Files dictionary after cleanGeneratedCode()")
+                for fname, fcontent in cleaned_files.items():
+                    logging.warning(f"File: {fname} (length: {len(fcontent)})")
+                    logging.warning(fcontent[:300] + ("..." if len(fcontent) > 300 else ""))
+                logging.warning("=" * 80)
+
+                write_files(cleaned_files)
                 
+                max_retries = 10
+                retries = 0
+                build_success = False
+                
+                while retries < max_retries:
+                    yield f"data: {json.dumps({'status': 'building'})}\n\n"
+                    build_success, build_output = await run_build()
+                    if build_success:
+                        break
+                    
+                    broken_file, error_snippet = extract_build_error(build_output)
+                    retries += 1
+                    yield f"data: {json.dumps({'status': 'fixing', 'attempt': retries, 'file': broken_file})}\n\n"
+                    
+                    if not broken_file or broken_file not in cleaned_files:
+                        logging.warning(f"Could not identify broken file cleanly. broken_file='{broken_file}'")
+                        stripped = broken_file.replace("src/", "")
+                        if stripped in cleaned_files:
+                            broken_file = stripped
+                        else:
+                            broken_file = "App.jsx" if "App.jsx" in cleaned_files else list(cleaned_files.keys())[0]
+
+                    broken_code = cleaned_files[broken_file]
+                    fix_instructions = FIX_SYSTEM_PROMPT.format(
+                        broken_code=broken_code,
+                        error=error_snippet
+                    )
+                    
+                    try:
+                        fix_response = await generate_ai(
+                            task_type="fix",
+                            system_prompt=fix_instructions,
+                            user_prompt=f"Fix {broken_file}. The error is: {error_snippet}",
+                            temperature=0.1,
+                            stream=False
+                        )
+                        fixed_code = fix_response.choices[0].message.content.strip()
+                        fixed_code = re.sub(r'^```(?:jsx|javascript|js|react|tsx|ts)?\s*\n?', '', fixed_code, flags=re.IGNORECASE)
+                        fixed_code = re.sub(r'\n?```\s*$', '', fixed_code)
+                        fixed_code = cleanGeneratedCode(fixed_code.strip())
+                        fixed_code = _repair_jsx(fixed_code)
+                        
+                        cleaned_files[broken_file] = fixed_code
+                        write_files(cleaned_files)
+                    except Exception as e:
+                        logging.error(f"Error during auto-fix: {e}")
+                        await anyio.sleep(2)
+                
+                if not build_success:
+                    yield f"data: {json.dumps({'error': 'Unable to repair generated code.'})}\n\n"
+                    yield "data: [DONE]\n\n"
+                    return
+
                 # Start Vite dev server if not running
                 if not vite_is_running():
                     await start_vite()
@@ -235,71 +476,4 @@ async def stream_jsx(request: StreamRequest):
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
-@router.post("/fix-jsx")
-async def fix_jsx(request: FixRequest):
-    """Auto-fix a broken React sandbox component using FIX_SYSTEM_PROMPT."""
-    async def event_generator():
-        try:
-            groq_api_key = get_env("GROQ_API_KEY")
-            openai_api_key = get_env("OPENAI_API_KEY")
 
-            if groq_api_key:
-                model = get_env("GROQ_MODEL", default="llama-3.3-70b-versatile")
-                client = openai.AsyncOpenAI(
-                    api_key=groq_api_key,
-                    base_url="https://api.groq.com/openai/v1"
-                )
-            elif openai_api_key:
-                model = get_env("OPENAI_MODEL", default="gpt-4o-mini")
-                client = openai.AsyncOpenAI(
-                    api_key=openai_api_key
-                )
-            else:
-                yield f"data: {json.dumps({'error': 'No API key configured. Set GROQ_API_KEY or OPENAI_API_KEY.'})}\n\n"
-                yield "data: [DONE]\n\n"
-                return
-
-            system_instructions = FIX_SYSTEM_PROMPT.format(
-                broken_code=request.broken_code,
-                error=request.error
-            )
-
-            response = await client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": system_instructions},
-                    {"role": "user", "content": f"Fix this component. The error is: {request.error}"}
-                ],
-                temperature=0.1,
-                stream=True
-            )
-
-            full_code = ""
-            async for chunk in response:
-                content = chunk.choices[0].delta.content
-                if content:
-                    full_code += content
-
-            # Server-side cleanup
-            cleaned = full_code.strip()
-            cleaned = re.sub(r'^```(?:jsx|javascript|js|react|tsx|ts)?\s*\n?', '', cleaned, flags=re.IGNORECASE)
-            cleaned = re.sub(r'\n?```\s*$', '', cleaned)
-            cleaned = cleaned.strip()
-
-            # JSX completeness repair
-            cleaned = _repair_jsx(cleaned)
-
-            # Stream cleaned code in chunks
-            chunk_size = 60
-            for i in range(0, len(cleaned), chunk_size):
-                yield f"data: {json.dumps({'chunk': cleaned[i:i+chunk_size]})}\n\n"
-                await anyio.sleep(0.005)
-
-            yield "data: [DONE]\n\n"
-
-        except Exception as e:
-            logging.error(f"Error fixing JSX: {e}")
-            yield f"data: {json.dumps({'error': str(e)})}\n\n"
-            yield "data: [DONE]\n\n"
-
-    return StreamingResponse(event_generator(), media_type="text/event-stream")

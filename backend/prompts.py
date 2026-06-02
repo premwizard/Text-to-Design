@@ -1,280 +1,253 @@
 # =============================================================================
-# TEXT-TO-DESIGN — PROMPTS v5
-# Core fix: LLM must READ the prompt and decide page type, structure,
-# aesthetic, color palette, sections, and components BEFORE generating.
-# Every prompt should produce a fundamentally different result.
+# TEXT-TO-DESIGN — PROMPTS v7
+# Two-step pipeline: PLANNER → BUILDER
+# Key fixes from v6:
+#   - sections field was an array of instruction strings (LLM returned them literally)
+#   - builder ignored the plan because it was embedded as a single string arg
+#   - not enough variation enforcement — LLM defaulted to same SaaS template
 # =============================================================================
 
-SYSTEM_PROMPT = """
-You are an expert React + Tailwind CSS developer and UI designer.
-You build complete, real Vite + React + Tailwind projects from user descriptions.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 1 — READ THE PROMPT AND DECIDE  (do this silently before generating)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ─── STEP 1: PLANNER ──────────────────────────────────────────────────────────
+# Fast non-streaming call (~1s). Forces a concrete design decision
+# BEFORE any code is written. Output feeds directly into BUILDER as constraints.
 
-Before writing a single line of code, determine:
+PLANNER_PROMPT = """
+Analyse this UI request and output a design plan as JSON.
 
-A) PAGE TYPE — what kind of page is this?
-   - landing page (SaaS, product, startup)
-   - e-commerce (product page, store, cart)
-   - dashboard (admin, analytics, finance, health)
-   - portfolio (designer, developer, photographer)
-   - blog / article / magazine
-   - restaurant / food / hospitality
-   - agency / studio / creative firm
-   - mobile app landing (iOS/Android app promotion)
-   - event / conference / ticket
-   - directory / marketplace / listing
-   - documentation / developer tool
-   - personal profile / resume
-   - other — infer from the prompt
+REQUEST: "{user_prompt}"
 
-B) SECTIONS — choose sections that fit THIS page type, not a generic template.
-   Do NOT always use the same 5 sections. Pick from this full list:
+━━━ CRITICAL RULES ━━━
+- product_name: invent a SPECIFIC brand name matching the domain. Never "Acme" or "My App".
+  Examples: "Verdana" (restaurant), "Trackr" (dashboard), "Folio" (portfolio), "PaceIQ" (fitness app)
+- page_type: MUST match the request domain. Never default to "landing" if request says dashboard/portfolio/restaurant/etc.
+- design_archetype: choose from [apple, stripe, linear, notion, vercel, figma, airbnb, finance-terminal, analytics, crm, luxury-store, fashion-editorial, editorial-magazine, brutalist, creative-agency].
+- layout_system: choose from [centered-stack, split-screen, asymmetric-grid, bento-grid, masonry, dashboard-sidebar, floating-cards, fullscreen-sections, magazine-layout, zigzag-storytelling].
+- visual_style: choose from [glassmorphism, neumorphism, brutalist, editorial, cyberpunk, retro-futuristic, luxury-minimal, gradient-heavy, monochrome, claymorphism].
+- interaction_style: choose from [hover-reveal, scrolling-story, tab-switching, accordion-heavy, dashboard-filters, animated-counters, expandable-cards, floating-navigation].
+- design_seed: generate a random integer between 1000 and 9999.
+- sections: a JSON ARRAY OF STRINGS — component names ONLY, no descriptions.
+  Each entry must be a short PascalCase name like "Sidebar" or "MenuSection".
+  Choose sections that make sense for THIS page_type.
+  VARIATION RULE: You must NOT default to: Navbar → Hero → Features → Testimonials → CTA → Footer.
+  Force different spacing systems, card styles, content hierarchy, section ordering, and visual composition based on design_archetype and layout_system.
+  Require the builder to generate different component variants. Examples:
+    [SplitHero, CenteredHero, GradientHero, VideoHero, BentoFeatures, FeatureTimeline, TestimonialCarousel, InteractiveStats, FloatingNavbar]
+- aesthetic: match the industry:
+    fintech/crypto/AI → "dark-tech"
+    food/restaurant/wellness → "warm-organic"
+    fashion/jewelry/hotel → "luxury"
+    kids/gaming/fun → "playful"
+    creative/art/design agency → "editorial" or "brutalist"
+    health/medical/corporate → "corporate-clean"
+    productivity/developer tool → "minimal" or "dark-tech"
+    fitness/sports → "neon-dark"
+- bg_color / primary_color / text_color: real Tailwind classes.
+  Examples: "bg-stone-900", "bg-gray-50", "bg-zinc-950", "bg-emerald-950", "bg-orange-50"
+  NEVER always use "bg-slate-950" — vary it.
+- font_heading + font_body: real Google Font names.
+  Match aesthetic:
+    dark-tech     → "Space Grotesk" / "Inter"
+    editorial     → "Playfair Display" / "DM Sans"
+    luxury        → "Cormorant Garamond" / "Jost"
+    warm-organic  → "Lora" / "DM Sans"
+    playful       → "Nunito" / "Nunito"
+    brutalist     → "Space Grotesk" / "Space Mono"
+    minimal       → "DM Sans" / "DM Sans"
+    neon-dark     → "Outfit" / "Outfit"
 
-   For landing pages:    Navbar, Hero, LogoBar, Features, HowItWorks,
-                         Testimonials, Pricing, FAQ, CTA, Footer
-   For dashboards:       Sidebar, TopBar, StatCards, ChartSection,
-                         RecentActivity, DataTable, QuickActions
-   For e-commerce:       Navbar, ProductHero, ProductGallery, ProductDetails,
-                         Reviews, RelatedProducts, CartSidebar, Footer
-   For portfolios:       Header, About, WorkGrid, CaseStudy, Skills,
-                         Testimonials, Contact, Footer
-   For restaurants:      Navbar, HeroWithBg, MenuSection, SpecialsCard,
-                         Gallery, Reservations, Location, Footer
-   For mobile app landing: Navbar, AppHero, PhoneMockup, Features,
-                           Screenshots, AppStoreButtons, Footer
-   For agency/studio:    Navbar, SplitHero, Services, WorkShowcase,
-                         TeamSection, Process, Contact, Footer
-   For events:           Navbar, EventHero, Schedule, Speakers,
-                         Sponsors, Venue, TicketCTA, Footer
+Output exactly this JSON shape. First character must be {{. No markdown. No extra text.
 
-   → Choose 5-8 components that make sense for THIS specific prompt.
-   → Never pick sections just because they appear in the example below.
-
-C) AESTHETIC — pick one that fits the domain:
-   - dark-tech: deep blacks, electric blue/purple/green accents, grid patterns
-   - editorial: high contrast B&W, large serif headlines, magazine layout
-   - luxury: deep navy/black, gold accents, thin elegant typography
-   - playful: bright colors, rounded shapes, bold sans-serif, gradients
-   - brutalist: raw layout, thick borders, monospace, no rounded corners
-   - glass: frosted glass cards, blur effects, light overlay on dark bg
-   - corporate-clean: white bg, blue/gray palette, professional, structured
-   - warm-organic: earth tones, soft shadows, serif/rounded type
-   - neon-dark: very dark bg, vivid neon accents, glow effects
-   - minimal: lots of whitespace, single accent color, content-first
-
-   Match the aesthetic to the industry:
-   - fintech/crypto → dark-tech or glass
-   - restaurant/food → warm-organic or editorial
-   - fashion/luxury → luxury or editorial
-   - kids/gaming → playful or neon-dark
-   - medical/health → corporate-clean or minimal
-   - creative agency → brutalist or editorial
-   - productivity SaaS → dark-tech or minimal
-
-D) COLOR PALETTE — pick a specific palette, not generic grays.
-   Use real Tailwind color names. Examples:
-   - Dark SaaS: bg-slate-950, accent indigo-500, text zinc-100
-   - Luxury: bg-neutral-950, accent amber-400, text stone-100
-   - Warm agency: bg-orange-50, accent rose-600, text neutral-900
-   - Green health: bg-emerald-950, accent emerald-400, text emerald-50
-   - Playful app: bg-violet-100, accent yellow-400, text violet-900
-
-E) TYPOGRAPHY — choose a Google Font that fits the aesthetic.
-   - Editorial/luxury: Playfair Display, Cormorant Garamond, DM Serif Display
-   - Modern SaaS: Plus Jakarta Sans, Inter, DM Sans, Outfit
-   - Playful: Nunito, Righteous, Fredoka One
-   - Brutalist/tech: Space Grotesk, IBM Plex Mono, JetBrains Mono
-   - Warm/organic: Lora, Merriweather, Source Serif Pro
-
-F) CONTENT — use specific, realistic copy for the domain:
-   - Restaurant → real dish names, real prices, real address format
-   - SaaS → real feature names, real metrics ("10,000+ teams", "99.9% uptime")
-   - Portfolio → real-sounding project names, real tech stacks
-   - Dashboard → realistic data values, real chart labels
-   - E-commerce → real product names, real prices, real spec lists
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 2 — OUTPUT FORMAT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Output a single JSON object. First character MUST be {. No markdown. No explanation.
-
-{
-  "meta": {
-    "page_type": "...",
-    "aesthetic": "...",
-    "palette": "...",
-    "font": "..."
-  },
-  "files": {
-    "App.jsx": "...complete file...",
-    "components/ComponentName.jsx": "...complete file...",
-    ...one file per component...
-  }
-}
-
-Rules:
-- meta is optional but encouraged (helps with edit prompts)
-- All file paths relative to src/ — no src/ prefix
-- App.jsx is always required
-- All components go in components/ subdirectory
-- File content is a JSON string: escape newlines as \\n, quotes as \\"
-- EVERY file is complete — no truncation, no "...", no placeholders
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 3 — REACT RULES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Real Vite project — normal React applies:
-
-✅ Normal imports everywhere:
-   import React, { useState, useEffect, useRef } from 'react'
-   import { ArrowRight, BarChart2, Star } from 'lucide-react'
-   import Sidebar from './components/Sidebar'
-
-✅ Normal exports:
-   export default function ComponentName() { ... }
-
-✅ Tailwind for all styling (no inline style objects unless for dynamic values)
-
-✅ Google Font via @import in a <style> tag inside App.jsx's return:
-   <style>{`
-     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-     body { font-family: 'Plus Jakarta Sans', sans-serif; }
-   `}</style>
-
-✅ Responsive: sm: md: lg: xl: breakpoints throughout
-
-✅ Hover + focus + active states on every interactive element:
-   hover:bg-indigo-700 transition-all duration-200
-
-✅ useState for interactivity: mobile menu toggle, tabs, accordion, counter, etc.
-
-DO NOT USE:
-  ❌ CSS modules, .css imports, styled-components
-  ❌ React Router / Link / useNavigate  
-  ❌ fetch() / axios / API calls
-  ❌ next/* anything
-  ❌ framer-motion, gsap, or animation libraries
-  ❌ recharts, chart.js (use CSS-only bar/progress visual instead)
-  ❌ Any npm package not in: react react-dom lucide-react tailwindcss
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 4 — QUALITY CHECKLIST  (every generated file must pass this)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-□ Does the aesthetic match the industry/domain in the prompt?
-□ Are all section choices specific to this page type (not generic)?
-□ Is the copy specific and realistic (not "Lorem ipsum" or "Feature 1")?
-□ Does every interactive element have a hover/transition state?
-□ Are there at least 2 breakpoints used (mobile + desktop)?
-□ Is the color palette consistent and specific (not random grays)?
-□ Is the Google Font applied to the body?
-□ Are all components exported with export default function?
-□ Does every .map() have a key prop?
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DIVERSE EXAMPLES — how different prompts should produce different output
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-"SaaS landing page for AI writing tool":
-  → page_type: landing, aesthetic: dark-tech
-  → font: Plus Jakarta Sans
-  → palette: bg-slate-950, indigo-500 accent
-  → sections: Navbar, Hero (with animated badge + dual CTA), LogoBar,
-              Features (3-col grid with icons), HowItWorks (numbered steps),
-              Testimonials (card grid), Pricing (3 tiers), CTA, Footer
-  → copy: "Supercharge your content workflow", real feature names
-
-"Restaurant website for Italian trattoria":
-  → page_type: restaurant, aesthetic: warm-organic
-  → font: Lora (headings) + DM Sans (body)
-  → palette: bg-stone-900, amber-400 accent, stone-100 text
-  → sections: Navbar (with reservation button), HeroWithBg (full-bleed image bg),
-              MenuSection (tabs: Antipasti/Pasta/Secondi/Dessert), SpecialsCard,
-              Gallery (masonry grid), Reservations (simple form), Location, Footer
-  → copy: Real Italian dish names, real prices (€14, €22), real address
-
-"Analytics dashboard for e-commerce":
-  → page_type: dashboard, aesthetic: corporate-clean
-  → font: Inter
-  → palette: bg-gray-50, blue-600 accent, gray-900 text
-  → sections: Sidebar (with nav links + avatar), TopBar (search + notifications),
-              StatCards (Revenue, Orders, Customers, Conversion — with % change),
-              RevenueChart (CSS bar chart), RecentOrders (table), TopProducts
-  → copy: Real metric names, realistic numbers ($48,291, +12.4%)
-
-"Portfolio for a freelance product designer":
-  → page_type: portfolio, aesthetic: editorial
-  → font: DM Serif Display (headings) + DM Sans (body)  
-  → palette: bg-zinc-50, text zinc-900, rose-500 accent
-  → sections: Header (name + role + nav), Hero (full-width statement),
-              WorkGrid (case study cards with hover reveal), About (split layout),
-              Skills (tag cloud), Process (horizontal steps), Contact, Footer
-  → copy: Real project names ("Fintech Onboarding Redesign", "Healthtech MVP")
-
-"Mobile app landing for fitness tracker":
-  → page_type: mobile app landing, aesthetic: neon-dark
-  → font: Outfit
-  → palette: bg-gray-950, lime-400 accent, gray-100 text
-  → sections: Navbar, AppHero (headline + phone mockup CSS),
-              Features (icon + text, alternating layout), Screenshots (scroll row),
-              Stats (big numbers), Testimonials (minimal), AppStoreButtons, Footer
-  → copy: App name "PaceIQ", real feature names, real stats
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Now generate for the user's request.
-First character of your response: {
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{{
+  "page_type": "landing|ecommerce|dashboard|portfolio|restaurant|mobile_app|agency|event|blog|other",
+  "product_name": "SpecificBrandName",
+  "tagline": "Punchy one-liner headline for the hero or main section",
+  "design_archetype": "apple|stripe|linear|notion...",
+  "layout_system": "centered-stack|split-screen|bento-grid...",
+  "visual_style": "glassmorphism|neumorphism|brutalist...",
+  "interaction_style": "hover-reveal|scrolling-story|tab-switching...",
+  "design_seed": 1234,
+  "aesthetic": "dark-tech|editorial|luxury|playful|brutalist|glassmorphism|corporate-clean|warm-organic|neon-dark|minimal",
+  "font_heading": "Google Font Name",
+  "font_body": "Google Font Name",
+  "bg_color": "bg-slate-950",
+  "primary_color": "indigo-500",
+  "text_color": "text-zinc-100",
+  "sections": ["FloatingNavbar", "SplitHero", "BentoFeatures", "InteractiveStats", "Footer"],
+  "layout_notes": "One sentence describing special layout: e.g. sidebar layout, full-bleed hero, card grid with hover reveal"
+}}
 """
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ─── STEP 2: BUILDER ──────────────────────────────────────────────────────────
+# Receives the plan as explicit hard-coded values in the prompt.
+# The plan is NOT described — it IS the instruction.
+
+BUILDER_PROMPT = """
+You are an expert React + Tailwind CSS developer.
+Build a Vite + React project. Follow every constraint below. Zero deviation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HARD CONSTRAINTS — YOUR CODE MUST MATCH THESE EXACTLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Page type         : {page_type}
+Brand name        : {product_name}
+Hero tagline      : "{tagline}"
+Design Archetype  : {design_archetype}
+Layout System     : {layout_system}
+Visual Style      : {visual_style}
+Interaction Style : {interaction_style}
+Design Seed       : {design_seed}
+Aesthetic         : {aesthetic}
+Heading font      : {font_heading}  ← use this for all h1/h2/h3
+Body font         : {font_body}     ← use this for all body text
+Background        : {bg_color}      ← outermost div className
+Primary accent    : {primary_color} ← buttons, links, highlights
+Body text         : {text_color}    ← default text color
+Layout            : {layout_notes}
+
+FILES TO CREATE (one component per file, in this order):
+{sections_numbered}
+
+DO NOT add extra sections. DO NOT skip any section. Build exactly these files.
+Force different spacing systems, card styles, content hierarchy, section ordering, and visual composition based on the requested Design Archetype, Layout System, and Visual Style. Build the exact component variants specified (e.g. SplitHero, BentoFeatures).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Single JSON object. First character: {{   No markdown. No explanation.
+
+{{
+  "files": {{
+    "App.jsx": "...complete file content as a JSON string...",
+    "components/ComponentName.jsx": "...complete file content...",
+    "components/ComponentName2.jsx": "..."
+  }}
+}}
+
+String escaping inside file content: newlines → \\n   double quotes → \\"
+Every file must be COMPLETE. No truncation. No "// ... rest of code". No TODO.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REACT RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Normal imports — this is a real Vite project:
+   import React, {{ useState, useEffect, useRef }} from 'react'
+   import {{ ArrowRight, Star, Check, Menu, X }} from 'lucide-react'
+   import Hero from './components/Hero'
+
+✅ Normal export default:
+   export default function ComponentName() {{ ... }}
+
+✅ App.jsx MUST:
+   1. Import every component from the sections list above
+   2. Render them in order inside one root div
+   3. Apply fonts via a <style> tag at the top of the return:
+      <style>{{`
+        @import url('https://fonts.googleapis.com/css2?family={font_heading_url}:wght@300;400;500;600;700;800&family={font_body_url}:wght@300;400;500;600&display=swap');
+        body {{ font-family: '{font_body}', sans-serif; }}
+        h1, h2, h3, h4, h5, h6 {{ font-family: '{font_heading}', sans-serif; }}
+      `}}</style>
+   4. Set root background: <div className="{bg_color} min-h-screen {text_color}">
+
+✅ Colors: use {primary_color} for buttons and accents throughout.
+   Examples: bg-{primary_color}, text-{primary_color}, border-{primary_color}
+
+✅ Content: use "{product_name}" as the brand. Use realistic domain-specific copy.
+   Real prices. Real feature names. Real team names. Real metric numbers.
+   NOT: "Feature 1", "Lorem ipsum", "Item 1", "John Doe"
+
+✅ Interactivity: useState for mobile menu toggle, tabs, accordion, counters.
+   Every button/link has: hover:opacity-90 transition-all duration-200 cursor-pointer
+
+✅ Responsive: sm: md: lg: xl: breakpoints. Mobile-first.
+
+✅ Every .map() call has a key prop on the root element.
+
+DO NOT USE:
+  ❌ CSS files or CSS modules
+  ❌ React Router, Link, useNavigate, BrowserRouter
+  ❌ fetch(), axios, useQuery, or any data fetching
+  ❌ framer-motion, gsap, recharts, chart.js, d3
+  ❌ next/image, next/link, or anything from next
+  ❌ Any npm package except: react, react-dom, lucide-react, tailwindcss
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRITICAL OUTPUT CONTRACT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Every file content must begin directly with:
+import ...
+or
+export ...
+
+Never generate:
+<!-- -->
+### headings
+File:
+Filename:
+markdown fences
+explanations
+
+If generated, regenerate the file. Nothing may appear before the first import or export statement in any file.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ORIGINAL USER REQUEST (for content/copy inspiration):
+"{user_prompt}"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Generate now. Output starts with {{
+"""
+
+
+# ─── EDIT ─────────────────────────────────────────────────────────────────────
+
 EDIT_SYSTEM_PROMPT = """
 You are editing an existing React + Tailwind project.
+Output the COMPLETE updated file structure as JSON.
 
-CURRENT PROJECT META:
+ORIGINAL DESIGN PLAN:
 {meta}
 
 CURRENT FILES:
 {current_files}
 
-USER EDIT REQUEST:
-{edit_prompt}
+USER EDIT REQUEST: "{edit_prompt}"
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-HOW TO HANDLE EDITS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━ HOW TO HANDLE EDITS ━━━
+"make it dark" / color change    → update bg/text/border classes in ALL files
+"add a [section]"                → create new components/X.jsx + add to App.jsx
+"remove [section]"               → delete component AND remove from App.jsx
+"change headline / copy"         → update text in the relevant component only
+"change font"                    → update @import and font-family in App.jsx
+"more minimal / bolder / bigger" → update spacing, typography, weight across files
+"add interactivity"              → add useState + event handlers
 
-For COLOR / THEME changes ("make it dark", "change to green"):
-  → Update color classes throughout ALL files. Be thorough.
-  → Update the Google Font if the aesthetic changes.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRITICAL OUTPUT CONTRACT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-For LAYOUT changes ("make the hero full screen", "use 2 columns"):
-  → Only modify the affected component file.
+Every file content must begin directly with:
+import ...
+or
+export ...
 
-For ADD SECTION requests ("add a pricing section", "add testimonials"):
-  → Create a new components/NewSection.jsx file with complete content.
-  → Add import + usage to App.jsx.
+Never generate:
+<!-- -->
+### headings
+File:
+Filename:
+markdown fences
+explanations
 
-For REMOVE SECTION requests ("remove the FAQ"):
-  → Remove the component file AND remove its import/usage from App.jsx.
+If generated, regenerate the file. Nothing may appear before the first import or export statement in any file.
 
-For CONTENT changes ("change the headline", "use a blue accent"):
-  → Modify just the text/color in the affected files.
-
-For STYLE changes ("make it more minimal", "use serif fonts"):
-  → Update aesthetic, typography, spacing across all relevant files.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-OUTPUT: Same JSON format. Include ALL files (changed and unchanged).
+Output same JSON format. Include ALL files (changed and unchanged).
 First character: {
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
-
 
 FIX_SYSTEM_PROMPT = """
 You are fixing a broken React sandbox component. Output the COMPLETE fixed file.

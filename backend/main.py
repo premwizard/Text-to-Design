@@ -1,6 +1,10 @@
 import logging
 import sys
+import asyncio
 from pathlib import Path
+
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
@@ -11,6 +15,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.routes.generate_ui import router as generate_router
+from backend.routes.fix_jsx import router as fix_jsx_router
 from backend.services.logger import setup_logging
 from backend.rag.manager import setup_rag
 
@@ -45,3 +50,4 @@ async def health_check():
 
 
 app.include_router(generate_router)
+app.include_router(fix_jsx_router)
