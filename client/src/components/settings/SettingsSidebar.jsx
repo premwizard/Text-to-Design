@@ -22,7 +22,7 @@ export const SETTINGS_SECTIONS = [
 
 export function SettingsSidebar({ activeSection, onSelect }) {
   return (
-    <nav className="w-full md:w-64 shrink-0 flex flex-col gap-1">
+    <nav className="w-full shrink-0 flex flex-col gap-1.5 p-2 bg-black/20 rounded-3xl border border-white/5 backdrop-blur-xl">
       {SETTINGS_SECTIONS.map((section) => {
         const Icon = section.icon;
         const isActive = activeSection === section.id;
@@ -32,18 +32,23 @@ export function SettingsSidebar({ activeSection, onSelect }) {
             key={section.id}
             onClick={() => onSelect(section.id)}
             className={cn(
-              "relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors text-left",
+              "relative flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 text-left overflow-hidden group",
               isActive
                 ? section.danger ? "text-rose-400" : "text-white"
-                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
+                : "text-zinc-400 hover:text-white"
             )}
           >
+            {!isActive && (
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+            )}
             {isActive && (
               <motion.div
                 layoutId="activeSettingsTab"
                 className={cn(
-                  "absolute inset-0 rounded-xl",
-                  section.danger ? "bg-rose-500/10 border border-rose-500/20" : "bg-white/10 border border-white/5"
+                  "absolute inset-0 rounded-2xl",
+                  section.danger 
+                    ? "bg-rose-500/10 border border-rose-500/20 shadow-[0_0_15px_rgba(244,63,94,0.1)]" 
+                    : "bg-white/10 border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
                 )}
                 initial={false}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}

@@ -58,7 +58,8 @@ export function AnimatedBackground() {
 
     const drawGrid = () => {
       const gridSize = 40;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      const isLight = document.documentElement.classList.contains('light-theme');
+      ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.03)';
       ctx.lineWidth = 1;
       
       const offset = (Date.now() / 50) % gridSize;
@@ -79,16 +80,10 @@ export function AnimatedBackground() {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw dark background gradient
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2, canvas.height / 2, 0,
-        canvas.width / 2, canvas.height / 2, canvas.width
-      );
-      gradient.addColorStop(0, 'rgba(15, 15, 20, 1)');
-      gradient.addColorStop(1, 'rgba(5, 5, 8, 1)');
+      // Determine if light theme is active by checking document class or body bg
+      const isLight = document.documentElement.classList.contains('light-theme');
       
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // We don't draw a solid background here anymore so CSS bg-app shows through.
       
       // Draw grid
       drawGrid();

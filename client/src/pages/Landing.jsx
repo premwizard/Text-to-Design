@@ -30,7 +30,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative bg-[#050505] text-zinc-100 min-h-screen font-sans selection:bg-sky-500/30 overflow-hidden w-full">
+    <div ref={containerRef} className="relative bg-app text-zinc-100 min-h-screen font-sans selection:bg-sky-500/30 overflow-hidden w-full">
       
       {/* --- GLOBAL LIVING BACKGROUND --- */}
       <div className="fixed inset-0 pointer-events-none z-0">

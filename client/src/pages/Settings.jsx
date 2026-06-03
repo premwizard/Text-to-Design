@@ -33,7 +33,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="h-screen w-screen bg-[#050505] text-zinc-100 flex flex-col overflow-hidden font-sans select-none relative">
+    <div className="h-screen w-screen bg-app text-zinc-100 flex flex-col overflow-hidden font-sans select-none relative">
       <AnimatedBackground />
       <TopNav loading={false} projectName="Settings" />
 
@@ -41,22 +41,22 @@ export default function Settings() {
         <LeftSidebar />
 
         <div className="flex-1 flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-3xl shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
-          <main className="flex-1 overflow-y-auto w-full p-6 lg:p-12 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          <main className="flex-1 overflow-y-auto w-full p-6 lg:p-12 xl:p-16 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
             
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               
-              <div className="mb-10">
-                <h1 className="text-3xl font-display font-bold text-white tracking-tight mb-2">
+              <div className="mb-12">
+                <h1 className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 tracking-tight mb-3">
                   Settings
                 </h1>
-                <p className="text-zinc-400">
+                <p className="text-zinc-400 text-lg max-w-2xl">
                   Manage your account preferences and customize your workspace.
                 </p>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-8 lg:gap-12 relative items-start">
+              <div className="flex flex-col md:flex-row gap-10 lg:gap-16 relative items-start">
                 {/* Sticky Sidebar */}
-                <div className="w-full md:w-64 shrink-0 md:sticky md:top-0">
+                <div className="w-full md:w-[280px] shrink-0 md:sticky md:top-6">
                   <SettingsSidebar 
                     activeSection={activeSection} 
                     onSelect={setActiveSection} 

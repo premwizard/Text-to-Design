@@ -88,7 +88,7 @@ export default function Templates() {
   const showRecent = recentlyUsed.length > 0 && activeCategory === 'All' && searchQuery === '';
 
   return (
-    <div className="h-screen w-screen bg-[#050505] text-zinc-100 flex flex-col overflow-hidden font-sans select-none relative">
+    <div className="h-screen w-screen bg-app text-zinc-100 flex flex-col overflow-hidden font-sans select-none relative">
       <AnimatedBackground />
       <TopNav loading={false} projectName="Templates" />
 

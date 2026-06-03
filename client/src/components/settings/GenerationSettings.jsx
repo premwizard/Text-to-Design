@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toggle } from '../ui/Toggle';
 
 export function GenerationSettings() {
   return (
@@ -8,10 +9,11 @@ export function GenerationSettings() {
         <p className="text-sm text-zinc-400">Tweak the AI generation behavior and output quality.</p>
       </div>
 
-      <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl space-y-8">
+      <div className="bg-zinc-900/30 border border-white/5 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
         
         {/* Toggles */}
-        <div className="space-y-4">
+        <div className="space-y-6 relative z-10">
           <h3 className="text-sm font-semibold text-white mb-4">Automation</h3>
           
           {[
@@ -26,18 +28,15 @@ export function GenerationSettings() {
                 <p className="text-sm font-medium text-zinc-200">{setting.label}</p>
                 <p className="text-xs text-zinc-500">{setting.desc}</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
-              </label>
+              <Toggle defaultChecked />
             </div>
           ))}
         </div>
 
-        <div className="w-full h-px bg-white/5" />
+        <div className="w-full h-px bg-white/5 my-8 relative z-10" />
 
         {/* Sliders */}
-        <div className="space-y-6">
+        <div className="space-y-8 relative z-10">
           <h3 className="text-sm font-semibold text-white mb-4">Quality & Performance</h3>
           
           {[

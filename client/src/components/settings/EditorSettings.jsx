@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toggle } from '../ui/Toggle';
 
 export function EditorSettings() {
   return (
@@ -8,9 +9,10 @@ export function EditorSettings() {
         <p className="text-sm text-zinc-400">Customize the integrated code editor experience.</p>
       </div>
 
-      <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl space-y-8">
+      <div className="bg-zinc-900/30 border border-white/5 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
           {/* Toggles */}
           <div className="space-y-5">
             <h3 className="text-sm font-semibold text-white mb-4">Preferences</h3>
@@ -22,19 +24,16 @@ export function EditorSettings() {
               { id: 'minimap', label: 'Minimap', checked: false },
               { id: 'auto-save', label: 'Auto Save', checked: true }
             ].map(setting => (
-              <div key={setting.id} className="flex items-center justify-between">
+              <div key={setting.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors -mx-3">
                 <span className="text-sm font-medium text-zinc-300">{setting.label}</span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" defaultChecked={setting.checked} />
-                  <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-violet-600"></div>
-                </label>
+                <Toggle defaultChecked={setting.checked} />
               </div>
             ))}
           </div>
 
           {/* Dropdowns */}
           <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-white mb-4">Appearance</h3>
+            <h3 className="text-sm font-semibold text-white mb-6">Appearance</h3>
             
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-300 block">Font Size</label>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bell, ShieldAlert, Zap } from 'lucide-react';
+import { Toggle } from '../ui/Toggle';
 
 export function NotificationSettings() {
   return (
@@ -9,9 +10,10 @@ export function NotificationSettings() {
         <p className="text-sm text-zinc-400">Manage what events trigger alerts.</p>
       </div>
 
-      <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-xl space-y-8">
+      <div className="bg-zinc-900/30 border border-white/5 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
         
-        <div className="space-y-5">
+        <div className="space-y-4 relative z-10">
           {[
             { id: 'gen-complete', label: 'Generation Complete', desc: 'Notify when AI finishes writing code.', icon: Zap, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
             { id: 'build-fail', label: 'Build Failed', desc: 'Alert when a syntax error breaks the preview.', icon: ShieldAlert, color: 'text-rose-400', bg: 'bg-rose-400/10' },
@@ -21,19 +23,16 @@ export function NotificationSettings() {
             const Icon = setting.icon;
             return (
               <div key={setting.id} className="flex items-start justify-between p-4 rounded-xl bg-black/20 border border-white/5 hover:border-white/10 transition-colors">
-                <div className="flex gap-4">
-                  <div className={`p-2 rounded-lg ${setting.bg} ${setting.color} mt-0.5`}>
-                    <Icon size={18} />
+                <div className="flex gap-4 items-center">
+                  <div className={`p-2.5 rounded-xl ${setting.bg} ${setting.color}`}>
+                    <Icon size={20} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-zinc-200">{setting.label}</p>
-                    <p className="text-xs text-zinc-500 mt-1">{setting.desc}</p>
+                    <p className="text-sm font-bold text-zinc-200 mb-0.5">{setting.label}</p>
+                    <p className="text-xs text-zinc-500">{setting.desc}</p>
                   </div>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer mt-1">
-                  <input type="checkbox" className="sr-only peer" defaultChecked />
-                  <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
-                </label>
+                <Toggle defaultChecked />
               </div>
             );
           })}
