@@ -23,13 +23,6 @@ export function Navbar() {
           <span className="font-bold text-2xl tracking-tight text-white">SynapseAI</span>
         </Link>
 
-        {/* Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
-          <a href="#features" className="hover:text-white transition-colors">Features</a>
-          <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
-          <a href="#showcase" className="hover:text-white transition-colors">Showcase</a>
-          <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-        </div>
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-6">

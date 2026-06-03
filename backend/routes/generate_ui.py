@@ -66,6 +66,53 @@ def _repair_json_escapes(raw: str) -> str:
     return ''.join(result)
 
 
+def _repair_truncated_json(raw: str) -> str:
+    """
+    Attempt to close an LLM response that was truncated mid-stream.
+    Handles:
+      - Unterminated string literals  → closes the open quote
+      - Unbalanced arrays / objects   → appends matching ] or } closers
+
+    This is a best-effort repair and is only called after both the
+    initial parse and the escape-repair pass have already failed.
+    """
+    result = []
+    in_string = False
+    escaped = False
+    stack = []  # tracks '{' and '[' nesting
+
+    for ch in raw:
+        result.append(ch)
+        if escaped:
+            escaped = False
+            continue
+        if ch == '\\' and in_string:
+            escaped = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if not in_string:
+            if ch == '{' or ch == '[':
+                stack.append(ch)
+            elif ch == '}':
+                if stack and stack[-1] == '{':
+                    stack.pop()
+            elif ch == ']':
+                if stack and stack[-1] == '[':
+                    stack.pop()
+
+    # Close any open string first
+    if in_string:
+        result.append('"')
+
+    # Close remaining open containers in LIFO order
+    for opener in reversed(stack):
+        result.append('}' if opener == '{' else ']')
+
+    return ''.join(result)
+
+
 def _repair_jsx(code: str) -> str:
     """
     Post-process LLM JSX output to ensure it is complete and balanced:
@@ -241,6 +288,18 @@ async def stream_jsx(request: StreamRequest):
                 planner_prompt = PLANNER_PROMPT.format(user_prompt=request.prompt)
                 
                 try:
+                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Understanding Prompt'})}\n\n"
+                    await anyio.sleep(0.2)
+                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Determining Page Type'})}\n\n"
+                    await anyio.sleep(0.2)
+                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Selecting Design System'})}\n\n"
+                    await anyio.sleep(0.2)
+                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Creating Component Structure'})}\n\n"
+                    await anyio.sleep(0.2)
+                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Defining Visual Style'})}\n\n"
+                    await anyio.sleep(0.2)
+                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Building Design Plan'})}\n\n"
+
                     planner_resp = await generate_ai(
                         task_type="planner",
                         system_prompt=None,
@@ -262,6 +321,12 @@ async def stream_jsx(request: StreamRequest):
                         
                     print("PARSED PLAN")
                     print(str(plan).encode('ascii', 'replace').decode('ascii'))
+                    
+                    # Yield the plan so frontend can display the Design Plan Panel
+                    yield f"data: {json.dumps({'type': 'plan', 'plan': plan})}\n\n"
+                    await anyio.sleep(0.5) # Give user a second to read the plan
+                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Generating React Components'})}\n\n"
+                    
                 except Exception as e:
                     logging.error(f"Planner failed: {e}")
                     raise e
@@ -368,11 +433,17 @@ async def stream_jsx(request: StreamRequest):
                             parsed_data = json.loads(repaired)
                             logging.warning("Escape repair succeeded.")
                         except json.JSONDecodeError as second_err:
-                            raise ValueError(
-                                f"JSON parse failed even after escape repair. "
-                                f"Original error: {first_err}. "
-                                f"Post-repair error: {second_err}"
-                            ) from second_err
+                            logging.warning(f"Escape repair failed ({second_err}), attempting truncation repair...")
+                            truncation_repaired = _repair_truncated_json(repaired)
+                            try:
+                                parsed_data = json.loads(truncation_repaired)
+                                logging.warning("Truncation repair succeeded — response was likely cut off mid-stream.")
+                            except json.JSONDecodeError as third_err:
+                                raise ValueError(
+                                    f"JSON parse failed even after escape + truncation repair. "
+                                    f"Original error: {first_err}. "
+                                    f"Post-repair error: {third_err}"
+                                ) from third_err
                 else:
                     raise ValueError("No valid JSON object found in response")
                 
@@ -405,6 +476,8 @@ async def stream_jsx(request: StreamRequest):
                 logging.warning("=" * 80)
 
                 write_files(cleaned_files)
+                
+                yield f"data: {json.dumps({'type': 'timeline', 'step': 'Finalizing Project'})}\n\n"
                 
                 max_retries = 10
                 retries = 0

@@ -47,12 +47,6 @@ export function HeroSection() {
         '-=0.5'
       );
 
-      // Stats strip
-      tl.fromTo(statsRef.current.children,
-        { y: 18, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out' },
-        '-=0.3'
-      );
 
       // ── ScrollTrigger parallax on content ─────────────────────────────
       gsap.to('.hero-content-inner', {
@@ -108,8 +102,8 @@ export function HeroSection() {
         {/* Headline */}
         <h1
           ref={titleRef}
-          className="text-6xl md:text-8xl lg:text-[96px] font-black tracking-tighter text-white mb-8 leading-[1.05]"
-          style={{ perspective: '1000px' }}
+          className="text-6xl md:text-8xl lg:text-[96px] font-black text-[#fdfbf7] mb-8 leading-[1.05]"
+          style={{ perspective: '1000px', textShadow: '0 4px 20px rgba(0,0,0,0.4)' }}
         >
           <span className="inline-block origin-bottom will-change-transform">Turn</span>{' '}
           <span className="inline-block origin-bottom will-change-transform">Ideas</span>{' '}
@@ -126,7 +120,7 @@ export function HeroSection() {
             </span>
           </span>{' '}
           <span className="inline-block origin-bottom will-change-transform">UI</span>{' '}
-          <span className="inline-block origin-bottom will-change-transform text-zinc-500">
+          <span className="inline-block origin-bottom will-change-transform text-[#c2baa6]">
             Instantly.
           </span>
         </h1>
@@ -134,10 +128,11 @@ export function HeroSection() {
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="text-xl md:text-2xl text-zinc-400 max-w-2xl mx-auto mb-12 leading-relaxed font-medium"
+          className="text-xl md:text-2xl text-[#d9d4cc] max-w-2xl mx-auto mb-12 leading-relaxed font-medium"
+          style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}
         >
           Describe your product. Watch our advanced AI generate complete{' '}
-          <span className="text-zinc-200 font-semibold">React + Tailwind</span> interfaces
+          <span className="text-[#f1ece4] font-semibold">React + Tailwind</span> interfaces
           in seconds. Build faster, iterate smarter, ship today.
         </p>
 
@@ -158,38 +153,12 @@ export function HeroSection() {
               }}
             />
             <Zap size={18} className="relative z-10" />
-            <span className="relative z-10">Start Building Free</span>
+            <span className="relative z-10">Start Building</span>
           </Link>
 
-          <a
-            href="#demo"
-            id="hero-cta-secondary"
-            className="group flex items-center justify-center gap-2 bg-zinc-900/70 text-white border border-zinc-700/60 px-10 py-5 rounded-2xl text-lg font-bold hover:bg-zinc-800/80 transition-all hover:scale-105 w-full sm:w-auto backdrop-blur-md"
-            style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.3)' }}
-          >
-            Watch Demo
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </a>
         </div>
 
-        {/* Stats strip */}
-        <div
-          ref={statsRef}
-          className="flex flex-wrap items-center justify-center gap-8 text-sm text-zinc-500"
-        >
-          {[
-            { value: '12k+',  label: 'Components generated' },
-            { value: '98%',   label: 'Accuracy rate' },
-            { value: '<3s',   label: 'Generation time' },
-            { value: '4.9★',  label: 'User rating' },
-          ].map((s, i) => (
-            <div key={i} className="flex items-center gap-2">
-              {i > 0 && <span className="w-px h-4 bg-zinc-800" />}
-              <span className="text-zinc-200 font-bold">{s.value}</span>
-              <span>{s.label}</span>
-            </div>
-          ))}
-        </div>
+
       </div>
 
       {/* ── Bottom fade to next section ── */}

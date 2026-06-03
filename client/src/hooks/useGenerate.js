@@ -9,11 +9,15 @@ export function useGenerate() {
   const [error, setError]     = useState('');
   const [statusText, setStatusText] = useState('');
   const [generationId, setGenerationId] = useState(0);
+  const [plan, setPlan] = useState(null);
+  const [timelineStep, setTimelineStep] = useState('');
 
   const generate = useCallback(async (prompt, currentCode = null) => {
     setLoading(true);
     setError('');
     setCode('');
+    setPlan(null);
+    setTimelineStep('');
     setStatusText('Generating layout code...');
     setGenerationId(prev => prev + 1);
 
@@ -81,6 +85,12 @@ export function useGenerate() {
               setStatusText(parsed.message || "Using backup AI model...");
               fullCodeAccumulator = "";
               setCode("");
+            }
+            if (parsed.type === "timeline") {
+              setTimelineStep(parsed.step);
+            }
+            if (parsed.type === "plan") {
+              setPlan(parsed.plan);
             }
             if (parsed.status) {
               if (parsed.status === "building") {
@@ -192,5 +202,5 @@ export function useGenerate() {
     }
   }, []);
 
-  return { code, setCode, generate, fix, loading, error, statusText, generationId };
+  return { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep };
 }

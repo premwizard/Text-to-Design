@@ -4,11 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { Navbar } from '../components/landing/Navbar';
 import { HeroSection } from '../components/landing/HeroSection';
-import { InteractiveDemo } from '../components/landing/InteractiveDemo';
-import { CapabilitiesBento } from '../components/landing/CapabilitiesBento';
-import { HowItWorks } from '../components/landing/HowItWorks';
-import { StatsAndTestimonials } from '../components/landing/StatsAndTestimonials';
-import { PricingAndFAQ } from '../components/landing/PricingAndFAQ';
 import { Footer } from '../components/landing/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -54,11 +49,6 @@ export default function Landing() {
       <div className="relative z-10 w-full flex flex-col items-center">
         <Navbar />
         <HeroSection />
-        <InteractiveDemo />
-        <CapabilitiesBento />
-        <HowItWorks />
-        <StatsAndTestimonials />
-        <PricingAndFAQ />
         <Footer />
       </div>
     </div>

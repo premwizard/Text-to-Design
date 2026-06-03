@@ -4,6 +4,7 @@ import { TopNav } from '../components/layout/TopNav';
 import { LeftSidebar } from '../components/layout/LeftSidebar';
 import { PromptPanel } from '../components/prompt/PromptPanel';
 import { WorkspacePanel } from '../components/workspace/WorkspacePanel';
+import { DesignPlanPanel } from '../components/workspace/DesignPlanPanel';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -43,7 +44,7 @@ function Home() {
   const [modalContent, setModalContent] = useState(null);
   const [sandboxFiles, setSandboxFiles] = useState({});
 
-  const { code, setCode, generate, fix, loading, error, statusText, generationId } = useGenerate();
+  const { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep } = useGenerate();
 
   useEffect(() => {
     const handleSandboxMessage = (event) => {
@@ -201,16 +202,20 @@ function Home() {
                 </button>
               </div>
             )}
-            <WorkspacePanel 
-              code={code}
-              setCode={setCode}
-              loading={loading}
-              statusText={statusText}
-              generationId={generationId}
-              localError={localError}
-              onFullscreen={() => setIsFullscreen(true)}
-              onRuntimeError={handleRuntimeError}
-            />
+            {(!code || code.length < 50) && loading ? (
+              <DesignPlanPanel plan={plan} timelineStep={timelineStep} />
+            ) : (
+              <WorkspacePanel 
+                code={code}
+                setCode={setCode}
+                loading={loading}
+                statusText={statusText}
+                generationId={generationId}
+                localError={localError}
+                onFullscreen={() => setIsFullscreen(true)}
+                onRuntimeError={handleRuntimeError}
+              />
+            )}
           </div>
         ) : null}
 
