@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
 import { LivePreview } from '../LivePreview';
 import { ProjectExplorer } from './ProjectExplorer';
 import { FileViewer } from './FileViewer';

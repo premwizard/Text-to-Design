@@ -1,25 +1,29 @@
 import React from 'react';
-import SimpleNavbar from './components/SimpleNavbar';
-import HeroDropdown from './components/HeroDropdown';
-import FeatureCards from './components/FeatureCards';
-import InteractiveDemo from './components/InteractiveDemo';
-import MinimalFooter from './components/MinimalFooter';
+import FloatingNavbar from './components/FloatingNavbar';
+import SplitHero from './components/SplitHero';
+import FeatureGrid from './components/FeatureGrid';
+import InteractivePromptGenerator from './components/InteractivePromptGenerator';
+import UserGallery from './components/UserGallery';
+import PricingTiers from './components/PricingTiers';
+import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <div className="bg-gray-50 min-h-screen text-gray-800">
+    <div className="bg-zinc-950 min-h-screen text-gray-200 overflow-hidden">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'DM Sans', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'DM Sans', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
       `}</style>
-      <SimpleNavbar />
-      <main className="space-y-24 md:space-y-32 py-12">
-        <HeroDropdown />
-        <FeatureCards />
-        <InteractiveDemo />
+      <FloatingNavbar />
+      <main>
+        <SplitHero />
+        <FeatureGrid />
+        <InteractivePromptGenerator />
+        <UserGallery />
+        <PricingTiers />
       </main>
-      <MinimalFooter />
+      <Footer />
     </div>
   );
 }
