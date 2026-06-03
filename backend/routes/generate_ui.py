@@ -444,16 +444,6 @@ async def stream_jsx(request: StreamRequest):
 
             yield "data: [DONE]\n\n"
 
-                    return
-
-                # Start Vite dev server if not running
-                if not vite_is_running():
-                    await start_vite()
-            except Exception as e:
-                logging.error(f"Error parsing or writing generated files: {e}")
-                yield f"data: {json.dumps({'error': f'Failed to write files: {str(e)}'})}\n\n"
-
-            yield "data: [DONE]\n\n"
 
         except Exception as e:
             logging.exception("Error streaming JSX")

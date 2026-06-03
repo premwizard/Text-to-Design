@@ -3,11 +3,14 @@ import { Sparkles, Settings, User, CreditCard } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+import { useNavigate } from 'react-router-dom';
+
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
 export function TopNav({ loading, projectName = 'Untitled Project' }) {
+  const navigate = useNavigate();
   return (
     <header className="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-zinc-950/40 backdrop-blur-xl shrink-0 z-20 shadow-sm relative">
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
@@ -51,7 +54,7 @@ export function TopNav({ loading, projectName = 'Untitled Project' }) {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          <button className="text-zinc-400 hover:text-white transition-colors p-2.5 rounded-xl hover:bg-white/10">
+          <button onClick={() => navigate('/settings')} className="text-zinc-400 hover:text-white transition-colors p-2.5 rounded-xl hover:bg-white/10">
             <Settings size={22} />
           </button>
           <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 transition-all shadow-md ml-1">

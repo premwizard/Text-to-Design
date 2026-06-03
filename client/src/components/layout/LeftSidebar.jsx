@@ -105,13 +105,20 @@ export function LeftSidebar() {
       {/* Bottom Actions */}
       <div className="p-4 border-t border-white/5">
         <button
+          onClick={() => navigate('/settings')}
           className={cn(
             "w-full flex items-center gap-4 px-3.5 py-3.5 rounded-xl text-sm font-semibold text-zinc-400 hover:bg-white/5 hover:text-zinc-200 transition-all duration-300 group",
-            isCollapsed && "justify-center"
+            isCollapsed && "justify-center",
+            location.pathname === '/settings' && "bg-violet-500/15 text-violet-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
           )}
           title={isCollapsed ? "Settings" : undefined}
         >
-          <div className="p-1.5 rounded-lg bg-zinc-900/50 text-zinc-500 group-hover:text-zinc-300 group-hover:bg-zinc-800 transition-all duration-300 group-hover:rotate-45">
+          <div className={cn(
+            "p-1.5 rounded-lg transition-all duration-300",
+            location.pathname === '/settings' 
+              ? "bg-violet-500/20 text-violet-400 scale-110" 
+              : "bg-zinc-900/50 text-zinc-500 group-hover:text-zinc-300 group-hover:bg-zinc-800 group-hover:rotate-45"
+          )}>
             <Settings size={24} className="shrink-0" />
           </div>
           {!isCollapsed && <span className="tracking-wide">Settings</span>}
