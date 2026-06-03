@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Plus, 
   Clock, 
@@ -28,7 +29,20 @@ const NAV_ITEMS = [
 
 export function LeftSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('new');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Determine active tab based on route
+  const activeTab = location.pathname === '/templates' ? 'templates' : 'new';
+
+  const handleNavClick = (id) => {
+    if (id === 'templates') {
+      navigate('/templates');
+    } else if (id === 'new') {
+      navigate('/app');
+    }
+    // Other tabs can be implemented later
+  };
 
   return (
     <aside 
@@ -57,7 +71,7 @@ export function LeftSidebar() {
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => handleNavClick(item.id)}
               className={cn(
                 "w-full flex items-center gap-4 px-3.5 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 group relative hover:bg-white/5",
                 isActive 

@@ -44,11 +44,7 @@ export function TopNav({ loading, projectName = 'Untitled Project' }) {
           </span>
         </div>
 
-        {/* Credits Counter */}
-        <div className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer text-sm font-semibold ml-2 bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:bg-white/10">
-          <CreditCard size={18} />
-          <span>24 Credits</span>
-        </div>
+   
 
         {/* Divider */}
         <div className="w-px h-8 bg-white/10 mx-2" />

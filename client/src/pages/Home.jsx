@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useGenerate } from '../hooks/useGenerate';
 import { TopNav } from '../components/layout/TopNav';
 import { LeftSidebar } from '../components/layout/LeftSidebar';
@@ -42,7 +43,9 @@ function validateGeneratedCode(code) {
 }
 
 function Home() {
-  const [prompt, setPrompt] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [prompt, setPrompt] = useState(location.state?.initialPrompt || '');
   const [localError, setLocalError] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -69,6 +72,18 @@ function Home() {
     window.addEventListener('message', handleSandboxMessage);
     return () => window.removeEventListener('message', handleSandboxMessage);
   }, []);
+
+  // Handle auto-generation if initialPrompt is provided via navigation
+  useEffect(() => {
+    if (location.state?.initialPrompt) {
+      const p = location.state.initialPrompt;
+      // Clear the state so it doesn't trigger again on refresh
+      navigate('.', { replace: true, state: {} });
+      if (!loading) {
+        generate(p, null);
+      }
+    }
+  }, [location.state?.initialPrompt]);
 
   useEffect(() => {
     if (!code) return;
