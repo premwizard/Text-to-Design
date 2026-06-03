@@ -1,6 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { Sparkles, Paperclip, ArrowUp, Zap, ChevronDown, StopCircle } from 'lucide-react';
-import { cn } from './PromptPanel';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
 
 export function PromptComposer({ 
   prompt, 
