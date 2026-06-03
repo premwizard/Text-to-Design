@@ -13,13 +13,15 @@
 # BEFORE any code is written. Output feeds directly into BUILDER as constraints.
 
 PLANNER_PROMPT = """
-Analyse this UI request and output a design plan as JSON.
+Analyse this UI request and output exactly 4 DISTINCT design plans as a JSON array.
 
 REQUEST: "{user_prompt}"
 
 ━━━ CRITICAL RULES ━━━
+- You MUST generate exactly 4 variations.
+- Force unique combinations of design_archetype, layout_system, visual_style, and aesthetic across all 4 variations.
+- They must feel like four completely separate designers created them. Do not just change colors.
 - product_name: invent a SPECIFIC brand name matching the domain. Never "Acme" or "My App".
-  Examples: "Verdana" (restaurant), "Trackr" (dashboard), "Folio" (portfolio), "PaceIQ" (fitness app)
 - page_type: MUST match the request domain. Never default to "landing" if request says dashboard/portfolio/restaurant/etc.
 - design_archetype: choose from [apple, stripe, linear, notion, vercel, figma, airbnb, finance-terminal, analytics, crm, luxury-store, fashion-editorial, editorial-magazine, brutalist, creative-agency].
 - layout_system: choose from [centered-stack, split-screen, asymmetric-grid, bento-grid, masonry, dashboard-sidebar, floating-cards, fullscreen-sections, magazine-layout, zigzag-storytelling].
@@ -30,7 +32,6 @@ REQUEST: "{user_prompt}"
   Each entry must be a short PascalCase name like "Sidebar" or "MenuSection".
   Choose sections that make sense for THIS page_type.
   VARIATION RULE: You must NOT default to: Navbar → Hero → Features → Testimonials → CTA → Footer.
-  Force different spacing systems, card styles, content hierarchy, section ordering, and visual composition based on design_archetype and layout_system.
   Require the builder to generate different component variants. Examples:
     [SplitHero, CenteredHero, GradientHero, VideoHero, BentoFeatures, FeatureTimeline, TestimonialCarousel, InteractiveStats, FloatingNavbar]
 - aesthetic: match the industry:
@@ -56,26 +57,39 @@ REQUEST: "{user_prompt}"
     minimal       → "DM Sans" / "DM Sans"
     neon-dark     → "Outfit" / "Outfit"
 
-Output exactly this JSON shape. First character must be {{. No markdown. No extra text.
+Output exactly this JSON shape. First character must be [. No markdown. No extra text.
 
-{{
-  "page_type": "landing|ecommerce|dashboard|portfolio|restaurant|mobile_app|agency|event|blog|other",
-  "product_name": "SpecificBrandName",
-  "tagline": "Punchy one-liner headline for the hero or main section",
-  "design_archetype": "apple|stripe|linear|notion...",
-  "layout_system": "centered-stack|split-screen|bento-grid...",
-  "visual_style": "glassmorphism|neumorphism|brutalist...",
-  "interaction_style": "hover-reveal|scrolling-story|tab-switching...",
-  "design_seed": 1234,
-  "aesthetic": "dark-tech|editorial|luxury|playful|brutalist|glassmorphism|corporate-clean|warm-organic|neon-dark|minimal",
-  "font_heading": "Google Font Name",
-  "font_body": "Google Font Name",
-  "bg_color": "bg-slate-950",
-  "primary_color": "indigo-500",
-  "text_color": "text-zinc-100",
-  "sections": ["FloatingNavbar", "SplitHero", "BentoFeatures", "InteractiveStats", "Footer"],
-  "layout_notes": "One sentence describing special layout: e.g. sidebar layout, full-bleed hero, card grid with hover reveal"
-}}
+[
+  {
+    "id": "varA",
+    "name": "Creative Name (e.g., Linear Dark)",
+    "page_type": "landing|ecommerce|dashboard|portfolio|restaurant|mobile_app|agency|event|blog|other",
+    "product_name": "SpecificBrandName",
+    "tagline": "Punchy one-liner headline for the hero or main section",
+    "design_archetype": "apple|stripe|linear|notion...",
+    "layout_system": "centered-stack|split-screen|bento-grid...",
+    "visual_style": "glassmorphism|neumorphism|brutalist...",
+    "interaction_style": "hover-reveal|scrolling-story|tab-switching...",
+    "design_seed": 1234,
+    "aesthetic": "dark-tech|editorial|luxury|playful|brutalist|glassmorphism|corporate-clean|warm-organic|neon-dark|minimal",
+    "font_heading": "Google Font Name",
+    "font_body": "Google Font Name",
+    "bg_color": "bg-slate-950",
+    "primary_color": "indigo-500",
+    "text_color": "text-zinc-100",
+    "sections": ["FloatingNavbar", "SplitHero", "BentoFeatures", "InteractiveStats", "Footer"],
+    "layout_notes": "One sentence describing special layout: e.g. sidebar layout, full-bleed hero, card grid with hover reveal"
+  },
+  {
+    "id": "varB", ...
+  },
+  {
+    "id": "varC", ...
+  },
+  {
+    "id": "varD", ...
+  }
+]
 """
 
 

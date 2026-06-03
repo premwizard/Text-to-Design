@@ -4,13 +4,14 @@ import { useState, useCallback } from 'react';
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 export function useGenerate() {
-  const [code, setCode]       = useState('');
+  const [code, setCode]       = useState(''); // For backward compatibility/edits
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
   const [statusText, setStatusText] = useState('');
   const [generationId, setGenerationId] = useState(0);
   const [plan, setPlan] = useState(null);
   const [timelineStep, setTimelineStep] = useState('');
+  const [variations, setVariations] = useState({}); // { varId: { plan, code, status, timelineStep } }
 
   const generate = useCallback(async (prompt, currentCode = null) => {
     setLoading(true);
@@ -18,6 +19,7 @@ export function useGenerate() {
     setCode('');
     setPlan(null);
     setTimelineStep('');
+    setVariations({});
     setStatusText('Generating layout code...');
     setGenerationId(prev => prev + 1);
 
@@ -81,13 +83,28 @@ export function useGenerate() {
               done = true;
               break;
             }
+            
+            const vid = parsed.variation_id;
+            
+            if (parsed.type === "plans") {
+                const initialVars = {};
+                parsed.plans.forEach(p => {
+                    const id = p.id;
+                    initialVars[id] = { plan: p, code: '', status: 'waiting', timelineStep: '' };
+                });
+                setVariations(initialVars);
+            }
             if (parsed.type === "fallback") {
               setStatusText(parsed.message || "Using backup AI model...");
               fullCodeAccumulator = "";
               setCode("");
             }
             if (parsed.type === "timeline") {
-              setTimelineStep(parsed.step);
+              if (vid) {
+                  setVariations(prev => ({ ...prev, [vid]: { ...prev[vid], timelineStep: parsed.step } }));
+              } else {
+                  setTimelineStep(parsed.step);
+              }
             }
             if (parsed.type === "plan") {
               setPlan(parsed.plan);
@@ -104,8 +121,34 @@ export function useGenerate() {
               }
             }
             if (parsed.chunk) {
-              fullCodeAccumulator += parsed.chunk;
-              setCode(prev => prev + parsed.chunk);
+              if (vid) {
+                  setVariations(prev => ({
+                      ...prev,
+                      [vid]: {
+                          ...prev[vid],
+                          code: (prev[vid]?.code || '') + parsed.chunk,
+                          status: 'generating'
+                      }
+                  }));
+              } else {
+                  fullCodeAccumulator += parsed.chunk;
+                  setCode(prev => prev + parsed.chunk);
+              }
+            }
+            if (parsed.type === "variation_complete") {
+              if (vid) {
+                  setVariations(prev => ({
+                      ...prev,
+                      [vid]: {
+                          ...prev[vid],
+                          status: 'complete'
+                      }
+                  }));
+                  // Fire save-files for this variation to build it in sandbox
+                  // We get the latest code from React state, wait, we can't reliably read state in SSE loop.
+                  // But the code accumulates in fullCodeAccumulator? No, fullCodeAccumulator isn't per-variation!
+                  // We should fire save-files from a useEffect in Home.jsx when a variation hits 'complete'.
+              }
             }
           } catch {
             // Silently skip malformed SSE lines
@@ -177,13 +220,72 @@ export function useGenerate() {
               done = true;
               break;
             }
+            
+            const vid = parsed.variation_id;
+            
+            if (parsed.type === "plans") {
+                const initialVars = {};
+                parsed.plans.forEach(p => {
+                    const id = p.id;
+                    initialVars[id] = { plan: p, code: '', status: 'waiting', timelineStep: '' };
+                });
+                setVariations(initialVars);
+            }
             if (parsed.type === "fallback") {
               setStatusText(parsed.message || "Using backup AI model...");
               fullCodeAccumulator = "";
+              setCode("");
+            }
+            if (parsed.type === "timeline") {
+              if (vid) {
+                  setVariations(prev => ({ ...prev, [vid]: { ...prev[vid], timelineStep: parsed.step } }));
+              } else {
+                  setTimelineStep(parsed.step);
+              }
+            }
+            if (parsed.type === "plan") {
+              setPlan(parsed.plan);
+            }
+            if (parsed.status) {
+              if (parsed.status === "building") {
+                setStatusText("Building and verifying...");
+              } else if (parsed.status === "fixing") {
+                setStatusText(`Fixing build error in ${parsed.file || 'unknown'} (Attempt ${parsed.attempt}/10)...`);
+              } else if (parsed.status === "fallback_restart") {
+                setStatusText("Primary AI model is busy. Switching to backup model...");
+                fullCodeAccumulator = "";
+                setCode("");
+              }
             }
             if (parsed.chunk) {
-              fullCodeAccumulator += parsed.chunk;
-              setStatusText('Applying fix...');
+              if (vid) {
+                  setVariations(prev => ({
+                      ...prev,
+                      [vid]: {
+                          ...prev[vid],
+                          code: (prev[vid]?.code || '') + parsed.chunk,
+                          status: 'generating'
+                      }
+                  }));
+              } else {
+                  fullCodeAccumulator += parsed.chunk;
+                  setCode(prev => prev + parsed.chunk);
+              }
+            }
+            if (parsed.type === "variation_complete") {
+              if (vid) {
+                  setVariations(prev => ({
+                      ...prev,
+                      [vid]: {
+                          ...prev[vid],
+                          status: 'complete'
+                      }
+                  }));
+                  // Fire save-files for this variation to build it in sandbox
+                  // We get the latest code from React state, wait, we can't reliably read state in SSE loop.
+                  // But the code accumulates in fullCodeAccumulator? No, fullCodeAccumulator isn't per-variation!
+                  // We should fire save-files from a useEffect in Home.jsx when a variation hits 'complete'.
+              }
             }
           } catch {
             // Silently skip malformed SSE lines
@@ -202,5 +304,5 @@ export function useGenerate() {
     }
   }, []);
 
-  return { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep };
+  return { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations };
 }

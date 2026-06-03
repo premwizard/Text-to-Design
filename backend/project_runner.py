@@ -85,7 +85,7 @@ def log_invalid_file(filename: str, offending_token: str, code: str):
     print(first_20_lines)
 
 
-def write_files(files: dict[str, str]) -> list[str]:
+def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
     """
     Write a dict of { "relative/path.jsx": "file content" } into sandbox/src/.
     Returns list of written paths for logging.
@@ -117,7 +117,8 @@ def write_files(files: dict[str, str]) -> list[str]:
         if rel_path.startswith("src/"):
             rel_path = rel_path[4:]
 
-        dest = SRC_DIR / rel_path
+        base_dir = SRC_DIR / variation_id if variation_id else SRC_DIR
+        dest = base_dir / rel_path
         dest.parent.mkdir(parents=True, exist_ok=True)
 
         if dest.parent.name == "components":
@@ -133,7 +134,7 @@ def write_files(files: dict[str, str]) -> list[str]:
         written.append(str(dest.relative_to(SANDBOX_DIR)))
 
     # 3. Clean up stale components (files in components/ that weren't generated)
-    components_dir = SRC_DIR / "components"
+    components_dir = (SRC_DIR / variation_id / "components") if variation_id else (SRC_DIR / "components")
     if components_dir.exists():
         for existing_file in components_dir.glob("*.jsx"):
             if existing_file.resolve() not in new_component_paths:
@@ -142,9 +143,35 @@ def write_files(files: dict[str, str]) -> list[str]:
                     print(f"Deleted stale component: {existing_file.name}")
                 except Exception as e:
                     print(f"Failed to delete stale component {existing_file.name}: {e}")
+                    
+    # 3.5. If variation_id is provided, ensure entry points exist
+    if variation_id:
+        import shutil
+        var_dir = SRC_DIR / variation_id
+        for boilerplate in ["main.jsx", "index.css", "ErrorBoundary.jsx"]:
+            src_file = SRC_DIR / boilerplate
+            dst_file = var_dir / boilerplate
+            if src_file.exists() and not dst_file.exists():
+                shutil.copy2(src_file, dst_file)
+                
+        # Generate varX.html in sandbox dir
+        html_path = SANDBOX_DIR / f"{variation_id}.html"
+        html_content = f"""<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Variation {variation_id}</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/{variation_id}/main.jsx"></script>
+  </body>
+</html>"""
+        html_path.write_text(html_content, encoding="utf-8")
 
     # STEP 7: Read sandbox/src/App.jsx back from disk and print first 10 lines
-    app_path = SRC_DIR / "App.jsx"
+    app_path = (SRC_DIR / variation_id / "App.jsx") if variation_id else (SRC_DIR / "App.jsx")
     if app_path.exists():
         print("=" * 80)
         print("STEP 7: Read sandbox/src/App.jsx back from disk")

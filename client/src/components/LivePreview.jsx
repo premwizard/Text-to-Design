@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError }) {
+export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId }) {
   const iframeRef = useRef(null);
   const [runtimeError, setRuntimeError] = useState(null);
 
@@ -19,6 +19,10 @@ export function LivePreview({ code, loading = false, statusText = '', generation
   useEffect(() => {
     setRuntimeError(null);
   }, [code]);
+
+  const iframeSrc = variationId 
+    ? `${window.location.protocol}//${window.location.hostname}:5174/${variationId}.html`
+    : `${window.location.protocol}//${window.location.hostname}:5174`;
 
   return (
     <div className="w-full h-full relative overflow-hidden">
@@ -69,7 +73,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
       {code && (
         <iframe
           ref={iframeRef}
-          src={`${window.location.protocol}//${window.location.hostname}:5174`}
+          src={iframeSrc}
           className="w-full h-full border-0 bg-transparent"
           title="Sandbox Preview"
           sandbox="allow-scripts allow-popups allow-forms allow-same-origin"

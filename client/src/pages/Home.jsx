@@ -5,6 +5,7 @@ import { LeftSidebar } from '../components/layout/LeftSidebar';
 import { PromptPanel } from '../components/prompt/PromptPanel';
 import { WorkspacePanel } from '../components/workspace/WorkspacePanel';
 import { DesignPlanPanel } from '../components/workspace/DesignPlanPanel';
+import { VariationsGrid } from '../components/workspace/VariationsGrid';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -44,7 +45,8 @@ function Home() {
   const [modalContent, setModalContent] = useState(null);
   const [sandboxFiles, setSandboxFiles] = useState({});
 
-  const { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep } = useGenerate();
+  const { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations } = useGenerate();
+  const [activeVariationId, setActiveVariationId] = useState(null);
 
   useEffect(() => {
     const handleSandboxMessage = (event) => {
@@ -114,10 +116,58 @@ function Home() {
     return () => clearTimeout(timer);
   }, [code]);
 
+  // Save files for variations when they update
+  useEffect(() => {
+    if (!variations) return;
+    
+    // Find all complete or generating variations that need saving
+    Object.keys(variations).forEach(vid => {
+      const v = variations[vid];
+      if (!v.code || v.code.length < 50) return;
+      
+      let files = null;
+      try {
+        let cleanedCode = v.code.trim();
+        cleanedCode = cleanedCode.replace(/^```(?:json|jsx|js)?\s*\n?/i, '');
+        cleanedCode = cleanedCode.replace(/\n?```\s*$/, '');
+        cleanedCode = cleanedCode.trim();
+        if (cleanedCode.startsWith('{')) {
+          const parsed = JSON.parse(cleanedCode);
+          if (parsed && parsed.files) files = parsed.files;
+        }
+      } catch (e) {}
+      
+      if (!files) return;
+      
+      const sanitizedFiles = {};
+      for (const [filename, fileContent] of Object.entries(files)) {
+        sanitizedFiles[filename] = cleanGeneratedCode(fileContent);
+      }
+      
+      if (Object.keys(sanitizedFiles).length > 0) {
+        // Debounce the save per variation
+        clearTimeout(window[`saveTimer_${vid}`]);
+        window[`saveTimer_${vid}`] = setTimeout(async () => {
+          try {
+            await fetch(`${API_BASE}/save-files`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ files: sanitizedFiles, variation_id: vid }),
+            });
+          } catch (err) {
+            console.error("Failed to save variation files", err);
+          }
+        }, 1500); // Wait 1.5s to batch saves while generating
+      }
+    });
+  }, [variations]);
+
+
   const handleGenerate = () => {
     const trimmed = prompt.trim();
     if (!trimmed) return;
-    generate(trimmed, code || null);
+    setActiveVariationId(null);
+    generate(trimmed, activeVariationId ? variations[activeVariationId]?.code : (code || null));
   };
 
   const handleRuntimeError = async (errorMsg, stack) => {
@@ -188,7 +238,7 @@ function Home() {
         />
 
         {/* Workspace / Live Preview */}
-        {code || loading ? (
+        {(Object.keys(variations || {}).length > 0 || code || loading) ? (
           <div className={isFullscreen ? 'fixed inset-0 z-50 bg-[#09090b] flex flex-col transition-all duration-300' : 'flex-1 flex flex-col min-w-[500px] shrink-0 transition-all duration-300'}>
             {isFullscreen && (
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-zinc-900/90 backdrop-blur-md px-6 py-2 rounded-full border border-zinc-800 shadow-2xl">
@@ -202,7 +252,44 @@ function Home() {
                 </button>
               </div>
             )}
-            {(!code || code.length < 50) && loading ? (
+            {activeVariationId ? (
+              <div className="flex-1 flex flex-col relative">
+                <button 
+                  onClick={() => setActiveVariationId(null)}
+                  className="absolute top-4 right-4 z-50 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 px-4 py-2 rounded-lg text-sm font-semibold backdrop-blur-sm transition-colors border border-zinc-700/50"
+                >
+                  ← Back to Variations
+                </button>
+                <WorkspacePanel 
+                  code={variations[activeVariationId]?.code || ''}
+                  setCode={(newCode) => {
+                    const c = typeof newCode === 'function' ? newCode(variations[activeVariationId]?.code || '') : newCode;
+                    setVariations(prev => ({
+                      ...prev,
+                      [activeVariationId]: {
+                        ...prev[activeVariationId],
+                        code: c
+                      }
+                    }));
+                  }}
+                  loading={loading}
+                  statusText={statusText}
+                  generationId={generationId}
+                  localError={localError}
+                  onFullscreen={() => setIsFullscreen(true)}
+                  onRuntimeError={handleRuntimeError}
+                />
+              </div>
+            ) : Object.keys(variations || {}).length > 0 ? (
+              <VariationsGrid 
+                variations={variations}
+                onSelect={(id) => setActiveVariationId(id)}
+                onRegenerate={(id) => {
+                  setActiveVariationId(null);
+                  generate("Regenerate this variation with a different design", variations[id]?.code);
+                }}
+              />
+            ) : (!code || code.length < 50) && loading ? (
               <DesignPlanPanel plan={plan} timelineStep={timelineStep} />
             ) : (
               <WorkspacePanel 
