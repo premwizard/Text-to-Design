@@ -9,52 +9,59 @@ export function cn(...inputs) {
 
 export function TopNav({ loading, projectName = 'Untitled Project' }) {
   return (
-    <header className="h-14 border-b border-zinc-800/80 flex items-center justify-between px-4 bg-zinc-950/80 backdrop-blur-md shrink-0 z-20">
-      <div className="flex items-center gap-4">
+    <header className="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-zinc-950/40 backdrop-blur-xl shrink-0 z-20 shadow-sm relative">
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
+      
+      <div className="flex items-center gap-5">
         {/* Logo */}
-        <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-500 to-indigo-500 shadow-md shadow-violet-500/20 text-zinc-50">
-          <Sparkles size={28} className="text-white" />
+        <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 shadow-[0_0_20px_rgba(139,92,246,0.3)] text-zinc-50 transform hover:scale-105 transition-transform cursor-pointer border border-white/10">
+          <Sparkles size={22} className="text-white drop-shadow-md" />
         </div>
         
         {/* Project Name */}
         <div className="flex flex-col">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-zinc-100 tracking-tight cursor-pointer hover:text-zinc-50 transition-colors">
+            <h1 className="text-xl font-display font-bold text-zinc-100 tracking-tight cursor-pointer hover:text-white transition-colors">
               {projectName}
             </h1>
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               <span className="text-[10px] uppercase font-bold tracking-wider">Online</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-5">
         {/* Status Indicator */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800">
-          <span className={cn("w-2 h-2 rounded-full", loading ? "bg-violet-500 animate-pulse" : "bg-zinc-600")} />
-          <span className="text-xs font-medium text-zinc-400">
+        <div className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-md">
+          <span className={cn(
+            "w-2 h-2 rounded-full shadow-lg", 
+            loading ? "bg-violet-400 animate-pulse shadow-violet-500/50" : "bg-zinc-500"
+          )} />
+          <span className="text-xs font-semibold text-zinc-300 tracking-wide uppercase">
             {loading ? 'Generating...' : 'Idle'}
           </span>
         </div>
 
         {/* Credits Counter */}
-        <div className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer text-sm font-medium mr-2">
-          <CreditCard size={20} />
+        <div className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer text-sm font-semibold ml-2 bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:bg-white/10">
+          <CreditCard size={18} />
           <span>24 Credits</span>
         </div>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-zinc-800" />
+        <div className="w-px h-8 bg-white/10 mx-2" />
 
         {/* Actions */}
-        <button className="text-zinc-400 hover:text-zinc-200 transition-colors p-2 rounded-xl hover:bg-zinc-900">
-          <Settings size={22} />
-        </button>
-        <button className="flex items-center justify-center w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 hover:border-zinc-600 hover:text-zinc-100 transition-colors">
-          <User size={20} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button className="text-zinc-400 hover:text-white transition-colors p-2.5 rounded-xl hover:bg-white/10">
+            <Settings size={22} />
+          </button>
+          <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 transition-all shadow-md ml-1">
+            <User size={20} />
+          </button>
+        </div>
       </div>
     </header>
   );

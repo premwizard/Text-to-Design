@@ -7,25 +7,32 @@ export function VariationsGrid({ variations, onSelect, onRegenerate }) {
 
   if (variationIds.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-zinc-500">
-        Waiting for variations...
+      <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 animate-fade-in relative z-10">
+        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 shadow-2xl backdrop-blur-md">
+          <Sparkles size={32} className="text-zinc-600" />
+        </div>
+        <p className="text-lg font-medium text-zinc-400">Awaiting prompt instructions...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col p-6 overflow-y-auto bg-[#070708]">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="flex-1 flex flex-col p-8 overflow-y-auto relative z-10 scroll-smooth">
+      <div className="mb-8 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
-            <Sparkles className="text-violet-400" size={20} />
+          <h2 className="text-2xl font-display font-bold text-zinc-100 flex items-center gap-3">
+            <div className="p-2 bg-violet-500/20 rounded-xl border border-violet-500/30">
+              <Sparkles className="text-violet-400" size={20} />
+            </div>
             Design Variations
           </h2>
-          <p className="text-sm text-zinc-400 mt-1">Select a variation to open in the workspace.</p>
+          <p className="text-sm font-medium text-zinc-400 mt-2 tracking-wide">
+            Select a variation to open in the workspace editor.
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 pb-32">
         {variationIds.map((vid) => {
           const v = variations[vid];
           const plan = v.plan || {};
@@ -35,19 +42,19 @@ export function VariationsGrid({ variations, onSelect, onRegenerate }) {
           return (
             <div 
               key={vid}
-              className="flex flex-col bg-[#0c0c0e] border border-zinc-800/60 rounded-2xl overflow-hidden group hover:border-violet-500/50 transition-colors shadow-lg"
+              className="flex flex-col glass-panel rounded-[2rem] overflow-hidden group hover:border-violet-500/50 transition-all duration-300 shadow-2xl transform hover:-translate-y-1"
             >
               {/* Header */}
-              <div className="px-5 py-4 border-b border-zinc-800/60 flex items-center justify-between bg-zinc-900/20">
+              <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/5 backdrop-blur-md">
                 <div>
-                  <h3 className="font-semibold text-zinc-100">{plan.name || 'Variation'}</h3>
-                  <div className="flex items-center gap-3 mt-1.5 text-xs text-zinc-500 font-medium">
-                    <span className="flex items-center gap-1.5">
-                      <Layout size={12} className="text-emerald-400/70" />
+                  <h3 className="font-semibold text-zinc-100 text-lg tracking-wide">{plan.name || 'Variation'}</h3>
+                  <div className="flex items-center gap-4 mt-2 text-xs text-zinc-400 font-medium">
+                    <span className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-md border border-emerald-500/20 shadow-sm">
+                      <Layout size={12} />
                       {plan.layout_system?.replace(/-/g, ' ') || 'Layout'}
                     </span>
-                    <span className="flex items-center gap-1.5">
-                      <Palette size={12} className="text-sky-400/70" />
+                    <span className="flex items-center gap-1.5 px-2 py-1 bg-sky-500/10 text-sky-400 rounded-md border border-sky-500/20 shadow-sm">
+                      <Palette size={12} />
                       {plan.aesthetic || 'Aesthetic'}
                     </span>
                   </div>
@@ -55,43 +62,45 @@ export function VariationsGrid({ variations, onSelect, onRegenerate }) {
                 {isComplete && (
                   <button 
                     onClick={() => onRegenerate(vid)}
-                    className="p-2 text-zinc-500 hover:text-violet-400 bg-zinc-800/30 hover:bg-violet-500/10 rounded-lg transition-colors tooltip"
+                    className="p-2.5 text-zinc-400 hover:text-white glass-button rounded-xl transition-all shadow-md group/btn"
                     title="Regenerate this variation"
                   >
-                    <RefreshCw size={16} />
+                    <RefreshCw size={18} className="group-hover/btn:rotate-180 transition-transform duration-500" />
                   </button>
                 )}
               </div>
 
               {/* Preview Container */}
               <div 
-                className="relative h-[300px] w-full bg-[#050505] cursor-pointer"
+                className="relative h-[400px] w-full bg-[#030303] cursor-pointer overflow-hidden"
                 onClick={() => isComplete && onSelect(vid)}
               >
                 {!isComplete && (
-                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-sm text-sky-400">
-                    <svg className="animate-spin h-8 w-8 mb-4 text-violet-500" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p className="text-sm font-semibold animate-pulse text-zinc-300">
+                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-xl">
+                    <div className="relative mb-6">
+                      <div className="absolute inset-0 bg-violet-500/20 blur-xl rounded-full" />
+                      <div className="w-16 h-16 border-4 border-white/10 border-t-violet-500 rounded-full animate-spin shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
+                    </div>
+                    <p className="text-sm font-semibold animate-pulse text-zinc-300 tracking-wider uppercase">
                       {v.timelineStep || 'Generating UI...'}
                     </p>
                   </div>
                 )}
                 
                 {/* Live Preview Iframe */}
-                {/* Note: We pass variationId to LivePreview to load the correct var.html */}
-                <LivePreview 
-                  code={v.code} 
-                  loading={isLoading} 
-                  statusText="" 
-                  variationId={vid}
-                />
+                <div className="w-full h-full transform transition-transform duration-700 group-hover:scale-[1.02]">
+                  <LivePreview 
+                    code={v.code} 
+                    loading={isLoading} 
+                    statusText="" 
+                    variationId={vid}
+                  />
+                </div>
 
                 {isComplete && (
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-violet-500/10 transition-colors pointer-events-none flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all px-4 py-2 bg-violet-600 text-white font-semibold rounded-lg shadow-xl shadow-violet-900/20">
+                  <div className="absolute inset-0 bg-gradient-to-t from-violet-900/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none flex items-center justify-center backdrop-blur-[2px]">
+                    <div className="transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 px-6 py-3 bg-white text-zinc-950 font-bold rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center gap-2">
+                      <Sparkles size={18} />
                       Open in Workspace
                     </div>
                   </div>
