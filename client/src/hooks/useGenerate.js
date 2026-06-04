@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 // Use Vite proxy in dev (relative path), fall back to env var for production
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com';
 
 export function useGenerate() {
   const [code, setCode]       = useState(''); // For backward compatibility/edits

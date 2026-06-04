@@ -13,7 +13,7 @@ import { Layout, LayoutTemplate, Briefcase, Monitor, ShoppingCart, Smartphone, S
 import { useAuth } from '../context/AuthContext';
 import { projectService } from '../services/projectService';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com';
 
 function cleanGeneratedCode(code) {
   if (!code) return "";
