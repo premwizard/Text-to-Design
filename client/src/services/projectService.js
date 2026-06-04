@@ -11,6 +11,21 @@ export const projectService = {
     return data;
   },
 
+  async getSavedProjects() {
+    return this.getProjects();
+  },
+
+  async getFavorites() {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('is_favorite', true)
+      .order('updated_at', { ascending: false });
+      
+    if (error) throw error;
+    return data;
+  },
+
   async getProject(id) {
     const { data, error } = await supabase
       .from('projects')
@@ -31,6 +46,14 @@ export const projectService = {
 
     if (error) throw error;
     return data;
+  },
+
+  async saveProject(projectData) {
+    if (projectData.id) {
+      const { id, ...updates } = projectData;
+      return this.updateProject(id, updates);
+    }
+    return this.createProject(projectData);
   },
 
   async updateProject(id, updates) {

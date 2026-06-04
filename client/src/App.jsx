@@ -10,6 +10,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Projects from './pages/Projects';
 import Profile from './pages/Profile';
+import SavedProjects from './pages/SavedProjects';
+import Favorites from './pages/Favorites';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
@@ -37,6 +39,16 @@ function App() {
           <Route path="/recent" element={
             <ProtectedRoute>
               <RecentlyGenerated />
+            </ProtectedRoute>
+          } />
+          <Route path="/saved-projects" element={
+            <ProtectedRoute>
+              <SavedProjects />
+            </ProtectedRoute>
+          } />
+          <Route path="/favorites" element={
+            <ProtectedRoute>
+              <Favorites />
             </ProtectedRoute>
           } />
           <Route path="/settings" element={

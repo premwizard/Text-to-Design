@@ -32,6 +32,8 @@ export function LeftSidebar() {
 
   // Determine active tab based on route
   const activeTab = location.pathname === '/templates' ? 'templates' : 
+                    location.pathname === '/saved-projects' ? 'saved' :
+                    location.pathname === '/favorites' ? 'favorites' :
                     location.pathname === '/recent' ? 'recent' : 'new';
 
   const handleNavClick = (id) => {
@@ -39,6 +41,10 @@ export function LeftSidebar() {
       navigate('/templates');
     } else if (id === 'recent') {
       navigate('/recent');
+    } else if (id === 'saved') {
+      navigate('/saved-projects');
+    } else if (id === 'favorites') {
+      navigate('/favorites');
     } else if (id === 'new') {
       navigate('/app');
     }
