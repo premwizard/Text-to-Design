@@ -8,8 +8,7 @@ import {
   Star, 
   Settings,
   ChevronLeft,
-  ChevronRight,
-  Code2
+  ChevronRight
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -24,7 +23,6 @@ const NAV_ITEMS = [
   { id: 'saved', label: 'Saved Projects', icon: FolderOpen },
   { id: 'templates', label: 'Templates', icon: LayoutTemplate },
   { id: 'favorites', label: 'Favorites', icon: Star },
-  { id: 'components', label: 'Components', icon: Code2 },
 ];
 
 export function LeftSidebar() {
@@ -33,11 +31,14 @@ export function LeftSidebar() {
   const navigate = useNavigate();
 
   // Determine active tab based on route
-  const activeTab = location.pathname === '/templates' ? 'templates' : 'new';
+  const activeTab = location.pathname === '/templates' ? 'templates' : 
+                    location.pathname === '/recent' ? 'recent' : 'new';
 
   const handleNavClick = (id) => {
     if (id === 'templates') {
       navigate('/templates');
+    } else if (id === 'recent') {
+      navigate('/recent');
     } else if (id === 'new') {
       navigate('/app');
     }

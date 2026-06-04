@@ -30,7 +30,8 @@ export function WorkspacePanel({
   generationId, 
   localError,
   onFullscreen,
-  onRuntimeError
+  onRuntimeError,
+  variationId
 }) {
   const [viewportMode, setViewportMode] = useState('desktop');
   
@@ -236,6 +237,7 @@ export function WorkspacePanel({
                         statusText={statusText} 
                         generationId={generationId} 
                         onRuntimeError={onRuntimeError}
+                        variationId={variationId}
                       />
                     )}
                   </div>

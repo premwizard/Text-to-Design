@@ -1,7 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Toggle } from '../ui/Toggle';
+import { useAuth } from '../../context/AuthContext';
+import { settingsService } from '../../services/settingsService';
 
 export function EditorSettings() {
+  const { user } = useAuth();
+  const [fontSize, setFontSize] = useState(14);
+  const [autoSave, setAutoSave] = useState(true);
+
+  useEffect(() => {
+    if (user?.id) {
+      settingsService.getSettings(user.id).then(data => {
+        if (data) {
+          if (data.editor_font_size) setFontSize(data.editor_font_size);
+          if (data.auto_save !== undefined) setAutoSave(data.auto_save);
+        }
+      }).catch(console.error);
+    }
+  }, [user]);
+
+  const handleFontSizeChange = (val) => {
+    const size = parseInt(val);
+    setFontSize(size);
+    if (user?.id) {
+      settingsService.updateSettings(user.id, { editor_font_size: size }).catch(console.error);
+    }
+  };
+
+  const handleAutoSaveToggle = (val) => {
+    setAutoSave(val);
+    if (user?.id) {
+      settingsService.updateSettings(user.id, { auto_save: val }).catch(console.error);
+    }
+  };
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -22,11 +53,14 @@ export function EditorSettings() {
               { id: 'auto-format', label: 'Auto Format', checked: true },
               { id: 'line-numbers', label: 'Line Numbers', checked: true },
               { id: 'minimap', label: 'Minimap', checked: false },
-              { id: 'auto-save', label: 'Auto Save', checked: true }
+              { id: 'auto-save', label: 'Auto Save' }
             ].map(setting => (
               <div key={setting.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors -mx-3">
                 <span className="text-sm font-medium text-zinc-300">{setting.label}</span>
-                <Toggle defaultChecked={setting.checked} />
+                <Toggle 
+                  defaultChecked={setting.id === 'auto-save' ? autoSave : true} 
+                  onChange={(val) => setting.id === 'auto-save' && handleAutoSaveToggle(val)} 
+                />
               </div>
             ))}
           </div>
@@ -37,9 +71,13 @@ export function EditorSettings() {
             
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-300 block">Font Size</label>
-              <select className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white appearance-none focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+              <select 
+                value={fontSize} 
+                onChange={(e) => handleFontSizeChange(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white appearance-none focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+              >
                 <option value="12">12px</option>
-                <option value="14" selected>14px</option>
+                <option value="14">14px</option>
                 <option value="16">16px</option>
                 <option value="18">18px</option>
                 <option value="20">20px</option>

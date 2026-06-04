@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { useAuth } from '../../context/AuthContext';
+import { settingsService } from '../../services/settingsService';
 
 function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -24,6 +26,17 @@ const ACCENT_COLORS = [
 export function AppearanceSettings() {
   const [theme, setTheme] = useState(() => localStorage.getItem('app_theme') || 'dark');
   const [accent, setAccent] = useState(() => localStorage.getItem('app_accent') || 'purple');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user?.id) {
+      settingsService.getSettings(user.id).then(data => {
+        if (data && data.theme) {
+          setTheme(data.theme);
+        }
+      }).catch(console.error);
+    }
+  }, [user]);
 
   useEffect(() => {
     localStorage.setItem('app_theme', theme);
@@ -33,7 +46,11 @@ export function AppearanceSettings() {
     } else {
       document.documentElement.classList.remove('light-theme');
     }
-  }, [theme]);
+    
+    if (user?.id) {
+      settingsService.updateSettings(user.id, { theme }).catch(console.error);
+    }
+  }, [theme, user]);
 
   useEffect(() => {
     localStorage.setItem('app_accent', accent);

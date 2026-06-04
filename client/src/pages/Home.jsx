@@ -9,7 +9,9 @@ import { DesignPlanPanel } from '../components/workspace/DesignPlanPanel';
 import { VariationsGrid } from '../components/workspace/VariationsGrid';
 import { AnimatedBackground } from '../components/layout/AnimatedBackground';
 import { PromptComposer } from '../components/prompt/PromptComposer';
-import { Layout, LayoutTemplate, Briefcase, Monitor, ShoppingCart, Smartphone, Sparkles, FolderOpen, History, ArrowRight } from 'lucide-react';
+import { Layout, LayoutTemplate, Briefcase, Monitor, ShoppingCart, Smartphone, Sparkles, FolderOpen, History, ArrowRight, ChevronLeft } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { projectService } from '../services/projectService';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -53,6 +55,57 @@ function Home() {
 
   const { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations } = useGenerate();
   const [activeVariationId, setActiveVariationId] = useState(null);
+  const { user } = useAuth();
+  const [recentProjects, setRecentProjects] = useState([]);
+
+  // Fetch recent projects for the empty state
+  useEffect(() => {
+    if (user?.id) {
+      projectService.getProjects()
+        .then(data => setRecentProjects(data.slice(0, 3)))
+        .catch(console.error);
+    }
+  }, [user]);
+
+  // Auto-save variation when complete
+  useEffect(() => {
+    if (!variations || !user?.id) return;
+    Object.entries(variations).forEach(([vid, v]) => {
+      if (v.status === 'complete' && v.code && !v.isSaved) {
+        // Mark as saved to prevent duplicate saves
+        setVariations(prev => ({
+          ...prev,
+          [vid]: { ...prev[vid], isSaved: true }
+        }));
+        
+        projectService.createProject({
+          user_id: user.id,
+          title: plan?.product_name || `Variation ${vid}`,
+          prompt: prompt,
+          generated_code: v.code,
+          framework: 'react'
+        }).catch(err => console.error("Failed to auto-save variation project", err));
+      }
+    });
+  }, [variations, user, plan, prompt]);
+
+  // Auto-save single code when loading finishes
+  useEffect(() => {
+    if (!loading && code && code.length > 50 && user?.id) {
+       // Prevent duplicate saves by checking if this generationId was already saved
+       const saveKey = `saved_gen_${generationId}`;
+       if (!window[saveKey]) {
+         window[saveKey] = true;
+         projectService.createProject({
+           user_id: user.id,
+           title: "Edited Design",
+           prompt: prompt || "Edit",
+           generated_code: code,
+           framework: 'react'
+         }).catch(console.error);
+       }
+    }
+  }, [loading, code, user, generationId, prompt]);
 
   useEffect(() => {
     const handleSandboxMessage = (event) => {
@@ -328,17 +381,19 @@ function Home() {
                     </button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-4">
+                    {recentProjects.length > 0 ? recentProjects.map(proj => (
+                      <div key={proj.id} className="p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">
                           <FolderOpen size={18} className="text-zinc-500" />
                         </div>
-                        <div className="truncate">
-                          <h4 className="text-sm font-semibold text-zinc-200 truncate">Untitled Project {i}</h4>
-                          <p className="text-xs text-zinc-500 mt-0.5">2 days ago</p>
+                        <div className="truncate text-left">
+                          <h4 className="text-sm font-semibold text-zinc-200 truncate">{proj.title}</h4>
+                          <p className="text-xs text-zinc-500 mt-0.5">{new Date(proj.created_at).toLocaleDateString()}</p>
                         </div>
                       </div>
-                    ))}
+                    )) : (
+                      <div className="col-span-3 text-center py-4 text-zinc-500 text-sm">No recent projects</div>
+                    )}
                   </div>
                 </div>
 
@@ -372,6 +427,7 @@ function Home() {
                       <ChevronLeft size={16} /> Back to Variations
                     </button>
                     <WorkspacePanel 
+                      variationId={activeVariationId}
                       code={variations[activeVariationId]?.code || ''}
                       setCode={(newCode) => {
                         const c = typeof newCode === 'function' ? newCode(variations[activeVariationId]?.code || '') : newCode;

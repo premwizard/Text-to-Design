@@ -88,7 +88,7 @@ export function VariationsGrid({ variations, onSelect, onRegenerate }) {
                 )}
                 
                 {/* Live Preview Iframe */}
-                <div className="w-full h-full transform transition-transform duration-700 group-hover:scale-[1.02]">
+                <div className="w-full h-full transform transition-transform duration-700 group-hover:scale-[1.02] pointer-events-none">
                   <LivePreview 
                     code={v.code} 
                     loading={isLoading} 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Zap, CheckCircle2, Copy } from 'lucide-react';
+import { X, Zap, CheckCircle2, Copy, LayoutTemplate } from 'lucide-react';
 
 export function TemplatePreviewModal({ template, isOpen, onClose, onGenerate }) {
   if (!isOpen || !template) return null;
@@ -33,13 +33,19 @@ export function TemplatePreviewModal({ template, isOpen, onClose, onGenerate }) 
             </button>
 
             {/* Left: Image Preview */}
-            <div className="w-full md:w-3/5 bg-zinc-900 relative">
+            <div className="w-full md:w-3/5 bg-zinc-900 relative flex items-center justify-center">
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent md:hidden z-10" />
-              <img 
-                src={template.thumbnail} 
-                alt={template.name}
-                className="w-full h-64 md:h-full object-cover"
-              />
+              {template.thumbnail ? (
+                <img 
+                  src={template.thumbnail} 
+                  alt={template.title}
+                  className="w-full h-64 md:h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-64 md:h-full flex items-center justify-center bg-zinc-800 text-zinc-600">
+                  <LayoutTemplate size={64} />
+                </div>
+              )}
             </div>
 
             {/* Right: Details */}
@@ -48,7 +54,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose, onGenerate }) 
                 {template.category}
               </div>
               <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-4">
-                {template.name}
+                {template.title || 'Untitled Template'}
               </h2>
               
               <p className="text-zinc-400 text-sm leading-relaxed mb-8">

@@ -60,7 +60,7 @@ REQUEST: "{user_prompt}"
 Output exactly this JSON shape. First character must be [. No markdown. No extra text.
 
 [
-  {
+  {{
     "id": "varA",
     "name": "Creative Name (e.g., Linear Dark)",
     "page_type": "landing|ecommerce|dashboard|portfolio|restaurant|mobile_app|agency|event|blog|other",
@@ -79,16 +79,16 @@ Output exactly this JSON shape. First character must be [. No markdown. No extra
     "text_color": "text-zinc-100",
     "sections": ["FloatingNavbar", "SplitHero", "BentoFeatures", "InteractiveStats", "Footer"],
     "layout_notes": "One sentence describing special layout: e.g. sidebar layout, full-bleed hero, card grid with hover reveal"
-  },
-  {
+  }},
+  {{
     "id": "varB", ...
-  },
-  {
+  }},
+  {{
     "id": "varC", ...
-  },
-  {
+  }},
+  {{
     "id": "varD", ...
-  }
+  }}
 ]
 """
 

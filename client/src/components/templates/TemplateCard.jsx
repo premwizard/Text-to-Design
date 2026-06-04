@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Sparkles, Eye, Zap } from 'lucide-react';
+import { Heart, Sparkles, Eye, Zap, LayoutTemplate } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -28,12 +28,18 @@ export function TemplateCard({
       <div className="relative aspect-[4/3] overflow-hidden bg-zinc-800">
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent z-10" />
         
-        <img 
-          src={template.thumbnail} 
-          alt={template.name}
-          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-          loading="lazy"
-        />
+        {template.thumbnail ? (
+          <img 
+            src={template.thumbnail} 
+            alt={template.title}
+            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-zinc-800 text-zinc-600">
+            <LayoutTemplate size={48} />
+          </div>
+        )}
 
         {/* Top Badges */}
         <div className="absolute top-3 left-3 right-3 flex justify-between items-start z-20">
@@ -84,7 +90,7 @@ export function TemplateCard({
           {template.category}
         </div>
         <h3 className="text-lg font-bold text-zinc-100 mb-2 group-hover:text-violet-300 transition-colors">
-          {template.name}
+          {template.title || 'Untitled Template'}
         </h3>
         <p className="text-sm text-zinc-400 line-clamp-2 flex-1 mb-4 leading-relaxed">
           {template.description}

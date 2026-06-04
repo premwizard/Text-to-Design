@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SearchX, LayoutTemplate } from 'lucide-react';
+import { SearchX, LayoutTemplate, Loader2 } from 'lucide-react';
 import { TopNav } from '../components/layout/TopNav';
 import { LeftSidebar } from '../components/layout/LeftSidebar';
 import { AnimatedBackground } from '../components/layout/AnimatedBackground';
-import { templates } from '../data/templates';
+import { templateService } from '../services/templateService';
 import { CategoryFilter } from '../components/templates/CategoryFilter';
 import { TemplateSearch } from '../components/templates/TemplateSearch';
 import { TemplateCard } from '../components/templates/TemplateCard';
@@ -43,8 +43,22 @@ export default function Templates() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [favorites, setFavorites] = useLocalStorage('ai_templates_favorites', []);
   const [recentlyUsed, setRecentlyUsed] = useLocalStorage('ai_templates_recent', []);
+  const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   const [previewTemplate, setPreviewTemplate] = useState(null);
+
+  useEffect(() => {
+    templateService.getTemplates()
+      .then(data => {
+        setTemplates(data || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error loading templates", err);
+        setLoading(false);
+      });
+  }, []);
 
   const handleToggleFavorite = (id) => {
     setFavorites(prev => 
@@ -66,9 +80,9 @@ export default function Templates() {
   const filteredTemplates = useMemo(() => {
     return templates.filter(template => {
       const matchesSearch = 
-        template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.category.toLowerCase().includes(searchQuery.toLowerCase());
+        (template.title || template.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (template.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (template.category || '').toLowerCase().includes(searchQuery.toLowerCase());
       
       if (activeCategory === 'Favorites') {
         return matchesSearch && favorites.includes(template.id);
@@ -78,11 +92,11 @@ export default function Templates() {
       
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, activeCategory, favorites]);
+  }, [searchQuery, activeCategory, favorites, templates]);
 
   const recentTemplates = useMemo(() => {
     return recentlyUsed.map(id => templates.find(t => t.id === id)).filter(Boolean);
-  }, [recentlyUsed]);
+  }, [recentlyUsed, templates]);
 
   // Adjust categories to inject "Favorites"
   const showRecent = recentlyUsed.length > 0 && activeCategory === 'All' && searchQuery === '';
@@ -127,79 +141,87 @@ export default function Templates() {
                 onChange={setActiveCategory} 
               />
 
-              {/* Recently Used */}
-              {showRecent && (
-                <section className="pt-4">
-                  <h3 className="text-lg font-bold text-white mb-4">Recently Used</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {recentTemplates.slice(0, 4).map(template => (
-                      <TemplateCard 
-                        key={`recent-${template.id}`}
-                        template={template}
-                        isFavorite={favorites.includes(template.id)}
-                        onToggleFavorite={handleToggleFavorite}
-                        onPreview={setPreviewTemplate}
-                        onGenerate={handleGenerate}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* Main Grid */}
-              <section className="pt-4">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold text-white">
-                    {activeCategory === 'All' ? 'All Templates' : activeCategory}
-                  </h3>
-                  <span className="text-sm font-medium text-zinc-500">
-                    {filteredTemplates.length} {filteredTemplates.length === 1 ? 'result' : 'results'}
-                  </span>
+              {loading ? (
+                <div className="flex justify-center items-center py-20">
+                  <Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
                 </div>
+              ) : (
+                <>
+                  {/* Recently Used */}
+                  {showRecent && (
+                    <section className="pt-4">
+                      <h3 className="text-lg font-bold text-white mb-4">Recently Used</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {recentTemplates.slice(0, 4).map(template => (
+                          <TemplateCard 
+                            key={`recent-${template.id}`}
+                            template={template}
+                            isFavorite={favorites.includes(template.id)}
+                            onToggleFavorite={handleToggleFavorite}
+                            onPreview={setPreviewTemplate}
+                            onGenerate={handleGenerate}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  )}
 
-                {filteredTemplates.length > 0 ? (
-                  <motion.div 
-                    layout
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20"
-                  >
-                    <AnimatePresence mode="popLayout">
-                      {filteredTemplates.map(template => (
-                        <TemplateCard 
-                          key={template.id}
-                          template={template}
-                          isFavorite={favorites.includes(template.id)}
-                          onToggleFavorite={handleToggleFavorite}
-                          onPreview={setPreviewTemplate}
-                          onGenerate={handleGenerate}
-                        />
-                      ))}
-                    </AnimatePresence>
-                  </motion.div>
-                ) : (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex flex-col items-center justify-center py-20 px-4 text-center"
-                  >
-                    <div className="w-24 h-24 rounded-full bg-zinc-900/50 flex items-center justify-center mb-6 border border-white/5">
-                      <SearchX className="text-zinc-500 w-10 h-10" />
+                  {/* Main Grid */}
+                  <section className="pt-4">
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-lg font-bold text-white">
+                        {activeCategory === 'All' ? 'All Templates' : activeCategory}
+                      </h3>
+                      <span className="text-sm font-medium text-zinc-500">
+                        {filteredTemplates.length} {filteredTemplates.length === 1 ? 'result' : 'results'}
+                      </span>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">No templates found</h3>
-                    <p className="text-zinc-400 max-w-sm mx-auto mb-8">
-                      We couldn't find any templates matching your search criteria. Try adjusting your filters.
-                    </p>
-                    <button 
-                      onClick={() => {
-                        setSearchQuery('');
-                        setActiveCategory('All');
-                      }}
-                      className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium border border-white/10 transition-colors"
-                    >
-                      Clear Filters
-                    </button>
-                  </motion.div>
-                )}
-              </section>
+
+                    {filteredTemplates.length > 0 ? (
+                      <motion.div 
+                        layout
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20"
+                      >
+                        <AnimatePresence mode="popLayout">
+                          {filteredTemplates.map(template => (
+                            <TemplateCard 
+                              key={template.id}
+                              template={template}
+                              isFavorite={favorites.includes(template.id)}
+                              onToggleFavorite={handleToggleFavorite}
+                              onPreview={setPreviewTemplate}
+                              onGenerate={handleGenerate}
+                            />
+                          ))}
+                        </AnimatePresence>
+                      </motion.div>
+                    ) : (
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex flex-col items-center justify-center py-20 px-4 text-center"
+                      >
+                        <div className="w-24 h-24 rounded-full bg-zinc-900/50 flex items-center justify-center mb-6 border border-white/5">
+                          <SearchX className="text-zinc-500 w-10 h-10" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">No templates found</h3>
+                        <p className="text-zinc-400 max-w-sm mx-auto mb-8">
+                          We couldn't find any templates matching your search criteria. Try adjusting your filters.
+                        </p>
+                        <button 
+                          onClick={() => {
+                            setSearchQuery('');
+                            setActiveCategory('All');
+                          }}
+                          className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium border border-white/10 transition-colors"
+                        >
+                          Clear Filters
+                        </button>
+                      </motion.div>
+                    )}
+                  </section>
+                </>
+              )}
 
             </motion.div>
           </main>
