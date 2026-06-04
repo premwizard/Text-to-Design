@@ -67,29 +67,7 @@ function Home() {
     }
   }, [user]);
 
-  // Auto-save variation when complete
-  useEffect(() => {
-    if (!variations || !user?.id) return;
-    Object.entries(variations).forEach(([vid, v]) => {
-      if (v.status === 'complete' && v.code && !v.isSaved) {
-        // Mark as saved to prevent duplicate saves
-        setVariations(prev => ({
-          ...prev,
-          [vid]: { ...prev[vid], isSaved: true }
-        }));
-        
-        projectService.createProject({
-          user_id: user.id,
-          title: plan?.product_name || `Variation ${vid}`,
-          prompt: prompt,
-          generated_code: v.code,
-          framework: 'react'
-        }).catch(err => console.error("Failed to auto-save variation project", err));
-      }
-    });
-  }, [variations, user, plan, prompt]);
-
-  // Auto-save single code when loading finishes
+  // Auto-save single code when loading finishes (if not using variations)
   useEffect(() => {
     if (!loading && code && code.length > 50 && user?.id) {
        // Prevent duplicate saves by checking if this generationId was already saved
@@ -454,6 +432,53 @@ function Home() {
                     onRegenerate={(id) => {
                       setActiveVariationId(null);
                       generate("Regenerate this variation with a different design", variations[id]?.code);
+                    }}
+                    onSave={async (id) => {
+                      const v = variations[id];
+                      if (!v || !user?.id || v.isSaved) return;
+                      try {
+                        const proj = await projectService.createProject({
+                          user_id: user.id,
+                          title: v.plan?.product_name || `Variation ${id}`,
+                          prompt: prompt,
+                          generated_code: v.code,
+                          framework: 'react'
+                        });
+                        setVariations(prev => ({
+                          ...prev,
+                          [id]: { ...prev[id], isSaved: true, dbProjectId: proj.id }
+                        }));
+                      } catch (err) {
+                        console.error("Failed to save variation project", err);
+                      }
+                    }}
+                    onToggleFavorite={async (id) => {
+                      const v = variations[id];
+                      if (!v || !user?.id) return;
+                      try {
+                        let projectId = v.dbProjectId;
+                        // If not saved yet, save it first
+                        if (!projectId) {
+                          const proj = await projectService.createProject({
+                            user_id: user.id,
+                            title: v.plan?.product_name || `Variation ${id}`,
+                            prompt: prompt,
+                            generated_code: v.code,
+                            framework: 'react'
+                          });
+                          projectId = proj.id;
+                        }
+                        
+                        const newFavStatus = !v.is_favorite;
+                        await projectService.toggleFavorite(projectId, newFavStatus);
+                        
+                        setVariations(prev => ({
+                          ...prev,
+                          [id]: { ...prev[id], isSaved: true, dbProjectId: projectId, is_favorite: newFavStatus }
+                        }));
+                      } catch (err) {
+                        console.error("Failed to favorite variation project", err);
+                      }
                     }}
                   />
                 ) : (!code || code.length < 50) && loading ? (

@@ -1,8 +1,14 @@
 import React from 'react';
 import { LivePreview } from '../LivePreview';
-import { Sparkles, RefreshCw, Layout, Palette } from 'lucide-react';
+import { Sparkles, RefreshCw, Layout, Palette, Save, Star, Check } from 'lucide-react';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-export function VariationsGrid({ variations, onSelect, onRegenerate }) {
+function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+export function VariationsGrid({ variations, onSelect, onRegenerate, onSave, onToggleFavorite }) {
   const variationIds = Object.keys(variations || {});
 
   if (variationIds.length === 0) {
@@ -60,13 +66,35 @@ export function VariationsGrid({ variations, onSelect, onRegenerate }) {
                   </div>
                 </div>
                 {isComplete && (
-                  <button 
-                    onClick={() => onRegenerate(vid)}
-                    className="p-2.5 text-zinc-400 hover:text-white glass-button rounded-xl transition-all shadow-md group/btn"
-                    title="Regenerate this variation"
-                  >
-                    <RefreshCw size={18} className="group-hover/btn:rotate-180 transition-transform duration-500" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); onToggleFavorite(vid); }}
+                      className="p-2.5 text-zinc-400 hover:text-amber-400 glass-button rounded-xl transition-all shadow-md group/btn"
+                      title="Favorite this variation"
+                    >
+                      <Star size={18} className={cn(v.is_favorite && "fill-amber-400 text-amber-400")} />
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); onSave(vid); }}
+                      className="p-2.5 text-zinc-400 hover:text-white glass-button rounded-xl transition-all shadow-md group/btn"
+                      title={v.isSaved ? "Saved to Workspace" : "Save to Workspace"}
+                      disabled={v.isSaved}
+                    >
+                      {v.isSaved ? (
+                        <Check size={18} className="text-emerald-400" />
+                      ) : (
+                        <Save size={18} />
+                      )}
+                    </button>
+                    <div className="w-px h-6 bg-white/10 mx-1"></div>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); onRegenerate(vid); }}
+                      className="p-2.5 text-zinc-400 hover:text-white glass-button rounded-xl transition-all shadow-md group/btn"
+                      title="Regenerate this variation"
+                    >
+                      <RefreshCw size={18} className="group-hover/btn:rotate-180 transition-transform duration-500" />
+                    </button>
+                  </div>
                 )}
               </div>
 
