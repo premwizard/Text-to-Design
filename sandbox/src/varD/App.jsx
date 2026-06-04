@@ -1,23 +1,23 @@
 import React from 'react';
-import ElegantNavbar from './components/ElegantNavbar';
-import StatelyHero from './components/StatelyHero';
-import FeaturedWorks from './components/FeaturedWorks';
-import PersonalStory from './components/PersonalStory';
-import InquiryForm from './components/InquiryForm';
+import InvitingHero from './components/InvitingHero.jsx';
+import ProductCards from './components/ProductCards.jsx';
+import OurStorySection from './components/OurStorySection.jsx';
+import CustomerTestimonials from './components/CustomerTestimonials.jsx';
+import SimpleFooter from './components/SimpleFooter.jsx';
 
 export default function App() {
   return (
-    <div className="bg-neutral-100 min-h-screen text-neutral-800">
+    <div className="bg-amber-50 min-h-screen text-stone-700">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700;800&family=Jost:wght@300;400;500;600&display=swap');
-        body { font-family: 'Jost', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Cormorant Garamond', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Lora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Lora', sans-serif; }
       `}</style>
-      <ElegantNavbar />
-      <StatelyHero />
-      <FeaturedWorks />
-      <PersonalStory />
-      <InquiryForm />
+      <InvitingHero />
+      <ProductCards />
+      <OurStorySection />
+      <CustomerTestimonials />
+      <SimpleFooter />
     </div>
   );
 }
