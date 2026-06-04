@@ -95,7 +95,6 @@ export function DesignSystemProvider({ children, metadata = {}, onAction }) {
     // Default Action handler if none is passed
     const defaultActionHandler = (action) => {
       if (!action) return;
-      console.log('Action triggered:', action);
       if (onAction) {
         onAction(action);
         return;

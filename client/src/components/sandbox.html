@@ -140,8 +140,6 @@
         return window.LucideReact || {};
       }
 
-      // Anything else: warn and return empty to avoid crashes
-      console.warn('[sandbox] Unsupported import "' + moduleName + '" — returning {}');
       return {};
     }
 

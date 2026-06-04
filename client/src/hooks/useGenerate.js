@@ -68,10 +68,8 @@ export function useGenerate() {
               const endIdx = cleaned.lastIndexOf('}');
               if (startIdx !== -1 && endIdx !== -1) {
                 const parsedFull = JSON.parse(cleaned.substring(startIdx, endIdx + 1));
-                console.log("Generated Files", parsedFull.files);
               }
             } catch (e) {
-              console.warn("Could not parse final code to log files:", e);
             }
             break;
           }

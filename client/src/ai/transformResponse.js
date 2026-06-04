@@ -22,8 +22,8 @@ export function parseAndRecoverJSON(rawString) {
   try {
     return JSON.parse(cleaned);
   } catch (e) {
-    console.warn('Initial JSON parse failed, attempting recovery on string:', cleaned);
-    
+    // Attempt recovery on string
+    const match = cleaned.match(/\{[\s\S]*\}/);
     // Count open/close curly braces
     const openBraces = (cleaned.match(/\{/g) || []).length;
     const closeBraces = (cleaned.match(/\}/g) || []).length;

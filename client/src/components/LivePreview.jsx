@@ -6,9 +6,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
 
   useEffect(() => {
     const handleMsg = (e) => {
-      console.log("[LivePreview] Received message:", e.data);
       if (e.data?.type === 'runtime_error') {
-        console.log("[LivePreview] Setting runtime error state!");
         setRuntimeError({ error: e.data.error, stack: e.data.stack });
       }
     };

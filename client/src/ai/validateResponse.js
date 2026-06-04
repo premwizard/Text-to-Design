@@ -70,7 +70,6 @@ export function validateResponse(data) {
 
       const baseResult = BaseComponentSchema.safeParse(normalizedComp);
       if (!baseResult.success) {
-        console.warn(`Skipping invalid base component structure at index ${idx}:`, baseResult.error.format());
         componentErrors.push({ index: idx, type: comp?.type || 'unknown', errors: baseResult.error.errors });
         return;
       }
@@ -79,7 +78,6 @@ export function validateResponse(data) {
       const registryEntry = componentRegistry[typeKey];
 
       if (!registryEntry) {
-        console.warn(`Unsupported component type: "${parsedComp.type}" at index ${idx}`);
         componentErrors.push({ index: idx, type: parsedComp.type, errors: [{ message: `Component type "${parsedComp.type}" is unsupported.` }] });
         return;
       }
@@ -90,8 +88,6 @@ export function validateResponse(data) {
       const propsResult = componentSchema.safeParse(propsToValidate);
 
       if (!propsResult.success) {
-        console.warn(`Props validation failed for component ${parsedComp.type} at index ${idx}. Falling back to default props.`, propsResult.error.format());
-        
         // Salvage: keep the component structure but apply registry defaults
         parsedComp.props = { ...registryEntry.defaultProps };
         parsedComp.content = parsedComp.props;

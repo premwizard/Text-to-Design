@@ -89,7 +89,6 @@ function Home() {
     const handleSandboxMessage = (event) => {
       const { type, action } = event.data;
       if (type === 'SANDBOX_ACTION') {
-        console.log('Action received from sandbox:', action);
         if (action.type === 'open-modal') {
           setModalContent(action.target || 'standard');
         } else if (action.type === 'close-modal') {

@@ -1,25 +1,29 @@
+import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import Home from './pages/Home';
-import Landing from './pages/Landing';
 import { ThemeProvider } from './context/ThemeContext';
-import Templates from './pages/Templates';
-import RecentlyGenerated from './pages/RecentlyGenerated';
-import Settings from './pages/Settings';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Projects from './pages/Projects';
-import Profile from './pages/Profile';
-import SavedProjects from './pages/SavedProjects';
-import Favorites from './pages/Favorites';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { ErrorBoundary } from './components/ErrorBoundary';
+
+const Home = React.lazy(() => import('./pages/Home'));
+const Landing = React.lazy(() => import('./pages/Landing'));
+const Templates = React.lazy(() => import('./pages/Templates'));
+const RecentlyGenerated = React.lazy(() => import('./pages/RecentlyGenerated'));
+const Settings = React.lazy(() => import('./pages/Settings'));
+const Login = React.lazy(() => import('./pages/Login'));
+const Signup = React.lazy(() => import('./pages/Signup'));
+const Profile = React.lazy(() => import('./pages/Profile'));
+const SavedProjects = React.lazy(() => import('./pages/SavedProjects'));
+const Favorites = React.lazy(() => import('./pages/Favorites'));
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <ThemeProvider>
+          <Suspense fallback={<div className="h-screen w-screen bg-app flex items-center justify-center text-zinc-500">Loading...</div>}>
+            <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
@@ -56,19 +60,16 @@ function App() {
               <Settings />
             </ProtectedRoute>
           } />
-          <Route path="/projects" element={
-            <ProtectedRoute>
-              <Projects />
-            </ProtectedRoute>
-          } />
           <Route path="/profile" element={
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
           } />
-        </Routes>
-      </ThemeProvider>
-    </AuthProvider>
+            </Routes>
+          </Suspense>
+        </ThemeProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
