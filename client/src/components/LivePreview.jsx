@@ -18,9 +18,11 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     setRuntimeError(null);
   }, [code]);
 
+  const SANDBOX_URL = import.meta.env.VITE_SANDBOX_URL || 'https://text-to-design.vercel.app';
+
   const iframeSrc = variationId 
-    ? `${window.location.protocol}//${window.location.hostname}:5174/${variationId}.html`
-    : `${window.location.protocol}//${window.location.hostname}:5174`;
+    ? `${SANDBOX_URL}/${variationId}.html`
+    : SANDBOX_URL;
 
   return (
     <div className="w-full h-full relative overflow-hidden">
