@@ -19,11 +19,7 @@ BACKEND_DIR = Path(__file__).parent
 SANDBOX_DIR = (BACKEND_DIR / "../sandbox").resolve()
 SRC_DIR = SANDBOX_DIR / "src"
 
-_vite_process: asyncio.subprocess.Process | None = None
-_vite_lock = asyncio.Lock()
 
-# Determine correct npm command name on Windows vs Unix
-NPM_CMD = "npm.cmd" if os.name == "nt" else "npm"
 
 # ─── File writing & Sanitization / Validation ─────────────────────────────────
 
@@ -155,6 +151,7 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
             if src_file.exists() and not dst_file.exists():
                 shutil.copy2(src_file, dst_file)
                 
+        sandbox_url = os.getenv("SANDBOX_URL", "https://text-to-design.vercel.app").rstrip("/")
         # Generate varX.html in sandbox dir
         html_path = SANDBOX_DIR / f"{variation_id}.html"
         html_content = f"""<!doctype html>
@@ -166,7 +163,7 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/preview/src/{variation_id}/main.jsx"></script>
+    <script type="module" src="{sandbox_url}/src/{variation_id}/main.jsx"></script>
   </body>
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
@@ -187,172 +184,4 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
     return written
 
 
-# ─── npm install ─────────────────────────────────────────────────────────────
 
-async def ensure_deps(log_cb=None):
-    """Run npm install if node_modules doesn't exist."""
-    nm = SANDBOX_DIR / "node_modules"
-    vite_dir = nm / "vite"
-    if vite_dir.exists():
-        return
-    if log_cb:
-        await log_cb("Installing dependencies (first run — ~30s)...")
-
-    proc = await asyncio.create_subprocess_exec(
-        NPM_CMD, "install",
-        cwd=str(SANDBOX_DIR),
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.STDOUT,
-    )
-    stdout, _ = await proc.communicate()
-    if proc.returncode != 0:
-        raise RuntimeError(f"npm install failed:\n{stdout.decode(errors='replace')}")
-
-    if log_cb:
-        await log_cb("Dependencies installed.")
-
-
-# ─── Vite server ─────────────────────────────────────────────────────────────
-
-async def start_vite(log_cb=None):
-    """
-    Kill any existing Vite process and start a fresh one.
-    Yields log lines via log_cb until the server is ready.
-    """
-    global _vite_process
-    
-    async with _vite_lock:
-        if vite_is_running():
-            return True
-            
-        await stop_vite()
-
-        # Ensure dependencies are installed before starting
-        await ensure_deps(log_cb)
-
-    if log_cb:
-        await log_cb("Starting Vite dev server on port 5174...")
-
-    kwargs = {}
-    if os.name != 'nt':
-        kwargs['preexec_fn'] = os.setsid
-
-    _vite_process = await asyncio.create_subprocess_exec(
-        NPM_CMD, "run", "dev",
-        cwd=str(SANDBOX_DIR),
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.STDOUT,
-        **kwargs
-    )
-
-    # Read output until Vite indicates it's ready
-    ready = False
-    async for raw in _vite_process.stdout:
-        line = raw.decode(errors="replace").rstrip()
-        lower_line = line.lower()
-        if log_cb:
-            await log_cb(f"[vite] {line}")
-        # Wait for actual Vite startup message, not the npm echo
-        if "local:" in lower_line or "network:" in lower_line or "ready in" in lower_line:
-            ready = True
-            break
-
-    # Important: continue consuming stdout in the background so the OS pipe buffer
-    # doesn't fill up and freeze the Vite process!
-    async def consume_stdout():
-        try:
-            async for raw in _vite_process.stdout:
-                if log_cb:
-                    await log_cb(f"[vite] {raw.decode(errors='replace').rstrip()}")
-        except Exception:
-            pass
-    
-    asyncio.create_task(consume_stdout())
-
-    return ready
-
-
-async def stop_vite():
-    """Gracefully terminate the existing Vite process."""
-    global _vite_process
-    if _vite_process and _vite_process.returncode is None:
-        try:
-            if os.name == 'nt':
-                # On Windows, terminating the shell wrapper (npm.cmd) leaves node processes orphaned.
-                # Taskkill /T /F forces all children in the tree to die.
-                # taskkill handles process tree on Windows
-                subprocess.run(
-                    ["taskkill", "/F", "/T", "/PID", str(_vite_process.pid)],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL
-                )
-            else:
-                # Kill the entire process group on Unix so the Node.js child of npm also dies
-                os.killpg(os.getpgid(_vite_process.pid), signal.SIGTERM)
-            await asyncio.wait_for(_vite_process.wait(), timeout=5)
-        except Exception:
-            try:
-                if os.name != 'nt':
-                    os.killpg(os.getpgid(_vite_process.pid), signal.SIGKILL)
-                else:
-                    _vite_process.kill()
-            except Exception:
-                pass
-    _vite_process = None
-
-
-def vite_is_running() -> bool:
-    return _vite_process is not None and _vite_process.returncode is None
-
-
-# ─── Build Validation ────────────────────────────────────────────────────────
-
-async def run_build() -> tuple[bool, str]:
-    """Run npm run build to validate the generated code."""
-    proc = await asyncio.create_subprocess_exec(
-        NPM_CMD, "run", "build",
-        cwd=str(SANDBOX_DIR),
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.STDOUT,
-    )
-    stdout, _ = await proc.communicate()
-    output = stdout.decode(errors="replace")
-    if proc.returncode == 0:
-        return True, output
-    return False, output
-
-def extract_build_error(output: str) -> tuple[str, str]:
-    """
-    Attempt to extract the filename and error message from Vite/Rollup/esbuild output.
-    Returns (filename, error_snippet). If filename cannot be found, filename is "".
-    """
-    filename = ""
-    error_snippet = output
-    
-    # Try Rollup format: failed to resolve import "..." from ".../src/components/Bad.jsx"
-    # or "[vite]: Rollup failed to resolve import "..." from "D:/.../src/components/Testimonials.jsx""
-    rollup_match = re.search(r'from\s+["\'](.*?\.jsx?)["\']', output)
-    if rollup_match:
-        path = rollup_match.group(1).replace("\\", "/")
-        if "src/" in path:
-            filename = path[path.find("src/") + 4:]
-            
-    if not filename:
-        # Try esbuild format: /absolute/path/src/App.jsx:5:10: error: Unexpected token
-        esbuild_match = re.search(r'([A-Za-z]:[\\/].*?|/[a-zA-Z0-9_./-]+/src/[a-zA-Z0-9_./-]+):(\d+):', output)
-        if esbuild_match:
-            path = esbuild_match.group(1).replace("\\", "/")
-            if "src/" in path:
-                filename = path[path.find("src/") + 4:]
-
-    if not filename:
-        # Just scan for any src/something.jsx
-        src_match = re.search(r'(?:src/)([a-zA-Z0-9_./-]+\.jsx?)', output)
-        if src_match:
-            filename = src_match.group(1)
-            
-    # Keep the snippet manageable
-    if len(error_snippet) > 2500:
-        error_snippet = error_snippet[-2500:]
-        
-    return filename.strip(), error_snippet

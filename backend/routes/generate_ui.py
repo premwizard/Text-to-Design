@@ -206,7 +206,7 @@ class SaveFilesRequest(BaseModel):
 @router.post("/save-files")
 async def save_files(request: SaveFilesRequest):
     try:
-        from backend.project_runner import write_files, start_vite, vite_is_running, cleanGeneratedCode
+        from backend.project_runner import write_files, cleanGeneratedCode
         # STEP 8: Print the exact code passed into LivePreview/Vite
         logging.warning("=" * 80)
         logging.warning("STEP 8: SaveFilesRequest payload (passed to Vite)")
@@ -218,9 +218,6 @@ async def save_files(request: SaveFilesRequest):
         # Clean every file after receiving/parsing JSON
         cleaned_files = {k: cleanGeneratedCode(v) for k, v in request.files.items()}
         write_files(cleaned_files, variation_id=request.variation_id)
-        # Ensure Vite dev server is running
-        if not vite_is_running():
-            await start_vite()
         return {"status": "success"}
     except Exception as e:
         logging.error(f"Error saving files: {e}")
@@ -235,7 +232,7 @@ async def stream_jsx(request: StreamRequest):
             gemini_api_key = get_env("GEMINI_API_KEY")
             openrouter_api_key = get_env("OPENROUTER_API_KEY")
             
-            from backend.project_runner import write_files, start_vite, vite_is_running
+            from backend.project_runner import write_files
             
             if not any([groq_api_key, openai_api_key, gemini_api_key, openrouter_api_key]):
                 # No key fallback: stream a mock React+Tailwind multi-file JSON structure
@@ -261,9 +258,6 @@ async def stream_jsx(request: StreamRequest):
                 cleaned_files = {k: cleanGeneratedCode(v) for k, v in files.items()}
                 write_files(cleaned_files)
                 
-                # Start Vite dev server if not running
-                if not vite_is_running():
-                    await start_vite()
                 
                 yield "data: [DONE]\n\n"
                 return
@@ -335,7 +329,7 @@ async def stream_jsx(request: StreamRequest):
                     raise ValueError("No valid JSON object found in response")
                 
                 files = parsed_data.get("files", {})
-                from backend.project_runner import cleanGeneratedCode, write_files, start_vite, vite_is_running
+                from backend.project_runner import cleanGeneratedCode, write_files
                 cleaned_files = {k: cleanGeneratedCode(v) for k, v in files.items()}
                 
                 # Single variation defaults to root or varA (if the UI expects a var)
@@ -344,9 +338,7 @@ async def stream_jsx(request: StreamRequest):
                 # In Edit mode, frontend handles save_files itself usually, but backend `/stream-jsx` does it too.
                 # We'll just write it to root for now, or we can skip writing in `/stream-jsx` entirely and let frontend call `/save-files`!
                 write_files(cleaned_files)
-                if not vite_is_running():
-                    await start_vite()
-                    
+
             else:
                 # ─── GENERATE VARIATIONS ────────────────────────
                 planner_prompt = PLANNER_PROMPT.format(user_prompt=request.prompt)
