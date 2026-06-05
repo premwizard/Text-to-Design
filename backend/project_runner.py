@@ -159,19 +159,19 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Variation {variation_id}</title>
-    <link rel="stylesheet" href="/dist/{variation_id}/main.css" />
+    <link rel="stylesheet" href="/dist/assets/{variation_id}.css" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/dist/{variation_id}/main.js"></script>
+    <script type="module" src="/dist/assets/{variation_id}.js"></script>
   </body>
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
 
-        # Compile with esbuild
+        # Compile with esbuild into the assets directory
         print("=" * 80)
         print(f"STEP 6.5: Running esbuild for {variation_id}")
-        cmd = f"npx esbuild src/{variation_id}/main.jsx --bundle --outfile=dist/{variation_id}/main.js --format=esm --loader:.js=jsx"
+        cmd = f"npx esbuild src/{variation_id}/main.jsx --bundle --outfile=dist/assets/{variation_id}.js --format=esm --loader:.js=jsx"
         try:
             result = subprocess.run(
                 cmd, 
