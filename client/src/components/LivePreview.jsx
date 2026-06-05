@@ -18,7 +18,8 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     setRuntimeError(null);
   }, [code]);
 
-  const SANDBOX_URL = import.meta.env.VITE_SANDBOX_URL || 'https://text-to-design.vercel.app';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com';
+  const SANDBOX_URL = import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`;
 
   const iframeSrc = variationId 
     ? `${SANDBOX_URL}/${variationId}.html`
