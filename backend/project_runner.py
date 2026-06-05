@@ -151,7 +151,6 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
             if src_file.exists() and not dst_file.exists():
                 shutil.copy2(src_file, dst_file)
                 
-        sandbox_url = os.getenv("SANDBOX_URL", "https://text-to-design.vercel.app").rstrip("/")
         # Generate varX.html in sandbox dir
         html_path = SANDBOX_DIR / f"{variation_id}.html"
         html_content = f"""<!doctype html>
@@ -160,13 +159,33 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Variation {variation_id}</title>
+    <link rel="stylesheet" href="/dist/{variation_id}/main.css" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="{sandbox_url}/src/{variation_id}/main.jsx"></script>
+    <script type="module" src="/dist/{variation_id}/main.js"></script>
   </body>
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
+
+        # Compile with esbuild
+        print("=" * 80)
+        print(f"STEP 6.5: Running esbuild for {variation_id}")
+        cmd = f"npx esbuild src/{variation_id}/main.jsx --bundle --outfile=dist/{variation_id}/main.js --format=esm --loader:.js=jsx"
+        try:
+            result = subprocess.run(
+                cmd, 
+                cwd=str(SANDBOX_DIR), 
+                shell=True, 
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            print("esbuild compilation successful")
+        except subprocess.CalledProcessError as e:
+            print(f"esbuild compilation failed: {e.stderr}")
+        print("=" * 80)
 
     # STEP 7: Read sandbox/src/App.jsx back from disk and print first 10 lines
     app_path = (SRC_DIR / variation_id / "App.jsx") if variation_id else (SRC_DIR / "App.jsx")

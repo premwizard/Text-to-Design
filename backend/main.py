@@ -67,9 +67,12 @@ import os
 
 assets_dir = ROOT_DIR / "sandbox" / "dist" / "assets"
 src_dir = ROOT_DIR / "sandbox" / "src"
+dist_dir = ROOT_DIR / "sandbox" / "dist"
 
 if src_dir.exists():
     app.mount("/src", StaticFiles(directory=str(src_dir)), name="src")
+if dist_dir.exists():
+    app.mount("/dist", StaticFiles(directory=str(dist_dir)), name="dist")
 
 @app.get("/preview/assets/{filename}")
 async def serve_preview_assets(filename: str):
