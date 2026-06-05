@@ -56,7 +56,7 @@ app.include_router(generate_router)
 app.include_router(fix_jsx_router)
 
 # --- Vite Sandbox Proxy ---
-proxy_client = httpx.AsyncClient(base_url="http://127.0.0.1:5174/")
+proxy_client = httpx.AsyncClient(base_url="http://127.0.0.1:5174/", timeout=httpx.Timeout(60.0))
 
 from backend.project_runner import start_vite, vite_is_running
 
