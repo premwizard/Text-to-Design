@@ -192,7 +192,8 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
 async def ensure_deps(log_cb=None):
     """Run npm install if node_modules doesn't exist."""
     nm = SANDBOX_DIR / "node_modules"
-    if nm.exists():
+    vite_dir = nm / "vite"
+    if vite_dir.exists():
         return
     if log_cb:
         await log_cb("Installing dependencies (first run — ~30s)...")
