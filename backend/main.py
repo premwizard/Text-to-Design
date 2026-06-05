@@ -16,6 +16,11 @@ from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import websockets
+import mimetypes
+
+# Ensure .jsx files are served with the correct JavaScript MIME type
+mimetypes.add_type("application/javascript", ".jsx")
+mimetypes.add_type("application/javascript", ".js")
 
 from backend.routes.generate_ui import router as generate_router
 from backend.routes.fix_jsx import router as fix_jsx_router
