@@ -239,14 +239,15 @@ async def start_vite(log_cb=None):
         stderr=asyncio.subprocess.STDOUT,
     )
 
-    # Read output until "Local:" line appears (server is ready)
+    # Read output until Vite indicates it's ready
     ready = False
     async for raw in _vite_process.stdout:
         line = raw.decode(errors="replace").rstrip()
+        lower_line = line.lower()
         if log_cb:
             await log_cb(f"[vite] {line}")
-        # Support various readiness flags
-        if "Local:" in line or "localhost" in line or "ready" in line.lower() or "port" in line:
+        # Wait for actual Vite startup message, not the npm echo
+        if "local:" in lower_line or "network:" in lower_line or "ready in" in lower_line:
             ready = True
             break
 

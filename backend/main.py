@@ -85,8 +85,9 @@ async def proxy_preview(request: Request, path: str):
             status_code=r.status_code,
             headers=r.headers
         )
-    except httpx.RequestError:
-        return {"error": "Sandbox not ready"}
+    except httpx.RequestError as e:
+        logger.error(f"Proxy request error: {e}")
+        return {"error": "Sandbox not ready", "details": str(e)}
 
 @app.websocket("/preview/{path:path}")
 async def proxy_websocket(websocket: WebSocket, path: str):
