@@ -64,7 +64,12 @@ from backend.project_runner import start_vite, vite_is_running
 async def proxy_preview(request: Request, path: str):
     if not vite_is_running():
         logger.info("Vite not running. Starting Vite dev server automatically before proxying...")
-        await start_vite()
+        async def vite_logger(msg):
+            logger.info(msg)
+        success = await start_vite(log_cb=vite_logger)
+        if not success:
+            logger.error("Aborting proxy because Vite failed to start")
+            return {"error": "Sandbox not ready", "details": "Vite dev server failed to start or crashed"}
 
     url = httpx.URL(path=f"/preview/{path}", query=request.url.query.encode("utf-8"))
     headers = dict(request.headers)

@@ -232,11 +232,16 @@ async def start_vite(log_cb=None):
     if log_cb:
         await log_cb("Starting Vite dev server on port 5174...")
 
+    kwargs = {}
+    if os.name != 'nt':
+        kwargs['preexec_fn'] = os.setsid
+
     _vite_process = await asyncio.create_subprocess_exec(
         NPM_CMD, "run", "dev",
         cwd=str(SANDBOX_DIR),
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.STDOUT,
+        **kwargs
     )
 
     # Read output until Vite indicates it's ready
@@ -255,8 +260,9 @@ async def start_vite(log_cb=None):
     # doesn't fill up and freeze the Vite process!
     async def consume_stdout():
         try:
-            async for _ in _vite_process.stdout:
-                pass
+            async for raw in _vite_process.stdout:
+                if log_cb:
+                    await log_cb(f"[vite] {raw.decode(errors='replace').rstrip()}")
         except Exception:
             pass
     
@@ -273,17 +279,22 @@ async def stop_vite():
             if os.name == 'nt':
                 # On Windows, terminating the shell wrapper (npm.cmd) leaves node processes orphaned.
                 # Taskkill /T /F forces all children in the tree to die.
+                # taskkill handles process tree on Windows
                 subprocess.run(
                     ["taskkill", "/F", "/T", "/PID", str(_vite_process.pid)],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
                 )
             else:
-                _vite_process.terminate()
+                # Kill the entire process group on Unix so the Node.js child of npm also dies
+                os.killpg(os.getpgid(_vite_process.pid), signal.SIGTERM)
             await asyncio.wait_for(_vite_process.wait(), timeout=5)
         except Exception:
             try:
-                _vite_process.kill()
+                if os.name != 'nt':
+                    os.killpg(os.getpgid(_vite_process.pid), signal.SIGKILL)
+                else:
+                    _vite_process.kill()
             except Exception:
                 pass
     _vite_process = None
