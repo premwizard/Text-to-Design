@@ -165,7 +165,7 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/{variation_id}/main.jsx"></script>
+    <script type="module" src="/preview/src/{variation_id}/main.jsx"></script>
   </body>
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
