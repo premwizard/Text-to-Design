@@ -58,8 +58,14 @@ app.include_router(fix_jsx_router)
 # --- Vite Sandbox Proxy ---
 proxy_client = httpx.AsyncClient(base_url="http://127.0.0.1:5174/")
 
+from backend.project_runner import start_vite, vite_is_running
+
 @app.api_route("/preview/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"])
 async def proxy_preview(request: Request, path: str):
+    if not vite_is_running():
+        logger.info("Vite not running. Starting Vite dev server automatically before proxying...")
+        await start_vite()
+
     url = httpx.URL(path=f"/preview/{path}", query=request.url.query.encode("utf-8"))
     headers = dict(request.headers)
     headers.pop("host", None)

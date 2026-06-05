@@ -20,6 +20,7 @@ SANDBOX_DIR = (BACKEND_DIR / "../sandbox").resolve()
 SRC_DIR = SANDBOX_DIR / "src"
 
 _vite_process: asyncio.subprocess.Process | None = None
+_vite_lock = asyncio.Lock()
 
 # Determine correct npm command name on Windows vs Unix
 NPM_CMD = "npm.cmd" if os.name == "nt" else "npm"
@@ -218,10 +219,15 @@ async def start_vite(log_cb=None):
     Yields log lines via log_cb until the server is ready.
     """
     global _vite_process
-    await stop_vite()
+    
+    async with _vite_lock:
+        if vite_is_running():
+            return True
+            
+        await stop_vite()
 
-    # Ensure dependencies are installed before starting
-    await ensure_deps(log_cb)
+        # Ensure dependencies are installed before starting
+        await ensure_deps(log_cb)
 
     if log_cb:
         await log_cb("Starting Vite dev server on port 5174...")
