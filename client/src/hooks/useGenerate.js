@@ -94,8 +94,20 @@ export function useGenerate() {
             }
             if (parsed.type === "fallback") {
               setStatusText(parsed.message || "Using backup AI model...");
-              fullCodeAccumulator = "";
-              setCode("");
+              if (vid) {
+                  setVariations(prev => ({
+                      ...prev,
+                      [vid]: { ...prev[vid], code: '' }
+                  }));
+              } else {
+                  fullCodeAccumulator = "";
+                  setCode("");
+              }
+            }
+            if (parsed.type === "emergency") {
+              setError(parsed.message || "AI providers are temporarily busy.");
+              done = true;
+              break;
             }
             if (parsed.type === "timeline") {
               if (vid) {
@@ -114,8 +126,15 @@ export function useGenerate() {
                 setStatusText(`Fixing build error in ${parsed.file || 'unknown'} (Attempt ${parsed.attempt}/10)...`);
               } else if (parsed.status === "fallback_restart") {
                 setStatusText("Primary AI model is busy. Switching to backup model...");
-                fullCodeAccumulator = "";
-                setCode("");
+                if (vid) {
+                    setVariations(prev => ({
+                        ...prev,
+                        [vid]: { ...prev[vid], code: '' }
+                    }));
+                } else {
+                    fullCodeAccumulator = "";
+                    setCode("");
+                }
               }
             }
             if (parsed.chunk) {
@@ -231,8 +250,20 @@ export function useGenerate() {
             }
             if (parsed.type === "fallback") {
               setStatusText(parsed.message || "Using backup AI model...");
-              fullCodeAccumulator = "";
-              setCode("");
+              if (vid) {
+                  setVariations(prev => ({
+                      ...prev,
+                      [vid]: { ...prev[vid], code: '' }
+                  }));
+              } else {
+                  fullCodeAccumulator = "";
+                  setCode("");
+              }
+            }
+            if (parsed.type === "emergency") {
+              setError(parsed.message || "AI providers are temporarily busy.");
+              done = true;
+              break;
             }
             if (parsed.type === "timeline") {
               if (vid) {
@@ -251,8 +282,15 @@ export function useGenerate() {
                 setStatusText(`Fixing build error in ${parsed.file || 'unknown'} (Attempt ${parsed.attempt}/10)...`);
               } else if (parsed.status === "fallback_restart") {
                 setStatusText("Primary AI model is busy. Switching to backup model...");
-                fullCodeAccumulator = "";
-                setCode("");
+                if (vid) {
+                    setVariations(prev => ({
+                        ...prev,
+                        [vid]: { ...prev[vid], code: '' }
+                    }));
+                } else {
+                    fullCodeAccumulator = "";
+                    setCode("");
+                }
               }
             }
             if (parsed.chunk) {

@@ -6,10 +6,12 @@ from backend.services.prompt_optimizer import optimize_prompt
 # Dynamically load providers
 import backend.services.groq_provider as groq_provider
 import backend.services.gemini_provider as gemini_provider
+import backend.services.openrouter_provider as openrouter_provider
 
 PROVIDERS = {
     "groq": groq_provider,
-    "gemini": gemini_provider
+    "gemini": gemini_provider,
+    "openrouter": openrouter_provider
 }
 
 MAX_RETRIES_PER_MODEL = 3
