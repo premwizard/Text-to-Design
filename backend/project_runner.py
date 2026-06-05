@@ -244,6 +244,17 @@ async def start_vite(log_cb=None):
             ready = True
             break
 
+    # Important: continue consuming stdout in the background so the OS pipe buffer
+    # doesn't fill up and freeze the Vite process!
+    async def consume_stdout():
+        try:
+            async for _ in _vite_process.stdout:
+                pass
+        except Exception:
+            pass
+    
+    asyncio.create_task(consume_stdout())
+
     return ready
 
 
