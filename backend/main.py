@@ -61,10 +61,31 @@ from fastapi.responses import FileResponse
 import os
 
 assets_dir = ROOT_DIR / "sandbox" / "dist" / "assets"
-if assets_dir.exists():
-    app.mount("/preview/assets", StaticFiles(directory=str(assets_dir)), name="preview_assets")
-else:
-    logger.warning(f"Assets directory not found at {assets_dir}. Ensure 'npm run build' was run in sandbox.")
+src_dir = ROOT_DIR / "sandbox" / "src"
+
+if src_dir.exists():
+    app.mount("/src", StaticFiles(directory=str(src_dir)), name="src")
+
+@app.get("/preview/assets/{filename}")
+async def serve_preview_assets(filename: str):
+    if not assets_dir.exists():
+        return {"error": "Not Found", "details": "Assets directory missing"}
+        
+    file_path = assets_dir / filename
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    
+    # Fallback to whatever hash is currently built if the HTML is requesting an old hash
+    if filename.endswith(".js"):
+        js_files = list(assets_dir.glob("*.js"))
+        if js_files:
+            return FileResponse(js_files[0])
+    elif filename.endswith(".css"):
+        css_files = list(assets_dir.glob("*.css"))
+        if css_files:
+            return FileResponse(css_files[0])
+            
+    return {"error": "Not Found"}
 
 @app.get("/preview/{path:path}")
 async def serve_preview(path: str):
