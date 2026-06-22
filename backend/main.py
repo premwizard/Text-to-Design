@@ -65,6 +65,10 @@ async def health_check():
 app.include_router(generate_router)
 app.include_router(fix_jsx_router)
 
+# Alias API routes under /preview to support preview-hosted frontend paths
+app.include_router(generate_router, prefix="/preview")
+app.include_router(fix_jsx_router, prefix="/preview")
+
 # --- Static Sandbox File Serving ---
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
