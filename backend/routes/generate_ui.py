@@ -204,7 +204,7 @@ class SaveFilesRequest(BaseModel):
     variation_id: Optional[str] = None
 
 @router.post("/save-files")
-async def save_files(request: SaveFilesRequest):
+def save_files(request: SaveFilesRequest):
     try:
         from backend.project_runner import write_files, cleanGeneratedCode
         # STEP 8: Print the exact code passed into LivePreview/Vite

@@ -171,7 +171,7 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
         # Compile with esbuild into the assets directory
         print("=" * 80)
         print(f"STEP 6.5: Running esbuild for {variation_id}")
-        cmd = f"npx esbuild src/{variation_id}/main.jsx --bundle --outfile=dist/assets/{variation_id}.js --format=esm --loader:.js=jsx"
+        cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile=dist/assets/{variation_id}.js --format=esm --loader:.js=jsx"
         try:
             result = subprocess.run(
                 cmd, 
