@@ -1,5 +1,4 @@
 import React from 'react';
-import * as React from "react";
 import FloatingNavbar from './components/FloatingNavbar';
 import GradientHero from './components/GradientHero';
 import FeatureTimeline from './components/FeatureTimeline';

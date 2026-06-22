@@ -1,5 +1,4 @@
 import React from 'react';
-import * as React from "react";
 import CenteredHero from './components/CenteredHero';
 import BentoFeatures from './components/BentoFeatures';
 import AccordionFAQ from './components/AccordionFAQ';

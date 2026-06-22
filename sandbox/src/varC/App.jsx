@@ -1,5 +1,4 @@
 import React from 'react';
-import * as React from "react";
 import MagazineHero from './components/MagazineHero';
 import EditorialFeatures from './components/EditorialFeatures';
 import ImageGallery from './components/ImageGallery';
