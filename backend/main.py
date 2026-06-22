@@ -84,12 +84,13 @@ async def serve_preview_assets(filename: str):
         return FileResponse(file_path)
     
     # Fallback to whatever hash is currently built if the HTML is requesting an old hash
+    stem = Path(filename).stem.split('-')[0] # get base name without hash
     if filename.endswith(".js"):
-        js_files = list(assets_dir.glob("*.js"))
+        js_files = list(assets_dir.glob(f"{stem}*.js"))
         if js_files:
             return FileResponse(js_files[0])
     elif filename.endswith(".css"):
-        css_files = list(assets_dir.glob("*.css"))
+        css_files = list(assets_dir.glob(f"{stem}*.css"))
         if css_files:
             return FileResponse(css_files[0])
             

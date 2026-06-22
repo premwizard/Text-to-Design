@@ -8,7 +8,7 @@ export default defineConfig({
   assetsInclude: [],
   server: {
     port: 5173,
-    strictPort: true,
+    strictPort: false,
     proxy: {
       '/stream-jsx': 'http://127.0.0.1:8000',
       '/save-files': 'http://127.0.0.1:8000',
