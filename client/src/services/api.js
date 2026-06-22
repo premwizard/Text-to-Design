@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { normalizeApiBaseUrl } from '../lib/urlHelpers';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com';
+const API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
 
 export async function generateUI(prompt) {
   const payload = { text: prompt };

@@ -12,8 +12,9 @@ import { PromptComposer } from '../components/prompt/PromptComposer';
 import { Layout, LayoutTemplate, Briefcase, Monitor, ShoppingCart, Smartphone, Sparkles, FolderOpen, History, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { projectService } from '../services/projectService';
+import { normalizeApiBaseUrl } from '../lib/urlHelpers';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com';
+const API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
 
 function cleanGeneratedCode(code) {
   if (!code) return "";

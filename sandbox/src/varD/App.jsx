@@ -1,23 +1,23 @@
 import React from 'react';
-import BoldHero from './components/BoldHero';
-import TabbedFeatures from './components/TabbedFeatures';
-import RawStats from './components/RawStats';
-import DirectCTA from './components/DirectCTA';
-import MinimalFooter from './components/MinimalFooter';
+import SplitHero from './components/SplitHero';
+import FeatureAccordion from './components/FeatureAccordion';
+import TestimonialSection from './components/TestimonialSection';
+import InteractiveStats from './components/InteractiveStats';
+import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <div className="bg-black min-h-screen text-white">
+    <div className="bg-stone-900 min-h-screen text-zinc-100">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Space+Mono:wght@300;400;500;600&display=swap');
-        body { font-family: 'Space Mono', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
       `}</style>
-      <BoldHero />
-      <TabbedFeatures />
-      <RawStats />
-      <DirectCTA />
-      <MinimalFooter />
+      <SplitHero/>
+      <FeatureAccordion/>
+      <TestimonialSection/>
+      <InteractiveStats/>
+      <Footer/>
     </div>
   );
 }

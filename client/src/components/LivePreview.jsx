@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { normalizeApiBaseUrl, normalizeSandboxUrl } from '../lib/urlHelpers';
 
 export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId }) {
   const iframeRef = useRef(null);
@@ -18,8 +19,8 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     setRuntimeError(null);
   }, [code]);
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com';
-  const SANDBOX_URL = import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`;
+  const API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
+  const SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
 
   const iframeSrc = variationId 
     ? `${SANDBOX_URL}/${variationId}.html`
