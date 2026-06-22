@@ -1,10 +1,9 @@
 import React from 'react';
-import IndustrialNavbar from './components/IndustrialNavbar';
 import BoldHero from './components/BoldHero';
-import FeatureAccordion from './components/FeatureAccordion';
-import InteractiveProcess from './components/InteractiveProcess';
-import FAQSection from './components/FAQSection';
-import Footer from './components/Footer';
+import TabbedFeatures from './components/TabbedFeatures';
+import RawStats from './components/RawStats';
+import DirectCTA from './components/DirectCTA';
+import MinimalFooter from './components/MinimalFooter';
 
 export default function App() {
   return (
@@ -14,12 +13,11 @@ export default function App() {
         body { font-family: 'Space Mono', sans-serif; }
         h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
       `}</style>
-      <IndustrialNavbar />
       <BoldHero />
-      <FeatureAccordion />
-      <InteractiveProcess />
-      <FAQSection />
-      <Footer />
+      <TabbedFeatures />
+      <RawStats />
+      <DirectCTA />
+      <MinimalFooter />
     </div>
   );
 }

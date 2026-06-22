@@ -182,13 +182,13 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
         print(f"[DEBUG] Output JS file path: {abs_outfile_js}")
         print(f"[DEBUG] Output CSS file path: {abs_outfile_css}")
         
-        cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx"
+        cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
         print(f"[DEBUG] Executing command: {cmd}")
         try:
             result = subprocess.run(
-                cmd, 
-                cwd=str(SANDBOX_DIR), 
-                shell=True, 
+                cmd,
+                cwd=str(SANDBOX_DIR),
+                shell=True,
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,

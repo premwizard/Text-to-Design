@@ -2,10 +2,10 @@ import React from 'react';
 
 export default function BoldHero() {
   return (
-    <section className="flex flex-col items-center py-12">
-      <h1 className="text-5xl font-bold mb-4">Build powerful software, faster.</h1>
-      <p className="text-lg text-center mb-8">CodeForge helps you streamline your development process with our suite of tools.</p>
-      <button className="bg-red-600 text-white px-6 py-3 hover:opacity-90 transition-all duration-200 cursor-pointer">Get Started</button>
-    </section>
+    <div className="container mx-auto p-12 pt-24 md:p-24">
+      <h1 className="text-5xl font-bold leading-tight">CoreBlock</h1>
+      <p className="text-2xl">Uncompromisingly robust infrastructure for your digital needs.</p>
+      <button className="bg-red-500 hover:opacity-90 transition-all duration-200 cursor-pointer py-4 px-8 rounded-lg text-lg font-bold">Get Started</button>
+    </div>
   );
 }
