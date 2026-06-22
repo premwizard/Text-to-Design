@@ -69,36 +69,54 @@ assets_dir = ROOT_DIR / "sandbox" / "dist" / "assets"
 src_dir = ROOT_DIR / "sandbox" / "src"
 dist_dir = ROOT_DIR / "sandbox" / "dist"
 
-if src_dir.exists():
-    app.mount("/src", StaticFiles(directory=str(src_dir)), name="src")
-if dist_dir.exists():
-    app.mount("/dist", StaticFiles(directory=str(dist_dir)), name="dist")
+# Ensure directories exist so they can be successfully mounted statically
+logger.info("Initializing static directories...")
+logger.info(f"Source directory: {src_dir} (exists: {src_dir.exists()})")
+logger.info(f"Dist directory: {dist_dir} (exists: {dist_dir.exists()})")
+src_dir.mkdir(parents=True, exist_ok=True)
+dist_dir.mkdir(parents=True, exist_ok=True)
+
+logger.info("Mounting /src and /dist static directories unconditionally")
+app.mount("/src", StaticFiles(directory=str(src_dir)), name="src")
+app.mount("/dist", StaticFiles(directory=str(dist_dir)), name="dist")
 
 @app.get("/preview/assets/{filename}")
 async def serve_preview_assets(filename: str):
+    logger.info(f"Requested preview asset: {filename}")
     if not assets_dir.exists():
+        logger.warning(f"Assets directory missing: {assets_dir}")
         return {"error": "Not Found", "details": "Assets directory missing"}
         
     file_path = assets_dir / filename
+    logger.info(f"Checking physical asset path: {file_path}")
     if file_path.exists() and file_path.is_file():
+        logger.info(f"Serving asset file: {file_path}")
         return FileResponse(file_path)
     
     # Fallback to whatever hash is currently built if the HTML is requesting an old hash
     stem = Path(filename).stem.split('-')[0] # get base name without hash
+    logger.info(f"Asset file not found directly. Falling back using stem: {stem}")
     if filename.endswith(".js"):
         js_files = list(assets_dir.glob(f"{stem}*.js"))
         if js_files:
+            logger.info(f"Fallback found JS file: {js_files[0]}")
             return FileResponse(js_files[0])
     elif filename.endswith(".css"):
         css_files = list(assets_dir.glob(f"{stem}*.css"))
         if css_files:
+            logger.info(f"Fallback found CSS file: {css_files[0]}")
             return FileResponse(css_files[0])
             
+    logger.warning(f"Preview asset not found: {filename}")
     return {"error": "Not Found"}
 
 @app.get("/preview/{path:path}")
 async def serve_preview(path: str):
+    logger.info(f"Requested preview path: {path}")
     file_path = ROOT_DIR / "sandbox" / path
+    logger.info(f"Checking physical preview path: {file_path}")
     if file_path.exists() and file_path.is_file():
+        logger.info(f"Serving preview file: {file_path}")
         return FileResponse(file_path)
+    logger.warning(f"Preview file not found: {file_path}")
     return {"error": "Not Found", "details": "The requested file does not exist in the sandbox"}

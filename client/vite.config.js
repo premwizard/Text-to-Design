@@ -15,6 +15,8 @@ export default defineConfig({
       '/fix-jsx': 'http://127.0.0.1:8000',
       '/generate-ui': 'http://127.0.0.1:8000',
       '/health': 'http://127.0.0.1:8000',
+      '/preview': 'http://127.0.0.1:8000',
+      '/dist': 'http://127.0.0.1:8000',
     },
   },
 })

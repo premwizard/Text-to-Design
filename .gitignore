@@ -1,5 +1,7 @@
 .env
 backend/.env
 node_modules/
-dist/
+client/dist/
 .DS_Store
+sandbox/dist/assets/var*
+sandbox/var*

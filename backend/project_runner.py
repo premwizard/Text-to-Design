@@ -153,25 +153,37 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
                 
         # Generate varX.html in sandbox dir
         html_path = SANDBOX_DIR / f"{variation_id}.html"
+        print(f"[DEBUG] Generating HTML file: {html_path}")
+        print(f"[DEBUG] Asset paths used in HTML: /dist/assets/{variation_id}.css and /dist/assets/{variation_id}.js")
         html_content = f"""<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Variation {variation_id}</title>
-    <link rel="stylesheet" href="/preview/assets/{variation_id}.css" />
+    <link rel="stylesheet" href="/dist/assets/{variation_id}.css" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/preview/assets/{variation_id}.js"></script>
+    <script type="module" src="/dist/assets/{variation_id}.js"></script>
   </body>
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
 
         # Compile with esbuild into the assets directory
+        outfile_js = f"dist/assets/{variation_id}.js"
+        outfile_css = f"dist/assets/{variation_id}.css"
+        abs_outfile_js = SANDBOX_DIR / outfile_js
+        abs_outfile_css = SANDBOX_DIR / outfile_css
+        
         print("=" * 80)
         print(f"STEP 6.5: Running esbuild for {variation_id}")
-        cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile=dist/assets/{variation_id}.js --format=esm --loader:.js=jsx"
+        print(f"[DEBUG] Target compilation folder: {SANDBOX_DIR}")
+        print(f"[DEBUG] Output JS file path: {abs_outfile_js}")
+        print(f"[DEBUG] Output CSS file path: {abs_outfile_css}")
+        
+        cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx"
+        print(f"[DEBUG] Executing command: {cmd}")
         try:
             result = subprocess.run(
                 cmd, 
@@ -183,6 +195,8 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
                 text=True
             )
             print("esbuild compilation successful")
+            print(f"[DEBUG] Generated JS file exists: {abs_outfile_js.exists()}")
+            print(f"[DEBUG] Generated CSS file exists: {abs_outfile_css.exists()}")
         except subprocess.CalledProcessError as e:
             print(f"esbuild compilation failed: {e.stderr}")
         print("=" * 80)
