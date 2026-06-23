@@ -11,7 +11,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, WebSocket
+from fastapi import FastAPI, Request, WebSocket, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
@@ -94,7 +94,7 @@ async def serve_preview_assets(filename: str):
     logger.info(f"Requested preview asset: {filename}")
     if not assets_dir.exists():
         logger.warning(f"Assets directory missing: {assets_dir}")
-        return {"error": "Not Found", "details": "Assets directory missing"}
+        raise HTTPException(status_code=404, detail="Assets directory missing")
         
     file_path = assets_dir / filename
     logger.info(f"Checking physical asset path: {file_path}")
@@ -117,15 +117,35 @@ async def serve_preview_assets(filename: str):
             return FileResponse(css_files[0])
             
     logger.warning(f"Preview asset not found: {filename}")
-    return {"error": "Not Found"}
+    raise HTTPException(status_code=404, detail="Asset not found")
 
 @app.get("/preview/{path:path}")
 async def serve_preview(path: str):
     logger.info(f"Requested preview path: {path}")
+    
+    # Standardise empty or index paths
+    if not path or path.strip("/") == "" or path.strip("/") == "index.html":
+        # Check dist first, then root sandbox index.html
+        dist_index = ROOT_DIR / "sandbox" / "dist" / "index.html"
+        root_index = ROOT_DIR / "sandbox" / "index.html"
+        if dist_index.exists() and dist_index.is_file():
+            logger.info(f"Serving preview index file from dist: {dist_index}")
+            return FileResponse(dist_index)
+        elif root_index.exists() and root_index.is_file():
+            logger.info(f"Serving preview index file from sandbox root: {root_index}")
+            return FileResponse(root_index)
+            
     file_path = ROOT_DIR / "sandbox" / path
     logger.info(f"Checking physical preview path: {file_path}")
     if file_path.exists() and file_path.is_file():
         logger.info(f"Serving preview file: {file_path}")
         return FileResponse(file_path)
+        
+    # Check if maybe it's in the dist directory
+    dist_file_path = ROOT_DIR / "sandbox" / "dist" / path
+    if dist_file_path.exists() and dist_file_path.is_file():
+        logger.info(f"Serving preview file from dist: {dist_file_path}")
+        return FileResponse(dist_file_path)
+        
     logger.warning(f"Preview file not found: {file_path}")
-    return {"error": "Not Found", "details": "The requested file does not exist in the sandbox"}
+    raise HTTPException(status_code=404, detail="The requested file does not exist in the sandbox")
