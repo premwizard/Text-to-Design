@@ -19,8 +19,13 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     setRuntimeError(null);
   }, [code]);
 
-  const API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
-  const SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
+  let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
+  let SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
+
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    API_BASE = 'http://localhost:5173';
+    SANDBOX_URL = 'http://localhost:5173/preview';
+  }
 
   const iframeSrc = variationId 
     ? `${SANDBOX_URL}/${variationId}.html`

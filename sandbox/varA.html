@@ -4,7 +4,61 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Variation varA</title>
+    
+    <!-- Tailwind CSS CDN for dynamic styling of preview elements -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Allow tailwind configuration extension if needed
+      tailwind.config = {
+        theme: {
+          extend: {}
+        }
+      };
+    </script>
+
+    <!-- Google Fonts Support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;650;700&family=Space+Grotesk:wght@400;550;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icon Support -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Raw compiled CSS from bundler as fallback -->
     <link rel="stylesheet" href="/dist/assets/varA.css" />
+
+    <!-- Preview Debugger & Global Error Catching -->
+    <script>
+      console.log("[PREVIEW DEBUG] Initializing Variation varA preview...");
+      
+      window.addEventListener('error', (event) => {
+        console.error("[PREVIEW DEBUG] Script error caught:", event.message);
+        if (window.parent) {
+          window.parent.postMessage({
+            type: 'runtime_error',
+            error: event.message,
+            stack: event.error ? event.error.stack : ''
+          }, '*');
+        }
+      });
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href);
+        const scripts = Array.from(document.querySelectorAll('script')).map(s => s.src || "inline");
+        console.log("[PREVIEW DEBUG] Loaded Stylesheets:", links);
+        console.log("[PREVIEW DEBUG] Loaded Scripts:", scripts);
+        
+        const observer = new MutationObserver((mutations) => {
+          const root = document.getElementById('root');
+          if (root && root.children.length > 0) {
+            console.log("[PREVIEW DEBUG] React application rendered to DOM successfully.");
+            console.log("[PREVIEW DEBUG] Final Rendered DOM Snippet:", root.innerHTML.slice(0, 500) + "...");
+            observer.disconnect();
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

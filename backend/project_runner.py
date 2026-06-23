@@ -82,7 +82,7 @@ def log_invalid_file(filename: str, offending_token: str, code: str):
     print(first_20_lines)
 
 
-def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
+async def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
     """
     Write a dict of { "relative/path.jsx": "file content" } into sandbox/src/.
     Returns list of written paths for logging.
@@ -161,7 +161,61 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Variation {variation_id}</title>
+    
+    <!-- Tailwind CSS CDN for dynamic styling of preview elements -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Allow tailwind configuration extension if needed
+      tailwind.config = {{
+        theme: {{
+          extend: {{}}
+        }}
+      }};
+    </script>
+
+    <!-- Google Fonts Support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;650;700&family=Space+Grotesk:wght@400;550;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icon Support -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Raw compiled CSS from bundler as fallback -->
     <link rel="stylesheet" href="/dist/assets/{variation_id}.css" />
+
+    <!-- Preview Debugger & Global Error Catching -->
+    <script>
+      console.log("[PREVIEW DEBUG] Initializing Variation {variation_id} preview...");
+      
+      window.addEventListener('error', (event) => {{
+        console.error("[PREVIEW DEBUG] Script error caught:", event.message);
+        if (window.parent) {{
+          window.parent.postMessage({{
+            type: 'runtime_error',
+            error: event.message,
+            stack: event.error ? event.error.stack : ''
+          }}, '*');
+        }}
+      }});
+
+      window.addEventListener('DOMContentLoaded', () => {{
+        const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href);
+        const scripts = Array.from(document.querySelectorAll('script')).map(s => s.src || "inline");
+        console.log("[PREVIEW DEBUG] Loaded Stylesheets:", links);
+        console.log("[PREVIEW DEBUG] Loaded Scripts:", scripts);
+        
+        const observer = new MutationObserver((mutations) => {{
+          const root = document.getElementById('root');
+          if (root && root.children.length > 0) {{
+            console.log("[PREVIEW DEBUG] React application rendered to DOM successfully.");
+            console.log("[PREVIEW DEBUG] Final Rendered DOM Snippet:", root.innerHTML.slice(0, 500) + "...");
+            observer.disconnect();
+          }}
+        }});
+        observer.observe(document.body, {{ childList: true, subtree: true }});
+      }});
+    </script>
   </head>
   <body>
     <div id="root"></div>
@@ -170,36 +224,87 @@ def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
 
-        # Compile with esbuild into the assets directory
-        outfile_js = f"dist/assets/{variation_id}.js"
-        outfile_css = f"dist/assets/{variation_id}.css"
-        abs_outfile_js = SANDBOX_DIR / outfile_js
-        abs_outfile_css = SANDBOX_DIR / outfile_css
-        
-        print("=" * 80)
-        print(f"STEP 6.5: Running esbuild for {variation_id}")
-        print(f"[DEBUG] Target compilation folder: {SANDBOX_DIR}")
-        print(f"[DEBUG] Output JS file path: {abs_outfile_js}")
-        print(f"[DEBUG] Output CSS file path: {abs_outfile_css}")
-        
-        cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
-        print(f"[DEBUG] Executing command: {cmd}")
-        try:
+        # Compile and verify step with a retry loop
+        max_attempts = 3
+        for attempt in range(1, max_attempts + 1):
+            outfile_js = f"dist/assets/{variation_id}.js"
+            outfile_css = f"dist/assets/{variation_id}.css"
+            abs_outfile_js = SANDBOX_DIR / outfile_js
+            abs_outfile_css = SANDBOX_DIR / outfile_css
+            
+            print("=" * 80)
+            print(f"STEP 6.5: Running esbuild for {variation_id} (Attempt {attempt}/{max_attempts})")
+            print(f"[DEBUG] Target compilation folder: {SANDBOX_DIR}")
+            print(f"[DEBUG] Output JS file path: {abs_outfile_js}")
+            print(f"[DEBUG] Output CSS file path: {abs_outfile_css}")
+            
+            cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
+            print(f"[DEBUG] Executing command: {cmd}")
+            
             result = subprocess.run(
                 cmd,
                 cwd=str(SANDBOX_DIR),
                 shell=True,
-                check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
             )
-            print("esbuild compilation successful")
-            print(f"[DEBUG] Generated JS file exists: {abs_outfile_js.exists()}")
-            print(f"[DEBUG] Generated CSS file exists: {abs_outfile_css.exists()}")
-        except subprocess.CalledProcessError as e:
-            print(f"esbuild compilation failed: {e.stderr}")
-        print("=" * 80)
+            
+            if result.returncode == 0:
+                print("esbuild compilation successful")
+                print(f"[DEBUG] Generated JS file exists: {abs_outfile_js.exists()}")
+                print(f"[DEBUG] Generated CSS file exists: {abs_outfile_css.exists()}")
+                print("=" * 80)
+                break
+            else:
+                print(f"esbuild compilation failed: {result.stderr}")
+                print("=" * 80)
+                if attempt == max_attempts:
+                    raise ValueError(f"esbuild compilation failed after {max_attempts} attempts: {result.stderr}")
+                
+                # Auto-repair logic
+                match = re.search(r'(src/[^:\s]+\.jsx?)', result.stderr)
+                if match:
+                    error_file_rel = match.group(1)
+                    error_file_abs = SANDBOX_DIR / error_file_rel
+                    if error_file_abs.exists():
+                        print(f"[Auto-Fix] Repairing offending file: {error_file_rel}")
+                        broken_code = error_file_abs.read_text(encoding="utf-8")
+                        
+                        from backend.services.ai_router import generate_ai
+                        from backend.prompts import FIX_SYSTEM_PROMPT
+                        from backend.routes.generate_ui import _repair_jsx
+                        
+                        system_instructions = FIX_SYSTEM_PROMPT.format(
+                            broken_code=broken_code,
+                            error=result.stderr
+                        )
+                        
+                        try:
+                            # Invoke AI text generation
+                            ai_response = await generate_ai(
+                                task_type="fix",
+                                system_prompt=system_instructions,
+                                user_prompt=f"Fix this component. The error is: {result.stderr}",
+                                temperature=0.1,
+                                stream=False
+                            )
+                            fixed_code_raw = ai_response.choices[0].message.content.strip()
+                            
+                            # Clean and repair fixed code
+                            fixed_code = cleanGeneratedCode(fixed_code_raw)
+                            fixed_code = _repair_jsx(fixed_code)
+                            
+                            # Write fixed code back to disk
+                            error_file_abs.write_text(fixed_code, encoding="utf-8")
+                            print(f"[Auto-Fix] Rewrote repaired file: {error_file_rel}")
+                        except Exception as ai_err:
+                            print(f"[Auto-Fix] AI repair request failed: {ai_err}")
+                            break
+                    else:
+                        break
+                else:
+                    break
 
     # STEP 7: Read sandbox/src/App.jsx back from disk and print first 10 lines
     app_path = (SRC_DIR / variation_id / "App.jsx") if variation_id else (SRC_DIR / "App.jsx")

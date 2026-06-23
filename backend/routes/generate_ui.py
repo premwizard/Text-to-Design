@@ -204,7 +204,7 @@ class SaveFilesRequest(BaseModel):
     variation_id: Optional[str] = None
 
 @router.post("/save-files")
-def save_files(request: SaveFilesRequest):
+async def save_files(request: SaveFilesRequest):
     try:
         from backend.project_runner import write_files, cleanGeneratedCode
         # STEP 8: Print the exact code passed into LivePreview/Vite
@@ -217,7 +217,7 @@ def save_files(request: SaveFilesRequest):
 
         # Clean every file after receiving/parsing JSON
         cleaned_files = {k: cleanGeneratedCode(v) for k, v in request.files.items()}
-        write_files(cleaned_files, variation_id=request.variation_id)
+        await write_files(cleaned_files, variation_id=request.variation_id)
         return {"status": "success"}
     except Exception as e:
         logging.error(f"Error saving files: {e}")
@@ -256,7 +256,7 @@ async def stream_jsx(request: StreamRequest):
                 from backend.project_runner import cleanGeneratedCode
                 files = parsed_data.get("files", {})
                 cleaned_files = {k: cleanGeneratedCode(v) for k, v in files.items()}
-                write_files(cleaned_files)
+                await write_files(cleaned_files)
                 
                 
                 yield "data: [DONE]\n\n"
@@ -337,7 +337,7 @@ async def stream_jsx(request: StreamRequest):
                 # Actually, edits don't need a variation loop, but they do need to be written to the correct folder.
                 # In Edit mode, frontend handles save_files itself usually, but backend `/stream-jsx` does it too.
                 # We'll just write it to root for now, or we can skip writing in `/stream-jsx` entirely and let frontend call `/save-files`!
-                write_files(cleaned_files)
+                await write_files(cleaned_files)
 
             else:
                 # ─── GENERATE VARIATIONS ────────────────────────

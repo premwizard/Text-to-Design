@@ -14,7 +14,10 @@ import { useAuth } from '../context/AuthContext';
 import { projectService } from '../services/projectService';
 import { normalizeApiBaseUrl } from '../lib/urlHelpers';
 
-const API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
+let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  API_BASE = 'http://localhost:5173';
+}
 
 function cleanGeneratedCode(code) {
   if (!code) return "";
