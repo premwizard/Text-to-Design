@@ -297,7 +297,8 @@ async def stream_jsx(request: StreamRequest):
                             continue
                         elif chunk.get("type") == "emergency":
                             yield f"data: {json.dumps({'error': chunk.get('message')})}\n\n"
-                            continue
+                            yield "data: [DONE]\n\n"
+                            return
                     
                     content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
                     if content:
@@ -358,6 +359,17 @@ async def stream_jsx(request: StreamRequest):
                         stream=False
                     )
                     planner_output = planner_resp.choices[0].message.content.strip()
+                    
+                    # Check if the AI router returned an emergency fallback error
+                    try:
+                        parsed_err = json.loads(planner_output)
+                        if isinstance(parsed_err, dict) and "error" in parsed_err:
+                            logging.warning(f"AI Router returned error response: {parsed_err['error']}")
+                            yield f"data: {json.dumps({'error': parsed_err['error']})}\n\n"
+                            yield "data: [DONE]\n\n"
+                            return
+                    except Exception:
+                        pass
                     
                     start_idx = planner_output.find('[')
                     end_idx = planner_output.rfind(']')

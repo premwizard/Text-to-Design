@@ -5,7 +5,7 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-url = "http://127.0.0.1:8000/stream-jsx"
+url = "https://text-to-design.onrender.com/stream-jsx"
 headers = {'Content-Type': 'application/json'}
 
 prompts = [

@@ -38,7 +38,7 @@ app.add_middleware(
         "https://synapseai-ebon.vercel.app",
         "http://localhost:5173",
         "https://text-to-design.vercel.app",
-        "https://text-to-design.onrender.com",
+        "http://localhost:8000",
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
