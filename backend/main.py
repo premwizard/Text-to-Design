@@ -57,6 +57,16 @@ async def startup_event():
         logger.warning("Continuing startup without RAG retrieval")
 
 
+@app.get("/")
+async def root():
+    return {
+        "status": "active",
+        "service": "Text-to-Design Backend",
+        "message": "Welcome to the Text-to-Design API. Live endpoints are active.",
+        "documentation": "/docs"
+    }
+
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
