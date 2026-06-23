@@ -1,25 +1,29 @@
 import React from 'react';
-import MagazineHero from './components/MagazineHero';
-import EditorialFeatures from './components/EditorialFeatures';
-import ImageGallery from './components/ImageGallery';
-import ClientLogos from './components/ClientLogos';
-import CallToAction from './components/CallToAction';
+import CompactNavbar from './components/CompactNavbar';
+import GreetingHeader from './components/GreetingHeader';
+import BentoProjectsGrid from './components/BentoProjectsGrid';
+import ExpertiseShowcase from './components/ExpertiseShowcase';
+import TestimonialCarousel from './components/TestimonialCarousel';
+import CallToActionStrip from './components/CallToActionStrip';
+import MinimalFooter from './components/MinimalFooter';
 
 export default function App() {
   return (
-    <div className="bg-white min-h-screen text-gray-900">
+    <div className="bg-neutral-100 min-h-screen text-neutral-800">
       <style>
         {`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
-        body { font-family: 'DM Sans', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', sans-serif; }
-      `}
+          @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+          body { font-family: 'DM Sans', sans-serif; }
+          h1, h2, h3, h4, h5, h6 { font-family: 'DM Sans', sans-serif; }
+        `}
       </style>
-      <MagazineHero />
-      <EditorialFeatures />
-      <ImageGallery />
-      <ClientLogos />
-      <CallToAction />
+      <CompactNavbar brandName="Pixelcraft Collective" />
+      <GreetingHeader />
+      <BentoProjectsGrid />
+      <ExpertiseShowcase />
+      <TestimonialCarousel />
+      <CallToActionStrip />
+      <MinimalFooter />
     </div>
   );
 }
