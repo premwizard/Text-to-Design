@@ -25,7 +25,9 @@ import {
   Eye,
   Tablet,
   Smartphone,
-  Monitor
+  Monitor,
+  TrendingUp,
+  History
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -34,7 +36,7 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-const AGENT_STEPS = [
+const GENERATE_STEPS = [
   { id: 'memory', label: 'Memory Retrieval', desc: 'Loading personalized design profile and user preferences' },
   { id: 'understanding', label: 'Understanding Prompt', desc: 'Analyzing intent and blending design memory' },
   { id: 'retrieval', label: 'Retrieving Design', desc: 'Searching Design Knowledge Base for matched layouts' },
@@ -44,6 +46,16 @@ const AGENT_STEPS = [
   { id: 'vision', label: 'Vision Analysis', desc: 'Evaluating visual balance, accessibility contrast, and spacing' },
   { id: 'critic', label: 'Reviewing UI', desc: 'Evaluating visual quality, hierarchy, and usability metrics' },
   { id: 'optimizing', label: 'Optimizing Design', desc: 'Applying design edits, enhancing colors and interactions' }
+];
+
+const EDIT_STEPS = [
+  { id: 'edit_planning', label: 'Edit Prompt Analysis', desc: 'Parsing conversational layout changes' },
+  { id: 'intent_classification', label: 'Intent Classification', desc: 'Determining update class and planning files' },
+  { id: 'patch_generation', label: 'JSX Patch Generation', desc: 'Applying minimal edits to component files' },
+  { id: 'render', label: 'Sandbox Re-render', desc: 'Writing changes and building web preview' },
+  { id: 'screenshot', label: 'Screenshot Capture', desc: 'Snapping updated viewport layouts' },
+  { id: 'vision_recheck', label: 'Vision Recheck', desc: 'Re-evaluating visual layout scores and deltas' },
+  { id: 'final_update', label: 'Final Update', desc: 'Committing project files snapshot' }
 ];
 
 export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agentOutputs = {} }) {
@@ -56,20 +68,42 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
     setTimestamp(Date.now());
   }, [agentStatus, agentOutputs.screenshot]);
 
+  // Detect active mode: generation vs edit
+  const isEditMode = [
+    'edit_planning', 'intent_classification', 'patch_generation', 
+    'render', 'vision_recheck', 'final_update'
+  ].includes(agentStatus) || agentOutputs.edit_planning !== null;
+
+  const stepsList = isEditMode ? EDIT_STEPS : GENERATE_STEPS;
+
   // Map backend agentStatus to step index
   const getStepIndex = (status) => {
-    switch (status) {
-      case 'memory': return 0;
-      case 'understanding': return 1;
-      case 'retrieval': return 2;
-      case 'planning': return 3;
-      case 'generating': return 4;
-      case 'screenshot': return 5;
-      case 'vision': return 6;
-      case 'critic': return 7;
-      case 'optimizing': return 8;
-      case 'done': return 9;
-      default: return 0;
+    if (isEditMode) {
+      switch (status) {
+        case 'edit_planning': return 0;
+        case 'intent_classification': return 1;
+        case 'patch_generation': return 2;
+        case 'render': return 3;
+        case 'screenshot': return 4;
+        case 'vision_recheck': return 5;
+        case 'final_update': return 6;
+        case 'done': return 7;
+        default: return 0;
+      }
+    } else {
+      switch (status) {
+        case 'memory': return 0;
+        case 'understanding': return 1;
+        case 'retrieval': return 2;
+        case 'planning': return 3;
+        case 'generating': return 4;
+        case 'screenshot': return 5;
+        case 'vision': return 6;
+        case 'critic': return 7;
+        case 'optimizing': return 8;
+        case 'done': return 9;
+        default: return 0;
+      }
     }
   };
 
@@ -93,7 +127,9 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
             <Cpu className="text-violet-400 w-5 h-5 animate-pulse" />
-            <h2 className="font-semibold tracking-tight text-zinc-100 text-xs uppercase tracking-wider">RAG Multi-Agent Pipeline</h2>
+            <h2 className="font-semibold tracking-tight text-zinc-100 text-xs uppercase tracking-wider">
+              {isEditMode ? 'UI Edit Pipeline' : 'RAG Multi-Agent Pipeline'}
+            </h2>
           </div>
           
           <button
@@ -115,7 +151,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
           <div className="absolute top-4 bottom-8 left-[11px] w-px bg-zinc-800/80" />
           
           <div className="space-y-8 relative">
-            {AGENT_STEPS.map((step, idx) => {
+            {stepsList.map((step, idx) => {
               const status = getAgentStepStatus(step.id, idx);
               
               return (
@@ -186,7 +222,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
 
               {/* Debug Tab Selectors */}
               <div className="flex border-b border-zinc-800/60 bg-zinc-950/20 px-4 overflow-x-auto whitespace-nowrap">
-                {AGENT_STEPS.map(step => (
+                {stepsList.map(step => (
                   <button
                     key={step.id}
                     onClick={() => setActiveDebugTab(step.id)}
@@ -215,8 +251,144 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                ========================================== */
             <AnimatePresence mode="wait">
               
-              {/* STATE 1: USER MEMORY RETRIEVAL */}
-              {(agentStatus === 'memory' || (agentOutputs.memory && currentStepIdx === 0)) && (
+              {/* EDIT MODE STATE 1: EDIT PROMPT ANALYSIS */}
+              {(isEditMode && (agentStatus === 'edit_planning' || agentStatus === 'intent_classification')) && (
+                <motion.div 
+                  key="edit_planning"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="space-y-6 text-left max-w-xl mx-auto"
+                >
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                    <div className="p-2 bg-violet-500/10 border border-violet-500/20 rounded-xl">
+                      <Sliders className="w-5 h-5 text-violet-400 animate-pulse" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">Conversational Edit Planning</h2>
+                      <p className="text-xs text-zinc-550">Analyzing style update instructions and code structure</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-zinc-900/40 border border-zinc-850 p-6 rounded-2xl shadow-xl space-y-4">
+                    <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold block">Classified Update Mode</span>
+                    <h3 className="text-lg font-bold text-zinc-200 capitalize">
+                      {agentOutputs.intent_classification?.editType?.replace('_', ' ') || 'ux_improvement'}
+                    </h3>
+                    <div className="space-y-2">
+                      <span className="text-[10px] text-zinc-550 uppercase tracking-widest font-semibold block">Target Component Patches</span>
+                      <div className="flex flex-wrap gap-2.5">
+                        {agentOutputs.intent_classification?.affected?.map((c, i) => (
+                          <span key={i} className="text-xs bg-zinc-950/60 border border-zinc-850 px-3 py-1 rounded-lg text-zinc-400 font-semibold">{c}</span>
+                        )) || <span className="text-xs text-zinc-650 font-semibold">Scanning files list...</span>}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* EDIT MODE STATE 2: JSX PATCH GENERATION & SANDBOX RE-RENDER */}
+              {(isEditMode && (agentStatus === 'patch_generation' || agentStatus === 'render')) && (
+                <motion.div 
+                  key="patching"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="flex flex-col items-center justify-center text-center space-y-6 max-w-md mx-auto"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-850 flex items-center justify-center shadow-2xl relative overflow-hidden ring-1 ring-violet-500/20">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/10 to-transparent" />
+                    <Settings className="w-8 h-8 text-violet-400 animate-spin" style={{ animationDuration: '6s' }} />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-zinc-100">Patching JSX Layout Code</h3>
+                    <p className="text-sm text-zinc-500 leading-relaxed font-medium">
+                      Modifying only the affected components and compiling preview HTML in sandbox.
+                    </p>
+                  </div>
+                  <div className="w-48 h-1 bg-zinc-900 rounded-full overflow-hidden relative">
+                    <div className="absolute inset-y-0 left-0 bg-violet-500 rounded-full" style={{ animation: 'progressBar 1.5s ease-in-out infinite' }} />
+                  </div>
+                </motion.div>
+              )}
+
+              {/* EDIT MODE STATE 3: VISION RECHECK */}
+              {(isEditMode && (agentStatus === 'vision_recheck' || agentStatus === 'final_update' || (agentOutputs.vision_recheck && currentStepIdx === 5))) && (
+                <motion.div 
+                  key="vision_recheck"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="space-y-8 text-left w-full"
+                >
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                    <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                      <TrendingUp className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">Vision Recheck & Score Delta</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5 font-medium">Re-evaluating visual layouts and tracking quality score improvements</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Score comparison card */}
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4 flex flex-col justify-between">
+                      <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold block">Rating Score Improvement</span>
+                      <div className="flex items-baseline gap-2.5">
+                        <span className="text-4xl font-extrabold text-white">{agentOutputs.vision_recheck?.afterScore || '8.5'}</span>
+                        <span className="text-xs text-zinc-550">before: {agentOutputs.vision_recheck?.beforeScore || '8.3'}</span>
+                      </div>
+                      
+                      <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-400 px-3 py-1.5 rounded-xl w-fit">
+                        <TrendingUp size={14} /> 
+                        {agentOutputs.vision_recheck?.improvementDelta >= 0 ? '+' : ''}
+                        {agentOutputs.vision_recheck?.improvementDelta || '0.2'} Improvement Delta
+                      </div>
+                    </div>
+
+                    {/* Sub dimensions */}
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-3.5">
+                      <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold block">Visual Dimensions</span>
+                      <div className="space-y-2">
+                        {agentOutputs.vision_recheck?.scores && Object.entries(agentOutputs.vision_recheck.scores).map(([metric, val], idx) => (
+                          <div key={idx} className="flex justify-between items-center text-xs font-semibold text-zinc-400 capitalize">
+                            <span>{metric}</span>
+                            <span className="text-indigo-400 font-mono">{val}/10</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Remaining visual issues */}
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-3.5">
+                      <span className="text-[10px] text-zinc-550 uppercase tracking-widest font-bold block">Remaining Anomaly Checks</span>
+                      <div className="space-y-2 max-h-36 overflow-y-auto">
+                        {agentOutputs.vision_recheck?.issues && agentOutputs.vision_recheck.issues.length > 0 ? (
+                          agentOutputs.vision_recheck.issues.map((issue, idx) => (
+                            <div key={idx} className="flex gap-2 text-[10px] text-zinc-400 bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-850">
+                              <AlertTriangle size={12} className="text-amber-500 shrink-0 mt-0.5" />
+                              <span className="font-semibold">{issue}</span>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-[10px] text-zinc-650 font-semibold py-8 text-center">All layout defects resolved successfully!</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {agentStatus === 'vision_recheck' && (
+                    <div className="flex items-center gap-3 justify-center text-zinc-500 text-sm font-medium mt-12 bg-zinc-950/40 py-3 rounded-xl border border-zinc-900 w-fit mx-auto px-6">
+                      <RefreshCw className="w-4 h-4 text-violet-400 animate-spin" />
+                      <span>Rechecking layout alignments...</span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* GENERATE MODE STATE 1: USER MEMORY RETRIEVAL */}
+              {(!isEditMode && (agentStatus === 'memory' || (agentOutputs.memory && currentStepIdx === 0))) && (
                 <motion.div 
                   key="memory"
                   initial={{ opacity: 0, scale: 0.98 }}
@@ -230,7 +402,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-zinc-100">Personalization Memory Retrieval</h2>
-                      <p className="text-xs text-zinc-500 mt-0.5">Searching statistical profile and semantic past interactions</p>
+                      <p className="text-xs text-zinc-500 mt-0.5 font-medium">Searching statistical profile and semantic past interactions</p>
                     </div>
                   </div>
 
@@ -267,8 +439,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 2: PROMPT UNDERSTANDING */}
-              {agentStatus === 'understanding' && (
+              {/* GENERATE MODE STATE 2: UNDERSTANDING */}
+              {(!isEditMode && agentStatus === 'understanding') && (
                 <motion.div 
                   key="understanding"
                   initial={{ opacity: 0, scale: 0.98 }}
@@ -292,8 +464,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 3: RAG DESIGN KNOWLEDGE RETRIEVAL */}
-              {(agentStatus === 'retrieval' || (agentOutputs.retrieval && currentStepIdx === 2)) && (
+              {/* GENERATE MODE STATE 3: RAG RETRIEVAL */}
+              {(!isEditMode && (agentStatus === 'retrieval' || (agentOutputs.retrieval && currentStepIdx === 2))) && (
                 <motion.div 
                   key="retrieval"
                   initial={{ opacity: 0, y: 15 }}
@@ -369,8 +541,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 4: DESIGN PLANNING */}
-              {(agentStatus === 'planning' || (agentOutputs.planning && currentStepIdx === 3)) && (
+              {/* GENERATE MODE STATE 4: DESIGN PLANNING */}
+              {(!isEditMode && (agentStatus === 'planning' || (agentOutputs.planning && currentStepIdx === 3))) && (
                 <motion.div 
                   key="planning"
                   initial={{ opacity: 0, y: 15 }}
@@ -417,8 +589,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 5: COMPONENT GENERATION */}
-              {(agentStatus === 'generating' || (agentOutputs.planning && currentStepIdx === 4)) && (
+              {/* GENERATE MODE STATE 5: COMPONENT GENERATION */}
+              {(!isEditMode && (agentStatus === 'generating' || (agentOutputs.planning && currentStepIdx === 4))) && (
                 <motion.div 
                   key="generating"
                   initial={{ opacity: 0, y: 15 }}
@@ -436,7 +608,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                         <p className="text-xs text-zinc-500 mt-0.5">{plan?.tagline}</p>
                       </div>
                     </div>
-                    <span className="text-[10px] font-mono text-zinc-500">Theme: {plan?.aesthetic}</span>
+                    <span className="text-[10px] font-mono text-zinc-550">Theme: {plan?.aesthetic}</span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -485,10 +657,10 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 6: SCREENSHOT CAPTURE */}
-              {(agentStatus === 'screenshot' || (agentOutputs.screenshot && currentStepIdx === 5)) && (
+              {/* SHARED SCREENSHOT CAPTURE (Shown in both modes) */}
+              {(!isEditMode && (agentStatus === 'screenshot' || (agentOutputs.screenshot && currentStepIdx === 5))) && (
                 <motion.div 
-                  key="screenshot"
+                  key="screenshot_shared"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
@@ -505,7 +677,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Desktop Screenshot Card */}
                     <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
                       <div className="flex items-center justify-between text-xs text-zinc-400 font-semibold border-b border-zinc-850 pb-2">
                         <span className="flex items-center gap-1.5"><Monitor size={14} className="text-pink-400" /> Desktop View</span>
@@ -526,7 +697,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       </div>
                     </div>
 
-                    {/* Tablet Screenshot Card */}
                     <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
                       <div className="flex items-center justify-between text-xs text-zinc-400 font-semibold border-b border-zinc-850 pb-2">
                         <span className="flex items-center gap-1.5"><Tablet size={14} className="text-sky-400" /> Tablet View</span>
@@ -547,7 +717,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       </div>
                     </div>
 
-                    {/* Mobile Screenshot Card */}
                     <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
                       <div className="flex items-center justify-between text-xs text-zinc-400 font-semibold border-b border-zinc-850 pb-2">
                         <span className="flex items-center gap-1.5"><Smartphone size={14} className="text-emerald-400" /> Mobile View</span>
@@ -578,10 +747,10 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 7: VISION AGENT ANALYSIS */}
-              {(agentStatus === 'vision' || (agentOutputs.vision && currentStepIdx === 6)) && (
+              {/* GENERATE MODE STATE 6: VISION ANALYSIS */}
+              {(!isEditMode && (agentStatus === 'vision' || (agentOutputs.vision && currentStepIdx === 6))) && (
                 <motion.div 
-                  key="vision"
+                  key="vision_shared"
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
@@ -593,12 +762,11 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-zinc-100">Vision Agent Visual Audit</h2>
-                      <p className="text-xs text-zinc-500 mt-0.5">Performing multimodal visual quality checks on rendered layouts</p>
+                      <p className="text-xs text-zinc-500 mt-0.5 font-medium">Performing multimodal visual quality checks on rendered layouts</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                    {/* Visual metric scores */}
                     <div className="col-span-2 bg-zinc-900/30 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
                       <h3 className="text-xs font-bold text-zinc-350 uppercase tracking-wider">Visual Dimension Scores</h3>
                       <div className="space-y-3.5">
@@ -620,14 +788,13 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       </div>
                     </div>
 
-                    {/* Detected design issue list */}
                     <div className="col-span-3 bg-zinc-900/30 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4 flex flex-col justify-between">
                       <div className="space-y-3">
                         <h3 className="text-xs font-bold text-zinc-350 uppercase tracking-wider">Detected Visual Anomaly Points</h3>
                         <div className="space-y-2 max-h-48 overflow-y-auto">
                           {agentOutputs.vision?.issues && agentOutputs.vision.issues.length > 0 ? (
                             agentOutputs.vision.issues.map((issue, idx) => (
-                              <div key={idx} className="flex gap-2 items-start text-xs text-zinc-450 bg-zinc-950/60 p-3 rounded-xl border border-zinc-850">
+                              <div key={idx} className="flex gap-2 items-start text-xs text-zinc-455 bg-zinc-950/60 p-3 rounded-xl border border-zinc-850">
                                 <AlertTriangle size={14} className="text-indigo-400 shrink-0 mt-0.5" />
                                 <span className="font-semibold">{issue}</span>
                               </div>
@@ -649,10 +816,10 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 8: UI CRITIC (HYBRID) */}
-              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 7)) && (
+              {/* GENERATE MODE STATE 8: UI CRITIC */}
+              {(!isEditMode && (agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 7))) && (
                 <motion.div 
-                  key="critic"
+                  key="critic_shared"
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
@@ -716,8 +883,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 9: OPTIMIZING DESIGN */}
-              {(agentStatus === 'optimizing' || agentStatus === 'done') && (
+              {/* GENERATE MODE STATE 9: OPTIMIZING DESIGN */}
+              {(!isEditMode && (agentStatus === 'optimizing' || agentStatus === 'done')) && (
                 <motion.div 
                   key="optimizing"
                   initial={{ opacity: 0, scale: 0.98 }}

@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "timestamp": 1782588364,
+    "prompt": "Make this neon cyber blue theme and add testimonials",
+    "files": {
+      "App.jsx": "import React from 'react';\nimport Navbar from './components/Navbar';\nimport HeroSection from './components/HeroSection';\nimport TestimonialsSection from './components/TestimonialsSection';\n\nexport default function App() {\n  return (\n    <div className=\"min-h-screen bg-[#39bff3] text-zinc-150\">\n      <Navbar />\n      <HeroSection />\n      <TestimonialsSection />\n    </div>\n  );\n}",
+      "components/Navbar.jsx": "import React from 'react';\n\nexport default function Navbar() {\n  return (\n    <nav className=\"p-4 border-b border-zinc-800 flex justify-between bg-zinc-950\">\n      <span className=\"font-bold text-white\">NexaTech</span>\n      <button className=\"bg-indigo-650 text-white px-3 py-1 rounded\">Login</button>\n    </nav>\n  );\n}\n",
+      "components/HeroSection.jsx": "import React from 'react';\n\nexport default function HeroSection() {\n  return (\n    <section className=\"py-20 text-center bg-neon-cyber-blue\">\n      <h1 className=\"text-4xl font-bold text-neon-cyber-blue-accent\">Premium Analytics Platform</h1>\n      <p className=\"text-zinc-400 mt-2\">Scale your SaaS data efficiently</p>\n      <button className=\"bg-neon-cyber-blue-accent text-white px-6 py-2.5 rounded-full mt-6\">Get Started</button>\n      <div className=\"mt-12\">\n        <h2 className=\"text-2xl font-bold mb-4\">What Our Clients Say</h2>\n        <div className=\"flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4\">\n          <div className=\"bg-white p-6 rounded-lg shadow-md\">\n            <p className=\"text-gray-600\">\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.\"</p>\n            <p className=\"text-gray-600 mt-2\">- John Doe</p>\n          </div>\n          <div className=\"bg-white p-6 rounded-lg shadow-md\">\n            <p className=\"text-gray-600\">\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.\"</p>\n            <p className=\"text-gray-600 mt-2\">- Jane Doe</p>\n          </div>\n        </div>\n      </div>\n    </section>\n  );\n}"
+    },
+    "metadata": {
+      "critic_score": 8.3,
+      "session_id": "test_edit_session_123"
+    }
+  }
+]

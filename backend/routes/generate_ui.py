@@ -401,4 +401,79 @@ async def stream_jsx(request: StreamRequest):
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
+class EditUIRequest(BaseModel):
+    user_id: str
+    session_id: str
+    edit_prompt: str
+    current_code: str
+    design_metadata: Optional[dict] = None
+
+class RollbackRequest(BaseModel):
+    user_id: str
+    session_id: str
+    snapshot_id: int
+
+@router.post("/edit-ui")
+async def edit_ui(request: EditUIRequest):
+    async def edit_event_generator():
+        try:
+            # Parse current_code (which contains {"files": {...}})
+            try:
+                parsed = json.loads(request.current_code)
+                current_files = parsed.get("files", {})
+            except Exception:
+                current_files = {}
+
+            from backend.services.agents.orchestrator import run_edit_orchestration_stream
+            async for event in run_edit_orchestration_stream(
+                user_id=request.user_id,
+                session_id=request.session_id,
+                edit_prompt=request.edit_prompt,
+                current_files=current_files,
+                design_metadata=request.design_metadata
+            ):
+                yield f"data: {json.dumps(event)}\n\n"
+
+            yield "data: [DONE]\n\n"
+        except Exception as e:
+            logging.exception("Error streaming edit updates")
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+            yield "data: [DONE]\n\n"
+
+    return StreamingResponse(edit_event_generator(), media_type="text/event-stream")
+
+@router.get("/edit-history")
+async def get_edit_history(user_id: str, session_id: str):
+    from backend.services.editing.history_service import EditHistoryService
+    service = EditHistoryService()
+    history = service.load_history(user_id, session_id)
+    # Return brief overview (omit full files contents to save network bandwidth)
+    history_overview = [
+        {
+            "id": h["id"],
+            "timestamp": h["timestamp"],
+            "prompt": h["prompt"],
+            "metadata": h["metadata"]
+        }
+        for h in history
+    ]
+    return {"history": history_overview}
+
+@router.post("/edit-history/rollback")
+async def rollback_history(request: RollbackRequest):
+    try:
+        from backend.services.editing.history_service import EditHistoryService
+        from backend.project_runner import write_files
+        service = EditHistoryService()
+        files = service.rollback_to_snapshot(request.user_id, request.session_id, request.snapshot_id)
+        
+        # Write back to sandbox to compile and refresh preview
+        await write_files(files)
+        return {"status": "success", "files": files}
+    except Exception as e:
+        logging.error(f"Rollback failed: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+
 

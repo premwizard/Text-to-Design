@@ -57,8 +57,9 @@ function Home() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [sandboxFiles, setSandboxFiles] = useState({});
+  const [mode, setMode] = useState('generate');
 
-  const { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations, agentStatus, agentOutputs } = useGenerate();
+  const { code, setCode, generate, editUI, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations, agentStatus, agentOutputs, sessionId } = useGenerate();
   const [activeVariationId, setActiveVariationId] = useState(null);
   const { user } = useAuth();
   const [recentProjects, setRecentProjects] = useState([]);
@@ -219,8 +220,14 @@ function Home() {
   const handleGenerate = () => {
     const trimmed = prompt.trim();
     if (!trimmed) return;
-    setActiveVariationId(null);
-    generate(trimmed, activeVariationId ? variations[activeVariationId]?.code : (code || null), user?.id || user?.email || null);
+    
+    if (mode === 'edit' && code) {
+      editUI(user?.id || 'default_user', sessionId || 'default_session', trimmed, JSON.stringify({ files: sandboxFiles }), plan);
+    } else {
+      setActiveVariationId(null);
+      setMode('edit');
+      generate(trimmed, activeVariationId ? variations[activeVariationId]?.code : (code || null), user?.id || user?.email || null);
+    }
   };
 
   const handleRuntimeError = async (errorMsg, stack) => {
@@ -502,6 +509,7 @@ function Home() {
                     localError={localError}
                     onFullscreen={() => setIsFullscreen(true)}
                     onRuntimeError={handleRuntimeError}
+                    sessionId={sessionId}
                   />
                 )}
               </div>
@@ -515,6 +523,8 @@ function Home() {
                     onGenerate={handleGenerate}
                     loading={loading}
                     hasCode={true}
+                    mode={mode}
+                    setMode={setMode}
                   />
                 </div>
               </div>

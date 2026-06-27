@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Sparkles, Paperclip, ArrowUp, Zap, ChevronDown, StopCircle } from 'lucide-react';
+import { Sparkles, Paperclip, ArrowUp, Zap, ChevronDown, StopCircle, Sliders } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,7 +12,9 @@ export function PromptComposer({
   setPrompt, 
   onGenerate, 
   loading,
-  hasCode
+  hasCode,
+  mode = 'generate',
+  setMode
 }) {
   const textareaRef = useRef(null);
 
@@ -38,6 +40,35 @@ export function PromptComposer({
       "relative z-30 flex flex-col items-center justify-center w-full max-w-4xl mx-auto transition-all duration-500",
       hasCode ? "px-4 pb-6" : "px-4 mt-8"
     )}>
+      
+      {/* Dynamic Mode Switcher pill */}
+      {hasCode && setMode && (
+        <div className="flex gap-1.5 mb-3 bg-zinc-950/80 p-1 rounded-full border border-zinc-850 shadow-inner scale-95 origin-bottom">
+          <button
+            onClick={() => setMode('edit')}
+            className={cn(
+              "px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1",
+              mode === 'edit'
+                ? "bg-violet-500/10 border border-violet-500/30 text-violet-400 font-extrabold"
+                : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+            )}
+          >
+            <Sliders size={12} className="text-violet-400" /> Conversational Edit
+          </button>
+          <button
+            onClick={() => setMode('generate')}
+            className={cn(
+              "px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1",
+              mode === 'generate'
+                ? "bg-zinc-800 text-zinc-200 font-extrabold"
+                : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+            )}
+          >
+            <Sparkles size={12} className="text-amber-400" /> Fresh Generate
+          </button>
+        </div>
+      )}
+
       {/* Input Container */}
       <div className="relative w-full bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 rounded-3xl shadow-2xl overflow-hidden focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/10 transition-all group">
         
@@ -47,8 +78,8 @@ export function PromptComposer({
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={loading}
-          placeholder={hasCode ? "Describe changes or follow-up instructions..." : "Describe the interface you want to build..."}
-          className="w-full min-h-[64px] bg-transparent text-zinc-100 placeholder:text-zinc-500 px-5 pt-5 pb-16 resize-none focus:outline-none font-sans text-base leading-relaxed"
+          placeholder={hasCode ? (mode === 'edit' ? "Describe changes to apply to components..." : "Start a new project design from scratch...") : "Describe the interface you want to build..."}
+          className="w-full min-h-[64px] bg-transparent text-zinc-100 placeholder:text-zinc-500 px-5 pt-5 pb-16 resize-none focus:outline-none font-sans text-base leading-relaxed text-left"
           style={{ overflowY: 'auto' }}
         />
         
@@ -78,7 +109,7 @@ export function PromptComposer({
               onClick={onGenerate}
               disabled={!prompt.trim() && !loading}
               className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200",
+                "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 cursor-pointer",
                 loading 
                   ? "bg-zinc-800 text-zinc-400 hover:text-rose-400" 
                   : prompt.trim() 
@@ -109,3 +140,4 @@ export function PromptComposer({
     </div>
   );
 }
+export default PromptComposer;

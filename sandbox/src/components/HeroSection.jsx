@@ -1,39 +1,24 @@
-import React, { useState } from 'react';
-import { ArrowDown } from 'lucide-react-native';
-import { Link } from 'react-router-dom';
+import React from 'react';
 
-const HeroSection = () => {
-  const [isFocused, setIsFocused] = useState(false);
-
+export default function HeroSection() {
   return (
-    <section className="relative bg-indigo-600 h-screen flex items-center justify-center">
-      <div className="container mx-auto p-4 pt-6 md:p-6 lg:px-20 xl:px-40">
-        <div className="flex flex-wrap justify-center text-center">
-          <h1 className="text-4xl lg:text-6xl font-bold font-inter text-white mb-4">
-            NexaTech
-          </h1>
-          <p className="text-lg lg:text-2xl font-inter text-indigo-200 mb-8 w-full lg:w-1/2 mx-auto">
-            Elevate Your Digital Horizon
-          </p>
-        </div>
-        <div className="flex justify-center mb-4">
-          <Link
-            to="#"
-            className="bg-indigo-700 hover:bg-indigo-800 text-white font-inter py-2 px-4 rounded-xl shadow-md transition duration-200"
-          >
-            Explore More
-          </Link>
-        </div>
-        <div className="flex justify-center">
-          <ArrowDown
-            size={40}
-            color="white"
-            className="animate-bounce cursor-pointer"
-          />
+    <section className="py-20 text-center bg-neon-cyber-blue">
+      <h1 className="text-4xl font-bold text-neon-cyber-blue-accent">Premium Analytics Platform</h1>
+      <p className="text-zinc-400 mt-2">Scale your SaaS data efficiently</p>
+      <button className="bg-neon-cyber-blue-accent text-white px-6 py-2.5 rounded-full mt-6">Get Started</button>
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">What Our Clients Say</h2>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <p className="text-gray-600">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex."</p>
+            <p className="text-gray-600 mt-2">- John Doe</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <p className="text-gray-600">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex."</p>
+            <p className="text-gray-600 mt-2">- Jane Doe</p>
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default HeroSection;
+}

@@ -26,6 +26,8 @@ export default defineConfig(({ mode }) => {
         '/preview': { target: backendTarget, changeOrigin: true },
         '/dist': { target: backendTarget, changeOrigin: true },
         '/screenshots': { target: backendTarget, changeOrigin: true },
+        '/edit-ui': { target: backendTarget, changeOrigin: true },
+        '/edit-history': { target: backendTarget, changeOrigin: true },
       },
     },
   }
