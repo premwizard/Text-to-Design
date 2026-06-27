@@ -1,56 +1,37 @@
 import React from 'react';
-import { Instagram, Linkedin, Twitter, Youtube, Mail } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowUp } from 'lucide-react-native';
+import Link from 'next/link';
 
 const Footer = () => {
+  const [year] = useState(new Date().getFullYear());
+
   return (
-    <footer className="bg-gray-900 text-gray-300 py-16 px-4 sm:px-6 lg:px-8 font-['Inter']">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-        {/* Brand Info */}
-        <div>
-          <h3 className="text-2xl font-bold text-white mb-4 font-['Outfit', sans-serif]">Aura Creative</h3>
-          <p className="text-lg mb-4">Crafting Digital Experiences, Beautifully.</p>
-          <div className="flex space-x-4">
-            <a href="#" aria-label="Instagram" className="text-gray-400 hover:text-indigo-400 transition-colors duration-300 ease-in-out">
-              <Instagram size={24} />
-            </a>
-            <a href="#" aria-label="LinkedIn" className="text-gray-400 hover:text-indigo-400 transition-colors duration-300 ease-in-out">
-              <Linkedin size={24} />
-            </a>
-            <a href="#" aria-label="Twitter" className="text-gray-400 hover:text-indigo-400 transition-colors duration-300 ease-in-out">
-              <Twitter size={24} />
-            </a>
-            <a href="#" aria-label="YouTube" className="text-gray-400 hover:text-indigo-400 transition-colors duration-300 ease-in-out">
-              <Youtube size={24} />
-            </a>
+    <footer className="bg-zinc-600 text-zinc-400 pt-12 pb-8 lg:pt-16 lg:pb-16">
+      <div className="container mx-auto px-4 lg:px-12 flex flex-col lg:flex-row justify-between items-center">
+        <div className="lg:w-1/2 xl:w-1/3 mb-8 lg:mb-0">
+          <h2 className="text-2xl font-bold text-zinc-200 mb-4">Aura Creative</h2>
+          <p className="text-zinc-400">Showcasing Innovation, Crafting Brilliance.</p>
+          <div className="flex mt-4">
+            <Link href="#" className="text-zinc-400 hover:text-zinc-200 transition duration-300 mr-4">About</Link>
+            <Link href="#" className="text-zinc-400 hover:text-zinc-200 transition duration-300 mr-4">Services</Link>
+            <Link href="#" className="text-zinc-400 hover:text-zinc-200 transition duration-300">Contact</Link>
           </div>
         </div>
-
-        {/* Navigation Links */}
-        <div>
-          <h4 className="text-lg font-semibold text-white mb-4 font-['Outfit', sans-serif]">Quick Links</h4>
-          <ul className="space-y-2">
-            <li><a href="#hero" className="hover:text-indigo-400 transition-colors duration-300 ease-in-out">Home</a></li>
-            <li><a href="#portfolio" className="hover:text-indigo-400 transition-colors duration-300 ease-in-out">Portfolio</a></li>
-            <li><a href="#about" className="hover:text-indigo-400 transition-colors duration-300 ease-in-out">About</a></li>
-            <li><a href="#contact" className="hover:text-indigo-400 transition-colors duration-300 ease-in-out">Contact</a></li>
-          </ul>
+        <div className="lg:w-1/2 xl:w-1/3 mb-8 lg:mb-0">
+          <h3 className="text-xl font-bold text-zinc-200 mb-4">Get in Touch</h3>
+          <p className="text-zinc-400 mb-4">Email: <a href="mailto:info@auracreative.com" className="text-zinc-400 hover:text-zinc-200 transition duration-300">info@auracreative.com</a></p>
+          <p className="text-zinc-400">Phone: <a href="tel:1234567890" className="text-zinc-400 hover:text-zinc-200 transition duration-300">1234567890</a></p>
         </div>
-
-        {/* Contact Info */}
-        <div>
-          <h4 className="text-lg font-semibold text-white mb-4 font-['Outfit', sans-serif]">Get In Touch</h4>
-          <p className="flex items-center mb-2">
-            <Mail size={20} className="mr-2 text-indigo-400 flex-shrink-0" />
-            <a href="mailto:info@auracreative.com" className="hover:text-indigo-400 transition-colors duration-300 ease-in-out">info@auracreative.com</a>
-          </p>
-          <p className="text-sm text-gray-400">
-            123 Creative Lane, Design City, DC 56789
-          </p>
+        <div className="lg:w-1/2 xl:w-1/3 text-right mb-8 lg:mb-0">
+          <button className="bg-zinc-700 hover:bg-zinc-800 text-zinc-200 py-2 px-4 rounded-md transition duration-300">
+            <Link href="#top">
+              <ArrowUp size={20} className="mr-2" />
+              Back to Top
+            </Link>
+          </button>
+          <p className="text-zinc-400 mt-4">&copy; {year} Aura Creative. All rights reserved.</p>
         </div>
-      </div>
-
-      <div className="mt-16 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} Aura Creative. All rights reserved.
       </div>
     </footer>
   );

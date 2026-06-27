@@ -19,6 +19,7 @@ export function useGenerate() {
   const [agentStatus, setAgentStatus] = useState('idle');
   const [agentOutputs, setAgentOutputs] = useState({
     understanding: null,
+    retrieval: null,
     planning: null,
     critic: null,
     optimizing: null
@@ -34,6 +35,7 @@ export function useGenerate() {
     setAgentStatus('idle');
     setAgentOutputs({
       understanding: null,
+      retrieval: null,
       planning: null,
       critic: null,
       optimizing: null

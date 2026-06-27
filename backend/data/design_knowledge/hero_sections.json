@@ -1,0 +1,41 @@
+[
+  {
+    "id": "hero-premium-saas-001",
+    "category": "hero-section",
+    "style": "premium-saas",
+    "layout": "headline-left-image-right",
+    "components": ["headline", "subheadline", "cta-primary", "cta-secondary", "social-proof"],
+    "designRules": {
+      "spacing": "large",
+      "borderRadius": "xl",
+      "shadow": "medium",
+      "border": "none"
+    }
+  },
+  {
+    "id": "hero-apple-minimal-001",
+    "category": "hero-section",
+    "style": "apple-style",
+    "layout": "centered-headline-with-device",
+    "components": ["eyebrow", "headline-centered", "cta-link-group", "mockup-showcase"],
+    "designRules": {
+      "spacing": "comfortable",
+      "borderRadius": "2xl",
+      "shadow": "soft-double",
+      "border": "none"
+    }
+  },
+  {
+    "id": "hero-neo-brutalism-001",
+    "category": "hero-section",
+    "style": "neo-brutalism",
+    "layout": "split-raw-text-heavy-cta",
+    "components": ["raw-title", "badge-pill", "action-buttons-brutal", "illustrated-sidebar"],
+    "designRules": {
+      "spacing": "loose",
+      "borderRadius": "none",
+      "shadow": "heavy-black-shadow",
+      "border": "thick-black-3px"
+    }
+  }
+]

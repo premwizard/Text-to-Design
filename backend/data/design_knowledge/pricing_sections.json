@@ -1,0 +1,41 @@
+[
+  {
+    "id": "pricing-premium-saas-001",
+    "category": "pricing",
+    "style": "premium-saas",
+    "layout": "three-card-grid-with-highlights",
+    "components": ["card-starter", "card-pro-featured", "card-enterprise", "billing-toggle"],
+    "designRules": {
+      "spacing": "comfortable",
+      "borderRadius": "2xl",
+      "shadow": "soft-double",
+      "border": "thin-gray-800"
+    }
+  },
+  {
+    "id": "pricing-minimal-clean-001",
+    "category": "pricing",
+    "style": "minimal",
+    "layout": "comparison-table-clean",
+    "components": ["toggle-switch", "simple-tier-cards", "feature-table-matrix"],
+    "designRules": {
+      "spacing": "comfortable",
+      "borderRadius": "lg",
+      "shadow": "none",
+      "border": "gray-250"
+    }
+  },
+  {
+    "id": "pricing-neo-brutalism-001",
+    "category": "pricing",
+    "style": "neo-brutalism",
+    "layout": "offset-skewed-cards",
+    "components": ["skewed-starter", "skewed-pro", "skewed-enterprise"],
+    "designRules": {
+      "spacing": "loose",
+      "borderRadius": "none",
+      "shadow": "heavy-black-shadow",
+      "border": "thick-black-3px"
+    }
+  }
+]

@@ -1,107 +1,82 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Camera, MonitorSmartphone, Image, Webhook } from 'lucide-react';
 
 const PortfolioGrid = () => {
-  const portfolioItems = [
+  const projects = [
     {
-      id: 1,
-      title: 'Aura Creative Website Redesign',
-      description: 'A complete overhaul of the Aura Creative brand identity and online presence.',
-      image: 'https://via.placeholder.com/600x400/1e3a8a/ffffff?text=Aura+Creative+Site',
-      tags: ['Web Design', 'Branding', 'UI/UX'],
-      icon: <Webhook size={24} />,
+      title: 'Aura Creative Branding',
+      description: 'Redefining brand identity for leading digital agencies.',
+      imageUrl: 'https://via.placeholder.com/600x400?text=Project+1',
+      tags: ['Branding', 'Design', 'Strategy'],
     },
     {
-      id: 2,
-      title: 'E-commerce Mobile App UI',
-      description: 'Intuitive and sleek user interface design for a new fashion e-commerce app.',
-      image: 'https://via.placeholder.com/600x400/1e3a8a/ffffff?text=E-commerce+App',
-      tags: ['Mobile App', 'UI Design', 'Prototyping'],
-      icon: <MonitorSmartphone size={24} />,
+      title: 'Ethereal App UI/UX',
+      description: 'Crafting intuitive and engaging user experiences for mobile applications.',
+      imageUrl: 'https://via.placeholder.com/600x400?text=Project+2',
+      tags: ['UI/UX', 'App Development', 'Prototyping'],
     },
     {
-      id: 3,
-      title: 'Product Photography Series',
-      description: 'High-quality product shots for a luxury watch brand.',
-      image: 'https://via.placeholder.com/600x400/1e3a8a/ffffff?text=Product+Photography',
-      tags: ['Photography', 'Commercial', 'Product'],
-      icon: <Camera size={24} />,
+      title: 'Luminous Web Development',
+      description: 'Building high-performance, responsive websites that captivate.',
+      imageUrl: 'https://via.placeholder.com/600x400?text=Project+3',
+      tags: ['Web Development', 'SEO', 'Performance'],
     },
     {
-      id: 4,
-      title: 'Brand Identity for "Luxe Living"',
-      description: 'Developing a sophisticated brand identity for a high-end real estate agency.',
-      image: 'https://via.placeholder.com/600x400/1e3a8a/ffffff?text=Luxe+Living+Branding',
-      tags: ['Branding', 'Logo Design', 'Marketing'],
-      icon: <Image size={24} />,
+      title: 'Quantum Marketing Campaign',
+      description: 'Data-driven marketing strategies that deliver measurable results.',
+      imageUrl: 'https://via.placeholder.com/600x400?text=Project+4',
+      tags: ['Marketing', 'Analytics', 'Growth'],
     },
     {
-      id: 5,
-      title: 'SaaS Platform Dashboard',
-      description: 'Designing a user-friendly and data-rich dashboard for a new SaaS product.',
-      image: 'https://via.placeholder.com/600x400/1e3a8a/ffffff?text=SaaS+Dashboard',
-      tags: ['Web Design', 'UI/UX', 'SaaS'],
-      icon: <Webhook size={24} />,
+      title: 'Nebula Motion Graphics',
+      description: 'Bringing brands to life with dynamic and compelling motion design.',
+      imageUrl: 'https://via.placeholder.com/600x400?text=Project+5',
+      tags: ['Motion Graphics', 'Animation', 'Video'],
     },
     {
-      id: 6,
-      title: 'Social Media Campaign Visuals',
-      description: 'Creating engaging visual assets for a global marketing campaign.',
-      image: 'https://via.placeholder.com/600x400/1e3a8a/ffffff?text=Social+Media+Visuals',
-      tags: ['Graphic Design', 'Social Media', 'Marketing'],
-      icon: <Image size={24} />,
+      title: 'Stellar Product Design',
+      description: 'Innovating and designing products that stand out in the market.',
+      imageUrl: 'https://via.placeholder.com/600x400?text=Project+6',
+      tags: ['Product Design', 'Innovation', 'Research'],
     },
   ];
 
   return (
-    <section className="bg-gray-900 text-gray-300 py-20">
+    <section className="py-16 md:py-24 bg-zinc-900 text-zinc-300 font-dm-sans">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 font-['Outfit', sans-serif]">Our Latest Work</h2>
-          <p className="text-lg text-gray-400 font-['Inter'] max-w-2xl mx-auto">
-            Explore a curated selection of our projects, showcasing our dedication to innovation and aesthetic excellence.
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Our Latest Work</h2>
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+            Explore a curated selection of our projects, showcasing our dedication to innovation and design excellence.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {portfolioItems.map((item) => (
-            <motion.div
-              key={item.id}
-              className="bg-gray-800 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-gray-700 transform hover:-translate-y-2 transition-transform duration-300 ease-in-out"
-              whileHover={{ y: -10 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
+            <div
+              key={index}
+              className="bg-zinc-800 rounded-lg shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:bg-zinc-700"
             >
-              <div className="relative">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-64 object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-70"></div>
-                <div className="absolute bottom-4 left-4 flex items-center space-x-2">
-                  <span className="bg-indigo-600 p-2 rounded-full text-white shadow-lg">
-                    {item.icon}
-                  </span>
-                  <span className="text-white text-lg font-bold font-['Outfit', sans-serif]">{item.title}</span>
-                </div>
-              </div>
+              <img
+                src={project.imageUrl}
+                alt={project.title}
+                className="w-full h-56 object-cover"
+                loading="lazy"
+              />
               <div className="p-6">
-                <p className="text-gray-400 font-['Inter'] mb-5 text-sm leading-relaxed">
-                  {item.description}
-                </p>
+                <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                <p className="text-zinc-400 mb-4">{project.description}</p>
                 <div className="flex flex-wrap gap-2">
-                  {item.tags.map((tag, index) => (
+                  {project.tags.map((tag, tagIndex) => (
                     <span
-                      key={index}
-                      className="bg-gray-700 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full font-['Inter'] transition-colors duration-200 ease-in-out"
+                      key={tagIndex}
+                      className="bg-zinc-700 text-zinc-300 text-xs font-medium px-3 py-1 rounded-full"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

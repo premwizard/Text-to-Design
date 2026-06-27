@@ -2,6 +2,7 @@ import json
 import logging
 import asyncio
 from backend.services.agents.prompt_understanding_agent import run_prompt_understanding
+from backend.services.agents.rag_retrieval_agent import run_rag_retrieval
 from backend.services.agents.design_planning_agent import run_design_planning
 from backend.services.agents.component_generation_agent import (
     generate_component_stream,
@@ -15,7 +16,7 @@ logger = logging.getLogger("backend.agents.orchestrator")
 
 async def run_orchestration_stream(user_prompt: str):
     """
-    Executes the 5-agent multi-agent pipeline in sequence and yields SSE formatted event payloads.
+    Executes the 6-agent RAG multi-agent pipeline in sequence and yields SSE formatted event payloads.
     """
     try:
         # ==========================================
@@ -31,20 +32,54 @@ async def run_orchestration_stream(user_prompt: str):
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 2: DESIGN PLANNING
+        # STEP 2: DESIGN KNOWLEDGE RETRIEVAL (RAG)
         # ==========================================
-        logger.info("Executing Agent 2: Design Planning")
+        logger.info("Executing Agent 2: Design Knowledge Retrieval (RAG)")
+        yield {"type": "timeline", "step": "Retrieving Design Knowledge"}
+        yield {"type": "agent_start", "agent": "retrieval", "message": "Searching Design Knowledge Base for matching styles and layouts..."}
+        
+        try:
+            rag_json = await run_rag_retrieval(intent_json)
+        except Exception as rag_err:
+            logger.error(f"RAG Retrieval failed: {rag_err}. Using baseline fallback configurations.")
+            # Standard design fallback if RAG query fails
+            rag_json = {
+                "styleMatched": "minimal",
+                "layoutPattern": "split-hero-bento-features",
+                "designRules": {
+                    "spacing": "comfortable",
+                    "borderRadius": "xl",
+                    "shadow": "medium",
+                    "border": "none"
+                },
+                "styling": {
+                    "font_heading": "Space Grotesk",
+                    "font_body": "Inter",
+                    "primary_color": "violet",
+                    "bg_color": "bg-zinc-950",
+                    "text_color": "text-zinc-100"
+                },
+                "retrievedPatterns": []
+            }
+            
+        yield {"type": "agent_complete", "agent": "retrieval", "output": rag_json}
+        await asyncio.sleep(0.5)
+
+        # ==========================================
+        # STEP 3: DESIGN PLANNING
+        # ==========================================
+        logger.info("Executing Agent 3: Design Planning")
         yield {"type": "timeline", "step": "Planning Design"}
-        yield {"type": "agent_start", "agent": "planning", "message": "Designing visual style and layout architecture..."}
+        yield {"type": "agent_start", "agent": "planning", "message": "Structuring visual styles and component architecture blueprints..."}
         
-        design_plan = await run_design_planning(intent_json, user_prompt)
+        design_plan = await run_design_planning(intent_json, rag_json, user_prompt)
         
-        # Inject sections array in a clean format to match DesignPlanPanel visualization
+        # Inject design plan details to synchronize frontend panels
         yield {"type": "plan", "plan": {
             "product_name": design_plan.get("productName", "App"),
             "tagline": design_plan.get("tagline", ""),
             "page_type": intent_json.get("pageType", "landing"),
-            "design_archetype": intent_json.get("style", {}).get("visualStyle", "modern"),
+            "design_archetype": rag_json.get("styleMatched", "modern"),
             "layout_system": design_plan.get("layout", {}).get("sidebar", "none") + "-sidebar" if design_plan.get("layout", {}).get("sidebar", "none") != "none" else "centered-stack",
             "visual_style": intent_json.get("style", {}).get("visualStyle", "modern"),
             "interaction_style": "hover-reveal",
@@ -62,11 +97,11 @@ async def run_orchestration_stream(user_prompt: str):
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 3: COMPONENT GENERATION
+        # STEP 4: COMPONENT GENERATION
         # ==========================================
-        logger.info("Executing Agent 3: Component Generation")
+        logger.info("Executing Agent 4: Component Generation")
         yield {"type": "timeline", "step": "Generating Components"}
-        yield {"type": "agent_start", "agent": "generating", "message": "Initializing components structure..."}
+        yield {"type": "agent_start", "agent": "generating", "message": "Initializing components structure from layout plan..."}
         
         layout = design_plan.get("layout", {})
         main_sections = layout.get("mainSections", [])
@@ -79,7 +114,6 @@ async def run_orchestration_stream(user_prompt: str):
             planned_components.append("Sidebar")
             
         for sec in main_sections:
-            # Skip if already added
             if sec not in planned_components:
                 planned_components.append(sec)
                 
@@ -97,7 +131,7 @@ async def run_orchestration_stream(user_prompt: str):
             yield {"chunk": f'    "{filename}": "'}
             
             comp_code = ""
-            async for chunk in generate_component_stream(comp_name, design_plan, generated_files):
+            async for chunk in generate_component_stream(comp_name, design_plan, rag_json, generated_files):
                 escaped = escape_json_chunk(chunk)
                 comp_code += chunk
                 yield {"chunk": escaped}
@@ -122,9 +156,9 @@ async def run_orchestration_stream(user_prompt: str):
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 4: UI CRITIC
+        # STEP 5: UI CRITIC
         # ==========================================
-        logger.info("Executing Agent 4: UI Critic")
+        logger.info("Executing Agent 5: UI Critic")
         yield {"type": "timeline", "step": "Reviewing UI"}
         yield {"type": "agent_start", "agent": "critic", "message": "Analyzing visual hierarchy, spacing, and styling contrast..."}
         
@@ -134,9 +168,9 @@ async def run_orchestration_stream(user_prompt: str):
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 5: OPTIMIZATION
+        # STEP 6: OPTIMIZATION
         # ==========================================
-        logger.info("Executing Agent 5: Optimization")
+        logger.info("Executing Agent 6: Optimization")
         yield {"type": "timeline", "step": "Optimizing Design"}
         yield {"type": "agent_start", "agent": "optimizing", "message": "Applying critic revisions and interactive styling improvements..."}
         

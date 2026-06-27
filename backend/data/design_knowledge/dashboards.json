@@ -1,0 +1,41 @@
+[
+  {
+    "id": "dashboard-premium-dark-001",
+    "category": "dashboard",
+    "style": "dark-modern",
+    "layout": "sidebar-left-navbar-top",
+    "components": ["sidebar-collapsible", "navbar-dashboard", "metric-cards", "charts-grid", "recent-transactions"],
+    "designRules": {
+      "spacing": "comfortable",
+      "borderRadius": "xl",
+      "shadow": "card-inner",
+      "border": "zinc-800"
+    }
+  },
+  {
+    "id": "dashboard-minimal-light-001",
+    "category": "dashboard",
+    "style": "minimal",
+    "layout": "centered-container-tabs",
+    "components": ["navbar-tabs", "metric-summary", "grid-widgets", "activity-feed"],
+    "designRules": {
+      "spacing": "compact",
+      "borderRadius": "md",
+      "shadow": "subtle-flat",
+      "border": "gray-100"
+    }
+  },
+  {
+    "id": "dashboard-crypto-terminal-001",
+    "category": "dashboard",
+    "style": "cyberpunk",
+    "layout": "nested-bento-grid",
+    "components": ["ticker-tape", "sidebar-icons", "charts-terminal", "order-book", "terminal-logs"],
+    "designRules": {
+      "spacing": "compact",
+      "borderRadius": "none",
+      "shadow": "neon-glow-primary",
+      "border": "neon-green-accent"
+    }
+  }
+]

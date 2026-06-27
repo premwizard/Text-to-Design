@@ -1,0 +1,37 @@
+[
+  {
+    "style": "premium-saas",
+    "primary_color": "indigo",
+    "bg_color": "bg-slate-950",
+    "text_color": "text-zinc-100",
+    "notes": "Classic dark premium tech theme using violet/indigo accents and a dark slate background."
+  },
+  {
+    "style": "minimal",
+    "primary_color": "zinc",
+    "bg_color": "bg-white",
+    "text_color": "text-zinc-900",
+    "notes": "Ultra-clean monochrome style focusing on whitespace and high readability."
+  },
+  {
+    "style": "neo-brutalism",
+    "primary_color": "yellow",
+    "bg_color": "bg-amber-50",
+    "text_color": "text-zinc-950",
+    "notes": "High contrast yellow and black styles with offset outlines."
+  },
+  {
+    "style": "glassmorphism",
+    "primary_color": "violet",
+    "bg_color": "bg-slate-950",
+    "text_color": "text-zinc-100",
+    "notes": "Gradients mixed with transparent layers and heavy backdrops."
+  },
+  {
+    "style": "dark-modern",
+    "primary_color": "emerald",
+    "bg_color": "bg-zinc-950",
+    "text_color": "text-zinc-100",
+    "notes": "Emerald active highlights on zinc-950 layouts."
+  }
+]

@@ -1,145 +1,87 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react-native';
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would typically send the data to an API or email service
-    setFormData({ name: '', email: '', subject: '', message: '' }); // Reset form
+    setIsSubmitted(true);
+    // Add your form submission logic here
   };
 
   return (
-    <section className="bg-gray-900 text-gray-300 py-20 px-4 font-['Inter']">
-      <div className="container mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-          {/* Contact Information Column */}
-          <div className="lg:col-span-1">
-            <h2 className="text-4xl font-bold text-indigo-400 mb-6 font-['Outfit', sans-serif]">Get in Touch</h2>
-            <p className="text-lg text-gray-400 mb-8">
-              Have a project in mind or just want to say hello? We'd love to hear from you.
-            </p>
-
-            <div className="mb-8 flex items-start space-x-4">
-              <Mail className="h-8 w-8 text-indigo-500 flex-shrink-0 transition-colors duration-300" />
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-1 font-['Outfit', sans-serif]">Email</h3>
-                <p className="text-gray-400">info@auracreative.dev</p>
-              </div>
-            </div>
-
-            <div className="mb-8 flex items-start space-x-4">
-              <Phone className="h-8 w-8 text-indigo-500 flex-shrink-0 transition-colors duration-300" />
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-1 font-['Outfit', sans-serif]">Phone</h3>
-                <p className="text-gray-400">+1 (123) 456-7890</p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <MapPin className="h-8 w-8 text-indigo-500 flex-shrink-0 transition-colors duration-300" />
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-1 font-['Outfit', sans-serif]">Location</h3>
-                <p className="text-gray-400">123 Creative Way, Innovation City, CA 90210</p>
-              </div>
-            </div>
-
-            {/* Subtle Gradient Background for this section */}
-            <div className="mt-12 h-48 rounded-2xl shadow-lg border border-gray-700 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-center p-6">
-              <p className="text-gray-400 font-['Inter']">
-                We are passionate about turning your ideas into stunning digital realities.
-              </p>
-            </div>
-          </div>
-
-          {/* Contact Form Column */}
-          <div className="lg:col-span-2 bg-gray-800 bg-opacity-50 rounded-2xl shadow-xl border border-gray-700 p-10">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2 font-['Inter']">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm transition-all duration-300 ease-in-out"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2 font-['Inter']">
-                    Your Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm transition-all duration-300 ease-in-out"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-400 mb-2 font-['Inter']">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm transition-all duration-300 ease-in-out"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2 font-['Inter']">
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="6"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm resize-none transition-all duration-300 ease-in-out"
-                ></textarea>
-              </div>
-
-              <div className="text-right">
-                <button
-                  type="submit"
-                  className="inline-flex items-center px-8 py-3 border border-transparent text-lg font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
-                  Send Message
-                </button>
-              </div>
-            </form>
-          </div>
+    <div className="max-w-lg mx-auto p-4 mb-8 md:p-6 lg:p-8 bg-zinc-800 rounded-md">
+      <h2 className="text-2xl text-zinc-400 font-bold mb-4">Get in Touch</h2>
+      <p className="text-zinc-500 mb-6">We'd love to hear from you. Send us a message and we'll get back to you as soon as possible.</p>
+      {isSubmitted ? (
+        <div className="text-zinc-400 bg-zinc-700 p-4 rounded-md mb-4">
+          <p>Thank you for your message. We'll be in touch soon.</p>
         </div>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-zinc-400 mb-2" htmlFor="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="block w-full p-2 pl-10 text-zinc-400 bg-zinc-700 border border-zinc-600 rounded-md focus:outline-none focus:ring-zinc-400 focus:border-zinc-400"
+              placeholder="Your Name"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-zinc-400 mb-2" htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full p-2 pl-10 text-zinc-400 bg-zinc-700 border border-zinc-600 rounded-md focus:outline-none focus:ring-zinc-400 focus:border-zinc-400"
+              placeholder="your@email.com"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-zinc-400 mb-2" htmlFor="message">Message</label>
+            <textarea
+              id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="block w-full p-2 pl-10 text-zinc-400 bg-zinc-700 border border-zinc-600 rounded-md focus:outline-none focus:ring-zinc-400 focus:border-zinc-400"
+              placeholder="Your message..."
+              rows={5}
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full p-2 text-zinc-400 bg-zinc-600 hover:bg-zinc-700 rounded-md focus:outline-none focus:ring-zinc-400 focus:border-zinc-400"
+          >
+            Send Message
+          </button>
+        </form>
+      )}
+      <div className="mt-6">
+        <h3 className="text-zinc-400 font-bold mb-2">Get in Touch</h3>
+        <ul>
+          <li className="mb-2 flex items-center">
+            <Mail size={20} className="mr-2 text-zinc-400" />
+            <a href="mailto:info@auracreative.com" className="text-zinc-400 hover:text-zinc-200">info@auracreative.com</a>
+          </li>
+          <li className="mb-2 flex items-center">
+            <Phone size={20} className="mr-2 text-zinc-400" />
+            <a href="tel:1234567890" className="text-zinc-400 hover:text-zinc-200">123 456 7890</a>
+          </li>
+          <li className="flex items-center">
+            <MapPin size={20} className="mr-2 text-zinc-400" />
+            <span className="text-zinc-400">123 Main St, Anytown, USA</span>
+          </li>
+        </ul>
       </div>
-    </section>
+    </div>
   );
 };
 

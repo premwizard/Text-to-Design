@@ -14,12 +14,16 @@ Generate the complete JSX code for a single component: '{component_name}'.
 Layout Context:
 - Brand Name: {product_name}
 - Hero Tagline: {tagline}
-- Spacing: {spacing}
-- Border Radius: {border_radius}
 - Visual Style: {visual_style}
 - Theme: {theme}
 - Primary Accent Color: {primary_color} (use Tailwind classes like bg-{primary_color}-600, text-{primary_color}-400, hover:bg-{primary_color}-700)
 - Font: {font_body}
+
+━━━ RETRIEVED DESIGN SYSTEM RULES ━━━
+- Spacing Level: {spacing} (apply comfortable/loose/compact margins/paddings accordingly)
+- Border Radius: {border_radius} (e.g., rounded-none, rounded-md, rounded-xl, rounded-2xl)
+- Shadow Level: {shadow} (apply shadows like shadow-none, shadow-md, shadow-lg, shadow-2xl, or custom neon/heavy shadows matching style)
+- Border Details: {border} (apply borders matching style: e.g., border border-zinc-800 or thick border-black)
 
 ━━━ DEVELOPMENT GUIDELINES ━━━
 - Output ONLY the complete, ready-to-import JSX code.
@@ -80,6 +84,7 @@ Sections to import and render:
 async def generate_component_stream(
     component_name: str,
     design_plan: dict,
+    rag_json: dict,
     previous_components: dict
 ):
     """
@@ -88,6 +93,8 @@ async def generate_component_stream(
     logger.info(f"Generating component: {component_name}")
     
     styling = design_plan.get("styling", {})
+    rules = rag_json.get("designRules", {})
+    
     prev_summary = ""
     for name, code in previous_components.items():
         prev_summary += f"- {name}: Exports default component {name}\n"
@@ -96,10 +103,12 @@ async def generate_component_stream(
         component_name=component_name,
         product_name=design_plan.get("productName", "App"),
         tagline=design_plan.get("tagline", ""),
-        spacing=design_plan.get("spacing", "comfortable"),
-        border_radius=design_plan.get("borderRadius", "large"),
-        visual_style=design_plan.get("visualStyle", "modern"),
-        theme=design_plan.get("theme", "premium dark"),
+        spacing=rules.get("spacing", "comfortable"),
+        border_radius=rules.get("borderRadius", "xl"),
+        shadow=rules.get("shadow", "medium"),
+        border=rules.get("border", "none"),
+        visual_style=rag_json.get("styleMatched", "modern"),
+        theme=design_plan.get("styling", {}).get("aesthetic", "premium dark"),
         primary_color=styling.get("primary_color", "violet"),
         font_body=styling.get("font_body", "Inter"),
         previous_components=prev_summary or "None"

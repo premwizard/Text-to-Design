@@ -16,7 +16,10 @@ import {
   Award,
   Settings,
   Check,
-  RefreshCw
+  RefreshCw,
+  Search,
+  Database,
+  Sliders
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -27,6 +30,7 @@ function cn(...inputs) {
 
 const AGENT_STEPS = [
   { id: 'understanding', label: 'Understanding Prompt', desc: 'Analyzing intent and extracting design parameters' },
+  { id: 'retrieval', label: 'Retrieving Design', desc: 'Searching Design Knowledge Base for matched layouts' },
   { id: 'planning', label: 'Planning Design', desc: 'Structuring layout architecture and styling system' },
   { id: 'generating', label: 'Generating Components', desc: 'Creating React + Tailwind layout component-by-component' },
   { id: 'critic', label: 'Reviewing UI', desc: 'Evaluating visual quality, hierarchy, and usability metrics' },
@@ -41,11 +45,12 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
   const getStepIndex = (status) => {
     switch (status) {
       case 'understanding': return 0;
-      case 'planning': return 1;
-      case 'generating': return 2;
-      case 'critic': return 3;
-      case 'optimizing': return 4;
-      case 'done': return 5;
+      case 'retrieval': return 1;
+      case 'planning': return 2;
+      case 'generating': return 3;
+      case 'critic': return 4;
+      case 'optimizing': return 5;
+      case 'done': return 6;
       default: return 0;
     }
   };
@@ -71,7 +76,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
             <Cpu className="text-violet-400 w-5 h-5 animate-pulse" />
-            <h2 className="font-semibold tracking-tight text-zinc-100 text-sm uppercase tracking-wider">Multi-Agent AI Pipeline</h2>
+            <h2 className="font-semibold tracking-tight text-zinc-100 text-xs uppercase tracking-wider">RAG Multi-Agent Pipeline</h2>
           </div>
           
           <button
@@ -119,7 +124,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                     <p className={cn(
                       "text-sm font-semibold transition-colors duration-300",
                       status === 'completed' ? "text-zinc-400" :
-                      status === 'active' ? "text-violet-300 font-bold" : "text-zinc-600"
+                      status === 'active' ? "text-violet-300 font-bold" : "text-zinc-650"
                     )}>
                       {step.label}
                     </p>
@@ -183,7 +188,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
               {/* JSON Log Viewer */}
               <div className="flex-1 p-6 font-mono text-xs text-zinc-400 overflow-auto bg-black/40">
                 <pre className="whitespace-pre-wrap leading-relaxed select-text">
-                  {renderJSON(agentOutputs[activeDebugTab === 'optimizing' ? 'optimizing' : activeDebugTab])}
+                  {renderJSON(agentOutputs[activeDebugTab])}
                 </pre>
               </div>
             </motion.div>
@@ -218,8 +223,89 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 2: DESIGN PLANNING */}
-              {(agentStatus === 'planning' || (agentOutputs.understanding && currentStepIdx === 1)) && (
+              {/* STATE 2: RAG DESIGN KNOWLEDGE RETRIEVAL */}
+              {(agentStatus === 'retrieval' || (agentOutputs.retrieval && currentStepIdx === 1)) && (
+                <motion.div 
+                  key="retrieval"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="space-y-8 text-left"
+                >
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                    <div className="p-2 bg-violet-500/10 border border-violet-500/20 rounded-xl">
+                      <Database className="w-5 h-5 text-violet-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">Design Knowledge Base Queries</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">Searching design rules, borders, and layouts using RAG</p>
+                    </div>
+                  </div>
+
+                  {/* Similarity Matches & Metrics */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
+                        <Palette className="w-4 h-4 text-violet-400" /> Matched Style
+                      </h3>
+                      <div className="space-y-1.5 text-xs text-zinc-400">
+                        <div className="flex justify-between py-1 border-b border-zinc-850">
+                          <span>Aesthetic style</span>
+                          <span className="text-zinc-200 capitalize font-semibold">{agentOutputs.retrieval?.styleMatched}</span>
+                        </div>
+                        <div className="flex justify-between py-1 border-b border-zinc-850">
+                          <span>Layout pattern</span>
+                          <span className="text-zinc-200 font-semibold">{agentOutputs.retrieval?.layoutPattern}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
+                        <Sliders className="w-4 h-4 text-emerald-400" /> Design Tokens (Rules)
+                      </h3>
+                      <div className="space-y-1.5 text-xs text-zinc-400">
+                        <div className="flex justify-between py-1 border-b border-zinc-850">
+                          <span>Spacing</span>
+                          <span className="text-zinc-200 capitalize">{agentOutputs.retrieval?.designRules?.spacing}</span>
+                        </div>
+                        <div className="flex justify-between py-1 border-b border-zinc-850">
+                          <span>Borders</span>
+                          <span className="text-zinc-200">{agentOutputs.retrieval?.designRules?.border}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span>Shadows</span>
+                          <span className="text-zinc-200 capitalize">{agentOutputs.retrieval?.designRules?.shadow}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
+                        <Search className="w-4 h-4 text-sky-400" /> Matched Entries
+                      </h3>
+                      <div className="space-y-2 max-h-24 overflow-y-auto">
+                        {agentOutputs.retrieval?.retrievedPatterns && agentOutputs.retrieval.retrievedPatterns.map((pat, idx) => (
+                          <div key={idx} className="flex justify-between items-center text-[10px] bg-zinc-950/60 p-2 rounded-lg border border-zinc-850 font-medium">
+                            <span className="text-zinc-400 truncate w-32">{pat.id}</span>
+                            <span className="text-emerald-400 font-semibold font-mono">{(pat.similarity_score * 20).toFixed(0)}% Match</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {agentStatus === 'retrieval' && (
+                    <div className="flex items-center gap-3 justify-center text-zinc-500 text-sm font-medium mt-12 bg-zinc-950/40 py-3 rounded-xl border border-zinc-900 w-fit mx-auto px-6">
+                      <RefreshCw className="w-4 h-4 text-violet-400 animate-spin" />
+                      <span>Retrieving design system blueprints...</span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* STATE 3: DESIGN PLANNING */}
+              {(agentStatus === 'planning' || (agentOutputs.planning && currentStepIdx === 2)) && (
                 <motion.div 
                   key="planning"
                   initial={{ opacity: 0, y: 15 }}
@@ -266,8 +352,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 3: COMPONENT GENERATION */}
-              {(agentStatus === 'generating' || (agentOutputs.planning && currentStepIdx === 2)) && (
+              {/* STATE 4: COMPONENT GENERATION */}
+              {(agentStatus === 'generating' || (agentOutputs.planning && currentStepIdx === 3)) && (
                 <motion.div 
                   key="generating"
                   initial={{ opacity: 0, y: 15 }}
@@ -317,7 +403,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {plan?.sections && plan.sections.map((section, idx) => (
                           <div key={idx} className="flex items-center gap-2 bg-zinc-950/60 border border-zinc-850 p-2.5 rounded-xl">
-                            {/* Checkbox representation based on loading */}
                             <div className="w-4 h-4 rounded-full bg-violet-500/10 ring-1 ring-violet-500/20 flex items-center justify-center">
                               <div className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-ping" />
                             </div>
@@ -335,8 +420,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 4: UI CRITIC */}
-              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 3)) && (
+              {/* STATE 5: UI CRITIC */}
+              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 4)) && (
                 <motion.div 
                   key="critic"
                   initial={{ opacity: 0, scale: 0.98 }}
@@ -404,7 +489,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 5: OPTIMIZING DESIGN */}
+              {/* STATE 6: OPTIMIZING DESIGN */}
               {(agentStatus === 'optimizing' || agentStatus === 'done') && (
                 <motion.div 
                   key="optimizing"

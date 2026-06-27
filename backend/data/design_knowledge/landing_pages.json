@@ -1,0 +1,54 @@
+[
+  {
+    "id": "landing-premium-saas-001",
+    "category": "landing",
+    "style": "premium-saas",
+    "layout": "split-hero-bento-features",
+    "components": ["navbar", "hero", "social-proof", "features-bento", "testimonials", "pricing", "cta", "footer"],
+    "designRules": {
+      "spacing": "comfortable",
+      "borderRadius": "xl",
+      "shadow": "soft-double",
+      "border": "thin-gray-800"
+    }
+  },
+  {
+    "id": "landing-neo-brutalism-001",
+    "category": "landing",
+    "style": "neo-brutalism",
+    "layout": "centered-asymmetric-grid",
+    "components": ["navbar", "hero-brutalist", "features-cards", "testimonials", "cta-brutalist", "footer"],
+    "designRules": {
+      "spacing": "loose",
+      "borderRadius": "none",
+      "shadow": "heavy-black-shadow",
+      "border": "thick-black-3px"
+    }
+  },
+  {
+    "id": "landing-minimal-001",
+    "category": "landing",
+    "style": "minimal",
+    "layout": "centered-stack-clean",
+    "components": ["navbar-clean", "hero-minimal", "features-minimal", "testimonials-clean", "footer-clean"],
+    "designRules": {
+      "spacing": "comfortable",
+      "borderRadius": "md",
+      "shadow": "none",
+      "border": "none"
+    }
+  },
+  {
+    "id": "landing-glassmorphism-001",
+    "category": "landing",
+    "style": "glassmorphism",
+    "layout": "floating-sections-glow",
+    "components": ["navbar-glass", "hero-glass", "features-glass", "testimonials-glass", "footer-glass"],
+    "designRules": {
+      "spacing": "comfortable",
+      "borderRadius": "2xl",
+      "shadow": "glowing-blur",
+      "border": "semi-transparent-white"
+    }
+  }
+]

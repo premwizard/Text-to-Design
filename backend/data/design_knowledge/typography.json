@@ -1,0 +1,38 @@
+[
+  {
+    "style": "premium-saas",
+    "font_heading": "Outfit",
+    "font_body": "Inter",
+    "notes": "Outfit delivers a clean, modern headline vibe while Inter maintains high body readability."
+  },
+  {
+    "style": "minimal",
+    "font_heading": "DM Sans",
+    "font_body": "DM Sans",
+    "notes": "Single font family approach is ideal for minimal layouts to keep page weight and visual noise low."
+  },
+  {
+    "style": "neo-brutalism",
+    "font_heading": "Space Grotesk",
+    "font_body": "Space Mono",
+    "notes": "Monospaced and geometric sans-serif shapes enforce the raw, engineering-focused neo-brutalist archetype."
+  },
+  {
+    "style": "glassmorphism",
+    "font_heading": "Plus Jakarta Sans",
+    "font_body": "Inter",
+    "notes": "Plus Jakarta Sans adds premium modern spacing, pairing beautifully with blur backgrounds."
+  },
+  {
+    "style": "apple-style",
+    "font_heading": "SF Pro Display",
+    "font_body": "Inter",
+    "notes": "Uses Inter as fallback to resemble the premium native macOS user interface aesthetic."
+  },
+  {
+    "style": "dark-modern",
+    "font_heading": "Space Grotesk",
+    "font_body": "Inter",
+    "notes": "Bold geometric heading layouts match neon gradients and dark tech backdrops."
+  }
+]
