@@ -20,7 +20,12 @@ import {
   Search,
   Database,
   Sliders,
-  UserCheck
+  UserCheck,
+  Image,
+  Eye,
+  Tablet,
+  Smartphone,
+  Monitor
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -35,6 +40,8 @@ const AGENT_STEPS = [
   { id: 'retrieval', label: 'Retrieving Design', desc: 'Searching Design Knowledge Base for matched layouts' },
   { id: 'planning', label: 'Planning Design', desc: 'Structuring layout architecture and styling system' },
   { id: 'generating', label: 'Generating Components', desc: 'Creating React + Tailwind layout component-by-component' },
+  { id: 'screenshot', label: 'Screenshot Capture', desc: 'Rendering sandbox output and capturing responsive layouts' },
+  { id: 'vision', label: 'Vision Analysis', desc: 'Evaluating visual balance, accessibility contrast, and spacing' },
   { id: 'critic', label: 'Reviewing UI', desc: 'Evaluating visual quality, hierarchy, and usability metrics' },
   { id: 'optimizing', label: 'Optimizing Design', desc: 'Applying design edits, enhancing colors and interactions' }
 ];
@@ -42,6 +49,12 @@ const AGENT_STEPS = [
 export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agentOutputs = {} }) {
   const [debugMode, setDebugMode] = useState(false);
   const [activeDebugTab, setActiveDebugTab] = useState('memory');
+  const [timestamp, setTimestamp] = useState(Date.now());
+
+  // Force cache-busting on screenshots when new agent status outputs occur
+  useEffect(() => {
+    setTimestamp(Date.now());
+  }, [agentStatus, agentOutputs.screenshot]);
 
   // Map backend agentStatus to step index
   const getStepIndex = (status) => {
@@ -51,9 +64,11 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
       case 'retrieval': return 2;
       case 'planning': return 3;
       case 'generating': return 4;
-      case 'critic': return 5;
-      case 'optimizing': return 6;
-      case 'done': return 7;
+      case 'screenshot': return 5;
+      case 'vision': return 6;
+      case 'critic': return 7;
+      case 'optimizing': return 8;
+      case 'done': return 9;
       default: return 0;
     }
   };
@@ -237,7 +252,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                             </div>
                           ))
                         ) : (
-                          <p className="text-xs text-zinc-600 font-medium">No similar past generations found.</p>
+                          <p className="text-xs text-zinc-650 font-medium">No similar past generations found.</p>
                         )}
                       </div>
                     </div>
@@ -296,9 +311,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                     </div>
                   </div>
 
-                  {/* Similarity Matches & Metrics */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* JSON Rule matches */}
                     <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
                       <h3 className="text-xs font-bold text-zinc-350 flex items-center gap-2">
                         <Sliders className="w-4 h-4 text-violet-400" /> Rule-Based Matches (JSON)
@@ -313,7 +326,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       </div>
                     </div>
 
-                    {/* Semantic Vector matches */}
                     <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
                       <h3 className="text-xs font-bold text-zinc-350 flex items-center gap-2">
                         <Search className="w-4 h-4 text-sky-400" /> Semantic Matches (ChromaDB)
@@ -328,7 +340,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       </div>
                     </div>
 
-                    {/* Final Ranked Combined results */}
                     <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
                       <h3 className="text-xs font-bold text-zinc-350 flex items-center gap-2">
                         <Award className="w-4 h-4 text-emerald-400" /> Final Merged Ranking
@@ -474,8 +485,172 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 6: UI CRITIC */}
-              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 5)) && (
+              {/* STATE 6: SCREENSHOT CAPTURE */}
+              {(agentStatus === 'screenshot' || (agentOutputs.screenshot && currentStepIdx === 5)) && (
+                <motion.div 
+                  key="screenshot"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="space-y-6 text-left w-full"
+                >
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                    <div className="p-2 bg-pink-500/10 border border-pink-500/20 rounded-xl">
+                      <Image className="w-5 h-5 text-pink-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">Playwright Screenshot Capture</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5 font-medium">Capturing viewport snapshots of the rendered web preview statically</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Desktop Screenshot Card */}
+                    <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
+                      <div className="flex items-center justify-between text-xs text-zinc-400 font-semibold border-b border-zinc-850 pb-2">
+                        <span className="flex items-center gap-1.5"><Monitor size={14} className="text-pink-400" /> Desktop View</span>
+                        <span className="text-[10px] font-mono text-zinc-550">1280x800</span>
+                      </div>
+                      <div className="aspect-[16/10] bg-black/60 rounded-xl border border-zinc-850/80 overflow-hidden relative group">
+                        {agentOutputs.screenshot?.desktop ? (
+                          <img 
+                            src={`/screenshots/ui_desktop.png?t=${timestamp}`} 
+                            alt="Desktop Preview" 
+                            className="w-full h-full object-cover object-top transition duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-xs text-zinc-650 font-semibold">
+                            No snapshot captured yet
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Tablet Screenshot Card */}
+                    <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
+                      <div className="flex items-center justify-between text-xs text-zinc-400 font-semibold border-b border-zinc-850 pb-2">
+                        <span className="flex items-center gap-1.5"><Tablet size={14} className="text-sky-400" /> Tablet View</span>
+                        <span className="text-[10px] font-mono text-zinc-550">768x1024</span>
+                      </div>
+                      <div className="aspect-[16/10] bg-black/60 rounded-xl border border-zinc-850/80 overflow-hidden relative group">
+                        {agentOutputs.screenshot?.tablet ? (
+                          <img 
+                            src={`/screenshots/ui_tablet.png?t=${timestamp}`} 
+                            alt="Tablet Preview" 
+                            className="w-full h-full object-cover object-top transition duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-xs text-zinc-650 font-semibold">
+                            No snapshot captured yet
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Mobile Screenshot Card */}
+                    <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
+                      <div className="flex items-center justify-between text-xs text-zinc-400 font-semibold border-b border-zinc-850 pb-2">
+                        <span className="flex items-center gap-1.5"><Smartphone size={14} className="text-emerald-400" /> Mobile View</span>
+                        <span className="text-[10px] font-mono text-zinc-550">375x667</span>
+                      </div>
+                      <div className="aspect-[16/10] bg-black/60 rounded-xl border border-zinc-850/80 overflow-hidden relative group">
+                        {agentOutputs.screenshot?.mobile ? (
+                          <img 
+                            src={`/screenshots/ui_mobile.png?t=${timestamp}`} 
+                            alt="Mobile Preview" 
+                            className="w-full h-full object-cover object-top transition duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-xs text-zinc-650 font-semibold">
+                            No snapshot captured yet
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {agentStatus === 'screenshot' && (
+                    <div className="flex items-center gap-3 justify-center text-zinc-500 text-sm font-medium mt-8 bg-zinc-950/40 py-3 rounded-xl border border-zinc-900 w-fit mx-auto px-6">
+                      <RefreshCw className="w-4 h-4 text-pink-400 animate-spin" />
+                      <span>Taking viewport snapshots...</span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* STATE 7: VISION AGENT ANALYSIS */}
+              {(agentStatus === 'vision' || (agentOutputs.vision && currentStepIdx === 6)) && (
+                <motion.div 
+                  key="vision"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="space-y-6 text-left"
+                >
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                    <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
+                      <Eye className="w-5 h-5 text-indigo-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">Vision Agent Visual Audit</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">Performing multimodal visual quality checks on rendered layouts</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                    {/* Visual metric scores */}
+                    <div className="col-span-2 bg-zinc-900/30 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-350 uppercase tracking-wider">Visual Dimension Scores</h3>
+                      <div className="space-y-3.5">
+                        {agentOutputs.vision?.scores ? (
+                          Object.entries(agentOutputs.vision.scores).map(([metric, val], idx) => (
+                            <div key={idx} className="space-y-1.5">
+                              <div className="flex justify-between items-center text-xs font-semibold text-zinc-400 capitalize">
+                                <span>{metric}</span>
+                                <span className="text-indigo-400 font-mono">{val}/10</span>
+                              </div>
+                              <div className="w-full h-1 bg-zinc-950 rounded-full overflow-hidden">
+                                <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${val * 10}%` }} />
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-xs text-zinc-650 font-medium py-8 text-center">Loading vision audits...</div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Detected design issue list */}
+                    <div className="col-span-3 bg-zinc-900/30 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4 flex flex-col justify-between">
+                      <div className="space-y-3">
+                        <h3 className="text-xs font-bold text-zinc-350 uppercase tracking-wider">Detected Visual Anomaly Points</h3>
+                        <div className="space-y-2 max-h-48 overflow-y-auto">
+                          {agentOutputs.vision?.issues && agentOutputs.vision.issues.length > 0 ? (
+                            agentOutputs.vision.issues.map((issue, idx) => (
+                              <div key={idx} className="flex gap-2 items-start text-xs text-zinc-450 bg-zinc-950/60 p-3 rounded-xl border border-zinc-850">
+                                <AlertTriangle size={14} className="text-indigo-400 shrink-0 mt-0.5" />
+                                <span className="font-semibold">{issue}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-xs text-zinc-600 font-medium py-8 text-center">No visual defects observed.</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {agentStatus === 'vision' && (
+                        <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 bg-zinc-950 border border-zinc-850 px-4 py-2.5 rounded-xl w-fit">
+                          <RefreshCw size={12} className="animate-spin text-indigo-500" />
+                          Analyzing spacing and hierarchy...
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STATE 8: UI CRITIC (HYBRID) */}
+              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 7)) && (
                 <motion.div 
                   key="critic"
                   initial={{ opacity: 0, scale: 0.98 }}
@@ -488,8 +663,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       <Award className="w-5 h-5 text-amber-400" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-zinc-100">UI Critic Evaluation</h2>
-                      <p className="text-xs text-zinc-500 mt-0.5">Assessing alignment, usability, and responsiveness</p>
+                      <h2 className="text-xl font-bold text-zinc-100">Hybrid UI Critic Evaluation</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">Calculated: 40% code review + 60% Vision Agent screenshot audit</p>
                     </div>
                   </div>
 
@@ -515,7 +690,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                     <div className="col-span-2 bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 shadow-xl space-y-4 flex flex-col justify-between">
                       <div className="space-y-4">
                         <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
-                          <AlertTriangle className="w-4 h-4 text-amber-500" /> Critic Observations
+                          <AlertTriangle className="w-4 h-4 text-amber-500" /> Merged Critique Issues
                         </h3>
                         <div className="space-y-2.5 max-h-40 overflow-y-auto">
                           {agentOutputs.critic?.issues && agentOutputs.critic.issues.map((issue, idx) => (
@@ -541,7 +716,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 7: OPTIMIZING DESIGN */}
+              {/* STATE 9: OPTIMIZING DESIGN */}
               {(agentStatus === 'optimizing' || agentStatus === 'done') && (
                 <motion.div 
                   key="optimizing"

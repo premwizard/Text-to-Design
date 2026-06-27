@@ -10,6 +10,8 @@ from backend.services.agents.component_generation_agent import (
     generate_app_stream,
     escape_json_chunk
 )
+from backend.services.agents.vision_agent import run_vision_agent
+from backend.services.vision.screenshot_service import capture_sandbox_screenshots
 from backend.services.agents.ui_critic_agent import run_ui_critic
 from backend.services.agents.optimization_agent import run_optimization
 from backend.services.vector_db.chroma_service import save_successful_generation
@@ -18,8 +20,9 @@ logger = logging.getLogger("backend.agents.orchestrator")
 
 async def run_orchestration_stream(user_prompt: str, user_id: str = None):
     """
-    Executes the 7-agent Personalized multi-agent pipeline in sequence and yields SSE formatted event payloads.
-    Includes Hybrid Vector Search and Semantic preference memory layers.
+    Executes the upgraded 10-step multi-agent pipeline.
+    Steps: Memory -> Understanding -> Hybrid RAG -> Design Planning -> Component Gen ->
+           Sandbox Render -> Screenshot Capture -> Vision Audit -> Critic -> Optimization.
     """
     try:
         # ==========================================
@@ -48,7 +51,7 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None):
         intent_json = await run_prompt_understanding(user_prompt, memory_prefs)
         
         yield {"type": "agent_complete", "agent": "understanding", "output": intent_json}
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
 
         # ==========================================
         # STEP 3: DESIGN KNOWLEDGE RETRIEVAL (RAG)
@@ -84,7 +87,7 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None):
             }
             
         yield {"type": "agent_complete", "agent": "retrieval", "output": rag_json}
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
 
         # ==========================================
         # STEP 4: DESIGN PLANNING
@@ -96,7 +99,7 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None):
         design_plan = await run_design_planning(intent_json, rag_json, user_prompt)
         
         # Inject design plan details to synchronize frontend panels
-        yield {"type": "plan", "plan": {
+        plan_record = {
             "product_name": design_plan.get("productName", "App"),
             "tagline": design_plan.get("tagline", ""),
             "page_type": intent_json.get("pageType", "landing"),
@@ -112,10 +115,11 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None):
             "text_color": design_plan.get("styling", {}).get("text_color", "text-zinc-100"),
             "sections": design_plan.get("layout", {}).get("mainSections", []),
             "layout_notes": f"Navbar: {design_plan.get('layout', {}).get('navbar', 'top')}, Sidebar: {design_plan.get('layout', {}).get('sidebar', 'none')}"
-        }}
+        }
+        yield {"type": "plan", "plan": plan_record}
         
         yield {"type": "agent_complete", "agent": "planning", "output": design_plan}
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
 
         # ==========================================
         # STEP 5: COMPONENT GENERATION
@@ -173,31 +177,67 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None):
         yield {"chunk": "\"\n  }\n}"}
         
         yield {"type": "agent_complete", "agent": "generating", "output": {"file_count": len(generated_files)}}
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
 
         # ==========================================
-        # STEP 6: UI CRITIC
+        # STEP 6: SANDBOX RENDER & SCREENSHOT CAPTURE
         # ==========================================
-        logger.info("Executing Agent 6: UI Critic")
+        logger.info("Executing Sandbox Render & Screenshot Capture")
+        yield {"type": "timeline", "step": "Screenshot Capture"}
+        yield {"type": "agent_start", "agent": "screenshot", "message": "Compiling components and capturing desktop/mobile layout snapshots..."}
+        
+        from backend.project_runner import write_files
+        try:
+            # Render sandbox files to disk
+            await write_files(generated_files)
+            # Capture screenshots using Playwright service
+            screenshot_paths = await capture_sandbox_screenshots()
+            logger.info(f"Screenshots saved to: {screenshot_paths}")
+        except Exception as screen_err:
+            logger.error(f"Screenshot capture failed: {screen_err}. Continuing with fallback placeholders.")
+            screenshot_paths = {}
+            
+        yield {"type": "agent_complete", "agent": "screenshot", "output": screenshot_paths}
+        await asyncio.sleep(0.3)
+
+        # ==========================================
+        # STEP 7: VISION AGENT AUDIT
+        # ==========================================
+        logger.info("Executing Agent 7: Vision Agent Audit")
+        yield {"type": "timeline", "step": "Vision Analysis"}
+        yield {"type": "agent_start", "agent": "vision", "message": "Evaluating visual alignment, spacing density, and color accessibility..."}
+        
+        try:
+            vision_feedback = await run_vision_agent(screenshot_paths, plan_record)
+        except Exception as vision_err:
+            logger.error(f"Vision Agent audit failed: {vision_err}. Proceeding with default values.")
+            vision_feedback = {}
+            
+        yield {"type": "agent_complete", "agent": "vision", "output": vision_feedback}
+        await asyncio.sleep(0.3)
+
+        # ==========================================
+        # STEP 8: UI CRITIC (HYBRID CODE + VISION REVIEW)
+        # ==========================================
+        logger.info("Executing Agent 8: Hybrid UI Critic")
         yield {"type": "timeline", "step": "Reviewing UI"}
         yield {"type": "agent_start", "agent": "critic", "message": "Analyzing visual hierarchy, spacing, and styling contrast..."}
         
-        critic_feedback = await run_ui_critic(generated_files)
+        critic_feedback = await run_ui_critic(generated_files, vision_feedback)
         
         yield {"type": "agent_complete", "agent": "critic", "output": critic_feedback}
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
 
         # ==========================================
-        # STEP 7: OPTIMIZATION
+        # STEP 9: OPTIMIZATION (VISUAL & CODE CORRECTIONS)
         # ==========================================
-        logger.info("Executing Agent 7: Optimization")
+        logger.info("Executing Agent 9: Visual & Code Optimization")
         yield {"type": "timeline", "step": "Optimizing Design"}
-        yield {"type": "agent_start", "agent": "optimizing", "message": "Applying critic revisions and interactive styling improvements..."}
+        yield {"type": "agent_start", "agent": "optimizing", "message": "Applying visual critic revisions and interactive styling improvements..."}
         
         optimized_files = await run_optimization(generated_files, critic_feedback)
         
-        # Save optimized files to disk for preview compile
-        from backend.project_runner import write_files
+        # Save optimized files to disk for final preview
         try:
             await write_files(optimized_files)
             logger.info("Successfully compiled and saved optimized files to sandbox")
@@ -210,19 +250,6 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None):
         await asyncio.sleep(0.3)
         
         # Save preference signals to User Memory and Successful Generations logs
-        plan_record = {
-            "design_rules": rag_json.get("designRules", {}),
-            "design_archetype": rag_json.get("styleMatched", "modern"),
-            "aesthetic": intent_json.get("theme", "premium dark"),
-            "primary_color": design_plan.get("styling", {}).get("primary_color", "violet"),
-            "layout_notes": rag_json.get("layoutPattern", "split-hero"),
-            "sections": design_plan.get("layout", {}).get("mainSections", []),
-            "font_heading": design_plan.get("styling", {}).get("font_heading", "Space Grotesk"),
-            "font_body": design_plan.get("styling", {}).get("font_body", "Inter"),
-            "bg_color": design_plan.get("styling", {}).get("bg_color", "bg-zinc-950"),
-            "layout_system": design_plan.get("layout", {}).get("sidebar", "none") + "-sidebar" if design_plan.get("layout", {}).get("sidebar", "none") != "none" else "centered-stack"
-        }
-        
         try:
             update_user_memory(user_id, user_prompt, plan_record)
         except Exception as mem_up_err:

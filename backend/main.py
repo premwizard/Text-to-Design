@@ -99,6 +99,10 @@ logger.info("Mounting /src and /dist static directories unconditionally")
 app.mount("/src", StaticFiles(directory=str(src_dir)), name="src")
 app.mount("/dist", StaticFiles(directory=str(dist_dir)), name="dist")
 
+screenshots_dir = ROOT_DIR / "backend" / "data" / "screenshots"
+screenshots_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/screenshots", StaticFiles(directory=str(screenshots_dir)), name="screenshots")
+
 @app.get("/preview/assets/{filename}")
 async def serve_preview_assets(filename: str):
     logger.info(f"Requested preview asset: {filename}")

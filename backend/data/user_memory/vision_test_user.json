@@ -1,0 +1,38 @@
+{
+  "userId": "vision_test_user",
+  "preferences": {
+    "theme": {
+      "dark": 1
+    },
+    "style": {
+      "dark-modern": 1
+    },
+    "borderRadius": {},
+    "spacing": {},
+    "favoriteColors": {
+      "indigo": 1
+    },
+    "preferredLayouts": {
+      "navbar: top, sidebar: none": 1
+    },
+    "commonComponents": {
+      "herosection": 1,
+      "bentofeatures": 1,
+      "transactiontable": 1,
+      "testimonialcarousel": 1,
+      "pricingplan": 1,
+      "footer": 1
+    }
+  },
+  "history": [
+    {
+      "prompt": "Create a premium dark SaaS website hero section with center aligned text and rounded glowing buttons",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    }
+  ],
+  "settings": {
+    "enabled": true
+  }
+}

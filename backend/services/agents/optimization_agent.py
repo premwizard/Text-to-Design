@@ -6,10 +6,10 @@ from backend.services.ai_router import generate_ai
 logger = logging.getLogger("backend.agents.optimization")
 
 SYSTEM_PROMPT = """You are a React + Tailwind CSS Optimization Agent.
-You take existing code files and a list of design issues identified by a UI Critic, then output optimized, polished, and bug-free versions of all files.
+You take existing code files and a list of design issues identified by a UI Critic (including code reviews and visual/screenshot feedback from a Vision Agent), then output optimized, polished, and bug-free versions of all files.
 
-Your changes should:
-1. Fix every issue listed by the critic (improve spacing, typography, colors, responsiveness, accessibility, interaction states).
+Your changes must:
+1. Fix every visual issue listed by the critic (increase padding/margins for spacing issues, adjust text colors for contrast/accessibility issues, fix responsive breakpoints for element overflows, reposition sections for visual hierarchy).
 2. Enhance UI premium details (add hover scale effects, glassmorphic shadows, smooth transitions: 'transition-all duration-300').
 3. Keep the file names and structure identical.
 
@@ -26,13 +26,13 @@ Output must start with { and end with }. No extra text.
 """
 
 async def run_optimization(files: dict[str, str], critic_feedback: dict) -> dict:
-    logger.info("Running Optimization Agent to fix critic issues")
+    logger.info("Running Optimization Agent to fix critic and vision issues")
     
     # Construct the query payload
     files_payload = json.dumps({"files": files}, indent=2)
     critic_issues = json.dumps(critic_feedback, indent=2)
     
-    user_prompt = f"Original Files:\n{files_payload}\n\nCritic Issues:\n{critic_issues}\n\nOptimize all files and output the full updated JSON object."
+    user_prompt = f"Original Files:\n{files_payload}\n\nCritic & Visual Issues:\n{critic_issues}\n\nOptimize all files and output the full updated JSON object."
     
     try:
         response = await generate_ai(

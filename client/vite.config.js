@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => {
         '/health': { target: backendTarget, changeOrigin: true },
         '/preview': { target: backendTarget, changeOrigin: true },
         '/dist': { target: backendTarget, changeOrigin: true },
+        '/screenshots': { target: backendTarget, changeOrigin: true },
       },
     },
   }
