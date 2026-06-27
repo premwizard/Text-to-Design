@@ -4,6 +4,9 @@ import { normalizeApiBaseUrl, normalizeSandboxUrl } from '../lib/urlHelpers';
 export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId }) {
   const iframeRef = useRef(null);
   const [runtimeError, setRuntimeError] = useState(null);
+  const [reloadCounter, setReloadCounter] = useState(0);
+  const prevLoading = useRef(loading);
+  const prevCode = useRef(code);
 
   useEffect(() => {
     const handleMsg = (e) => {
@@ -19,6 +22,14 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     setRuntimeError(null);
   }, [code]);
 
+  useEffect(() => {
+    if ((prevLoading.current && !loading) || (prevCode.current !== code && !loading)) {
+      setReloadCounter(prev => prev + 1);
+    }
+    prevLoading.current = loading;
+    prevCode.current = code;
+  }, [loading, code]);
+
   let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
   let SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
 
@@ -28,8 +39,9 @@ export function LivePreview({ code, loading = false, statusText = '', generation
   }
 
   const iframeSrc = variationId 
-    ? `${SANDBOX_URL}/${variationId}.html`
-    : SANDBOX_URL;
+    ? `${SANDBOX_URL}/${variationId}.html?rc=${reloadCounter}`
+    : `${SANDBOX_URL}?rc=${reloadCounter}`;
+
 
   return (
     <div className="w-full h-full relative overflow-hidden">
@@ -79,6 +91,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
 
       {code && (
         <iframe
+          key={`${variationId || 'default'}-${reloadCounter}`}
           ref={iframeRef}
           src={iframeSrc}
           className="w-full h-full border-0 bg-transparent"

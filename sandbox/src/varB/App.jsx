@@ -1,22 +1,30 @@
 import React from 'react';
-import HeroWithImage from './components/HeroWithImage';
-import ProjectMasonry from './components/ProjectMasonry';
-import ProcessTimeline from './components/ProcessTimeline';
-import ClientLogos from './components/ClientLogos';
+import DynamicHeader from './components/DynamicHeader';
+import FullBleedHero from './components/FullBleedHero';
+import DesignerSpotlight from './components/DesignerSpotlight';
+import CollectionShowcase from './components/CollectionShowcase';
+import EditorialFeature from './components/EditorialFeature';
+import LatestDrops from './components/LatestDrops';
+import BrandStorySection from './components/BrandStorySection';
+import NewsletterCallout from './components/NewsletterCallout';
 import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <div className="bg-gray-800 min-h-screen text-gray-100">
+    <div className="bg-gray-50 min-h-screen text-neutral-800">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
       `}</style>
-      <HeroWithImage />
-      <ProjectMasonry />
-      <ProcessTimeline />
-      <ClientLogos />
+      <DynamicHeader />
+      <FullBleedHero />
+      <DesignerSpotlight />
+      <CollectionShowcase />
+      <EditorialFeature />
+      <LatestDrops />
+      <BrandStorySection />
+      <NewsletterCallout />
       <Footer />
     </div>
   );
