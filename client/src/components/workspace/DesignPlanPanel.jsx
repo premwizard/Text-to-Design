@@ -19,7 +19,8 @@ import {
   RefreshCw,
   Search,
   Database,
-  Sliders
+  Sliders,
+  UserCheck
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -29,7 +30,8 @@ function cn(...inputs) {
 }
 
 const AGENT_STEPS = [
-  { id: 'understanding', label: 'Understanding Prompt', desc: 'Analyzing intent and extracting design parameters' },
+  { id: 'memory', label: 'Memory Retrieval', desc: 'Loading personalized design profile and user preferences' },
+  { id: 'understanding', label: 'Understanding Prompt', desc: 'Analyzing intent and blending design memory' },
   { id: 'retrieval', label: 'Retrieving Design', desc: 'Searching Design Knowledge Base for matched layouts' },
   { id: 'planning', label: 'Planning Design', desc: 'Structuring layout architecture and styling system' },
   { id: 'generating', label: 'Generating Components', desc: 'Creating React + Tailwind layout component-by-component' },
@@ -39,18 +41,19 @@ const AGENT_STEPS = [
 
 export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agentOutputs = {} }) {
   const [debugMode, setDebugMode] = useState(false);
-  const [activeDebugTab, setActiveDebugTab] = useState('understanding');
+  const [activeDebugTab, setActiveDebugTab] = useState('memory');
 
   // Map backend agentStatus to step index
   const getStepIndex = (status) => {
     switch (status) {
-      case 'understanding': return 0;
-      case 'retrieval': return 1;
-      case 'planning': return 2;
-      case 'generating': return 3;
-      case 'critic': return 4;
-      case 'optimizing': return 5;
-      case 'done': return 6;
+      case 'memory': return 0;
+      case 'understanding': return 1;
+      case 'retrieval': return 2;
+      case 'planning': return 3;
+      case 'generating': return 4;
+      case 'critic': return 5;
+      case 'optimizing': return 6;
+      case 'done': return 7;
       default: return 0;
     }
   };
@@ -63,7 +66,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
     return 'pending';
   };
 
-  // Helper to safely stringify and format JSON output
   const renderJSON = (data) => {
     if (!data) return 'Waiting for agent execution...';
     return JSON.stringify(data, null, 2);
@@ -168,13 +170,13 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
               </div>
 
               {/* Debug Tab Selectors */}
-              <div className="flex border-b border-zinc-800/60 bg-zinc-950/20 px-4">
+              <div className="flex border-b border-zinc-800/60 bg-zinc-950/20 px-4 overflow-x-auto whitespace-nowrap">
                 {AGENT_STEPS.map(step => (
                   <button
                     key={step.id}
                     onClick={() => setActiveDebugTab(step.id)}
                     className={cn(
-                      "px-4 py-3 text-xs font-semibold border-b-2 transition-all cursor-pointer",
+                      "px-4 py-3 text-xs font-semibold border-b-2 transition-all cursor-pointer inline-block",
                       activeDebugTab === step.id 
                         ? "border-violet-500 text-violet-300 font-bold bg-white/5" 
                         : "border-transparent text-zinc-550 hover:text-zinc-300"
@@ -198,7 +200,59 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                ========================================== */
             <AnimatePresence mode="wait">
               
-              {/* STATE 1: PROMPT UNDERSTANDING */}
+              {/* STATE 1: USER MEMORY RETRIEVAL */}
+              {(agentStatus === 'memory' || (agentOutputs.memory && currentStepIdx === 0)) && (
+                <motion.div 
+                  key="memory"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="space-y-6 text-left"
+                >
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                    <div className="p-2 bg-violet-500/10 border border-violet-500/20 rounded-xl">
+                      <UserCheck className="w-5 h-5 text-violet-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">Personalization Memory Retrieval</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">Searching statistical profile and semantic past interactions</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-3">
+                      <span className="text-[10px] text-violet-400 uppercase tracking-widest font-bold block">Statistical Theme</span>
+                      <h4 className="text-sm font-semibold text-zinc-200 capitalize">{agentOutputs.memory?.theme || "Default Theme"}</h4>
+                      <p className="text-xs text-zinc-650 font-medium">Layout: {agentOutputs.memory?.layoutPattern?.replace(/-/g, ' ') || "Default"}</p>
+                    </div>
+                    
+                    <div className="col-span-2 bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-3">
+                      <span className="text-[10px] text-sky-400 uppercase tracking-widest font-bold block">Semantic Match History</span>
+                      <div className="space-y-2 max-h-28 overflow-y-auto">
+                        {agentOutputs.memory?.semanticMatches && agentOutputs.memory.semanticMatches.length > 0 ? (
+                          agentOutputs.memory.semanticMatches.map((m, idx) => (
+                            <div key={idx} className="flex justify-between items-center text-xs bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-850">
+                              <span className="text-zinc-400 truncate w-72">Prompt: "{m.prompt}"</span>
+                              <span className="text-emerald-400 font-semibold font-mono">{(m.score * 100).toFixed(0)}% Similarity</span>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-xs text-zinc-600 font-medium">No similar past generations found.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {agentStatus === 'memory' && (
+                    <div className="flex items-center gap-3 justify-center text-zinc-500 text-sm font-medium mt-12 bg-zinc-950/40 py-3 rounded-xl border border-zinc-900 w-fit mx-auto px-6">
+                      <RefreshCw className="w-4 h-4 text-violet-400 animate-spin" />
+                      <span>Retrieving design memory...</span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* STATE 2: PROMPT UNDERSTANDING */}
               {agentStatus === 'understanding' && (
                 <motion.div 
                   key="understanding"
@@ -214,7 +268,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                   <div className="space-y-2">
                     <h3 className="text-xl font-bold text-zinc-100">Analyzing User Intent</h3>
                     <p className="text-sm text-zinc-500 leading-relaxed font-medium">
-                      Decoding natural language, detecting project domains, and structuring style specifications.
+                      Decoding natural language, detecting project domains, and blending design memory.
                     </p>
                   </div>
                   <div className="w-48 h-1 bg-zinc-900 rounded-full overflow-hidden relative">
@@ -223,72 +277,72 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 2: RAG DESIGN KNOWLEDGE RETRIEVAL */}
-              {(agentStatus === 'retrieval' || (agentOutputs.retrieval && currentStepIdx === 1)) && (
+              {/* STATE 3: RAG DESIGN KNOWLEDGE RETRIEVAL */}
+              {(agentStatus === 'retrieval' || (agentOutputs.retrieval && currentStepIdx === 2)) && (
                 <motion.div 
                   key="retrieval"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
-                  className="space-y-8 text-left"
+                  className="space-y-8 text-left w-full"
                 >
                   <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
                     <div className="p-2 bg-violet-500/10 border border-violet-500/20 rounded-xl">
                       <Database className="w-5 h-5 text-violet-400" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-zinc-100">Design Knowledge Base Queries</h2>
-                      <p className="text-xs text-zinc-500 mt-0.5">Searching design rules, borders, and layouts using RAG</p>
+                      <h2 className="text-xl font-bold text-zinc-100">Hybrid Design Retrieval (JSON + ChromaDB)</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5 font-medium">Combining structural templates (40%) and semantic similarity embeddings (60%)</p>
                     </div>
                   </div>
 
                   {/* Similarity Matches & Metrics */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* JSON Rule matches */}
                     <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
-                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
-                        <Palette className="w-4 h-4 text-violet-400" /> Matched Style
+                      <h3 className="text-xs font-bold text-zinc-350 flex items-center gap-2">
+                        <Sliders className="w-4 h-4 text-violet-400" /> Rule-Based Matches (JSON)
                       </h3>
-                      <div className="space-y-1.5 text-xs text-zinc-400">
-                        <div className="flex justify-between py-1 border-b border-zinc-850">
-                          <span>Aesthetic style</span>
-                          <span className="text-zinc-200 capitalize font-semibold">{agentOutputs.retrieval?.styleMatched}</span>
-                        </div>
-                        <div className="flex justify-between py-1 border-b border-zinc-850">
-                          <span>Layout pattern</span>
-                          <span className="text-zinc-200 font-semibold">{agentOutputs.retrieval?.layoutPattern}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
-                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
-                        <Sliders className="w-4 h-4 text-emerald-400" /> Design Tokens (Rules)
-                      </h3>
-                      <div className="space-y-1.5 text-xs text-zinc-400">
-                        <div className="flex justify-between py-1 border-b border-zinc-850">
-                          <span>Spacing</span>
-                          <span className="text-zinc-200 capitalize">{agentOutputs.retrieval?.designRules?.spacing}</span>
-                        </div>
-                        <div className="flex justify-between py-1 border-b border-zinc-850">
-                          <span>Borders</span>
-                          <span className="text-zinc-200">{agentOutputs.retrieval?.designRules?.border}</span>
-                        </div>
-                        <div className="flex justify-between py-1">
-                          <span>Shadows</span>
-                          <span className="text-zinc-200 capitalize">{agentOutputs.retrieval?.designRules?.shadow}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
-                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
-                        <Search className="w-4 h-4 text-sky-400" /> Matched Entries
-                      </h3>
-                      <div className="space-y-2 max-h-24 overflow-y-auto">
-                        {agentOutputs.retrieval?.retrievedPatterns && agentOutputs.retrieval.retrievedPatterns.map((pat, idx) => (
-                          <div key={idx} className="flex justify-between items-center text-[10px] bg-zinc-950/60 p-2 rounded-lg border border-zinc-850 font-medium">
+                      <div className="space-y-2.5 max-h-48 overflow-y-auto">
+                        {agentOutputs.retrieval?.jsonMatches && agentOutputs.retrieval.jsonMatches.map((pat, idx) => (
+                          <div key={idx} className="flex justify-between items-center text-[10px] bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-850 font-medium">
                             <span className="text-zinc-400 truncate w-32">{pat.id}</span>
-                            <span className="text-emerald-400 font-semibold font-mono">{(pat.similarity_score * 20).toFixed(0)}% Match</span>
+                            <span className="text-violet-400 font-semibold font-mono">{(pat.score * 100).toFixed(0)}% Score</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Semantic Vector matches */}
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-350 flex items-center gap-2">
+                        <Search className="w-4 h-4 text-sky-400" /> Semantic Matches (ChromaDB)
+                      </h3>
+                      <div className="space-y-2.5 max-h-48 overflow-y-auto">
+                        {agentOutputs.retrieval?.semanticMatches && agentOutputs.retrieval.semanticMatches.map((pat, idx) => (
+                          <div key={idx} className="flex justify-between items-center text-[10px] bg-zinc-950/60 p-2.5 rounded-xl border border-zinc-850 font-medium">
+                            <span className="text-zinc-400 truncate w-32">{pat.id}</span>
+                            <span className="text-sky-400 font-semibold font-mono">{(pat.score * 100).toFixed(0)}% Score</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Final Ranked Combined results */}
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-350 flex items-center gap-2">
+                        <Award className="w-4 h-4 text-emerald-400" /> Final Merged Ranking
+                      </h3>
+                      <div className="space-y-3 max-h-48 overflow-y-auto">
+                        {agentOutputs.retrieval?.finalResults && agentOutputs.retrieval.finalResults.map((pat, idx) => (
+                          <div key={idx} className="space-y-1.5 bg-zinc-950/40 p-2.5 rounded-xl border border-zinc-850/60">
+                            <div className="flex justify-between items-center text-[10px] font-semibold">
+                              <span className="text-zinc-300 truncate w-32">{pat.id}</span>
+                              <span className="text-emerald-400 font-mono">{(pat.final_score * 100).toFixed(0)}% Match</span>
+                            </div>
+                            <div className="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
+                              <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pat.final_score * 100}%` }} />
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -304,8 +358,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 3: DESIGN PLANNING */}
-              {(agentStatus === 'planning' || (agentOutputs.planning && currentStepIdx === 2)) && (
+              {/* STATE 4: DESIGN PLANNING */}
+              {(agentStatus === 'planning' || (agentOutputs.planning && currentStepIdx === 3)) && (
                 <motion.div 
                   key="planning"
                   initial={{ opacity: 0, y: 15 }}
@@ -319,7 +373,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-zinc-100">Design Specifications Formulated</h2>
-                      <p className="text-xs text-zinc-500 mt-0.5">Parameters synthesized by the Prompt Understanding Agent</p>
+                      <p className="text-xs text-zinc-500 mt-0.5 font-medium">Parameters synthesized by the Prompt Understanding Agent</p>
                     </div>
                   </div>
 
@@ -345,15 +399,15 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
 
                   {agentStatus === 'planning' && (
                     <div className="flex items-center gap-3 justify-center text-zinc-500 text-sm font-medium mt-12 bg-zinc-950/40 py-3 rounded-xl border border-zinc-900 w-fit mx-auto px-6">
-                      <RefreshCw className="w-4 h-4 text-violet-400 animate-spin" />
+                      <RefreshCw className="w-4.5 h-4.5 text-violet-400 animate-spin" />
                       <span>Planning grid layout layout maps...</span>
                     </div>
                   )}
                 </motion.div>
               )}
 
-              {/* STATE 4: COMPONENT GENERATION */}
-              {(agentStatus === 'generating' || (agentOutputs.planning && currentStepIdx === 3)) && (
+              {/* STATE 5: COMPONENT GENERATION */}
+              {(agentStatus === 'generating' || (agentOutputs.planning && currentStepIdx === 4)) && (
                 <motion.div 
                   key="generating"
                   initial={{ opacity: 0, y: 15 }}
@@ -420,8 +474,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 5: UI CRITIC */}
-              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 4)) && (
+              {/* STATE 6: UI CRITIC */}
+              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 5)) && (
                 <motion.div 
                   key="critic"
                   initial={{ opacity: 0, scale: 0.98 }}
@@ -440,9 +494,8 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Score Card */}
                     <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-xl space-y-4">
-                      <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Quality Score</span>
+                      <span className="text-[10px] text-zinc-550 font-bold uppercase tracking-widest">Quality Score</span>
                       <div className="relative w-32 h-32 flex items-center justify-center">
                         <svg className="w-full h-full transform -rotate-90">
                           <circle cx="64" cy="64" r="54" className="stroke-zinc-800" strokeWidth="8" fill="transparent" />
@@ -459,7 +512,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                       <span className="text-[10px] font-bold text-amber-400 tracking-wider">HARMONIC RATING</span>
                     </div>
 
-                    {/* Critic Issues */}
                     <div className="col-span-2 bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 shadow-xl space-y-4 flex flex-col justify-between">
                       <div className="space-y-4">
                         <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
@@ -489,7 +541,7 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
                 </motion.div>
               )}
 
-              {/* STATE 6: OPTIMIZING DESIGN */}
+              {/* STATE 7: OPTIMIZING DESIGN */}
               {(agentStatus === 'optimizing' || agentStatus === 'done') && (
                 <motion.div 
                   key="optimizing"
@@ -520,7 +572,6 @@ export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agen
         </div>
       </div>
       
-      {/* Dynamic Keyframes inject */}
       <style>{`
         @keyframes progressBar {
           0%   { transform: scaleX(0);   transform-origin: left; }

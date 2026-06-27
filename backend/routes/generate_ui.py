@@ -169,10 +169,53 @@ class GenerateUIRequest(BaseModel):
 class StreamRequest(BaseModel):
     prompt: str
     current_code: Optional[str] = None
+    user_id: Optional[str] = None
 
 class FixRequest(BaseModel):
     broken_code: str
     error: str
+
+class MemorySettingsRequest(BaseModel):
+    userId: Optional[str] = None
+    enabled: Optional[bool] = None
+    reset: Optional[bool] = False
+
+@router.get("/user-memory")
+async def get_user_memory(userId: Optional[str] = None):
+    from backend.services.agents.memory_agent import MemoryAgent
+    agent = MemoryAgent()
+    memory = agent.load_user_memory(userId)
+    resolved = agent.get_memory_preferences(userId)
+    return {
+        "memory": memory,
+        "resolved": resolved
+    }
+
+@router.post("/user-memory/settings")
+async def update_memory_settings(request: MemorySettingsRequest):
+    from backend.services.agents.memory_agent import MemoryAgent
+    agent = MemoryAgent()
+    memory = agent.load_user_memory(request.userId)
+    
+    if request.reset:
+        memory["preferences"] = {
+            "theme": {},
+            "style": {},
+            "borderRadius": {},
+            "spacing": {},
+            "favoriteColors": {},
+            "preferredLayouts": {},
+            "commonComponents": {}
+        }
+        memory["history"] = []
+        logging.info(f"Reset memory preferences for {request.userId}")
+        
+    if request.enabled is not None:
+        memory["settings"]["enabled"] = request.enabled
+        logging.info(f"Set memory customization enabled to {request.enabled} for {request.userId}")
+        
+    agent.save_user_memory(request.userId, memory)
+    return {"status": "success", "memory": memory}
 
 @router.post("/generate-ui")
 async def generate_ui(request: GenerateUIRequest, response: Response):
@@ -344,7 +387,7 @@ async def stream_jsx(request: StreamRequest):
                 # ─── GENERATE MULTI-AGENT PIPELINE ────────────────────────
                 from backend.services.agents.orchestrator import run_orchestration_stream
                 
-                async for event in run_orchestration_stream(request.prompt):
+                async for event in run_orchestration_stream(request.prompt, request.user_id):
                     yield f"data: {json.dumps(event)}\n\n"
 
             yield "data: [DONE]\n\n"

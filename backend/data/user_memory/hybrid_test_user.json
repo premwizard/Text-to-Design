@@ -1,0 +1,64 @@
+{
+  "userId": "hybrid_test_user",
+  "preferences": {
+    "theme": {
+      "dark": 4
+    },
+    "style": {
+      "dark-modern": 4
+    },
+    "borderRadius": {
+      "none": 2,
+      "xl": 2
+    },
+    "spacing": {
+      "loose": 2,
+      "comfortable": 2
+    },
+    "favoriteColors": {
+      "indigo": 2,
+      "violet": 2
+    },
+    "preferredLayouts": {
+      "centered-asymmetric-grid": 2,
+      "split-hero-bento-features": 2
+    },
+    "commonComponents": {
+      "herosection": 2,
+      "bentofeatures": 2,
+      "transactiontable": 2,
+      "testimonialcarousel": 2,
+      "pricingplan": 2,
+      "footer": 2
+    }
+  },
+  "history": [
+    {
+      "prompt": "Create a futuristic neo-brutalist tech landing page with high contrast offsets",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Create a pricing section for my software service",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "violet"
+    },
+    {
+      "prompt": "Create a futuristic neo-brutalist tech landing page with high contrast offsets",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Create a pricing section for my software service",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "violet"
+    }
+  ],
+  "settings": {
+    "enabled": true
+  }
+}

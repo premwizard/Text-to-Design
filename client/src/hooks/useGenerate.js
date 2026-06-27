@@ -18,6 +18,7 @@ export function useGenerate() {
   const [variations, setVariations] = useState({}); // { varId: { plan, code, status, timelineStep } }
   const [agentStatus, setAgentStatus] = useState('idle');
   const [agentOutputs, setAgentOutputs] = useState({
+    memory: null,
     understanding: null,
     retrieval: null,
     planning: null,
@@ -25,7 +26,7 @@ export function useGenerate() {
     optimizing: null
   });
 
-  const generate = useCallback(async (prompt, currentCode = null) => {
+  const generate = useCallback(async (prompt, currentCode = null, userId = null) => {
     setLoading(true);
     setError('');
     setCode('');
@@ -34,6 +35,7 @@ export function useGenerate() {
     setVariations({});
     setAgentStatus('idle');
     setAgentOutputs({
+      memory: null,
       understanding: null,
       retrieval: null,
       planning: null,
@@ -47,7 +49,7 @@ export function useGenerate() {
       const response = await fetch(`${API_BASE}/stream-jsx`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, current_code: currentCode }),
+        body: JSON.stringify({ prompt, current_code: currentCode, user_id: userId }),
       });
 
       if (!response.ok) {

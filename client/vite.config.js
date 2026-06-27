@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
       strictPort: false,
       proxy: {
         '/stream-jsx': { target: backendTarget, changeOrigin: true },
+        '/user-memory': { target: backendTarget, changeOrigin: true },
         '/save-files': { target: backendTarget, changeOrigin: true },
         '/fix-jsx': { target: backendTarget, changeOrigin: true },
         '/generate-ui': { target: backendTarget, changeOrigin: true },

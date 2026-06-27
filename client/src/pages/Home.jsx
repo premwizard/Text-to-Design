@@ -9,6 +9,7 @@ import { DesignPlanPanel } from '../components/workspace/DesignPlanPanel';
 import { VariationsGrid } from '../components/workspace/VariationsGrid';
 import { AnimatedBackground } from '../components/layout/AnimatedBackground';
 import { PromptComposer } from '../components/prompt/PromptComposer';
+import { PersonalizationCard } from '../components/workspace/PersonalizationCard';
 import { Layout, LayoutTemplate, Briefcase, Monitor, ShoppingCart, Smartphone, Sparkles, FolderOpen, History, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { projectService } from '../services/projectService';
@@ -219,7 +220,7 @@ function Home() {
     const trimmed = prompt.trim();
     if (!trimmed) return;
     setActiveVariationId(null);
-    generate(trimmed, activeVariationId ? variations[activeVariationId]?.code : (code || null));
+    generate(trimmed, activeVariationId ? variations[activeVariationId]?.code : (code || null), user?.id || user?.email || null);
   };
 
   const handleRuntimeError = async (errorMsg, stack) => {
@@ -321,6 +322,11 @@ function Home() {
                   loading={loading}
                   hasCode={false}
                 />
+
+                {/* Personalization Dashboard Panel */}
+                <div className="w-full mt-10">
+                  <PersonalizationCard userId={user?.id || user?.email} />
+                </div>
 
                 {/* Quick Templates */}
                 <div className="w-full mt-16 mb-8">

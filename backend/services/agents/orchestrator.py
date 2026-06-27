@@ -1,6 +1,7 @@
 import json
 import logging
 import asyncio
+from backend.services.agents.memory_agent import run_memory_retrieval, update_user_memory
 from backend.services.agents.prompt_understanding_agent import run_prompt_understanding
 from backend.services.agents.rag_retrieval_agent import run_rag_retrieval
 from backend.services.agents.design_planning_agent import run_design_planning
@@ -11,38 +12,55 @@ from backend.services.agents.component_generation_agent import (
 )
 from backend.services.agents.ui_critic_agent import run_ui_critic
 from backend.services.agents.optimization_agent import run_optimization
+from backend.services.vector_db.chroma_service import save_successful_generation
 
 logger = logging.getLogger("backend.agents.orchestrator")
 
-async def run_orchestration_stream(user_prompt: str):
+async def run_orchestration_stream(user_prompt: str, user_id: str = None):
     """
-    Executes the 6-agent RAG multi-agent pipeline in sequence and yields SSE formatted event payloads.
+    Executes the 7-agent Personalized multi-agent pipeline in sequence and yields SSE formatted event payloads.
+    Includes Hybrid Vector Search and Semantic preference memory layers.
     """
     try:
         # ==========================================
-        # STEP 1: PROMPT UNDERSTANDING
+        # STEP 1: USER MEMORY RETRIEVAL
         # ==========================================
-        logger.info("Executing Agent 1: Prompt Understanding")
-        yield {"type": "timeline", "step": "Understanding Prompt"}
-        yield {"type": "agent_start", "agent": "understanding", "message": "Analyzing prompt requirements..."}
+        logger.info(f"Executing Agent 1: Memory Retrieval for user: {user_id}")
+        yield {"type": "timeline", "step": "Analyzing Prompt"}
+        yield {"type": "agent_start", "agent": "memory", "message": "Loading personalized design profile and settings..."}
         
-        intent_json = await run_prompt_understanding(user_prompt)
+        try:
+            memory_prefs = await run_memory_retrieval(user_id, user_prompt)
+        except Exception as mem_err:
+            logger.error(f"Memory retrieval failed: {mem_err}. Continuing with empty preferences.")
+            memory_prefs = {}
+            
+        yield {"type": "agent_complete", "agent": "memory", "output": memory_prefs}
+        await asyncio.sleep(0.3)
+
+        # ==========================================
+        # STEP 2: PROMPT UNDERSTANDING
+        # ==========================================
+        logger.info("Executing Agent 2: Prompt Understanding")
+        yield {"type": "timeline", "step": "Understanding Prompt"}
+        yield {"type": "agent_start", "agent": "understanding", "message": "Analyzing prompt requirements and blending design memory..."}
+        
+        intent_json = await run_prompt_understanding(user_prompt, memory_prefs)
         
         yield {"type": "agent_complete", "agent": "understanding", "output": intent_json}
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 2: DESIGN KNOWLEDGE RETRIEVAL (RAG)
+        # STEP 3: DESIGN KNOWLEDGE RETRIEVAL (RAG)
         # ==========================================
-        logger.info("Executing Agent 2: Design Knowledge Retrieval (RAG)")
+        logger.info("Executing Agent 3: Design Knowledge Retrieval (RAG)")
         yield {"type": "timeline", "step": "Retrieving Design Knowledge"}
-        yield {"type": "agent_start", "agent": "retrieval", "message": "Searching Design Knowledge Base for matching styles and layouts..."}
+        yield {"type": "agent_start", "agent": "retrieval", "message": "Searching Design Knowledge Base using Hybrid JSON & Semantic retrieval..."}
         
         try:
-            rag_json = await run_rag_retrieval(intent_json)
+            rag_json = await run_rag_retrieval(intent_json, user_prompt)
         except Exception as rag_err:
             logger.error(f"RAG Retrieval failed: {rag_err}. Using baseline fallback configurations.")
-            # Standard design fallback if RAG query fails
             rag_json = {
                 "styleMatched": "minimal",
                 "layoutPattern": "split-hero-bento-features",
@@ -59,16 +77,19 @@ async def run_orchestration_stream(user_prompt: str):
                     "bg_color": "bg-zinc-950",
                     "text_color": "text-zinc-100"
                 },
-                "retrievedPatterns": []
+                "retrievedPatterns": [],
+                "jsonMatches": [],
+                "semanticMatches": [],
+                "finalResults": []
             }
             
         yield {"type": "agent_complete", "agent": "retrieval", "output": rag_json}
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 3: DESIGN PLANNING
+        # STEP 4: DESIGN PLANNING
         # ==========================================
-        logger.info("Executing Agent 3: Design Planning")
+        logger.info("Executing Agent 4: Design Planning")
         yield {"type": "timeline", "step": "Planning Design"}
         yield {"type": "agent_start", "agent": "planning", "message": "Structuring visual styles and component architecture blueprints..."}
         
@@ -97,16 +118,15 @@ async def run_orchestration_stream(user_prompt: str):
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 4: COMPONENT GENERATION
+        # STEP 5: COMPONENT GENERATION
         # ==========================================
-        logger.info("Executing Agent 4: Component Generation")
+        logger.info("Executing Agent 5: Component Generation")
         yield {"type": "timeline", "step": "Generating Components"}
         yield {"type": "agent_start", "agent": "generating", "message": "Initializing components structure from layout plan..."}
         
         layout = design_plan.get("layout", {})
         main_sections = layout.get("mainSections", [])
         
-        # Build list of all files to generate
         planned_components = []
         if layout.get("navbar") == "top":
             planned_components.append("Navbar")
@@ -156,9 +176,9 @@ async def run_orchestration_stream(user_prompt: str):
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 5: UI CRITIC
+        # STEP 6: UI CRITIC
         # ==========================================
-        logger.info("Executing Agent 5: UI Critic")
+        logger.info("Executing Agent 6: UI Critic")
         yield {"type": "timeline", "step": "Reviewing UI"}
         yield {"type": "agent_start", "agent": "critic", "message": "Analyzing visual hierarchy, spacing, and styling contrast..."}
         
@@ -168,9 +188,9 @@ async def run_orchestration_stream(user_prompt: str):
         await asyncio.sleep(0.5)
 
         # ==========================================
-        # STEP 6: OPTIMIZATION
+        # STEP 7: OPTIMIZATION
         # ==========================================
-        logger.info("Executing Agent 6: Optimization")
+        logger.info("Executing Agent 7: Optimization")
         yield {"type": "timeline", "step": "Optimizing Design"}
         yield {"type": "agent_start", "agent": "optimizing", "message": "Applying critic revisions and interactive styling improvements..."}
         
@@ -187,7 +207,35 @@ async def run_orchestration_stream(user_prompt: str):
         final_code_json = json.dumps({"files": optimized_files}, indent=2)
         
         yield {"type": "agent_complete", "agent": "optimizing", "output": {"score_after": min(critic_feedback.get("score", 7.0) + 1.2, 10.0)}}
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
+        
+        # Save preference signals to User Memory and Successful Generations logs
+        plan_record = {
+            "design_rules": rag_json.get("designRules", {}),
+            "design_archetype": rag_json.get("styleMatched", "modern"),
+            "aesthetic": intent_json.get("theme", "premium dark"),
+            "primary_color": design_plan.get("styling", {}).get("primary_color", "violet"),
+            "layout_notes": rag_json.get("layoutPattern", "split-hero"),
+            "sections": design_plan.get("layout", {}).get("mainSections", []),
+            "font_heading": design_plan.get("styling", {}).get("font_heading", "Space Grotesk"),
+            "font_body": design_plan.get("styling", {}).get("font_body", "Inter"),
+            "bg_color": design_plan.get("styling", {}).get("bg_color", "bg-zinc-950"),
+            "layout_system": design_plan.get("layout", {}).get("sidebar", "none") + "-sidebar" if design_plan.get("layout", {}).get("sidebar", "none") != "none" else "centered-stack"
+        }
+        
+        try:
+            update_user_memory(user_id, user_prompt, plan_record)
+        except Exception as mem_up_err:
+            logger.error(f"Failed to update user memory: {mem_up_err}")
+            
+        try:
+            save_successful_generation(
+                prompt=user_prompt,
+                design_plan=plan_record,
+                critic_score=critic_feedback.get("score", 8.0)
+            )
+        except Exception as gen_up_err:
+            logger.error(f"Failed to save successful generation vector entry: {gen_up_err}")
         
         # Yield the final compiled code back so frontend code panes display the optimized code
         yield {"type": "final_code", "code": final_code_json}
