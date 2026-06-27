@@ -341,110 +341,11 @@ async def stream_jsx(request: StreamRequest):
                 await write_files(cleaned_files)
 
             else:
-                # ─── GENERATE VARIATIONS ────────────────────────
-                planner_prompt = PLANNER_PROMPT.format(user_prompt=request.prompt)
+                # ─── GENERATE MULTI-AGENT PIPELINE ────────────────────────
+                from backend.services.agents.orchestrator import run_orchestration_stream
                 
-                try:
-                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Understanding Prompt'})}\n\n"
-                    await anyio.sleep(0.2)
-                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Determining Page Type'})}\n\n"
-                    await anyio.sleep(0.2)
-                    yield f"data: {json.dumps({'type': 'timeline', 'step': 'Building 4 Distinct Design Plans'})}\n\n"
-
-                    planner_resp = await generate_ai(
-                        task_type="planner",
-                        system_prompt=None,
-                        user_prompt=planner_prompt,
-                        temperature=1.0,
-                        stream=False
-                    )
-                    planner_output = planner_resp.choices[0].message.content.strip()
-                    
-                    # Check if the AI router returned an emergency fallback error
-                    try:
-                        parsed_err = json.loads(planner_output)
-                        if isinstance(parsed_err, dict) and "error" in parsed_err:
-                            logging.warning(f"AI Router returned error response: {parsed_err['error']}")
-                            yield f"data: {json.dumps({'error': parsed_err['error']})}\n\n"
-                            yield "data: [DONE]\n\n"
-                            return
-                    except Exception:
-                        pass
-                    
-                    start_idx = planner_output.find('[')
-                    end_idx = planner_output.rfind(']')
-                    if start_idx != -1 and end_idx != -1:
-                        plans = json.loads(planner_output[start_idx:end_idx+1])
-                        if not isinstance(plans, list):
-                            plans = [plans]
-                        plans = plans[:4] # limit to 4
-                    else:
-                        raise ValueError("No JSON array found in planner output")
-                        
-                    yield f"data: {json.dumps({'type': 'plans', 'plans': plans})}\n\n"
-                    await anyio.sleep(0.5)
-                except Exception as e:
-                    logging.error(f"Planner failed: {e}")
-                    raise e
-                
-                for i, plan in enumerate(plans):
-                    variation_id = plan.get("id", f"var{i}")
-                    
-                    yield f"data: {json.dumps({'type': 'timeline', 'variation_id': variation_id, 'step': f'Building Variation {i+1}'})}\n\n"
-                    
-                    font_heading = plan.get("font_heading", "Inter")
-                    font_body = plan.get("font_body", "Inter")
-                    sections = plan.get("sections", [])
-                    if not sections:
-                        sections = ["Navbar", "Hero", "Footer"]
-                    
-                    sections_numbered = "1. App.jsx\n"
-                    for j, sec in enumerate(sections, start=2):
-                        sections_numbered += f"{j}. components/{sec}.jsx\n"
-
-                    system_instructions = BUILDER_PROMPT.format(
-                        page_type=plan.get("page_type", "landing"),
-                        product_name=plan.get("product_name", "App"),
-                        tagline=plan.get("tagline", ""),
-                        design_archetype=plan.get("design_archetype", "apple"),
-                        layout_system=plan.get("layout_system", "centered-stack"),
-                        visual_style=plan.get("visual_style", "glassmorphism"),
-                        interaction_style=plan.get("interaction_style", "hover-reveal"),
-                        design_seed=plan.get("design_seed", 1234),
-                        aesthetic=plan.get("aesthetic", "minimal"),
-                        font_heading=font_heading,
-                        font_body=font_body,
-                        font_heading_url=font_heading.replace(" ", "+"),
-                        font_body_url=font_body.replace(" ", "+"),
-                        bg_color=plan.get("bg_color", "bg-white"),
-                        primary_color=plan.get("primary_color", "blue-500"),
-                        text_color=plan.get("text_color", "text-slate-900"),
-                        layout_notes=plan.get("layout_notes", ""),
-                        sections_numbered=sections_numbered,
-                        user_prompt=request.prompt
-                    )
-                    
-                    response = generate_ai(
-                        task_type="builder",
-                        system_prompt=system_instructions,
-                        user_prompt="Generate the code.",
-                        temperature=1.0,
-                        stream=True
-                    )
-                    
-                    full_code = ""
-                    async for chunk in response:
-                        if isinstance(chunk, dict):
-                            continue
-                        content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
-                        if content:
-                            full_code += content
-                            yield f"data: {json.dumps({'chunk': content, 'variation_id': variation_id})}\n\n"
-                    
-                    # Instead of parsing and writing files on backend, we will just send variation_complete.
-                    # The frontend already accumulates the code and can call /save-files!
-                    yield f"data: {json.dumps({'type': 'variation_complete', 'variation_id': variation_id})}\n\n"
-                    await anyio.sleep(0.5)
+                async for event in run_orchestration_stream(request.prompt):
+                    yield f"data: {json.dumps(event)}\n\n"
 
             yield "data: [DONE]\n\n"
 

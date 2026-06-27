@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   CheckCircle2, 
@@ -9,7 +9,14 @@ import {
   Layers,
   ChevronRight,
   Sparkles,
-  Component
+  Component,
+  AlertTriangle,
+  Terminal,
+  Cpu,
+  Award,
+  Settings,
+  Check,
+  RefreshCw
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -18,114 +25,110 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-const TIMELINE_STEPS = [
-  "Understanding Prompt",
-  "Determining Page Type",
-  "Selecting Design System",
-  "Creating Component Structure",
-  "Defining Visual Style",
-  "Building Design Plan",
-  "Generating React Components",
-  "Finalizing Project"
+const AGENT_STEPS = [
+  { id: 'understanding', label: 'Understanding Prompt', desc: 'Analyzing intent and extracting design parameters' },
+  { id: 'planning', label: 'Planning Design', desc: 'Structuring layout architecture and styling system' },
+  { id: 'generating', label: 'Generating Components', desc: 'Creating React + Tailwind layout component-by-component' },
+  { id: 'critic', label: 'Reviewing UI', desc: 'Evaluating visual quality, hierarchy, and usability metrics' },
+  { id: 'optimizing', label: 'Optimizing Design', desc: 'Applying design edits, enhancing colors and interactions' }
 ];
 
-// Helper to determine step status
-function getStepStatus(step, currentStep, planExists) {
-  const currentIndex = TIMELINE_STEPS.indexOf(currentStep);
-  const stepIndex = TIMELINE_STEPS.indexOf(step);
-  
-  if (stepIndex < currentIndex) return 'completed';
-  if (stepIndex === currentIndex) return 'active';
-  
-  // Special case: if plan exists but we haven't hit "Generating React Components" yet, 
-  // steps up to "Building Design Plan" are completed.
-  if (planExists && stepIndex <= TIMELINE_STEPS.indexOf("Building Design Plan") && currentIndex < TIMELINE_STEPS.indexOf("Generating React Components")) {
-    return 'completed';
-  }
-  
-  return 'pending';
-}
+export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agentOutputs = {} }) {
+  const [debugMode, setDebugMode] = useState(false);
+  const [activeDebugTab, setActiveDebugTab] = useState('understanding');
 
-function extractFontName(fontString) {
-  if (!fontString) return '';
-  return fontString.split(':')[0].replace(/\+/g, ' ');
-}
-
-export function DesignPlanPanel({ plan, timelineStep }) {
-  // Inject fonts requested by the plan
-  useEffect(() => {
-    if (!plan) return;
-    
-    const headingFont = extractFontName(plan.font_heading);
-    const bodyFont = extractFontName(plan.font_body);
-    
-    if (headingFont || bodyFont) {
-      const link = document.createElement('link');
-      link.href = `https://fonts.googleapis.com/css2?family=${headingFont.replace(/ /g, '+')}:wght@400;600;700&family=${bodyFont.replace(/ /g, '+')}:wght@400;500;600&display=swap`;
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
-      
-      return () => {
-        document.head.removeChild(link);
-      };
+  // Map backend agentStatus to step index
+  const getStepIndex = (status) => {
+    switch (status) {
+      case 'understanding': return 0;
+      case 'planning': return 1;
+      case 'generating': return 2;
+      case 'critic': return 3;
+      case 'optimizing': return 4;
+      case 'done': return 5;
+      default: return 0;
     }
-  }, [plan]);
+  };
+
+  const currentStepIdx = getStepIndex(agentStatus);
+
+  const getAgentStepStatus = (stepId, index) => {
+    if (currentStepIdx > index) return 'completed';
+    if (agentStatus === stepId) return 'active';
+    return 'pending';
+  };
+
+  // Helper to safely stringify and format JSON output
+  const renderJSON = (data) => {
+    if (!data) return 'Waiting for agent execution...';
+    return JSON.stringify(data, null, 2);
+  };
 
   return (
-    <div className="flex-1 flex flex-col lg:flex-row bg-[#09090b] text-zinc-100 overflow-hidden min-w-[500px]">
-      {/* Sidebar: AI Thinking Timeline */}
-      <div className="w-full lg:w-80 border-r border-zinc-800/80 bg-zinc-950/50 p-6 flex flex-col shrink-0 overflow-y-auto">
-        <div className="flex items-center gap-2 mb-8">
-          <Sparkles className="text-violet-400 w-5 h-5" />
-          <h2 className="font-semibold tracking-tight text-zinc-100">AI Design Planning</h2>
-        </div>
-        
-        <div className="relative flex-1">
-          <div className="absolute top-4 bottom-8 left-[11px] w-px bg-zinc-800/60" />
+    <div className="flex-1 flex flex-col lg:flex-row bg-[#08080a] text-zinc-150 overflow-hidden min-w-[500px] h-full font-sans select-text">
+      {/* LEFT SIDEBAR: Pipeline Step Indicators */}
+      <div className="w-full lg:w-96 border-r border-zinc-800/80 bg-zinc-950/60 p-6 flex flex-col shrink-0 overflow-y-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2">
+            <Cpu className="text-violet-400 w-5 h-5 animate-pulse" />
+            <h2 className="font-semibold tracking-tight text-zinc-100 text-sm uppercase tracking-wider">Multi-Agent AI Pipeline</h2>
+          </div>
           
-          <div className="space-y-6 relative">
-            {TIMELINE_STEPS.map((step, idx) => {
-              const status = getStepStatus(step, timelineStep, !!plan);
+          <button
+            onClick={() => setDebugMode(!debugMode)}
+            className={cn(
+              "text-xs px-3 py-1.5 rounded-lg border font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
+              debugMode 
+                ? "bg-violet-500/10 border-violet-500/40 text-violet-400 shadow-md shadow-violet-500/5" 
+                : "border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900"
+            )}
+          >
+            <Terminal size={12} />
+            Debug Mode
+          </button>
+        </div>
+
+        {/* Steps Pipeline */}
+        <div className="relative flex-1">
+          <div className="absolute top-4 bottom-8 left-[11px] w-px bg-zinc-800/80" />
+          
+          <div className="space-y-8 relative">
+            {AGENT_STEPS.map((step, idx) => {
+              const status = getAgentStepStatus(step.id, idx);
               
               return (
-                <div key={idx} className="flex gap-4 relative">
+                <div key={step.id} className="flex gap-4 relative group">
                   <div className="relative flex items-center justify-center shrink-0 z-10 mt-0.5">
                     {status === 'completed' ? (
-                      <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center ring-1 ring-emerald-500/30">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center ring-1 ring-emerald-500/40 shadow-lg shadow-emerald-500/10">
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
                       </div>
                     ) : status === 'active' ? (
-                      <div className="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center ring-1 ring-violet-500/40 relative">
-                        <div className="absolute inset-0 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
-                        <div className="w-2 h-2 rounded-full bg-violet-400" />
+                      <div className="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center ring-1 ring-violet-500/60 relative shadow-lg shadow-violet-500/10">
+                        <div className="absolute inset-0 rounded-full border border-violet-400 border-t-transparent animate-spin" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-violet-400 shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
                       </div>
                     ) : (
-                      <div className="w-6 h-6 rounded-full bg-zinc-900 flex items-center justify-center ring-1 ring-zinc-800">
-                        <CircleDashed className="w-3.5 h-3.5 text-zinc-600" />
+                      <div className="w-6 h-6 rounded-full bg-zinc-900/60 flex items-center justify-center ring-1 ring-zinc-850">
+                        <CircleDashed className="w-3.5 h-3.5 text-zinc-650" />
                       </div>
                     )}
                   </div>
                   
-                  <div className="flex-1">
+                  <div className="flex-1 text-left">
                     <p className={cn(
-                      "text-sm font-medium transition-colors duration-300",
-                      status === 'completed' ? "text-zinc-300" :
-                      status === 'active' ? "text-zinc-100" : "text-zinc-600"
+                      "text-sm font-semibold transition-colors duration-300",
+                      status === 'completed' ? "text-zinc-400" :
+                      status === 'active' ? "text-violet-300 font-bold" : "text-zinc-600"
                     )}>
-                      {step}
+                      {step.label}
                     </p>
-                    <AnimatePresence>
-                      {status === 'active' && (
-                        <motion.p
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="text-xs text-zinc-500 mt-1"
-                        >
-                          Synthesizing requirements...
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
+                    <p className={cn(
+                      "text-xs mt-1 transition-colors duration-300",
+                      status === 'active' ? "text-zinc-400" : "text-zinc-600 font-medium"
+                    )}>
+                      {step.desc}
+                    </p>
                   </div>
                 </div>
               );
@@ -134,166 +137,313 @@ export function DesignPlanPanel({ plan, timelineStep }) {
         </div>
       </div>
 
-      {/* Main Content: Design Plan Visualization */}
-      <div className="flex-1 overflow-y-auto bg-dot-grid relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/50 to-[#09090b] pointer-events-none" />
+      {/* RIGHT WORKSPACE DISPLAY */}
+      <div className="flex-1 overflow-y-auto relative bg-[#09090b]">
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/60 to-[#09090b] pointer-events-none" />
         
         <div className="relative z-10 p-8 max-w-5xl mx-auto min-h-full flex flex-col justify-center">
-          {!plan ? (
+          
+          {debugMode ? (
+            /* ==========================================
+               DEBUG DASHBOARD (RAW AGENT MESSAGES)
+               ========================================== */
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col items-center justify-center text-center space-y-4"
+              className="w-full flex flex-col h-[650px] bg-[#0c0c0e] border border-zinc-800/80 rounded-2xl shadow-2xl overflow-hidden text-left"
             >
-              <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/10 to-transparent" />
-                <LayoutTemplate className="w-8 h-8 text-violet-400 animate-pulse" />
+              <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80 bg-zinc-950/40">
+                <div className="flex items-center gap-2">
+                  <Terminal size={14} className="text-violet-400" />
+                  <span className="text-xs font-bold text-zinc-300 uppercase tracking-widest">Orchestration Logs</span>
+                </div>
+                <span className="text-[10px] bg-violet-500/10 border border-violet-500/30 text-violet-400 px-2.5 py-0.5 rounded-full font-bold">
+                  DEBUGGING ACTIVE
+                </span>
               </div>
-              <h3 className="text-xl font-bold text-zinc-200">Analyzing Request</h3>
-              <p className="text-sm text-zinc-500 max-w-sm">
-                Evaluating aesthetic, layout, and component requirements to construct the perfect interface.
-              </p>
+
+              {/* Debug Tab Selectors */}
+              <div className="flex border-b border-zinc-800/60 bg-zinc-950/20 px-4">
+                {AGENT_STEPS.map(step => (
+                  <button
+                    key={step.id}
+                    onClick={() => setActiveDebugTab(step.id)}
+                    className={cn(
+                      "px-4 py-3 text-xs font-semibold border-b-2 transition-all cursor-pointer",
+                      activeDebugTab === step.id 
+                        ? "border-violet-500 text-violet-300 font-bold bg-white/5" 
+                        : "border-transparent text-zinc-550 hover:text-zinc-300"
+                    )}
+                  >
+                    {step.label.split(' ')[0]} Agent
+                  </button>
+                ))}
+              </div>
+
+              {/* JSON Log Viewer */}
+              <div className="flex-1 p-6 font-mono text-xs text-zinc-400 overflow-auto bg-black/40">
+                <pre className="whitespace-pre-wrap leading-relaxed select-text">
+                  {renderJSON(agentOutputs[activeDebugTab === 'optimizing' ? 'optimizing' : activeDebugTab])}
+                </pre>
+              </div>
             </motion.div>
           ) : (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ staggerChildren: 0.1 }}
-              className="space-y-8"
-            >
-              {/* Header Info */}
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-6 pb-6 border-b border-zinc-800/60"
-              >
-                <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-zinc-100">{plan.product_name}</h1>
-                  <p className="text-zinc-400 mt-2 font-medium">{plan.tagline}</p>
-                </div>
-              </motion.div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                {/* General Config */}
+            /* ==========================================
+               VISUAL DASHBOARDS (CREATIVE STATE RENDER)
+               ========================================== */
+            <AnimatePresence mode="wait">
+              
+              {/* STATE 1: PROMPT UNDERSTANDING */}
+              {agentStatus === 'understanding' && (
                 <motion.div 
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 backdrop-blur-sm"
+                  key="understanding"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="flex flex-col items-center justify-center text-center space-y-6 max-w-md mx-auto"
                 >
-                  <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2 mb-6">
-                    <Layers className="w-4 h-4 text-violet-400" />
-                    Architecture
-                  </h3>
-                  
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-2 border-b border-zinc-800/40">
-                      <span className="text-sm text-zinc-500">Page Type</span>
-                      <span className="text-sm font-medium text-zinc-300 capitalize">{plan.page_type}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-zinc-800/40">
-                      <span className="text-sm text-zinc-500">Design Archetype</span>
-                      <span className="text-sm font-medium text-zinc-300 capitalize">{plan.design_archetype}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-zinc-800/40">
-                      <span className="text-sm text-zinc-500">Layout System</span>
-                      <span className="text-sm font-medium text-zinc-300 capitalize">{plan.layout_system}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-sm text-zinc-500">Visual Style</span>
-                      <span className="text-sm font-medium text-zinc-300 capitalize">{plan.visual_style}</span>
-                    </div>
+                  <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-850 flex items-center justify-center shadow-2xl relative overflow-hidden ring-1 ring-violet-500/20">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/10 to-transparent" />
+                    <Sparkles className="w-8 h-8 text-violet-400 animate-pulse" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-zinc-100">Analyzing User Intent</h3>
+                    <p className="text-sm text-zinc-500 leading-relaxed font-medium">
+                      Decoding natural language, detecting project domains, and structuring style specifications.
+                    </p>
+                  </div>
+                  <div className="w-48 h-1 bg-zinc-900 rounded-full overflow-hidden relative">
+                    <div className="absolute inset-y-0 left-0 bg-violet-500 rounded-full" style={{ animation: 'progressBar 1.5s ease-in-out infinite' }} />
                   </div>
                 </motion.div>
+              )}
 
-                {/* Styling (Colors & Fonts) */}
+              {/* STATE 2: DESIGN PLANNING */}
+              {(agentStatus === 'planning' || (agentOutputs.understanding && currentStepIdx === 1)) && (
                 <motion.div 
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 backdrop-blur-sm"
+                  key="planning"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="space-y-8"
                 >
-                  <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2 mb-6">
-                    <Palette className="w-4 h-4 text-emerald-400" />
-                    Aesthetics: {plan.aesthetic}
-                  </h3>
-                  
-                  {/* Colors */}
-                  <div className="mb-6">
-                    <p className="text-xs text-zinc-500 font-medium mb-3">Color Palette</p>
-                    <div className="flex gap-3">
-                      {/* Simulating Tailwind colors by mapping to generic hex for preview, or just showing the class */}
-                      {/* Note: since we only have classes like "bg-slate-950", we'll just show the class names creatively */}
-                      <div className="flex flex-col gap-1.5 items-center">
-                        <div className={cn("w-10 h-10 rounded-full border border-zinc-700 shadow-inner", plan.bg_color)} />
-                        <span className="text-[10px] text-zinc-500">Back</span>
-                      </div>
-                      <div className="flex flex-col gap-1.5 items-center">
-                        <div className={cn("w-10 h-10 rounded-full border border-zinc-700 shadow-inner", `bg-${plan.primary_color}`)} />
-                        <span className="text-[10px] text-zinc-500">Brand</span>
-                      </div>
-                      <div className="flex flex-col gap-1.5 items-center">
-                        <div className={cn("w-10 h-10 rounded-full border border-zinc-700 shadow-inner bg-zinc-100")} />
-                        <span className="text-[10px] text-zinc-500">Text</span>
-                      </div>
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80 text-left">
+                    <div className="p-2 bg-violet-500/10 border border-violet-500/20 rounded-xl">
+                      <Palette className="w-5 h-5 text-violet-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">Design Specifications Formulated</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">Parameters synthesized by the Prompt Understanding Agent</p>
                     </div>
                   </div>
 
-                  {/* Typography */}
-                  <div>
-                    <p className="text-xs text-zinc-500 font-medium mb-3 flex items-center gap-1"><Type className="w-3 h-3"/> Typography</p>
-                    <div className="space-y-4 bg-zinc-950/50 rounded-xl p-4 border border-zinc-800/50">
-                      <div>
-                        <span className="text-[10px] uppercase text-zinc-600 block mb-1">Heading: {extractFontName(plan.font_heading)}</span>
-                        <h4 className="text-lg text-zinc-200" style={{ fontFamily: `"${extractFontName(plan.font_heading)}", sans-serif` }}>
-                          The quick brown fox
-                        </h4>
-                      </div>
-                      <div>
-                        <span className="text-[10px] uppercase text-zinc-600 block mb-1">Body: {extractFontName(plan.font_body)}</span>
-                        <p className="text-sm text-zinc-400" style={{ fontFamily: `"${extractFontName(plan.font_body)}", sans-serif` }}>
-                          The quick brown fox jumps over the lazy dog.
-                        </p>
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 backdrop-blur-sm shadow-xl">
+                      <span className="text-[10px] text-violet-400 uppercase tracking-widest font-bold block mb-1">Architecture</span>
+                      <h4 className="text-sm font-semibold text-zinc-300 capitalize">{agentOutputs.understanding?.pageType || "Landing Page"}</h4>
+                      <p className="text-xs text-zinc-650 mt-1 font-medium">Industry: {agentOutputs.understanding?.industry || "Tech"}</p>
+                    </div>
+                    
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 backdrop-blur-sm shadow-xl">
+                      <span className="text-[10px] text-emerald-400 uppercase tracking-widest font-bold block mb-1">Visual Theme</span>
+                      <h4 className="text-sm font-semibold text-zinc-300 capitalize">{agentOutputs.understanding?.theme || "Premium Dark"}</h4>
+                      <p className="text-xs text-zinc-650 mt-1 font-medium">Style: {agentOutputs.understanding?.style?.visualStyle || "Modern"}</p>
+                    </div>
+
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 backdrop-blur-sm shadow-xl">
+                      <span className="text-[10px] text-sky-400 uppercase tracking-widest font-bold block mb-1">Structure Style</span>
+                      <h4 className="text-sm font-semibold text-zinc-300 capitalize">Borders: {agentOutputs.understanding?.style?.borderRadius || "Large"}</h4>
+                      <p className="text-xs text-zinc-650 mt-1 font-medium">Spacing: {agentOutputs.understanding?.style?.spacing || "Comfortable"}</p>
                     </div>
                   </div>
+
+                  {agentStatus === 'planning' && (
+                    <div className="flex items-center gap-3 justify-center text-zinc-500 text-sm font-medium mt-12 bg-zinc-950/40 py-3 rounded-xl border border-zinc-900 w-fit mx-auto px-6">
+                      <RefreshCw className="w-4 h-4 text-violet-400 animate-spin" />
+                      <span>Planning grid layout layout maps...</span>
+                    </div>
+                  )}
                 </motion.div>
+              )}
 
-              </div>
-
-              {/* Component Tree */}
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 backdrop-blur-sm"
-              >
-                <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2 mb-6">
-                  <Component className="w-4 h-4 text-sky-400" />
-                  Component Hierarchy
-                </h3>
-                
-                <div className="bg-zinc-950 rounded-xl p-5 border border-zinc-800/50 font-mono text-sm relative">
-                  {/* Decorative tree line */}
-                  <div className="absolute left-[29px] top-[45px] bottom-[30px] w-px bg-zinc-800" />
-                  
-                  <div className="flex items-center gap-2 text-zinc-300 mb-3 font-semibold">
-                    <LayoutTemplate className="w-4 h-4 text-zinc-500" /> App
+              {/* STATE 3: COMPONENT GENERATION */}
+              {(agentStatus === 'generating' || (agentOutputs.planning && currentStepIdx === 2)) && (
+                <motion.div 
+                  key="generating"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="space-y-6 text-left"
+                >
+                  <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-sky-500/10 border border-sky-500/20 rounded-xl">
+                        <LayoutTemplate className="w-5 h-5 text-sky-400" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-bold text-zinc-100">{plan?.product_name || "App Layout"} Setup</h2>
+                        <p className="text-xs text-zinc-500 mt-0.5">{plan?.tagline}</p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-mono text-zinc-500">Theme: {plan?.aesthetic}</span>
                   </div>
-                  
-                  <div className="pl-5 space-y-2.5 relative">
-                    {plan.sections && plan.sections.map((section, idx) => (
-                      <div key={idx} className="flex items-center gap-3 group">
-                        <div className="w-4 border-t border-zinc-800" />
-                        <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-800/80 px-3 py-1.5 rounded-lg text-zinc-400 group-hover:text-zinc-200 group-hover:border-zinc-700 transition-colors shadow-sm w-full max-w-sm">
-                          <ChevronRight className="w-3 h-3 opacity-50" />
-                          {section}
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-violet-400" /> Theme Configuration
+                      </h3>
+                      <div className="space-y-2 text-xs text-zinc-400 font-medium">
+                        <div className="flex justify-between py-1 border-b border-zinc-850">
+                          <span>Font Heading</span>
+                          <span className="text-zinc-300">{plan?.font_heading}</span>
+                        </div>
+                        <div className="flex justify-between py-1 border-b border-zinc-850">
+                          <span>Font Body</span>
+                          <span className="text-zinc-300">{plan?.font_body}</span>
+                        </div>
+                        <div className="flex justify-between py-1 border-b border-zinc-850">
+                          <span>Theme Primary</span>
+                          <span className="text-zinc-300 font-mono text-violet-400 bg-violet-500/5 px-2 py-0.5 rounded border border-violet-500/10">{plan?.primary_color}</span>
                         </div>
                       </div>
-                    ))}
+                    </div>
+
+                    <div className="col-span-2 bg-zinc-900/40 border border-zinc-850 rounded-2xl p-5 shadow-xl space-y-4">
+                      <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
+                        <Component className="w-4 h-4 text-sky-400" /> Planned Components
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {plan?.sections && plan.sections.map((section, idx) => (
+                          <div key={idx} className="flex items-center gap-2 bg-zinc-950/60 border border-zinc-850 p-2.5 rounded-xl">
+                            {/* Checkbox representation based on loading */}
+                            <div className="w-4 h-4 rounded-full bg-violet-500/10 ring-1 ring-violet-500/20 flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-ping" />
+                            </div>
+                            <span className="text-xs font-semibold text-zinc-400">components/{section}.jsx</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-              
-            </motion.div>
+
+                  <div className="flex items-center gap-3 justify-center text-zinc-400 text-sm font-semibold mt-8 bg-zinc-900 border border-zinc-850 py-4.5 rounded-2xl w-full">
+                    <RefreshCw className="w-4.5 h-4.5 text-sky-400 animate-spin" />
+                    <span>Streaming layout components live... Preview updates instantly.</span>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STATE 4: UI CRITIC */}
+              {(agentStatus === 'critic' || (agentOutputs.critic && currentStepIdx === 3)) && (
+                <motion.div 
+                  key="critic"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="space-y-6 text-left"
+                >
+                  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                    <div className="p-2 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                      <Award className="w-5 h-5 text-amber-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-zinc-100">UI Critic Evaluation</h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">Assessing alignment, usability, and responsiveness</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Score Card */}
+                    <div className="bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-xl space-y-4">
+                      <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Quality Score</span>
+                      <div className="relative w-32 h-32 flex items-center justify-center">
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle cx="64" cy="64" r="54" className="stroke-zinc-800" strokeWidth="8" fill="transparent" />
+                          <circle cx="64" cy="64" r="54" className="stroke-amber-500" strokeWidth="8" fill="transparent"
+                            strokeDasharray={2 * Math.PI * 54}
+                            strokeDashoffset={2 * Math.PI * 54 * (1 - (agentOutputs.critic?.score || 8.0) / 10)}
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        <span className="absolute text-4xl font-extrabold text-white font-display">
+                          {agentOutputs.critic?.score || '8.2'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold text-amber-400 tracking-wider">HARMONIC RATING</span>
+                    </div>
+
+                    {/* Critic Issues */}
+                    <div className="col-span-2 bg-zinc-900/40 border border-zinc-850 rounded-2xl p-6 shadow-xl space-y-4 flex flex-col justify-between">
+                      <div className="space-y-4">
+                        <h3 className="text-xs font-bold text-zinc-300 flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4 text-amber-500" /> Critic Observations
+                        </h3>
+                        <div className="space-y-2.5 max-h-40 overflow-y-auto">
+                          {agentOutputs.critic?.issues && agentOutputs.critic.issues.map((issue, idx) => (
+                            <div key={idx} className="flex gap-2.5 items-start text-xs text-zinc-400 bg-zinc-950/50 p-2.5 rounded-xl border border-zinc-850">
+                              <span className="text-amber-500 font-bold shrink-0 mt-0.5">•</span>
+                              <span className="font-medium">{issue}</span>
+                            </div>
+                          ))}
+                          {!agentOutputs.critic?.issues && (
+                            <p className="text-xs text-zinc-650 font-medium">Running critic reports...</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {agentStatus === 'critic' && (
+                        <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 bg-zinc-950 border border-zinc-850 px-4 py-2 rounded-xl w-fit">
+                          <RefreshCw size={12} className="animate-spin text-amber-500" />
+                          Analyzing layouts...
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STATE 5: OPTIMIZING DESIGN */}
+              {(agentStatus === 'optimizing' || agentStatus === 'done') && (
+                <motion.div 
+                  key="optimizing"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  className="flex flex-col items-center justify-center text-center space-y-6 max-w-md mx-auto"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-850 flex items-center justify-center shadow-2xl relative overflow-hidden ring-1 ring-emerald-500/20">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-transparent" />
+                    <Settings className="w-8 h-8 text-emerald-400 animate-spin" style={{ animationDuration: '6s' }} />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-zinc-100">Applying Optimizations</h3>
+                    <p className="text-sm text-zinc-500 leading-relaxed font-medium">
+                      Polishing visual alignment, fixing spacing concerns, adding micro-interactions, and preparing preview compilation.
+                    </p>
+                  </div>
+                  <div className="w-48 h-1 bg-zinc-900 rounded-full overflow-hidden relative">
+                    <div className="absolute inset-y-0 left-0 bg-emerald-500 rounded-full" style={{ animation: 'progressBar 1.5s ease-in-out infinite' }} />
+                  </div>
+                </motion.div>
+              )}
+
+            </AnimatePresence>
           )}
+
         </div>
       </div>
+      
+      {/* Dynamic Keyframes inject */}
+      <style>{`
+        @keyframes progressBar {
+          0%   { transform: scaleX(0);   transform-origin: left; }
+          50%  { transform: scaleX(0.7); transform-origin: left; }
+          100% { transform: scaleX(1);   transform-origin: left; }
+        }
+      `}</style>
     </div>
   );
 }
+export default DesignPlanPanel;

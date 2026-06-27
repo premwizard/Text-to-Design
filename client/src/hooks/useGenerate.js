@@ -16,6 +16,13 @@ export function useGenerate() {
   const [plan, setPlan] = useState(null);
   const [timelineStep, setTimelineStep] = useState('');
   const [variations, setVariations] = useState({}); // { varId: { plan, code, status, timelineStep } }
+  const [agentStatus, setAgentStatus] = useState('idle');
+  const [agentOutputs, setAgentOutputs] = useState({
+    understanding: null,
+    planning: null,
+    critic: null,
+    optimizing: null
+  });
 
   const generate = useCallback(async (prompt, currentCode = null) => {
     setLoading(true);
@@ -24,6 +31,13 @@ export function useGenerate() {
     setPlan(null);
     setTimelineStep('');
     setVariations({});
+    setAgentStatus('idle');
+    setAgentOutputs({
+      understanding: null,
+      planning: null,
+      critic: null,
+      optimizing: null
+    });
     setStatusText('Generating layout code...');
     setGenerationId(prev => prev + 1);
 
@@ -107,6 +121,20 @@ export function useGenerate() {
                   fullCodeAccumulator = "";
                   setCode("");
               }
+            }
+            if (parsed.type === "agent_start") {
+              setAgentStatus(parsed.agent);
+              setStatusText(parsed.message || `Running ${parsed.agent} agent...`);
+            }
+            if (parsed.type === "agent_complete") {
+              setAgentOutputs(prev => ({ ...prev, [parsed.agent]: parsed.output }));
+            }
+            if (parsed.type === "agent_timeline") {
+              setStatusText(parsed.message || parsed.step);
+            }
+            if (parsed.type === "final_code") {
+              setCode(parsed.code);
+              fullCodeAccumulator = parsed.code;
             }
             if (parsed.type === "emergency") {
               setError(parsed.message || "AI providers are temporarily busy.");
@@ -344,5 +372,5 @@ export function useGenerate() {
     }
   }, []);
 
-  return { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations };
+  return { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations, agentStatus, setAgentStatus, agentOutputs, setAgentOutputs };
 }

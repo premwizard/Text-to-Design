@@ -57,7 +57,7 @@ function Home() {
   const [modalContent, setModalContent] = useState(null);
   const [sandboxFiles, setSandboxFiles] = useState({});
 
-  const { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations } = useGenerate();
+  const { code, setCode, generate, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations, agentStatus, agentOutputs } = useGenerate();
   const [activeVariationId, setActiveVariationId] = useState(null);
   const { user } = useAuth();
   const [recentProjects, setRecentProjects] = useState([]);
@@ -485,7 +485,7 @@ function Home() {
                     }}
                   />
                 ) : (!code || code.length < 50) && loading ? (
-                  <DesignPlanPanel plan={plan} timelineStep={timelineStep} />
+                  <DesignPlanPanel plan={plan} timelineStep={timelineStep} agentStatus={agentStatus} agentOutputs={agentOutputs} />
                 ) : (
                   <WorkspacePanel 
                     code={code}
