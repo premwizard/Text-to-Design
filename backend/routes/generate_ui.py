@@ -123,6 +123,12 @@ def _repair_jsx(code: str) -> str:
     if not code:
         return code
 
+    from backend.services.debug.debug_logger import DebugLogger
+    db_logger = DebugLogger()
+    
+    orig_len = len(code)
+    db_logger.log("JSX_REPAIR", "START", f"Original length: {orig_len} chars")
+
     # ── 1. Find the last clean closing boundary ────────────────────────────
     # A clean boundary is a line that ends a JSX block: ), }, );, };, or />
     clean_boundary_re = re.compile(
@@ -135,28 +141,50 @@ def _repair_jsx(code: str) -> str:
     last_clean = len(lines) - 1
     for i in range(len(lines) - 1, -1, -1):
         stripped = lines[i].strip()
+        if not stripped:
+            continue
         if clean_boundary_re.match(lines[i]) or stripped in ('}', ')', '};', ');', '/>'):
             last_clean = i
             break
+        if "export default" in stripped:
+            last_clean = len(lines) - 1
+            break
 
-    # Truncate to last clean boundary
-    lines = lines[:last_clean + 1]
-    code = '\n'.join(lines)
+    if last_clean < len(lines) - 1:
+        db_logger.log("JSX_REPAIR", "TRUNCATION", f"Truncated code from line {len(lines)} to last clean line {last_clean+1}")
+        lines = lines[:last_clean + 1]
+        code = '\n'.join(lines)
 
     # ── 2. Balance curly braces ────────────────────────────────────────────
     open_braces = code.count('{') - code.count('}')
     if open_braces > 0:
-        # Close any open blocks (JSX expressions, function body)
         code = code.rstrip()
         code += '\n' + '  ' * max(open_braces - 1, 0) + '\n'.join(['}'] * open_braces)
+        db_logger.log("JSX_REPAIR", "BRACE_BALANCING", f"Added {open_braces} closing curly braces")
 
     # ── 3. Ensure GeneratedPage function closure ───────────────────────────
     # If the code ends without a bare closing `}` on its own line, add one
     last_meaningful = code.rstrip().splitlines()[-1].strip() if code.strip() else ''
     if last_meaningful not in ('}', '};'):
-        code = code.rstrip() + '\n}'
+        if not last_meaningful.startswith("export default"):
+            code = code.rstrip() + '\n}'
+            db_logger.log("JSX_REPAIR", "PAGE_CLOSURE", "Appended function closing bracket }")
 
-    return code.strip()
+    final_code = code.strip()
+
+    # Warn if imports or exports count has changed
+    orig_imports_count = len([line for line in code.splitlines() if "import" in line])
+    final_imports_count = len([line for line in final_code.splitlines() if "import" in line])
+    if orig_imports_count != final_imports_count:
+        db_logger.log("JSX_REPAIR", "WARNING", f"Imports count changed from {orig_imports_count} to {final_imports_count} during repair!")
+
+    orig_exports_count = len([line for line in code.splitlines() if "export" in line])
+    final_exports_count = len([line for line in final_code.splitlines() if "export" in line])
+    if orig_exports_count != final_exports_count:
+        db_logger.log("JSX_REPAIR", "WARNING", f"Exports count changed from {orig_exports_count} to {final_exports_count} during repair!")
+
+    db_logger.log("JSX_REPAIR", "SUCCESS", f"Repaired length: {len(final_code)} chars (delta: {len(final_code) - orig_len})")
+    return final_code
 
 
 from backend.services.ai_router import generate_ai
@@ -170,6 +198,8 @@ class StreamRequest(BaseModel):
     prompt: str
     current_code: Optional[str] = None
     user_id: Optional[str] = None
+    generation_mode: Optional[str] = "single_mode"
+    variation_count: Optional[int] = 1
 
 class FixRequest(BaseModel):
     broken_code: str
@@ -331,7 +361,12 @@ async def stream_jsx(request: StreamRequest):
                     stream=True
                 )
                 
+                from backend.services.debug.debug_logger import DebugLogger
+                db_logger = DebugLogger()
+                db_logger.log("STREAM_PARSER", "START", f"Streaming edit code changes for request...")
+                
                 full_code = ""
+                chunk_count = 0
                 async for chunk in response:
                     if isinstance(chunk, dict):
                         if chunk.get("type") == "fallback":
@@ -346,7 +381,16 @@ async def stream_jsx(request: StreamRequest):
                     content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
                     if content:
                         full_code += content
+                        chunk_count += 1
+                        if chunk_count % 50 == 1:
+                            db_logger.log("STREAM_PARSER", "STREAMING", f"Received chunk count: {chunk_count}")
                         yield f"data: {json.dumps({'chunk': content})}\n\n"
+
+                db_logger.log("STREAM_PARSER", "STREAM_COMPLETE", f"Total chunks received: {chunk_count}. Code length: {len(full_code)}")
+                
+                # Check for truncation/missing parts
+                if not full_code.strip().endswith("}") and not full_code.strip().endswith("```"):
+                    db_logger.log("STREAM_PARSER", "WARNING", "Stream output does not end cleanly with } or code block markers. May be truncated.")
 
                 # Parse and write files
                 cleaned = full_code.strip()
@@ -373,6 +417,10 @@ async def stream_jsx(request: StreamRequest):
                     raise ValueError("No valid JSON object found in response")
                 
                 files = parsed_data.get("files", {})
+                db_logger.log("STREAM_PARSER", "EXTRACTED_FILES", f"Parsed file keys: {list(files.keys())}")
+                for filename, filecontent in files.items():
+                    db_logger.log("STREAM_PARSER", "FILE_SUMMARY", f"File: {filename} (length: {len(filecontent)} chars)")
+                    
                 from backend.project_runner import cleanGeneratedCode, write_files
                 cleaned_files = {k: cleanGeneratedCode(v) for k, v in files.items()}
                 
@@ -387,7 +435,12 @@ async def stream_jsx(request: StreamRequest):
                 # ─── GENERATE MULTI-AGENT PIPELINE ────────────────────────
                 from backend.services.agents.orchestrator import run_orchestration_stream
                 
-                async for event in run_orchestration_stream(request.prompt, request.user_id):
+                async for event in run_orchestration_stream(
+                    request.prompt, 
+                    request.user_id,
+                    generation_mode=request.generation_mode,
+                    variation_count=request.variation_count
+                ):
                     yield f"data: {json.dumps(event)}\n\n"
 
             yield "data: [DONE]\n\n"
@@ -472,6 +525,24 @@ async def rollback_history(request: RollbackRequest):
         return {"status": "success", "files": files}
     except Exception as e:
         logging.error(f"Rollback failed: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+class LogEventRequest(BaseModel):
+    session_id: str
+    stage: str
+    status: str
+    message: str
+
+@router.post("/log-debug-event")
+async def log_debug_event(request: LogEventRequest):
+    try:
+        from backend.services.debug.debug_logger import DebugLogger
+        logger = DebugLogger(request.session_id)
+        logger.log(request.stage, request.status, request.message)
+        return {"status": "ok"}
+    except Exception as e:
+        logging.error(f"Failed to log debug event: {e}")
         return {"status": "error", "message": str(e)}
 
 

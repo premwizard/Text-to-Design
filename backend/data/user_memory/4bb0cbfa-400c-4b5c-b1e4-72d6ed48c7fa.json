@@ -1,0 +1,49 @@
+{
+  "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
+  "preferences": {
+    "theme": {
+      "light": 3
+    },
+    "style": {
+      "minimal": 3
+    },
+    "borderRadius": {},
+    "spacing": {},
+    "favoriteColors": {
+      "zinc": 3
+    },
+    "preferredLayouts": {
+      "navbar: top, sidebar: none": 3
+    },
+    "commonComponents": {
+      "herosection": 3,
+      "featuredproducts": 3,
+      "categories": 3,
+      "testimonialcarousel": 1,
+      "footer": 3
+    }
+  },
+  "history": [
+    {
+      "prompt": "Build a e-commerce store: Online store front",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a e-commerce store: Online store front",
+      "style": "minimal",
+      "theme": "light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a e-commerce store: Online store front",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    }
+  ],
+  "settings": {
+    "enabled": true
+  }
+}

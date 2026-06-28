@@ -14,7 +14,11 @@ export function PromptComposer({
   loading,
   hasCode,
   mode = 'generate',
-  setMode
+  setMode,
+  generationMode = 'single_mode',
+  setGenerationMode,
+  variationCount = 1,
+  setVariationCount
 }) {
   const textareaRef = useRef(null);
 
@@ -127,6 +131,91 @@ export function PromptComposer({
         </div>
       </div>
       
+      {/* Mode Selection UI */}
+      {(!hasCode || mode === 'generate') && setGenerationMode && (
+        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-4 px-4 py-3 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-xl shadow-lg select-none">
+          <div className="flex flex-wrap items-center gap-6">
+            <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Generation Mode:</span>
+            
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input 
+                type="radio" 
+                name="generation_mode" 
+                checked={generationMode === 'single_mode'} 
+                onChange={() => {
+                  setGenerationMode('single_mode');
+                  setVariationCount(1);
+                }}
+                className="sr-only" 
+              />
+              <div className={cn(
+                "w-4 h-4 rounded-full border flex items-center justify-center transition-all",
+                generationMode === 'single_mode' 
+                  ? "border-violet-500 bg-violet-500/20 text-violet-400 shadow-[0_0_8px_rgba(139,92,246,0.3)]" 
+                  : "border-zinc-700 hover:border-zinc-500"
+              )}>
+                {generationMode === 'single_mode' && <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />}
+              </div>
+              <span className={cn(
+                "text-xs font-semibold transition-colors",
+                generationMode === 'single_mode' ? "text-violet-400" : "text-zinc-400 group-hover:text-zinc-300"
+              )}>
+                Single Best Design <span className="text-[10px] text-violet-500/80 font-normal ml-0.5">(Recommended)</span>
+              </span>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input 
+                type="radio" 
+                name="generation_mode" 
+                checked={generationMode === 'variation_mode'} 
+                onChange={() => {
+                  setGenerationMode('variation_mode');
+                  setVariationCount(3); // Default to 3 variations
+                }}
+                className="sr-only" 
+              />
+              <div className={cn(
+                "w-4 h-4 rounded-full border flex items-center justify-center transition-all",
+                generationMode === 'variation_mode' 
+                  ? "border-violet-500 bg-violet-500/20 text-violet-400 shadow-[0_0_8px_rgba(139,92,246,0.3)]" 
+                  : "border-zinc-700 hover:border-zinc-500"
+              )}>
+                {generationMode === 'variation_mode' && <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />}
+              </div>
+              <span className={cn(
+                "text-xs font-semibold transition-colors",
+                generationMode === 'variation_mode' ? "text-violet-400" : "text-zinc-400 group-hover:text-zinc-300"
+              )}>
+                Generate Variations
+              </span>
+            </label>
+          </div>
+
+          {generationMode === 'variation_mode' && setVariationCount && (
+            <div className="flex items-center gap-2.5 animate-fade-in self-stretch sm:self-auto justify-between border-t border-zinc-800/40 sm:border-0 pt-2 sm:pt-0">
+              <span className="text-xs font-semibold text-zinc-500">Count:</span>
+              <div className="flex bg-zinc-950 p-0.5 rounded-lg border border-zinc-850">
+                {[2, 3, 4].map(num => (
+                  <button
+                    key={num}
+                    onClick={() => setVariationCount(num)}
+                    className={cn(
+                      "px-3 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer",
+                      variationCount === num
+                        ? "bg-zinc-800/80 text-violet-400 border border-zinc-700/50 shadow-inner"
+                        : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                    )}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {!hasCode && (
         <div className="flex items-center gap-4 mt-6 text-xs text-zinc-500 font-medium">
           <span className="cursor-pointer hover:text-zinc-300 transition-colors">Start with a blank canvas</span>

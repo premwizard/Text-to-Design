@@ -12,6 +12,8 @@ import shutil
 import subprocess
 import signal
 import sys
+import json
+import time
 from pathlib import Path
 
 # Absolute path to the sandbox project (sibling of backend/)
@@ -55,21 +57,47 @@ def cleanGeneratedCode(code: str) -> str:
 
 
 def validateGeneratedCode(code: str, filename: str) -> bool:
-    # Reject files containing forbidden patterns
+    from backend.services.debug.debug_logger import DebugLogger
+    db_logger = DebugLogger()
+    db_logger.log("VALIDATION", "START", f"Validating file: {filename}")
+
+    # 1. Reject files containing forbidden patterns
     forbidden_tokens = ["<!--", "-->", "```", "###"]
     for token in forbidden_tokens:
         if token in code:
             log_invalid_file(filename, token, code)
+            db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Contains forbidden token '{token}'")
             return False
             
-    if re.search(r'\bfile:', code, re.IGNORECASE):
-        log_invalid_file(filename, "File:", code)
-        return False
-        
-    if re.search(r'\bfilename:', code, re.IGNORECASE):
+    if re.search(r'\bfile:', code, re.IGNORECASE) or re.search(r'\bfilename:', code, re.IGNORECASE):
         log_invalid_file(filename, "Filename:", code)
+        db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Contains file/filename header")
         return False
-        
+
+    # 2. Check for syntax highlighting HTML spans (accidental UI tokens)
+    highlighting_patterns = [
+        r'<span\s+(?:class|className)="text-(?:pink-400\s+font-semibold|amber-300|violet-300|emerald-400|sky-400|zinc-500\s+italic)"',
+        r'text-pink-400\s+font-semibold">',
+        r'text-amber-300">',
+        r'text-violet-300">',
+        r'text-emerald-400">',
+        r'text-sky-400">',
+        r'text-zinc-500\s+italic">'
+    ]
+    for pattern in highlighting_patterns:
+        if re.search(pattern, code):
+            log_invalid_file(filename, f"Highlighting token (pattern: {pattern})", code)
+            db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Syntax highlighting span leak matched pattern: {pattern}")
+            return False
+
+    # 3. Basic imports validation
+    for line in code.splitlines():
+        if ("import" in line or "export" in line) and ("<" in line or ">" in line or "class=" in line or "className=" in line):
+            log_invalid_file(filename, f"Malformed import/export line: {line}", code)
+            db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Malformed import/export line: {line}")
+            return False
+
+    db_logger.log("VALIDATION", "PASSED", f"File: {filename}")
     return True
 
 
@@ -82,7 +110,107 @@ def log_invalid_file(filename: str, offending_token: str, code: str):
     print(first_20_lines)
 
 
-async def write_files(files: dict[str, str], variation_id: str = None) -> list[str]:
+def log_corrupted_run(files: dict, error_msg: str):
+    try:
+        corrupted_dir = Path(__file__).parent / "data" / "corrupted_runs"
+        corrupted_dir.mkdir(parents=True, exist_ok=True)
+        filename = f"corrupted_{int(time.time())}_{os.getpid()}.json"
+        log_file = corrupted_dir / filename
+        log_data = {
+            "timestamp": int(time.time()),
+            "error": error_msg,
+            "files": files
+        }
+        log_file.write_text(json.dumps(log_data, indent=2), encoding="utf-8")
+        print(f"[Error-Logger] Logged corrupted files to: {log_file}")
+    except Exception as e:
+        print(f"[Error-Logger] Failed to log corrupted run: {e}")
+
+async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tuple[bool, str]:
+    """
+    Creates a temporary validation directory sandbox/src_validate_temp,
+    writes proposed and boilerplate files there, and runs esbuild dry-run compilation.
+    """
+    temp_src_dir = SANDBOX_DIR / "src_validate_temp"
+    temp_src_dir.mkdir(parents=True, exist_ok=True)
+    
+    from backend.services.debug.debug_logger import DebugLogger
+    db_logger = DebugLogger()
+    db_logger.log("COMPILE", "START", f"Dry-run compilation checking. Target variation: {variation_id}. Proposed files: {list(cleaned_files.keys())}")
+    
+    try:
+        # 1. Write the proposed files to the temp directory
+        for rel_path, content in cleaned_files.items():
+            rel_path = rel_path.lstrip("/")
+            if rel_path.startswith("src/"):
+                rel_path = rel_path[4:]
+            
+            dest = temp_src_dir / rel_path
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(content, encoding="utf-8")
+            
+        # 2. Copy active folder's boilerplate and other existing components if they are not in cleaned_files
+        active_src_dir = SRC_DIR / variation_id if variation_id else SRC_DIR
+        
+        # Copy standard files: main.jsx, index.css, ErrorBoundary.jsx
+        for filename in ["main.jsx", "index.css", "ErrorBoundary.jsx"]:
+            src_file = active_src_dir / filename
+            if not src_file.exists():
+                src_file = SRC_DIR / filename
+            dest_file = temp_src_dir / filename
+            if src_file.exists() and not dest_file.exists():
+                shutil.copy2(src_file, dest_file)
+                
+        # Copy existing components in components/ folder if they were not generated/updated in this turn
+        active_comp_dir = active_src_dir / "components"
+        if active_comp_dir.exists():
+            for comp_file in active_comp_dir.glob("*.jsx"):
+                rel_comp_path = f"components/{comp_file.name}"
+                dest_file = temp_src_dir / rel_comp_path
+                if not dest_file.exists():
+                    dest_file.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(comp_file, dest_file)
+                    
+        # 3. Run esbuild compilation check
+        temp_outfile = SANDBOX_DIR / "dist/assets/validate_temp.js"
+        temp_outfile.parent.mkdir(parents=True, exist_ok=True)
+        
+        cmd = f"npx --yes esbuild src_validate_temp/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
+        
+        proc = await asyncio.create_subprocess_shell(
+            cmd,
+            cwd=str(SANDBOX_DIR),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        stdout, stderr = await proc.communicate()
+        
+        if temp_outfile.exists():
+            try:
+                temp_outfile.unlink()
+            except Exception:
+                pass
+                
+        if proc.returncode == 0:
+            db_logger.log("COMPILE", "SUCCESS", "Dry-run esbuild bundle compiled successfully.")
+            return True, ""
+        else:
+            err_msg = stderr.decode("utf-8", errors="replace")
+            err_msg = err_msg.replace("src_validate_temp/", "src/")
+            db_logger.log("COMPILE", "FAILED", f"Dry-run compilation error:\n{err_msg}")
+            return False, err_msg
+            
+    except Exception as e:
+        db_logger.log("COMPILE", "ERROR", f"Unexpected error during compilation validation: {e}")
+        return False, f"Unexpected error during compilation validation: {e}"
+    finally:
+        if temp_src_dir.exists():
+            try:
+                shutil.rmtree(temp_src_dir)
+            except Exception:
+                pass
+
+async def write_files(files: dict[str, str], variation_id: str = None, bypass_validation: bool = False) -> list[str]:
     """
     Write a dict of { "relative/path.jsx": "file content" } into sandbox/src/.
     Returns list of written paths for logging.
@@ -100,34 +228,52 @@ async def write_files(files: dict[str, str], variation_id: str = None) -> list[s
     cleaned_files = {}
     for rel_path, content in files.items():
         cleaned_content = cleanGeneratedCode(content)
-        if not validateGeneratedCode(cleaned_content, rel_path):
-            raise ValueError(f"Generated code validation failed for {rel_path}.")
         cleaned_files[rel_path] = cleaned_content
+
+    if not bypass_validation:
+        for rel_path, cleaned_content in cleaned_files.items():
+            if not validateGeneratedCode(cleaned_content, rel_path):
+                log_corrupted_run(cleaned_files, f"Static validation failed for {rel_path}")
+                raise ValueError(f"Static validation failed for {rel_path}. Code contains forbidden or highlighting tokens.")
+                
+        # Compilation validation check
+        success, err_msg = await dry_run_compile(cleaned_files, variation_id)
+        if not success:
+            log_corrupted_run(cleaned_files, err_msg)
+            raise ValueError(f"JSX compilation failed: {err_msg}")
 
     # 2. Write new files to disk
     written = []
     new_component_paths = set()
+    
+    from backend.services.debug.debug_logger import DebugLogger
+    db_logger = DebugLogger()
+    import hashlib
     
     for rel_path, content in cleaned_files.items():
         # Normalise: strip leading slash or src/
         rel_path = rel_path.lstrip("/")
         if rel_path.startswith("src/"):
             rel_path = rel_path[4:]
-
+ 
         base_dir = SRC_DIR / variation_id if variation_id else SRC_DIR
         dest = base_dir / rel_path
         dest.parent.mkdir(parents=True, exist_ok=True)
-
+ 
         if dest.parent.name == "components":
             new_component_paths.add(dest.resolve())
-
-        # STEP 6: Actual contents written to disk
-        print("=" * 80)
-        print(f"STEP 6: Writing to disk -> {dest}")
-        print(content[:500] + ("..." if len(content) > 500 else ""))
-        print("=" * 80)
-
-        dest.write_text(content, encoding="utf-8")
+ 
+        # Compute md5 hash
+        content_hash = hashlib.md5(content.encode("utf-8")).hexdigest()
+        db_logger.log("SANDBOX", "WRITE_START", f"Writing file: {rel_path}\nDestination: {dest}\nHash: {content_hash}")
+ 
+        try:
+            dest.write_text(content, encoding="utf-8")
+            db_logger.log("SANDBOX", "WRITE_SUCCESS", f"Wrote file {rel_path} successfully.")
+        except Exception as e:
+            db_logger.log("SANDBOX", "WRITE_ERROR", f"Failed to write file {rel_path}: {e}")
+            raise e
+            
         written.append(str(dest.relative_to(SANDBOX_DIR)))
 
     # 3. Clean up stale components (files in components/ that weren't generated)
@@ -182,14 +328,46 @@ async def write_files(files: dict[str, str], variation_id: str = None) -> list[s
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Raw compiled CSS from bundler as fallback -->
-    <link rel="stylesheet" href="/dist/assets/{variation_id}.css" />
-
     <!-- Preview Debugger & Global Error Catching -->
     <script>
       console.log("[PREVIEW DEBUG] Initializing Variation {variation_id} preview...");
       
+      const _log = console.log;
+      const _error = console.error;
+      const _warn = console.warn;
+      
+      function forwardLog(type, args) {{
+        const msg = Array.from(args).map(arg => {{
+          if (typeof arg === 'object') {{
+            try {{ return JSON.stringify(arg); }} catch(e) {{ return String(arg); }}
+          }}
+          return String(arg);
+        }}).join(' ');
+        
+        if (window.parent) {{
+          window.parent.postMessage({{
+            type: 'preview_console',
+            logType: type,
+            message: msg
+          }}, '*');
+        }}
+      }}
+      
+      console.log = function() {{
+        _log.apply(console, arguments);
+        forwardLog('log', arguments);
+      }};
+      console.error = function() {{
+        _error.apply(console, arguments);
+        forwardLog('error', arguments);
+      }};
+      console.warn = function() {{
+        _warn.apply(console, arguments);
+        forwardLog('warn', arguments);
+      }};
+
       window.addEventListener('error', (event) => {{
-        console.error("[PREVIEW DEBUG] Script error caught:", event.message);
+        _error("[PREVIEW DEBUG] Script error caught:", event.message);
         if (window.parent) {{
           window.parent.postMessage({{
             type: 'runtime_error',
@@ -202,18 +380,25 @@ async def write_files(files: dict[str, str], variation_id: str = None) -> list[s
       window.addEventListener('DOMContentLoaded', () => {{
         const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href);
         const scripts = Array.from(document.querySelectorAll('script')).map(s => s.src || "inline");
-        console.log("[PREVIEW DEBUG] Loaded Stylesheets:", links);
-        console.log("[PREVIEW DEBUG] Loaded Scripts:", scripts);
+        _log("[PREVIEW DEBUG] Loaded Stylesheets:", links);
+        _log("[PREVIEW DEBUG] Loaded Scripts:", scripts);
         
+        const root = document.getElementById('root');
         const observer = new MutationObserver((mutations) => {{
-          const root = document.getElementById('root');
           if (root && root.children.length > 0) {{
-            console.log("[PREVIEW DEBUG] React application rendered to DOM successfully.");
-            console.log("[PREVIEW DEBUG] Final Rendered DOM Snippet:", root.innerHTML.slice(0, 500) + "...");
+            _log("[PREVIEW DEBUG] React application rendered to DOM successfully.");
+            if (window.parent) {{
+              window.parent.postMessage({{
+                type: 'preview_rendered',
+                html: root.innerHTML.slice(0, 1000)
+              }}, '*');
+            }}
             observer.disconnect();
           }}
         }});
-        observer.observe(document.body, {{ childList: true, subtree: true }});
+        if (root) {{
+          observer.observe(root, {{ childList: true, subtree: true }});
+        }}
       }});
     </script>
   </head>

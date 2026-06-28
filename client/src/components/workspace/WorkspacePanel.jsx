@@ -337,6 +337,7 @@ export function WorkspacePanel({
                         generationId={generationId} 
                         onRuntimeError={onRuntimeError}
                         variationId={variationId}
+                        sessionId={sessionId}
                       />
                     )}
                   </div>

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { normalizeApiBaseUrl, normalizeSandboxUrl } from '../lib/urlHelpers';
 
-export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId }) {
+export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId, sessionId }) {
   const iframeRef = useRef(null);
   const [runtimeError, setRuntimeError] = useState(null);
   const [reloadCounter, setReloadCounter] = useState(0);
@@ -12,11 +12,51 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     const handleMsg = (e) => {
       if (e.data?.type === 'runtime_error') {
         setRuntimeError({ error: e.data.error, stack: e.data.stack });
+        if (sessionId) {
+          fetch('/log-debug-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              session_id: sessionId,
+              stage: 'VITE_RUNTIME',
+              status: 'ERROR',
+              message: `React Runtime Error:\n${e.data.error}\nStack:\n${e.data.stack}`
+            })
+          }).catch(err => console.error("Failed to post runtime error:", err));
+        }
+      } else if (e.data?.type === 'preview_console') {
+        console.log(`[IFRAME CONSOLE] [${e.data.logType}] ${e.data.message}`);
+        if (sessionId) {
+          fetch('/log-debug-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              session_id: sessionId,
+              stage: 'VITE',
+              status: e.data.logType.toUpperCase(),
+              message: e.data.message
+            })
+          }).catch(err => console.error("Failed to post console log:", err));
+        }
+      } else if (e.data?.type === 'preview_rendered') {
+        console.log(`[IFRAME DOM] Rendered HTML. length: ${e.data.html.length}`);
+        if (sessionId) {
+          fetch('/log-debug-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              session_id: sessionId,
+              stage: 'PREVIEW',
+              status: 'SUCCESS',
+              message: `DOM successfully rendered. Content snippet:\n${e.data.html}`
+            })
+          }).catch(err => console.error("Failed to post preview rendered state:", err));
+        }
       }
     };
     window.addEventListener('message', handleMsg);
     return () => window.removeEventListener('message', handleMsg);
-  }, []);
+  }, [sessionId]);
 
   useEffect(() => {
     setRuntimeError(null);
@@ -97,6 +137,21 @@ export function LivePreview({ code, loading = false, statusText = '', generation
           className="w-full h-full border-0 bg-transparent"
           title="Sandbox Preview"
           sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
+          onLoad={() => {
+            console.log(`[IFRAME] loaded src: ${iframeSrc}`);
+            if (sessionId) {
+              fetch('/log-debug-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  session_id: sessionId,
+                  stage: 'PREVIEW',
+                  status: 'LOADED',
+                  message: `iframe loaded source: ${iframeSrc}`
+                })
+              }).catch(err => console.error("Failed to post iframe load status:", err));
+            }
+          }}
         />
       )}
 

@@ -46,6 +46,32 @@ function validateGeneratedCode(code) {
   }
   if (/\bfile:/i.test(code)) return false;
   if (/\bfilename:/i.test(code)) return false;
+  
+  // Highlight spans checks
+  const highlightingPatterns = [
+    /<span\s+(class|className)="text-(pink-400\s+font-semibold|amber-300|violet-300|emerald-400|sky-400|zinc-500\s+italic)"/,
+    /text-pink-400\s+font-semibold">/,
+    /text-amber-300">/,
+    /text-violet-300">/,
+    /text-emerald-400">/,
+    /text-sky-400">/,
+    /text-zinc-500\s+italic">/
+  ];
+  for (const pattern of highlightingPatterns) {
+    if (pattern.test(code)) {
+      return false;
+    }
+  }
+  
+  // Malformed import/export checks
+  const lines = code.split('\n');
+  for (const line of lines) {
+    if ((line.includes("import") || line.includes("export")) && 
+        (line.includes("<") || line.includes(">") || line.includes("class=") || line.includes("className="))) {
+      return false;
+    }
+  }
+  
   return true;
 }
 
@@ -61,8 +87,53 @@ function Home() {
 
   const { code, setCode, generate, editUI, fix, loading, error, statusText, generationId, plan, timelineStep, variations, setVariations, agentStatus, agentOutputs, sessionId } = useGenerate();
   const [activeVariationId, setActiveVariationId] = useState(null);
+  const [generationMode, setGenerationMode] = useState('single_mode');
+  const [variationCount, setVariationCount] = useState(1);
   const { user } = useAuth();
   const [recentProjects, setRecentProjects] = useState([]);
+  
+  const [previewStatus, setPreviewStatus] = useState('IDLE'); // 'IDLE', 'LOADING', 'COMPILING', 'LOADED', 'RENDERED', 'RUNTIME_ERROR'
+  const [compileStatus, setCompileStatus] = useState('IDLE'); // 'IDLE', 'COMPILING', 'SUCCESS', 'FAILED'
+  const [latestConsoleLog, setLatestConsoleLog] = useState('');
+
+  // Handle preview iframe postMessage listeners
+  useEffect(() => {
+    const handleMessage = (e) => {
+      if (e.data?.type === 'preview_console') {
+        setLatestConsoleLog(`[${e.data.logType}] ${e.data.message}`);
+        if (e.data.logType === 'error') {
+          setPreviewStatus('RUNTIME_ERROR');
+        }
+      } else if (e.data?.type === 'runtime_error') {
+        setPreviewStatus('RUNTIME_ERROR');
+      } else if (e.data?.type === 'preview_rendered') {
+        setPreviewStatus('RENDERED');
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  // Update statuses when loading / compilation / errors update
+  useEffect(() => {
+    if (loading) {
+      setPreviewStatus('LOADING');
+      setCompileStatus('COMPILING');
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    if (error || localError) {
+      setCompileStatus('FAILED');
+      setPreviewStatus('COMPILE_ERROR');
+    } else if (code && !loading) {
+      setCompileStatus('SUCCESS');
+    }
+  }, [error, localError, code, loading]);
+
+  function cn(...inputs) {
+    return inputs.filter(Boolean).join(' ');
+  }
 
   // Fetch recent projects for the empty state
   useEffect(() => {
@@ -226,7 +297,7 @@ function Home() {
     } else {
       setActiveVariationId(null);
       setMode('edit');
-      generate(trimmed, activeVariationId ? variations[activeVariationId]?.code : (code || null), user?.id || user?.email || null);
+      generate(trimmed, activeVariationId ? variations[activeVariationId]?.code : (code || null), user?.id || user?.email || null, generationMode, variationCount);
     }
   };
 
@@ -328,6 +399,10 @@ function Home() {
                   onGenerate={handleGenerate}
                   loading={loading}
                   hasCode={false}
+                  generationMode={generationMode}
+                  setGenerationMode={setGenerationMode}
+                  variationCount={variationCount}
+                  setVariationCount={setVariationCount}
                 />
 
                 {/* Personalization Dashboard Panel */}
@@ -525,6 +600,10 @@ function Home() {
                     hasCode={true}
                     mode={mode}
                     setMode={setMode}
+                    generationMode={generationMode}
+                    setGenerationMode={setGenerationMode}
+                    variationCount={variationCount}
+                    setVariationCount={setVariationCount}
                   />
                 </div>
               </div>
@@ -533,6 +612,76 @@ function Home() {
 
         </div>
       </div>
+
+      {/* Live Pipeline Debug Overlay */}
+      {sessionId && (
+        <div className="fixed bottom-24 right-6 z-40 max-w-sm w-full glass-panel border border-white/10 rounded-2xl p-4 shadow-2xl text-left text-xs text-zinc-300">
+          <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-2">
+            <span className="font-display font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+              Pipeline Live Debugger
+            </span>
+            <span className="text-[10px] text-zinc-500 font-mono select-all">
+              Session: {sessionId}
+            </span>
+          </div>
+          
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-zinc-500 font-medium">Current Stage:</span>
+              <span className="font-semibold text-zinc-150 capitalize">
+                {timelineStep || (loading ? 'Generating Code' : 'Idle')}
+              </span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span className="text-zinc-500 font-medium">Agent Status:</span>
+              <span className="font-mono text-[10px] font-bold text-violet-400 uppercase">
+                {agentStatus || 'Idle'}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="text-zinc-500 font-medium">esbuild Compile:</span>
+              <span className={cn(
+                "font-bold uppercase text-[10px] px-1.5 py-0.5 rounded",
+                compileStatus === 'SUCCESS' ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" :
+                compileStatus === 'FAILED' ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" :
+                compileStatus === 'COMPILING' ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
+                "bg-zinc-850 text-zinc-400"
+              )}>
+                {compileStatus}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="text-zinc-500 font-medium">Preview Render:</span>
+              <span className={cn(
+                "font-bold uppercase text-[10px] px-1.5 py-0.5 rounded",
+                previewStatus === 'RENDERED' ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" :
+                previewStatus === 'RUNTIME_ERROR' ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" :
+                previewStatus === 'COMPILE_ERROR' ? "bg-red-500/10 text-red-400 border border-red-500/20" :
+                previewStatus === 'LOADING' ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
+                "bg-zinc-850 text-zinc-400"
+              )}>
+                {previewStatus}
+              </span>
+            </div>
+
+            {(error || localError) && (
+              <div className="mt-2 p-2 bg-rose-950/20 border border-rose-500/10 rounded-lg text-[10px] text-rose-400 font-mono break-all max-h-20 overflow-y-auto">
+                <strong>Error:</strong> {error || localError}
+              </div>
+            )}
+
+            {latestConsoleLog && (
+              <div className="mt-2 p-2 bg-zinc-950/60 border border-zinc-850 rounded-lg text-[9px] text-zinc-500 font-mono truncate">
+                <strong>Console:</strong> {latestConsoleLog}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Action modal popups */}
       {modalContent && (

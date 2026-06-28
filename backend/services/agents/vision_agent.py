@@ -27,7 +27,7 @@ class VisionAgent:
     def __init__(self):
         pass
 
-    async def analyze_screenshots(self, screenshot_paths: dict, metadata: dict = None) -> dict:
+    async def analyze_screenshots(self, screenshot_paths: dict, metadata: dict = None, is_single_mode: bool = False) -> dict:
         logger.info("Executing Vision Agent screenshot evaluation...")
         
         desktop_path = screenshot_paths.get("desktop")
@@ -49,26 +49,34 @@ class VisionAgent:
         try:
             client = openai.AsyncOpenAI(api_key=openai_key)
             
+            audit_prompt = (
+                "You are an elite web UI auditor and visual critic. "
+                "Analyze these three screenshots of a newly generated web component layout: "
+                "1. Desktop view (1280x800)\n"
+                "2. Tablet view (768x1024)\n"
+                "3. Mobile view (375x667)\n\n"
+                "Evaluate the following visual aspects:\n"
+                "- Layout Balance: alignment, symmetry, consistency\n"
+                "- Typography Quality: font hierarchy, text density, readability\n"
+                "- Color Quality: harmony, contrast, accessibility\n"
+                "- CTA Quality: prominence, button visibility\n"
+                "- Responsiveness: layout stability, element scaling\n"
+                "- Overall Visual Quality: whitespace usage, premium feel\n\n"
+                "Return a structured JSON payload containing overallScore (float 0.0 - 10.0), "
+                "scores dict (layout, spacing, typography, colors, responsiveness), and a list of specific visual issues (strings)."
+                "Your response must contain ONLY the valid JSON object, without any markdown formatting or extra text."
+            )
+            if is_single_mode:
+                audit_prompt += (
+                    "\nIMPORTANT: This is a premium layout run. Be extremely critical and rigorous. "
+                    "Assess minor visual details: spacing alignment down to a few pixels, text hierarchy clarity, color contrast "
+                    "accessibility, and mobile viewport responsiveness. Identify any minor flaws or gaps in visual quality."
+                )
+            
             content_list = [
                 {
                     "type": "text",
-                    "text": (
-                        "You are an elite web UI auditor and visual critic. "
-                        "Analyze these three screenshots of a newly generated web component layout: "
-                        "1. Desktop view (1280x800)\n"
-                        "2. Tablet view (768x1024)\n"
-                        "3. Mobile view (375x667)\n\n"
-                        "Evaluate the following visual aspects:\n"
-                        "- Layout Balance: alignment, symmetry, consistency\n"
-                        "- Typography Quality: font hierarchy, text density, readability\n"
-                        "- Color Quality: harmony, contrast, accessibility\n"
-                        "- CTA Quality: prominence, button visibility\n"
-                        "- Responsiveness: layout stability, element scaling\n"
-                        "- Overall Visual Quality: whitespace usage, premium feel\n\n"
-                        "Return a structured JSON payload containing overallScore (float 0.0 - 10.0), "
-                        "scores dict (layout, spacing, typography, colors, responsiveness), and a list of specific visual issues (strings)."
-                        "Your response must contain ONLY the valid JSON object, without any markdown formatting or extra text."
-                    )
+                    "text": audit_prompt
                 }
             ]
             
@@ -130,6 +138,6 @@ class VisionAgent:
             "issues": issues
         }
 
-async def run_vision_agent(screenshot_paths: dict, metadata: dict = None) -> dict:
+async def run_vision_agent(screenshot_paths: dict, metadata: dict = None, is_single_mode: bool = False) -> dict:
     agent = VisionAgent()
-    return await agent.analyze_screenshots(screenshot_paths, metadata)
+    return await agent.analyze_screenshots(screenshot_paths, metadata, is_single_mode=is_single_mode)

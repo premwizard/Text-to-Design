@@ -42,6 +42,9 @@ class EditAgent:
     async def plan_edit(self, edit_prompt: str, current_files: dict, design_metadata: dict = None) -> dict:
         logger.info(f"Classifying edit intent and planning patches for: '{edit_prompt}'")
         
+        from backend.services.debug.debug_logger import DebugLogger
+        db_logger = DebugLogger()
+        
         # Prepare list of existing files
         existing_filenames = list(current_files.keys())
         
@@ -50,6 +53,8 @@ class EditAgent:
             f"Existing Project Files: {existing_filenames}\n"
             f"Current Design Metadata: {json.dumps(design_metadata or {})}\n"
         )
+        
+        db_logger.log("EDIT_PLANNER", "START", f"User Message:\n{user_message}")
         
         try:
             response = await generate_ai(
@@ -61,6 +66,8 @@ class EditAgent:
             )
             output_text = response.choices[0].message.content.strip()
             
+            db_logger.log("EDIT_PLANNER", "RAW_OUTPUT", f"Raw response:\n{output_text}")
+            
             if output_text.startswith("```"):
                 output_text = output_text.strip("`").replace("json\n", "", 1).strip()
                 
@@ -70,17 +77,21 @@ class EditAgent:
                 json_str = output_text[start_idx:end_idx+1]
                 parsed = json.loads(json_str)
                 logger.info(f"Edit classification planned. Type: {parsed.get('editType')}. Affected files: {parsed.get('affectedComponents')}")
+                
+                db_logger.log("EDIT_PLANNER", "PARSED_PLAN", f"Parsed plan: {json.dumps(parsed, indent=2)}")
                 return parsed
             else:
                 raise ValueError("No JSON object found in classifier output")
                 
         except Exception as exc:
             logger.error(f"Classifier planning failed: {exc}. Reverting to all files fallback.")
-            return {
+            fallback = {
                 "editType": "ux_improvement",
                 "affectedComponents": existing_filenames,
                 "changes": [f"Apply changes requested: {edit_prompt}"]
             }
+            db_logger.log("EDIT_PLANNER", "FALLBACK", f"Error: {exc}\nUsing fallback: {json.dumps(fallback, indent=2)}")
+            return fallback
 
 async def run_edit_planning(edit_prompt: str, current_files: dict, design_metadata: dict = None) -> dict:
     agent = EditAgent()

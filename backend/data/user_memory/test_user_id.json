@@ -1,0 +1,31 @@
+{
+  "userId": "test_user_id",
+  "preferences": {
+    "theme": {
+      "dark": 1
+    },
+    "style": {
+      "dark-modern": 1
+    },
+    "borderRadius": {},
+    "spacing": {},
+    "favoriteColors": {
+      "violet": 1
+    },
+    "preferredLayouts": {
+      "navbar: top, sidebar: none": 1
+    },
+    "commonComponents": {}
+  },
+  "history": [
+    {
+      "prompt": "Simple brutalist landing page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "violet"
+    }
+  ],
+  "settings": {
+    "enabled": true
+  }
+}

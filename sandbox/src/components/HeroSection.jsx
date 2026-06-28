@@ -1,24 +1,40 @@
 import React from 'react';
+import { Plus } from 'lucide-react-native';
+import { Link } from 'react-router-dom';
 
-export default function HeroSection() {
+const HeroSection = () => {
+  const [isActive, setIsActive] = React.useState(false);
+
+  const handleMouseOver = () => {
+    setIsActive(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsActive(false);
+  };
+
   return (
-    <section className="py-20 text-center bg-neon-cyber-blue">
-      <h1 className="text-4xl font-bold text-neon-cyber-blue-accent">Premium Analytics Platform</h1>
-      <p className="text-zinc-400 mt-2">Scale your SaaS data efficiently</p>
-      <button className="bg-neon-cyber-blue-accent text-white px-6 py-2.5 rounded-full mt-6">Get Started</button>
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">What Our Clients Say</h2>
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <p className="text-gray-600">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex."</p>
-            <p className="text-gray-600 mt-2">- John Doe</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <p className="text-gray-600">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex."</p>
-            <p className="text-gray-600 mt-2">- Jane Doe</p>
-          </div>
-        </div>
+    <div className="h-screen flex flex-col justify-center items-center bg-zinc-900">
+      <div className="container mx-auto p-4 md:p-6 lg:p-8 flex flex-col items-center">
+        <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold text-zinc-100 font-dm-sans">
+          Vestia
+        </h1>
+        <p className="text-lg md:text-2xl lg:text-3xl text-zinc-400 font-dm-sans mt-4 md:mt-6 lg:mt-8">
+          Elevate Your Style
+        </p>
+        <button
+          className={`bg-zinc-600 hover:bg-zinc-700 text-zinc-100 font-dm-sans rounded-md py-2 md:py-3 lg:py-4 px-4 md:px-6 lg:px-8 mt-6 md:mt-8 lg:mt-10 ${
+            isActive ? 'shadow-md' : 'shadow-none'
+          }`}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+        >
+          <Plus size={20} className="mr-2" />
+          Explore Now
+        </button>
       </div>
-    </section>
+    </div>
   );
-}
+};
+
+export default HeroSection;

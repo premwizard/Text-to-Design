@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "timestamp": 1782665180,
+    "prompt": "Simple brutalist landing page",
+    "files": {
+      "App.jsx": ""
+    },
+    "metadata": {
+      "critic_score": 8.38,
+      "session_id": "session_12959"
+    }
+  }
+]

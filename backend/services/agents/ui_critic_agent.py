@@ -29,7 +29,7 @@ Output ONLY a JSON object with this exact schema (do not output any explanation 
 Output must start with { and end with }. No extra text.
 """
 
-async def run_ui_critic(files: dict[str, str], vision_feedback: dict = None) -> dict:
+async def run_ui_critic(files: dict[str, str], vision_feedback: dict = None, is_single_mode: bool = False) -> dict:
     logger.info("Running UI Critic Agent on generated files")
     
     # 1. STEP 1: Text-Based Code Review (Text Score)
@@ -40,10 +40,14 @@ async def run_ui_critic(files: dict[str, str], vision_feedback: dict = None) -> 
     text_score = 8.5
     text_issues = []
     
+    sys_prompt = SYSTEM_PROMPT
+    if is_single_mode:
+        sys_prompt += "\nIMPORTANT: This is a premium layout run. Critique with extreme rigor. Look for tiny inconsistencies in spacing, margins, paddings, responsive design wraps, typography hierarchy, and accessibility features."
+        
     try:
         response = await generate_ai(
             task_type="ui_critic",
-            system_prompt=SYSTEM_PROMPT,
+            system_prompt=sys_prompt,
             user_prompt=f"Review these generated files:\n{files_content}",
             temperature=0.3,
             stream=False

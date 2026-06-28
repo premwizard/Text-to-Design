@@ -25,7 +25,7 @@ Output ONLY a single JSON object containing all modified and unmodified files wi
 Output must start with { and end with }. No extra text.
 """
 
-async def run_optimization(files: dict[str, str], critic_feedback: dict) -> dict:
+async def run_optimization(files: dict[str, str], critic_feedback: dict, is_single_mode: bool = False) -> dict:
     logger.info("Running Optimization Agent to fix critic and vision issues")
     
     # Construct the query payload
@@ -34,10 +34,14 @@ async def run_optimization(files: dict[str, str], critic_feedback: dict) -> dict
     
     user_prompt = f"Original Files:\n{files_payload}\n\nCritic & Visual Issues:\n{critic_issues}\n\nOptimize all files and output the full updated JSON object."
     
+    sys_prompt = SYSTEM_PROMPT
+    if is_single_mode:
+        sys_prompt += "\nSince this is a high-priority premium run, you MUST perform an extremely thorough, aggressive optimization. Carefully inspect every layout parameter: ensure spacing is perfectly consistent, apply beautiful hover micro-interactions, add smooth transitions, enhance colors for visual prestige, and make sure responsive design breakpoints are handled flawlessly with zero truncation or text overlap."
+        
     try:
         response = await generate_ai(
             task_type="optimization",
-            system_prompt=SYSTEM_PROMPT,
+            system_prompt=sys_prompt,
             user_prompt=user_prompt,
             temperature=0.3,
             stream=False

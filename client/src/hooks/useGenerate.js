@@ -35,7 +35,7 @@ export function useGenerate() {
     final_update: null
   });
 
-  const generate = useCallback(async (prompt, currentCode = null, userId = null) => {
+  const generate = useCallback(async (prompt, currentCode = null, userId = null, generationMode = 'single_mode', variationCount = 1) => {
     setLoading(true);
     setError('');
     setCode('');
@@ -66,7 +66,13 @@ export function useGenerate() {
       const response = await fetch(`${API_BASE}/stream-jsx`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, current_code: currentCode, user_id: userId }),
+        body: JSON.stringify({ 
+          prompt, 
+          current_code: currentCode, 
+          user_id: userId,
+          generation_mode: generationMode,
+          variation_count: variationCount
+        }),
       });
 
       if (!response.ok) {

@@ -28,6 +28,7 @@ export default defineConfig(({ mode }) => {
         '/screenshots': { target: backendTarget, changeOrigin: true },
         '/edit-ui': { target: backendTarget, changeOrigin: true },
         '/edit-history': { target: backendTarget, changeOrigin: true },
+        '/log-debug-event': { target: backendTarget, changeOrigin: true },
       },
     },
   }

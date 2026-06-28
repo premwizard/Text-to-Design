@@ -46,6 +46,14 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Incoming Request: {request.method} {request.url.path}")
+    response = await call_next(request)
+    logger.info(f"Response Status: {response.status_code} for {request.url.path}")
+    return response
+
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("Starting backend and initializing RAG resources")
@@ -55,6 +63,14 @@ async def startup_event():
     except Exception as exc:
         logger.error("RAG initialization failed: %s", exc)
         logger.warning("Continuing startup without RAG retrieval")
+        
+    # Print all registered FastAPI routes at startup
+    logger.info("=" * 80)
+    logger.info("REGISTERED API ROUTES:")
+    for route in app.routes:
+        methods = getattr(route, 'methods', None)
+        logger.info(f"Route Path: {route.path} | Methods: {methods}")
+    logger.info("=" * 80)
 
 
 @app.get("/")

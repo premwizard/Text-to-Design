@@ -1,14 +1,29 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import TestimonialsSection from './components/TestimonialsSection';
+import FeaturedProducts from './components/FeaturedProducts';
+import Categories from './components/Categories';
+import Footer from './components/Footer';
 
-export default function App() {
+function App() {
   return (
-    <div className="min-h-screen bg-[#39bff3] text-zinc-150">
-      <Navbar />
-      <HeroSection />
-      <TestimonialsSection />
-    </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'DM Sans', sans-serif; }
+      `}</style>
+      <div className="flex min-h-screen flex-col bg-white text-zinc-900">
+        <Navbar />
+        <main className="flex-1">
+          <HeroSection />
+          <FeaturedProducts />
+          <Categories />
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }
+
+export default App;

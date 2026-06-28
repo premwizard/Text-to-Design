@@ -92,6 +92,9 @@ async def generate_component_stream(
     """
     logger.info(f"Generating component: {component_name}")
     
+    from backend.services.debug.debug_logger import DebugLogger
+    db_logger = DebugLogger()
+    
     styling = design_plan.get("styling", {})
     rules = rag_json.get("designRules", {})
     
@@ -114,6 +117,8 @@ async def generate_component_stream(
         previous_components=prev_summary or "None"
     )
     
+    db_logger.log("GENERATION", "STREAM_START", f"Component: {component_name}\nSystem Prompt Length: {len(sys_prompt)}")
+    
     stream = generate_ai(
         task_type="component_generator",
         system_prompt=sys_prompt,
@@ -122,12 +127,16 @@ async def generate_component_stream(
         stream=True
     )
     
+    full_code = ""
     async for chunk in stream:
         if isinstance(chunk, dict):
             continue
         content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
         if content:
+            full_code += content
             yield content
+            
+    db_logger.log("GENERATION", "STREAM_COMPLETE", f"Component: {component_name}\nCode length: {len(full_code)}")
 
 async def generate_app_stream(
     design_plan: dict,
@@ -137,6 +146,9 @@ async def generate_app_stream(
     Calls AI router to stream App.jsx incorporating the planned layout and styling.
     """
     logger.info("Generating App.jsx root container")
+    
+    from backend.services.debug.debug_logger import DebugLogger
+    db_logger = DebugLogger()
     
     layout = design_plan.get("layout", {})
     styling = design_plan.get("styling", {})
@@ -161,6 +173,8 @@ async def generate_app_stream(
         sections_import_list=sections_import_list
     )
     
+    db_logger.log("GENERATION", "STREAM_START", f"App.jsx\nSystem Prompt Length: {len(sys_prompt)}")
+    
     stream = generate_ai(
         task_type="app_generator",
         system_prompt=sys_prompt,
@@ -169,9 +183,13 @@ async def generate_app_stream(
         stream=True
     )
     
+    full_code = ""
     async for chunk in stream:
         if isinstance(chunk, dict):
             continue
         content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
         if content:
+            full_code += content
             yield content
+            
+    db_logger.log("GENERATION", "STREAM_COMPLETE", f"App.jsx\nCode length: {len(full_code)}")
