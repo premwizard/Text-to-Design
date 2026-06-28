@@ -1,26 +1,43 @@
 import React, { useState, useMemo } from 'react';
 import { FileCode, Copy, Check } from 'lucide-react';
 
-// Basic regex-based syntax highlighter for JS/JSX
+// Basic regex-based syntax highlighter for JS/JSX (Single-pass to avoid nested HTML corruption)
 function highlightCode(code) {
-  let html = code
+  if (!code) return '';
+  
+  // 1. Escape HTML characters first
+  let escaped = code
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
     
-  // Keywords
-  html = html.replace(/\b(import|export|from|default|function|const|let|var|return|if|else|for|while|try|catch|class|extends|async|await)\b/g, '<span class="text-pink-400 font-semibold">$1</span>');
-  // Strings
-  html = html.replace(/('[^']*'|"[^"]*"|`[^`]*`)/g, '<span class="text-amber-300">$1</span>');
-  // Numbers
-  html = html.replace(/\b(\d+)\b/g, '<span class="text-violet-300">$1</span>');
-  // Components/Tags
-  html = html.replace(/&lt;([A-Z][a-zA-Z0-9]*)/g, '&lt;<span class="text-emerald-400">$1</span>');
-  html = html.replace(/&lt;(\/?[a-z][a-zA-Z0-9]*)/g, '&lt;<span class="text-sky-400">$1</span>');
-  // Comments
-  html = html.replace(/(\/\/.*)/g, '<span class="text-zinc-500 italic">$1</span>');
-  
-  return html;
+  // 2. Tokenize in a single regex replacement pass to avoid corrupting already inserted tags
+  const tokenRegex = /(\/\/.*)|('[^']*'|"[^"]*"|`[^`]*`)|(\b(?:import|export|from|default|function|const|let|var|return|if|else|for|while|try|catch|class|extends|async|await)\b)|(&lt;[A-Z][a-zA-Z0-9]*)|(&lt;\/?[a-z][a-zA-Z0-9]*)|(\b\d+\b)/g;
+
+  return escaped.replace(tokenRegex, (match, comment, string, keyword, component, tag, number) => {
+    if (comment) {
+      return `<span class="text-zinc-500 italic">${comment}</span>`;
+    }
+    if (string) {
+      return `<span class="text-amber-300">${string}</span>`;
+    }
+    if (keyword) {
+      return `<span class="text-pink-400 font-semibold">${keyword}</span>`;
+    }
+    if (component) {
+      const name = component.substring(4); // strip '&lt;'
+      return `&lt;<span class="text-emerald-400">${name}</span>`;
+    }
+    if (tag) {
+      const prefix = tag.startsWith('&lt;/') ? '&lt;/' : '&lt;';
+      const name = tag.substring(prefix.length);
+      return `${prefix}<span class="text-sky-400">${name}</span>`;
+    }
+    if (number) {
+      return `<span class="text-violet-300">${number}</span>`;
+    }
+    return match;
+  });
 }
 
 export function FileViewer({ filename, content }) {

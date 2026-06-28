@@ -16,49 +16,63 @@ export function LivePreview({ code, loading = false, statusText = '', generation
   const prevLoading = useRef(loading);
   const prevCode = useRef(code);
 
+  const postDebugEvent = async (payload) => {
+    try {
+      const res = await fetch(`${API_BASE}/log-debug-event`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) return;
+    } catch (e) {}
+
+    // Fallback directly to localhost ports to bypass cached/unrestarted dev server proxies
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const fallbackPorts = ['8000', '8001'];
+      for (const port of fallbackPorts) {
+        try {
+          const res = await fetch(`http://localhost:${port}/log-debug-event`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) return;
+        } catch (e) {}
+      }
+    }
+  };
+
   useEffect(() => {
     const handleMsg = (e) => {
       if (e.data?.type === 'runtime_error') {
         setRuntimeError({ error: e.data.error, stack: e.data.stack });
         if (sessionId) {
-          fetch(`${API_BASE}/log-debug-event`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              session_id: sessionId,
-              stage: 'VITE_RUNTIME',
-              status: 'ERROR',
-              message: `React Runtime Error:\n${e.data.error}\nStack:\n${e.data.stack}`
-            })
-          }).catch(err => console.error("Failed to post runtime error:", err));
+          postDebugEvent({
+            session_id: sessionId,
+            stage: 'VITE_RUNTIME',
+            status: 'ERROR',
+            message: `React Runtime Error:\n${e.data.error}\nStack:\n${e.data.stack}`
+          });
         }
       } else if (e.data?.type === 'preview_console') {
         console.log(`[IFRAME CONSOLE] [${e.data.logType}] ${e.data.message}`);
         if (sessionId) {
-          fetch(`${API_BASE}/log-debug-event`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              session_id: sessionId,
-              stage: 'VITE',
-              status: e.data.logType.toUpperCase(),
-              message: e.data.message
-            })
-          }).catch(err => console.error("Failed to post console log:", err));
+          postDebugEvent({
+            session_id: sessionId,
+            stage: 'VITE',
+            status: e.data.logType.toUpperCase(),
+            message: e.data.message
+          });
         }
       } else if (e.data?.type === 'preview_rendered') {
         console.log(`[IFRAME DOM] Rendered HTML. length: ${e.data.html.length}`);
         if (sessionId) {
-          fetch(`${API_BASE}/log-debug-event`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              session_id: sessionId,
-              stage: 'PREVIEW',
-              status: 'SUCCESS',
-              message: `DOM successfully rendered. Content snippet:\n${e.data.html}`
-            })
-          }).catch(err => console.error("Failed to post preview rendered state:", err));
+          postDebugEvent({
+            session_id: sessionId,
+            stage: 'PREVIEW',
+            status: 'SUCCESS',
+            message: `DOM successfully rendered. Content snippet:\n${e.data.html}`
+          });
         }
       }
     };
@@ -140,16 +154,12 @@ export function LivePreview({ code, loading = false, statusText = '', generation
           onLoad={() => {
             console.log(`[IFRAME] loaded src: ${iframeSrc}`);
             if (sessionId) {
-              fetch(`${API_BASE}/log-debug-event`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  session_id: sessionId,
-                  stage: 'PREVIEW',
-                  status: 'LOADED',
-                  message: `iframe loaded source: ${iframeSrc}`
-                })
-              }).catch(err => console.error("Failed to post iframe load status:", err));
+              postDebugEvent({
+                session_id: sessionId,
+                stage: 'PREVIEW',
+                status: 'LOADED',
+                message: `iframe loaded source: ${iframeSrc}`
+              });
             }
           }}
         />

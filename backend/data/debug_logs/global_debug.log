@@ -304,3 +304,105 @@ Error: Command failed: C:\merged_partition_content\D drive\Projects\text to desi
 Node.js v22.13.0
 
 
+[22:58:37] [VALIDATION] [START]
+Validating file: Hello.jsx
+
+[22:58:37] [VALIDATION] [PASSED]
+File: Hello.jsx
+
+[22:58:37] [VALIDATION] [START]
+Validating file: Hello.jsx
+
+[22:58:37] [VALIDATION] [FAILED]
+File: Hello.jsx
+Reason: Malformed import/export line: export default function Hello() { return <div>Hello</div>; }
+
+[22:58:37] [VALIDATION] [START]
+Validating file: Hello.jsx
+
+[22:58:37] [VALIDATION] [FAILED]
+File: Hello.jsx
+Reason: Malformed import/export line: export default function Hello() { return <div>Hello</div>; }
+
+[22:58:37] [VALIDATION] [START]
+Validating file: Hello.jsx
+
+[22:58:37] [VALIDATION] [FAILED]
+File: Hello.jsx
+Reason: Syntax highlighting span leak matched pattern: text-pink-400\s+font-semibold">
+
+[22:58:37] [JSX_REPAIR] [START]
+Original length: 334 chars
+
+[22:58:37] [JSX_REPAIR] [TRUNCATION]
+Truncated code from line 11 to last clean line 10
+
+[22:58:37] [JSX_REPAIR] [SUCCESS]
+Repaired length: 333 chars (delta: -1)
+
+[22:58:37] [JSX_REPAIR] [START]
+Original length: 267 chars
+
+[22:58:37] [JSX_REPAIR] [SUCCESS]
+Repaired length: 266 chars (delta: -1)
+
+[22:58:37] [COMPILE] [START]
+Dry-run compilation checking. Target variation: None. Proposed files: ['App.jsx']
+
+[22:58:38] [COMPILE] [SUCCESS]
+Dry-run esbuild bundle compiled successfully.
+
+[22:58:38] [COMPILE] [START]
+Dry-run compilation checking. Target variation: None. Proposed files: ['App.jsx']
+
+[22:58:39] [COMPILE] [FAILED]
+Dry-run compilation error:
+▲ [WARNING] The character "}" is not valid inside a JSX element
+
+    src/App.jsx:8:0:
+      8 │ }
+        │ ^
+        ╵ {'}'}
+
+  Did you mean to escape it as "{'}'}" instead?
+
+X [ERROR] Unexpected end of file before a closing "p" tag
+
+    src/App.jsx:8:1:
+      8 │ }
+        │  ^
+        ╵  </p>
+
+  The opening "p" tag is here:
+
+    src/App.jsx:6:7:
+      6 │       <p>Missing closing div tags...
+        ╵        ^
+
+1 warning and 1 error
+node:child_process:921
+    throw err;
+    ^
+
+Error: Command failed: C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\@esbuild\win32-x64\esbuild.exe src/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:882:11)
+    at Object.execFileSync (node:child_process:918:15)
+    at Object.<anonymous> (C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\esbuild\bin\esbuild:222:28)
+    at Module._compile (node:internal/modules/cjs/loader:1562:14)
+    at Object..js (node:internal/modules/cjs/loader:1699:10)
+    at Module.load (node:internal/modules/cjs/loader:1313:32)
+    at Function._load (node:internal/modules/cjs/loader:1123:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 24064,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v22.13.0
+
+
