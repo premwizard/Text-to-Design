@@ -2,6 +2,14 @@ import React, { useRef, useState, useEffect } from 'react';
 import { normalizeApiBaseUrl, normalizeSandboxUrl } from '../lib/urlHelpers';
 
 export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId, sessionId }) {
+  let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
+  let SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
+
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    API_BASE = 'http://localhost:5173';
+    SANDBOX_URL = 'http://localhost:5173/preview';
+  }
+
   const iframeRef = useRef(null);
   const [runtimeError, setRuntimeError] = useState(null);
   const [reloadCounter, setReloadCounter] = useState(0);
@@ -13,7 +21,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
       if (e.data?.type === 'runtime_error') {
         setRuntimeError({ error: e.data.error, stack: e.data.stack });
         if (sessionId) {
-          fetch('/log-debug-event', {
+          fetch(`${API_BASE}/log-debug-event`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -27,7 +35,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
       } else if (e.data?.type === 'preview_console') {
         console.log(`[IFRAME CONSOLE] [${e.data.logType}] ${e.data.message}`);
         if (sessionId) {
-          fetch('/log-debug-event', {
+          fetch(`${API_BASE}/log-debug-event`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -41,7 +49,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
       } else if (e.data?.type === 'preview_rendered') {
         console.log(`[IFRAME DOM] Rendered HTML. length: ${e.data.html.length}`);
         if (sessionId) {
-          fetch('/log-debug-event', {
+          fetch(`${API_BASE}/log-debug-event`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -56,7 +64,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     };
     window.addEventListener('message', handleMsg);
     return () => window.removeEventListener('message', handleMsg);
-  }, [sessionId]);
+  }, [sessionId, API_BASE]);
 
   useEffect(() => {
     setRuntimeError(null);
@@ -69,14 +77,6 @@ export function LivePreview({ code, loading = false, statusText = '', generation
     prevLoading.current = loading;
     prevCode.current = code;
   }, [loading, code]);
-
-  let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
-  let SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
-
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    API_BASE = 'http://localhost:5173';
-    SANDBOX_URL = 'http://localhost:5173/preview';
-  }
 
   const iframeSrc = variationId 
     ? `${SANDBOX_URL}/${variationId}.html?rc=${reloadCounter}`
@@ -140,7 +140,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
           onLoad={() => {
             console.log(`[IFRAME] loaded src: ${iframeSrc}`);
             if (sessionId) {
-              fetch('/log-debug-event', {
+              fetch(`${API_BASE}/log-debug-event`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

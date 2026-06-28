@@ -2,25 +2,29 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 3
+      "light": 4
     },
     "style": {
-      "minimal": 3
+      "minimal": 4
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "zinc": 3
+      "zinc": 4
     },
     "preferredLayouts": {
-      "navbar: top, sidebar: none": 3
+      "navbar: top, sidebar: none": 3,
+      "navbar: top, sidebar: left": 1
     },
     "commonComponents": {
-      "herosection": 3,
+      "herosection": 4,
       "featuredproducts": 3,
       "categories": 3,
-      "testimonialcarousel": 1,
-      "footer": 3
+      "testimonialcarousel": 2,
+      "footer": 4,
+      "bentofeatures": 1,
+      "transactiontable": 1,
+      "pricingplan": 1
     }
   },
   "history": [
@@ -40,6 +44,12 @@
       "prompt": "Build a e-commerce store: Online store front",
       "style": "minimal",
       "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a analytics dashboard: Analytics and data view",
+      "style": "minimal",
+      "theme": "light",
       "primaryColor": "zinc"
     }
   ],

@@ -1,77 +1,49 @@
 import React, { useState } from 'react';
-import { Bell, Menu,Moon, Sun, X } from 'lucide-react-native';
-import { Link } from 'react-router-dom';
+import { FaBars, FaTimes } from 'lucide-react';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [theme, setTheme] = useState('dark');
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
+  const [open, setOpen] = useState(false);
 
   return (
-    <nav className="bg-zinc-600 py-4 md:py-6 lg:py-8">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-zinc-400 hover:text-zinc-200">
-          Vestia
-        </Link>
-        <button
-          className="md:hidden flex justify-center w-8 h-8 bg-zinc-600 hover:bg-zinc-700 rounded-md"
-          onClick={toggleMenu}
-        >
-          {isOpen ? <X size={24} color="#fff" /> : <Menu size={24} color="#fff" />}
-        </button>
-        <ul
-          className={`md:flex md:items-center md:justify-between md:space-x-6 lg:space-x-8 ${
-            isOpen ? 'flex flex-col space-y-4' : 'hidden'
-          } md:space-y-0`}
-        >
-          <li>
-            <Link
-              to="/"
-              className="text-zinc-400 hover:text-zinc-200 transition duration-300 ease-in-out"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/about"
-              className="text-zinc-400 hover:text-zinc-200 transition duration-300 ease-in-out"
-            >
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/contact"
-              className="text-zinc-400 hover:text-zinc-200 transition duration-300 ease-in-out"
-            >
-              Contact
-            </Link>
-          </li>
-          <li>
-            <button
-              className="flex justify-center w-8 h-8 bg-zinc-600 hover:bg-zinc-700 rounded-md"
-              onClick={toggleTheme}
-            >
-              {theme === 'dark' ? <Sun size={24} color="#fff" /> : <Moon size={24} color="#fff" />}
-            </button>
-          </li>
-          <li>
-            <button
-              className="flex justify-center w-8 h-8 bg-zinc-600 hover:bg-zinc-700 rounded-md"
-            >
-              <Bell size={24} color="#fff" />
-            </button>
-          </li>
-        </ul>
-      </div>
+    <nav className="flex justify-between items-center bg-zinc-600 py-4 px-6 text-zinc-400 shadow-md lg:px-12 lg:py-6">
+      <a href="#" className="flex items-center font-sans font-bold text-lg">
+        <img src="/dashsphere-logo" alt="DashSphere Logo" className="h-6 w-6 mr-2" />
+        DashSphere
+      </a>
+      <button
+        type="button"
+        className="lg:hidden flex items-center"
+        onClick={() => setOpen(!open)}
+      >
+        {open ? <FaTimes size={24} /> : <FaBars size={24} />}
+      </button>
+      <ul
+        className={`lg:flex lg:items-center lg:justify-between transition-all duration-300 ${open ? 'lg:translate-x-0' : 'lg:translate-x-[-100%]'}`}
+      >
+        <li className="lg:mr-6">
+          <a href="#" className="text-zinc-400 hover:bg-zinc-700 rounded-md px-4 py-2 transition-all duration-300">
+            Home
+          </a>
+        </li>
+        <li className="lg:mr-6">
+          <a href="#" className="text-zinc-400 hover:bg-zinc-700 rounded-md px-4 py-2 transition-all duration-300">
+            Features
+          </a>
+        </li>
+        <li className="lg:mr-6">
+          <a href="#" className="text-zinc-400 hover:bg-zinc-700 rounded-md px-4 py-2 transition-all duration-300">
+            Pricing
+          </a>
+        </li>
+        <li>
+          <button
+            type="button"
+            className="bg-zinc-700 hover:bg-zinc-600 text-white rounded-md px-4 py-2 transition-all duration-300"
+          >
+            Login
+          </button>
+        </li>
+      </ul>
     </nav>
   );
 };
