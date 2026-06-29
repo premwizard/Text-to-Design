@@ -30,7 +30,30 @@ Layout Context:
 - Do NOT wrap code in markdown blocks (no ```jsx or ```).
 - Do NOT output any explanations, TODOs, comments, or header text.
 - Start directly with the imports: e.g. import React from 'react';
-- Use lucide-react icons for visual decoration.
+- Generate ONLY standard React web components for Vite.
+- Allowed libraries:
+  * react
+  * lucide-react
+  * react-router-dom
+- Forbidden imports:
+  * react-native
+  * lucide-react-native
+  * next/*
+  * expo
+  * @react-navigation
+- Rules:
+  * Never generate React Native components
+  * Never generate Next.js imports
+  * Never use View, Text, Pressable, ScrollView
+  * Use div, section, button, span instead
+  * Use lucide-react for icons only
+- Examples:
+  * BAD: import {{ View, Text }} from 'react-native'
+    GOOD: <div><span>Hello</span></div>
+  * BAD: import Link from 'next/link'
+    GOOD: import {{ Link }} from 'react-router-dom'
+  * BAD: import {{ Home }} from 'lucide-react-native'
+    GOOD: import {{ Home }} from 'lucide-react'
 - Ensure the component is responsive (use mobile-first Tailwind prefixes: sm:, md:, lg:).
 - Design it with a premium visual feel, leveraging nice hover states and subtle gradients.
 - Make all key elements interactive (tabs, menu collapses, accordions, form inputs) using standard React useState.
@@ -58,6 +81,17 @@ Sections to import and render:
 
 ━━━ APP RULES ━━━
 - Output ONLY the complete root App.jsx code. Do NOT wrap in markdown fences or include explanations.
+- Generate ONLY standard React web components for Vite.
+- Allowed libraries:
+  * react
+  * lucide-react
+  * react-router-dom
+- Forbidden imports:
+  * react-native
+  * lucide-react-native
+  * next/*
+  * expo
+  * @react-navigation
 - Import all layout components correctly using relative paths:
   e.g., import Navbar from './components/Navbar';
         import HeroSection from './components/HeroSection';

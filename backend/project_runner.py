@@ -51,6 +51,28 @@ def cleanGeneratedCode(code: str) -> str:
     if match:
         code = code[match.start():]
     
+    # 5.5. Auto Repair Layer for framework contamination:
+    
+    # A. Map 'lucide-react-native' to 'lucide-react'
+    if 'lucide-react-native' in code:
+        code = re.sub(r'([\'"])lucide-react-native([\'"])', r'\1lucide-react\2', code)
+        print("[AUTO_REPAIR] Replaced lucide-react-native with lucide-react")
+        
+    # B. Map 'next/link' to 'react-router-dom'
+    if 'next/link' in code:
+        code = re.sub(r'import\s+Link\s+from\s+[\'"]next/link[\'"];?\s*\n?', "import { Link } from 'react-router-dom';\n", code)
+        code = re.sub(r'([\'"])next/link([\'"])', r'\1react-router-dom\2', code)
+        print("[AUTO_REPAIR] Replaced next/link with react-router-dom")
+        
+    # C. Map 'react-native' components: View -> div, Text -> span, and remove react-native import
+    if 'react-native' in code:
+        code = re.sub(r'import\s+(?:(?!import)[\s\S])*?from\s+[\'"]react-native[\'"];?\s*\n?', '', code)
+        code = re.sub(r'<\s*View\b', '<div', code)
+        code = re.sub(r'<\s*/\s*View\s*>', '</div>', code)
+        code = re.sub(r'<\s*Text\b', '<span', code)
+        code = re.sub(r'<\s*/\s*Text\s*>', '</span>', code)
+        print("[AUTO_REPAIR] Replaced react-native components View -> div, Text -> span and removed react-native import")
+            
     # 6. Final strip of extra whitespace
     code = code.strip()
     return code
@@ -65,7 +87,7 @@ def validateGeneratedCode(code: str, filename: str) -> bool:
     if not code or len(code.strip()) < 30:
         log_invalid_file(filename, "Empty or too short code", code or "")
         db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Code is empty or too short.")
-        return False
+        raise ValueError(f"Static validation failed: Code in {filename} is empty or too short.")
 
     # 1. Reject files containing forbidden patterns
     forbidden_tokens = ["<!--", "-->", "```", "###"]
@@ -73,12 +95,12 @@ def validateGeneratedCode(code: str, filename: str) -> bool:
         if token in code:
             log_invalid_file(filename, token, code)
             db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Contains forbidden token '{token}'")
-            return False
+            raise ValueError(f"Static validation failed: File {filename} contains forbidden token '{token}'")
             
     if re.search(r'\bfile:', code, re.IGNORECASE) or re.search(r'\bfilename:', code, re.IGNORECASE):
         log_invalid_file(filename, "Filename:", code)
         db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Contains file/filename header")
-        return False
+        raise ValueError(f"Static validation failed: File {filename} contains file/filename header")
 
     # 2. Check for syntax highlighting HTML spans (accidental UI tokens)
     highlighting_patterns = [
@@ -86,6 +108,7 @@ def validateGeneratedCode(code: str, filename: str) -> bool:
         r'text-pink-400\s+font-semibold">',
         r'text-amber-300">',
         r'text-violet-300">',
+        r'text-emerald-450">',
         r'text-emerald-400">',
         r'text-sky-400">',
         r'text-zinc-500\s+italic">'
@@ -94,14 +117,22 @@ def validateGeneratedCode(code: str, filename: str) -> bool:
         if re.search(pattern, code):
             log_invalid_file(filename, f"Highlighting token (pattern: {pattern})", code)
             db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Syntax highlighting span leak matched pattern: {pattern}")
-            return False
+            raise ValueError(f"Static validation failed: File {filename} contains syntax highlighting span leak.")
 
     # 3. Basic imports validation
     for line in code.splitlines():
         if ("import" in line or "export" in line) and ("<" in line or ">" in line or "class=" in line or "className=" in line):
             log_invalid_file(filename, f"Malformed import/export line: {line}", code)
             db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Malformed import/export line: {line}")
-            return False
+            raise ValueError(f"Static validation failed: File {filename} contains malformed import/export line: {line}")
+
+    # 4. Import Validator check
+    from backend.services.validators.import_validator import validate_imports
+    is_valid_imports, err_msg = validate_imports(code, filename)
+    if not is_valid_imports:
+        log_invalid_file(filename, "Forbidden imports", code)
+        db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: {err_msg}")
+        raise ValueError(err_msg)
 
     db_logger.log("VALIDATION", "PASSED", f"File: {filename}")
     return True
@@ -131,6 +162,52 @@ def log_corrupted_run(files: dict, error_msg: str):
         print(f"[Error-Logger] Logged corrupted files to: {log_file}")
     except Exception as e:
         print(f"[Error-Logger] Failed to log corrupted run: {e}")
+
+
+def log_framework_error(err_msg: str, cleaned_files: dict):
+    """
+    Parses compilation errors to detect framework/import contamination,
+    and logs them under backend/data/framework_errors/ if found.
+    """
+    try:
+        # Regex to match esbuild could not resolve error
+        # Example: X [ERROR] Could not resolve "lucide-react-native"
+        matches = list(re.finditer(r'Could not resolve "([^"]+)"', err_msg))
+        if not matches:
+            return
+            
+        for match in matches:
+            bad_import = match.group(1)
+            
+            # Try to find the file name in the vicinity
+            file_match = re.search(r'src/([\w\.\-/]+?\.jsx?):', err_msg)
+            file_name = file_match.group(1) if file_match else "Unknown"
+            
+            # Determine suggested fix
+            suggested_fix = "Install the package or replace it with a web-compatible library."
+            if "lucide-react-native" in bad_import:
+                suggested_fix = "Replace import from 'lucide-react-native' with 'lucide-react'."
+            elif "next/link" in bad_import:
+                suggested_fix = "Replace import from 'next/link' with 'react-router-dom'."
+            elif "react-native" in bad_import:
+                suggested_fix = "Remove 'react-native' import and replace React Native components (View, Text, etc.) with web equivalents (div, span, etc.)."
+            
+            error_dir = BACKEND_DIR / "data" / "framework_errors"
+            error_dir.mkdir(parents=True, exist_ok=True)
+            
+            error_file = error_dir / f"error_{int(time.time())}_{os.getpid()}.json"
+            error_data = {
+                "timestamp": int(time.time()),
+                "file": file_name,
+                "bad_import": bad_import,
+                "suggested_fix": suggested_fix,
+                "full_error": err_msg
+            }
+            error_file.write_text(json.dumps(error_data, indent=2), encoding="utf-8")
+            print(f"[Framework-Error] Logged framework contamination error to: {error_file}")
+    except Exception as e:
+        print(f"[Framework-Error] Failed to log framework error: {e}")
+
 
 async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tuple[bool, str]:
     """
@@ -246,6 +323,7 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
         success, err_msg = await dry_run_compile(cleaned_files, variation_id)
         if not success:
             log_corrupted_run(cleaned_files, err_msg)
+            log_framework_error(err_msg, cleaned_files)
             raise ValueError(f"JSX compilation failed: {err_msg}")
 
     # 2. Write new files to disk

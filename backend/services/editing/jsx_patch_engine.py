@@ -14,6 +14,8 @@ Rules:
 3. Preserve all Tailwind variables, fonts, and styling consistency.
 4. Return ONLY the complete, corrected React component code.
 5. Do NOT wrap your output in markdown code fences or explain the changes.
+6. Do NOT import or use 'lucide-react-native'. Use standard 'lucide-react' for web icons.
+7. Do NOT import or use 'react-router-dom', 'framer-motion', 'recharts', 'chart.js', or any external packages. For links/navigation, use standard <a> tags or state toggles, NOT <Link> or useNavigate.
 """
 
 NEW_COMP_SYSTEM_PROMPT = """You are a React + Tailwind CSS component builder.
@@ -21,10 +23,11 @@ Generate a new visual section component from scratch.
 
 Rules:
 1. Choose typography, layout classes, background themes, and accents that harmoniously match the design metadata.
-2. Use Lucide icons for visual interest.
-3. Make the component fully responsive.
-4. Return ONLY the clean React component code.
-5. Do NOT wrap your output in markdown code fences or explain the changes.
+2. Use standard 'lucide-react' icons for visual interest. Do NOT use 'lucide-react-native'.
+3. Do NOT import or use 'react-router-dom', 'framer-motion', 'recharts', 'chart.js', or any external packages. For links/navigation, use standard <a> tags or state toggles, NOT <Link> or useNavigate.
+4. Make the component fully responsive.
+5. Return ONLY the clean React component code.
+6. Do NOT wrap your output in markdown code fences or explain the changes.
 """
 
 class JSXPatchEngine:

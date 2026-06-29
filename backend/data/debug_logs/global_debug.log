@@ -916,3 +916,627 @@ Error: Command failed: C:\merged_partition_content\D drive\Projects\text to desi
 Node.js v22.13.0
 
 
+[10:44:46] [VALIDATION] [START]
+Validating file: components/Navbar.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: components/Navbar.jsx
+
+[10:44:46] [VALIDATION] [START]
+Validating file: components/Sidebar.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: components/Sidebar.jsx
+
+[10:44:46] [VALIDATION] [START]
+Validating file: components/DashboardHeader.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: components/DashboardHeader.jsx
+
+[10:44:46] [VALIDATION] [START]
+Validating file: components/FilterControls.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: components/FilterControls.jsx
+
+[10:44:46] [VALIDATION] [START]
+Validating file: components/SummaryCards.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: components/SummaryCards.jsx
+
+[10:44:46] [VALIDATION] [START]
+Validating file: components/ChartsSection.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: components/ChartsSection.jsx
+
+[10:44:46] [VALIDATION] [START]
+Validating file: components/DataTable.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: components/DataTable.jsx
+
+[10:44:46] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:44:46] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:44:46] [COMPILE] [START]
+Dry-run compilation checking. Target variation: None. Proposed files: ['components/Navbar.jsx', 'components/Sidebar.jsx', 'components/DashboardHeader.jsx', 'components/FilterControls.jsx', 'components/SummaryCards.jsx', 'components/ChartsSection.jsx', 'components/DataTable.jsx', 'App.jsx']
+
+[10:44:48] [COMPILE] [FAILED]
+Dry-run compilation error:
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/DataTable.jsx:2:45:
+      2 │ import { ChevronDown, ChevronUp, Plus } from 'lucide-react-native';
+        ╵                                              ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/ChartsSection.jsx:2:48:
+      2 │ import { ChartBar, ChartPie, Eye, EyeOff } from 'lucide-react-native';
+        ╵                                                 ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/SummaryCards.jsx:2:42:
+      2 │ import { Globe2, TrendingUp, Users } from 'lucide-react-native';
+        ╵                                           ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "react-router-dom"
+
+    src/components/ChartsSection.jsx:3:21:
+      3 │ import { Link } from 'react-router-dom';
+        ╵                      ~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "react-router-dom" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/FilterControls.jsx:2:47:
+      2 │ import { Filter, ChevronDown, ChevronUp } from 'lucide-react-native';
+        ╵                                                ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "react-router-dom"
+
+    src/components/DataTable.jsx:3:21:
+      3 │ import { Link } from 'react-router-dom';
+        ╵                      ~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "react-router-dom" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+6 of 7 errors shown (disable the message limit with --log-limit=0)
+node:child_process:921
+    throw err;
+    ^
+
+Error: Command failed: C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\@esbuild\win32-x64\esbuild.exe src/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:882:11)
+    at Object.execFileSync (node:child_process:918:15)
+    at Object.<anonymous> (C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\esbuild\bin\esbuild:222:28)
+    at Module._compile (node:internal/modules/cjs/loader:1562:14)
+    at Object..js (node:internal/modules/cjs/loader:1699:10)
+    at Module.load (node:internal/modules/cjs/loader:1313:32)
+    at Function._load (node:internal/modules/cjs/loader:1123:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 22136,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v22.13.0
+
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[10:50:45] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:50:45] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:53:26] [VALIDATION] [START]
+Validating file: components/Navbar.jsx
+
+[10:53:26] [VALIDATION] [PASSED]
+File: components/Navbar.jsx
+
+[10:53:26] [VALIDATION] [START]
+Validating file: components/HeroSection.jsx
+
+[10:53:26] [VALIDATION] [PASSED]
+File: components/HeroSection.jsx
+
+[10:53:26] [VALIDATION] [START]
+Validating file: components/CategoryShowcase.jsx
+
+[10:53:26] [VALIDATION] [PASSED]
+File: components/CategoryShowcase.jsx
+
+[10:53:26] [VALIDATION] [START]
+Validating file: components/ProductGrid.jsx
+
+[10:53:26] [VALIDATION] [PASSED]
+File: components/ProductGrid.jsx
+
+[10:53:26] [VALIDATION] [START]
+Validating file: components/Footer.jsx
+
+[10:53:26] [VALIDATION] [PASSED]
+File: components/Footer.jsx
+
+[10:53:26] [VALIDATION] [START]
+Validating file: App.jsx
+
+[10:53:26] [VALIDATION] [PASSED]
+File: App.jsx
+
+[10:53:26] [COMPILE] [START]
+Dry-run compilation checking. Target variation: None. Proposed files: ['components/Navbar.jsx', 'components/HeroSection.jsx', 'components/CategoryShowcase.jsx', 'components/ProductGrid.jsx', 'components/Footer.jsx', 'App.jsx']
+
+[10:53:28] [COMPILE] [FAILED]
+Dry-run compilation error:
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/Navbar.jsx:2:46:
+      2 │ import { Home, Menu, User, ChevronDown } from 'lucide-react-native';
+        ╵                                               ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/CategoryShowcase.jsx:2:31:
+      2 │ import { FiChevronRight } from 'lucide-react-native';
+        ╵                                ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/HeroSection.jsx:2:25:
+      2 │ import { Calendar } from 'lucide-react-native';
+        ╵                          ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/Footer.jsx:2:24:
+      2 │ import { ArrowUp } from 'lucide-react-native';
+        ╵                         ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "next/link"
+
+    src/components/Navbar.jsx:3:17:
+      3 │ import Link from 'next/link';
+        ╵                  ~~~~~~~~~~~
+
+  You can mark the path "next/link" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "react-native"
+
+    src/components/CategoryShowcase.jsx:3:27:
+      3 │ import { View, Text } from 'react-native';
+        ╵                            ~~~~~~~~~~~~~~
+
+  You can mark the path "react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+6 of 9 errors shown (disable the message limit with --log-limit=0)
+node:child_process:921
+    throw err;
+    ^
+
+Error: Command failed: C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\@esbuild\win32-x64\esbuild.exe src/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:882:11)
+    at Object.execFileSync (node:child_process:918:15)
+    at Object.<anonymous> (C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\esbuild\bin\esbuild:222:28)
+    at Module._compile (node:internal/modules/cjs/loader:1562:14)
+    at Object..js (node:internal/modules/cjs/loader:1699:10)
+    at Module.load (node:internal/modules/cjs/loader:1313:32)
+    at Function._load (node:internal/modules/cjs/loader:1123:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 22364,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v22.13.0
+
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:05:32] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:05:32] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+
+[11:14:00] [STREAM_PARSER] [START]
+Streaming edit code changes for request...
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:14:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:14:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [PASSED]
+File: App.jsx
+
+[11:46:47] [VALIDATION] [START]
+Validating file: App.jsx
+
+[11:46:47] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+

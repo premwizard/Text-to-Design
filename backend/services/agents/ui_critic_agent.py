@@ -14,6 +14,7 @@ Assess the files on the following dimensions:
 4. Responsiveness (correct breakpoints, flex/grid wraps).
 5. Accessibility (labels, button accessibility details, semantic tags).
 6. Visual hierarchy (clear focal point, CTA positioning).
+7. Framework compatibility (ensure only allowed packages are used: react, lucide-react, react-router-dom; strictly reject react-native, expo, next.js imports).
 
 Output ONLY a JSON object with this exact schema (do not output any explanation or markdown fences):
 {
@@ -71,6 +72,22 @@ async def run_ui_critic(files: dict[str, str], vision_feedback: dict = None, is_
         logger.error(f"Text UI Critic failed: {exc}. Using fallback values.")
         text_score = 8.5
         text_issues = ["Ensure padding offsets are consistent", "Check small font weights for accessibility"]
+
+    # 1.5. Programmatic framework contamination scan & score penalty
+    try:
+        from backend.services.validators.import_validator import validate_imports
+        contamination_issues = []
+        for path, code in files.items():
+            is_valid_imports, err_msg = validate_imports(code, path)
+            if not is_valid_imports:
+                contamination_issues.append(f"Framework contamination: {err_msg}")
+        
+        if contamination_issues:
+            logger.warning(f"Framework contamination detected in UI Critic! Penalizing score: {contamination_issues}")
+            text_score = max(1.0, text_score - (2.0 * len(contamination_issues)))
+            text_issues = list(set(text_issues + contamination_issues))
+    except Exception as check_exc:
+        logger.error(f"Failed programmatic import scan: {check_exc}")
 
     # 2. STEP 2: Vision-Based Review Integration
     if vision_feedback and isinstance(vision_feedback, dict):

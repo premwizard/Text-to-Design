@@ -10,28 +10,35 @@ def _get_client():
         base_url="https://openrouter.ai/api/v1"
     )
 
-async def generate_text(model: str, messages: list, temperature: float = 0.7):
+async def generate_text(model: str, messages: list, temperature: float = 0.7, max_tokens: int = None):
     client = _get_client()
     if not client:
         raise Exception("OPENROUTER_API_KEY is missing")
-    return await client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=temperature,
-        stream=False,
-        timeout=45.0
-    )
+    kwargs = {
+        "model": model,
+        "messages": messages,
+        "temperature": temperature,
+        "stream": False,
+        "timeout": 45.0
+    }
+    if max_tokens is not None:
+        kwargs["max_tokens"] = max_tokens
+    return await client.chat.completions.create(**kwargs)
 
-async def generate_stream(model: str, messages: list, temperature: float = 0.7):
+async def generate_stream(model: str, messages: list, temperature: float = 0.7, max_tokens: int = None):
     client = _get_client()
     if not client:
         raise Exception("OPENROUTER_API_KEY is missing")
-    response = await client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=temperature,
-        stream=True,
-        timeout=30.0
-    )
+    kwargs = {
+        "model": model,
+        "messages": messages,
+        "temperature": temperature,
+        "stream": True,
+        "timeout": 30.0
+    }
+    if max_tokens is not None:
+        kwargs["max_tokens"] = max_tokens
+    response = await client.chat.completions.create(**kwargs)
     async for chunk in response:
         yield chunk
+

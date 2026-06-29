@@ -309,6 +309,19 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None, genera
             async for chunk in generate_component_stream(comp_name, design_plan, rag_json, generated_files):
                 comp_code += chunk
                 
+            if not comp_code or len(comp_code.strip()) < 50:
+                logger.warning(f"Component {comp_name} code is empty or missing. Generating automated fallback.")
+                comp_code = f"""import React from 'react';
+
+export default function {comp_name}() {{
+  return (
+    <div className="py-20 text-center bg-zinc-900 border border-zinc-800 rounded-xl my-4 px-4">
+      <h3 className="text-xl font-bold text-zinc-200">{comp_name}</h3>
+      <p className="text-sm text-zinc-400 mt-2">Placeholder component generated automatically due to provider rate limit/network timeout.</p>
+    </div>
+  );
+}}
+"""
             generated_files[filename] = comp_code
             
         # Stream App.jsx root behind the scenes
@@ -318,6 +331,25 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None, genera
         async for chunk in generate_app_stream(design_plan, planned_components):
             app_code += chunk
             
+        if not app_code or len(app_code.strip()) < 50:
+            logger.warning("Root App.jsx code is empty or missing. Generating automated fallback App.jsx.")
+            imports = ""
+            renders = ""
+            for comp in planned_components:
+                imports += f"import {comp} from './components/{comp}';\n"
+                renders += f"      <{comp} />\n"
+                
+            app_code = f"""import React from 'react';
+{imports}
+
+export default function App() {{
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white flex flex-col p-4 sm:p-6 lg:p-8">
+{renders}
+    </div>
+  );
+}}
+"""
         generated_files["App.jsx"] = app_code
         
         yield {"type": "agent_complete", "agent": "generating", "output": {"file_count": len(generated_files)}}

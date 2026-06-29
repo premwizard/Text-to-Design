@@ -12,6 +12,8 @@ Your changes must:
 1. Fix every visual issue listed by the critic (increase padding/margins for spacing issues, adjust text colors for contrast/accessibility issues, fix responsive breakpoints for element overflows, reposition sections for visual hierarchy).
 2. Enhance UI premium details (add hover scale effects, glassmorphic shadows, smooth transitions: 'transition-all duration-300').
 3. Keep the file names and structure identical.
+4. Do NOT import or use 'lucide-react-native'. Use standard 'lucide-react' for web icons.
+5. Do NOT import or use 'react-router-dom', 'framer-motion', 'recharts', 'chart.js', or any external packages. For links/navigation, use standard <a> tags or state toggles, NOT <Link> or useNavigate.
 
 Output ONLY a single JSON object containing all modified and unmodified files with this exact schema (no markdown formatting, no descriptions):
 {
@@ -44,7 +46,8 @@ async def run_optimization(files: dict[str, str], critic_feedback: dict, is_sing
             system_prompt=sys_prompt,
             user_prompt=user_prompt,
             temperature=0.3,
-            stream=False
+            stream=False,
+            max_tokens=8192
         )
         output_text = response.choices[0].message.content.strip()
         
@@ -55,7 +58,22 @@ async def run_optimization(files: dict[str, str], critic_feedback: dict, is_sing
         end_idx = output_text.rfind('}')
         if start_idx != -1 and end_idx != -1:
             json_str = output_text[start_idx:end_idx+1]
-            parsed = json.loads(json_str)
+            try:
+                parsed = json.loads(json_str)
+            except json.JSONDecodeError as parse_err:
+                logger.warning(f"Optimization JSON parsing failed: {parse_err}. Attempting auto-repairs...")
+                from backend.routes.generate_ui import _repair_json_escapes, _repair_truncated_json
+                try:
+                    repaired = _repair_json_escapes(json_str)
+                    parsed = json.loads(repaired)
+                except json.JSONDecodeError:
+                    try:
+                        truncation_repaired = _repair_truncated_json(repaired)
+                        parsed = json.loads(truncation_repaired)
+                    except json.JSONDecodeError as final_err:
+                        logger.error(f"JSON repair failed to restore a valid object: {final_err}")
+                        raise final_err
+
             if "files" in parsed:
                 result = {}
                 for k, v in parsed["files"].items():
@@ -78,3 +96,4 @@ async def run_optimization(files: dict[str, str], critic_feedback: dict, is_sing
     except Exception as exc:
         logger.error(f"Optimization Agent failed: {exc}. Returning original files unchanged.")
         return files
+

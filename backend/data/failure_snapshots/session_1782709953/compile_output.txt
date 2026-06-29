@@ -1,0 +1,71 @@
+JSX compilation failed: X [ERROR] Could not resolve "./components/DetailedInsights"
+
+    src/App.jsx:9:29:
+      9 │ import DetailedInsights from './components/DetailedInsights';
+        ╵                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/SummaryCards.jsx:2:42:
+      2 │ import { Globe2, TrendingUp, Users } from 'lucide-react-native';
+        ╵                                           ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/FilterControls.jsx:2:47:
+      2 │ import { Filter, ChevronDown, ChevronUp } from 'lucide-react-native';
+        ╵                                                ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "recharts"
+
+    src/components/FilterControls.jsx:11:7:
+      11 │ } from 'recharts';
+         ╵        ~~~~~~~~~~
+
+  You can mark the path "recharts" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "lucide-react-native"
+
+    src/components/DataTable.jsx:2:45:
+      2 │ import { ChevronDown, ChevronUp, Plus } from 'lucide-react-native';
+        ╵                                              ~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "lucide-react-native" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+X [ERROR] Could not resolve "react-router-dom"
+
+    src/components/SummaryCards.jsx:3:21:
+      3 │ import { Link } from 'react-router-dom';
+        ╵                      ~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "react-router-dom" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+6 of 13 errors shown (disable the message limit with --log-limit=0)
+node:child_process:921
+    throw err;
+    ^
+
+Error: Command failed: C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\@esbuild\win32-x64\esbuild.exe src/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:882:11)
+    at Object.execFileSync (node:child_process:918:15)
+    at Object.<anonymous> (C:\merged_partition_content\D drive\Projects\text to design project\test-to-design3\sandbox\node_modules\esbuild\bin\esbuild:222:28)
+    at Module._compile (node:internal/modules/cjs/loader:1562:14)
+    at Object..js (node:internal/modules/cjs/loader:1699:10)
+    at Module.load (node:internal/modules/cjs/loader:1313:32)
+    at Function._load (node:internal/modules/cjs/loader:1123:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 22736,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v22.13.0
