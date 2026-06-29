@@ -1,0 +1,21 @@
+{
+  "valid": false,
+  "score": 70,
+  "errors": [
+    {
+      "file": "PricingPlan.jsx",
+      "type": "INVALID_IMPORT",
+      "message": "'framer-motion' is not allowed"
+    },
+    {
+      "file": "Hero.jsx",
+      "type": "UNCLOSED_BRACKET",
+      "message": "Unclosed bracket '{' starting on line 3"
+    },
+    {
+      "file": "Hero.jsx",
+      "type": "UNCLOSED_TAG",
+      "message": "Tag <div> is not closed (started on line 3)"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "filename": "components/PricingPlan.jsx",
+    "content": "import React from 'react';\n// removed framer-motion\n\nexport default function PricingPlan() {\n    return <div>Pricing Plan</div>;\n}"
+  },
+  {
+    "filename": "components/HeroSection.jsx",
+    "content": "import React from 'react';\nimport { Camera } from 'lucide-react';\n\nexport default function HeroSection() {\n    return <div><Camera /> Hero Section</div>; // fixed syntax\n}"
+  },
+  {
+    "filename": "components/ValidComponent.jsx",
+    "content": "import React from 'react';\n\nexport default function ValidComponent() {\n    return <div>Valid Component</div>;\n}"
+  }
+]

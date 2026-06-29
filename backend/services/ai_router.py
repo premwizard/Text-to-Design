@@ -1,6 +1,7 @@
 import logging
 import anyio
 import time
+import os
 from backend.services.prompt_optimizer import optimize_prompt
 from backend.config.ai_models import PROVIDERS_CONFIG, get_provider_fallback_order
 
@@ -65,11 +66,25 @@ def _build_messages(system_prompt: str, user_prompt: str):
         messages.append({"role": "user", "content": user_prompt})
     return messages
 
+def get_available_provider_order():
+    provider_order = get_provider_fallback_order()
+    available = []
+    for p in provider_order:
+        p_lower = p.lower()
+        if p_lower == "openai" and not os.getenv("OPENAI_API_KEY"):
+            logging.warning("[Router] Skipping OpenAI - OPENAI_API_KEY missing.")
+            continue
+        if p_lower == "openrouter" and not os.getenv("OPENROUTER_API_KEY"):
+            logging.warning("[Router] Skipping OpenRouter - OPENROUTER_API_KEY missing.")
+            continue
+        available.append(p)
+    return available
+
 async def _stream_ai(task_type: str, system_prompt: str, user_prompt: str, temperature: float = 0.7, max_tokens: int = None):
     sys_p, usr_p = optimize_prompt(system_prompt, user_prompt)
     messages = _build_messages(sys_p, usr_p)
     
-    provider_order = get_provider_fallback_order()
+    provider_order = get_available_provider_order()
     
     # We will track if we ever switched models or providers to yield a fallback message
     first_attempt = True
@@ -94,6 +109,7 @@ async def _stream_ai(task_type: str, system_prompt: str, user_prompt: str, tempe
             
             # Retry loop for rate limits
             max_retries = 3
+            retry_delays = [2, 5, 10]
             for attempt in range(max_retries):
                 try:
                     response_stream = provider.generate_stream(
@@ -111,8 +127,8 @@ async def _stream_ai(task_type: str, system_prompt: str, user_prompt: str, tempe
                     return
                     
                 except Exception as e:
-                    if is_rate_limited(e) and attempt < max_retries - 1:
-                        sleep_time = (attempt + 1) * 2
+                    if is_rate_limited(e) and attempt < max_retries:
+                        sleep_time = retry_delays[attempt]
                         logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time}s... (Attempt {attempt+1}/{max_retries})")
                         await anyio.sleep(sleep_time)
                         continue
@@ -140,7 +156,7 @@ async def _execute_ai(task_type: str, system_prompt: str, user_prompt: str, temp
     sys_p, usr_p = optimize_prompt(system_prompt, user_prompt)
     messages = _build_messages(sys_p, usr_p)
     
-    provider_order = get_provider_fallback_order()
+    provider_order = get_available_provider_order()
     
     for provider_name in provider_order:
         provider = PROVIDERS.get(provider_name.lower())
@@ -157,6 +173,7 @@ async def _execute_ai(task_type: str, system_prompt: str, user_prompt: str, temp
             logging.info(f"[Router] Trying {provider_name.capitalize()} model: {model_name}")
             
             max_retries = 3
+            retry_delays = [2, 5, 10]
             for attempt in range(max_retries):
                 try:
                     response = await provider.generate_text(
@@ -169,8 +186,8 @@ async def _execute_ai(task_type: str, system_prompt: str, user_prompt: str, temp
                     return response
                     
                 except Exception as e:
-                    if is_rate_limited(e) and attempt < max_retries - 1:
-                        sleep_time = (attempt + 1) * 2
+                    if is_rate_limited(e) and attempt < max_retries:
+                        sleep_time = retry_delays[attempt]
                         logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time}s... (Attempt {attempt+1}/{max_retries})")
                         await anyio.sleep(sleep_time)
                         continue

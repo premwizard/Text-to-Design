@@ -6,11 +6,12 @@ from backend.services.agents.memory_agent import run_memory_retrieval, update_us
 from backend.services.agents.prompt_understanding_agent import run_prompt_understanding
 from backend.services.agents.rag_retrieval_agent import run_rag_retrieval
 from backend.services.agents.design_planning_agent import run_design_planning
-from backend.services.agents.component_generation_agent import (
-    generate_component_stream,
-    generate_app_stream,
-    escape_json_chunk
+from backend.services.agents.full_app_generation import (
+    run_full_app_generation,
+    run_auto_fix_generation
 )
+from backend.services.agents.sanitizer_agent import run_code_sanitization
+from backend.services.agents.code_validator_agent import run_code_validation, escape_json_chunk
 from backend.services.agents.vision_agent import run_vision_agent
 from backend.services.vision.screenshot_service import capture_sandbox_screenshots
 from backend.services.agents.ui_critic_agent import run_ui_critic
@@ -267,156 +268,75 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None, genera
         # ==========================================
         # STEP 5: COMPONENT GENERATION (INTERNAL ONLY - NO CHUNKS YIELDED)
         # ==========================================
-        logger.info("Executing Agent 5: Component Generation")
-        yield {"type": "timeline", "step": "Generating Components"}
-        yield {"type": "agent_start", "agent": "generating", "message": "Initializing components structure from layout plan..."}
+        # STEP 5: FULL APP GENERATION
+        # ==========================================
+        logger.info("Executing Agent 5: Full App Generation")
+        yield {"type": "timeline", "step": "Generating Application"}
+        yield {"type": "agent_start", "agent": "generating", "message": "Generating all components and App.jsx in a single pass..."}
         
-        layout = design_plan.get("layout", {})
-        main_sections = layout.get("mainSections", [])
-        
-        planned_components = []
-        if layout.get("navbar") == "top":
-            planned_components.append("Navbar")
-        if layout.get("sidebar") in ["left", "right"]:
-            planned_components.append("Sidebar")
+        try:
+            generated_files = await run_full_app_generation(design_plan, rag_json)
+        except Exception as e:
+            logger.error(f"Full app generation failed: {e}")
+            yield {"type": "agent_complete", "agent": "generating", "output": {"status": "failed", "error": str(e)}}
+            return
             
-        for sec in main_sections:
-            if sec not in planned_components:
-                planned_components.append(sec)
-                
-        logger.info(f"Planned component files: {planned_components}")
+        # Sanitize all files
+        generated_files = await run_code_sanitization(generated_files)
         
-        generated_files = {}
+        # Validate all files
+        val_result = await run_code_validation(generated_files)
         
-        # Stream components sequentially behind the scenes
-        for i, comp_name in enumerate(planned_components):
-            filename = f"components/{comp_name}.jsx"
-            yield {"type": "agent_timeline", "step": "Generating Components", "message": f"Creating {filename}..."}
+        if not val_result.get("valid", False):
+            # Auto-Fix broken files
+            broken_files = {}
+            for err in val_result.get("errors", []):
+                fname = err.get("file")
+                if fname and fname in generated_files:
+                    broken_files[fname] = generated_files[fname]
+                    
+            if broken_files:
+                logger.info(f"Triggering auto-fix for {len(broken_files)} broken files.")
+                yield {"type": "agent_timeline", "step": "Validation & Auto-Fix", "message": "Repairing syntax errors..."}
+                try:
+                    repaired_files = await run_auto_fix_generation(broken_files, val_result.get("errors", []))
+                    # Merge repaired files
+                    for fname, r_code in repaired_files.items():
+                        generated_files[fname] = r_code
+                        
+                    # Re-sanitize and validate repaired files
+                    generated_files = await run_code_sanitization(generated_files)
+                    val_result = await run_code_validation(generated_files)
+                except Exception as e:
+                    logger.error(f"Auto-fix failed: {e}")
+                    
+        if not val_result.get("valid", False):
+            logger.warning("Application still has validation errors after auto-fix. Proceeding anyway.")
             
-            comp_code = ""
-            async for chunk in generate_component_stream(comp_name, design_plan, rag_json, generated_files):
-                comp_code += chunk
-                
-            if not comp_code or len(comp_code.strip()) < 50:
-                logger.warning(f"Component {comp_name} code is empty or missing. Generating automated fallback.")
-                comp_code = f"""import React from 'react';
-
-export default function {comp_name}() {{
-  return (
-    <div className="py-20 text-center bg-zinc-900 border border-zinc-800 rounded-xl my-4 px-4">
-      <h3 className="text-xl font-bold text-zinc-200">{comp_name}</h3>
-      <p className="text-sm text-zinc-400 mt-2">Placeholder component generated automatically due to provider rate limit/network timeout.</p>
-    </div>
-  );
-}}
-"""
-            generated_files[filename] = comp_code
-            
-        # Stream App.jsx root behind the scenes
-        yield {"type": "agent_timeline", "step": "Generating Components", "message": "Creating root App.jsx layout..."}
-        
-        app_code = ""
-        async for chunk in generate_app_stream(design_plan, planned_components):
-            app_code += chunk
-            
-        if not app_code or len(app_code.strip()) < 50:
-            logger.warning("Root App.jsx code is empty or missing. Generating automated fallback App.jsx.")
-            imports = ""
-            renders = ""
-            for comp in planned_components:
-                imports += f"import {comp} from './components/{comp}';\n"
-                renders += f"      <{comp} />\n"
-                
-            app_code = f"""import React from 'react';
-{imports}
-
-export default function App() {{
-  return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col p-4 sm:p-6 lg:p-8">
-{renders}
-    </div>
-  );
-}}
-"""
-        generated_files["App.jsx"] = app_code
-        
         yield {"type": "agent_complete", "agent": "generating", "output": {"file_count": len(generated_files)}}
         await asyncio.sleep(0.3)
 
         # ==========================================
-        # STEP 6: SANDBOX RENDER & SCREENSHOT CAPTURE
+        # STEP 6: SANDBOX RENDER
         # ==========================================
-        logger.info("Executing Sandbox Render & Screenshot Capture")
-        yield {"type": "timeline", "step": "Screenshot Capture"}
-        yield {"type": "agent_start", "agent": "screenshot", "message": "Compiling components and capturing desktop/mobile layout snapshots..."}
+        logger.info("Executing Sandbox Render")
+        yield {"type": "timeline", "step": "Sandbox Render"}
+        yield {"type": "agent_start", "agent": "screenshot", "message": "Compiling components to sandbox..."}
         
         from backend.project_runner import write_files
         try:
-            # Render sandbox files to disk
             await write_files(generated_files)
-            # Capture screenshots using Playwright service
-            screenshot_paths = await capture_sandbox_screenshots()
-            logger.info(f"Screenshots saved to: {screenshot_paths}")
-        except Exception as screen_err:
-            logger.error(f"Screenshot capture failed: {screen_err}. Continuing with fallback placeholders.")
-            screenshot_paths = {}
-            
-        yield {"type": "agent_complete", "agent": "screenshot", "output": screenshot_paths}
-        await asyncio.sleep(0.3)
-
-        # ==========================================
-        # STEP 7: VISION AGENT AUDIT
-        # ==========================================
-        logger.info("Executing Agent 7: Vision Agent Audit")
-        yield {"type": "timeline", "step": "Vision Analysis"}
-        yield {"type": "agent_start", "agent": "vision", "message": "Evaluating visual alignment, spacing density, and color accessibility..."}
-        
-        try:
-            vision_feedback = await run_vision_agent(screenshot_paths, plan_record, is_single_mode=True)
-        except Exception as vision_err:
-            logger.error(f"Vision Agent audit failed: {vision_err}. Proceeding with default values.")
-            vision_feedback = {}
-            
-        yield {"type": "agent_complete", "agent": "vision", "output": vision_feedback}
-        await asyncio.sleep(0.3)
-
-        # ==========================================
-        # STEP 8: UI CRITIC (HYBRID CODE + VISION REVIEW)
-        # ==========================================
-        logger.info("Executing Agent 8: Hybrid UI Critic")
-        yield {"type": "timeline", "step": "Reviewing UI"}
-        yield {"type": "agent_start", "agent": "critic", "message": "Analyzing visual hierarchy, spacing, and styling contrast..."}
-        
-        critic_feedback = await run_ui_critic(generated_files, vision_feedback, is_single_mode=True)
-        
-        yield {"type": "agent_complete", "agent": "critic", "output": critic_feedback}
-        await asyncio.sleep(0.3)
-
-        # ==========================================
-        # STEP 9: OPTIMIZATION (VISUAL & CODE CORRECTIONS)
-        # ==========================================
-        logger.info("Executing Agent 9: Visual & Code Optimization")
-        yield {"type": "timeline", "step": "Optimizing Design"}
-        yield {"type": "agent_start", "agent": "optimizing", "message": "Applying visual critic revisions and interactive styling improvements..."}
-        
-        optimized_files = await run_optimization(generated_files, critic_feedback, is_single_mode=True)
-        
-        # Save optimized files to disk for final preview
-        try:
-            await write_files(optimized_files)
-            logger.info("Successfully compiled and saved optimized files to sandbox")
+            logger.info("Successfully compiled and saved files to sandbox")
         except Exception as file_err:
-            logger.error(f"Failed to compile optimized files: {file_err}. Falling back to original generated files.")
-            optimized_files = generated_files
-            try:
-                await write_files(generated_files)
-            except Exception as rollback_err:
-                logger.error(f"Failed to rollback files in sandbox: {rollback_err}")
+            logger.error(f"Failed to compile files: {file_err}")
             
-        final_code_json = json.dumps({"files": optimized_files}, indent=2)
-        
-        yield {"type": "agent_complete", "agent": "optimizing", "output": {"score_after": min(critic_feedback.get("score", 7.0) + 1.2, 10.0)}}
+        yield {"type": "agent_complete", "agent": "screenshot", "output": {}}
         await asyncio.sleep(0.3)
+
+        # VISION, CRITIC, and OPTIMIZATION are bypassed in this new architecture flow
+        # to ensure speed and drastically reduce LLM calls.
+        
+        final_code_json = json.dumps({"files": generated_files}, indent=2)
         
         # Save preference signals to User Memory and Successful Generations logs
         try:

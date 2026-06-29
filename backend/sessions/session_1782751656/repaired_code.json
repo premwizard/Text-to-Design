@@ -1,0 +1,10 @@
+[
+  {
+    "filename": "PricingPlan.jsx",
+    "content": "import React from 'react';\nexport default function PricingPlan() { return <div>Pricing</div>; }"
+  },
+  {
+    "filename": "Hero.jsx",
+    "content": "import React from 'react';\nimport { Camera } from 'lucide-react';\nexport default function Hero() { return <div>Hero</div>; }"
+  }
+]

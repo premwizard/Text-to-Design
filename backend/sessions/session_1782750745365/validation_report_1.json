@@ -1,0 +1,15 @@
+{
+  "valid": false,
+  "errors": [
+    {
+      "file": "components/PricingPlan.jsx",
+      "type": "INVALID_IMPORT",
+      "message": "framer-motion is not allowed"
+    },
+    {
+      "file": "components/HeroSection.jsx",
+      "type": "SYNTAX_ERROR",
+      "message": "Unterminated JSX contents. (5:26)"
+    }
+  ]
+}

@@ -24,6 +24,7 @@ mimetypes.add_type("application/javascript", ".js")
 
 from backend.routes.generate_ui import router as generate_router
 from backend.routes.fix_jsx import router as fix_jsx_router
+from backend.routes.generate import router as my_test_generate_router
 from backend.services.logger import setup_logging
 from backend.rag.manager import setup_rag
 
@@ -121,6 +122,7 @@ async def log_debug_event_preview_direct(request: Request):
 
 app.include_router(generate_router)
 app.include_router(fix_jsx_router)
+app.include_router(my_test_generate_router)
 
 # Alias API routes under /preview to support preview-hosted frontend paths
 app.include_router(generate_router, prefix="/preview")

@@ -119,7 +119,16 @@ def clean_imports(code: str, available_files: list[str]) -> str:
 def clean_tailwind_classes(code: str) -> str:
     """
     Searches for className="..." strings and cleans up malformed Tailwind classes.
+    Also repairs severely broken font class strings like `"DM_Sans']` -> ` font-['DM_Sans']`.
     """
+    # 1. Repair broken quotes around bracketed classes (e.g., LLM outputs "DM_Sans'] instead of font-['DM_Sans'])
+    # Example broken: className="... py-32"DM_Sans'] bg-..."
+    # We look for a quote immediately followed by text and bracket `']`, and change the quote to space + `font-['`
+    code = re.sub(r'\"([a-zA-Z0-9_]+)\'\]', r" font-['\1']", code)
+    
+    # 2. Repair missing quotes at end of className: className="abc def> -> className="abc def">
+    # This is tricky without a full parser, but we can do a naive check in heuristic repair instead.
+
     def replacer(match):
         class_str = match.group(1)
         # Remove duplicate spaces
