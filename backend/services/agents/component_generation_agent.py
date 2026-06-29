@@ -59,6 +59,14 @@ Layout Context:
 - Make all key elements interactive (tabs, menu collapses, accordions, form inputs) using standard React useState.
 - Do NOT import other files; if you need dummy sub-elements, define them locally inside this component.
 
+━━━ PRE-FLIGHT VALIDATION CHECKLIST ━━━
+Before outputting, verify:
+1. Every opened JSX tag (e.g. <div>) has a matching closing tag (e.g. </div>) or is self-closing (e.g. <img />).
+2. Every array, object, and function is properly closed.
+3. The component has exactly one "export default function {component_name}".
+4. Do NOT output truncated code or placeholder lines like "// rest of component goes here". Every piece of code must be fully written and valid.
+5. First line must start with the first import statement. Do not use markdown fences (```jsx).
+
 Previous components created so far:
 {previous_components}
 """

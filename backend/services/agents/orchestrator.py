@@ -178,21 +178,9 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None, genera
                     cleaned = re.sub(r'\n?```\s*$', '', cleaned)
                     cleaned = cleaned.strip()
                     
-                    start_idx = cleaned.find('{')
-                    end_idx = cleaned.rfind('}')
-                    if start_idx != -1 and end_idx != -1:
-                        json_str = cleaned[start_idx:end_idx+1]
-                        try:
-                            parsed_data = json.loads(json_str)
-                        except json.JSONDecodeError:
-                            from backend.routes.generate_ui import _repair_json_escapes, _repair_truncated_json
-                            repaired = _repair_json_escapes(json_str)
-                            try:
-                                parsed_data = json.loads(repaired)
-                            except json.JSONDecodeError:
-                                truncation_repaired = _repair_truncated_json(repaired)
-                                parsed_data = json.loads(truncation_repaired)
-                    else:
+                    from backend.routes.generate_ui import parse_json_robust
+                    parsed_data = parse_json_robust(cleaned)
+                    if not parsed_data:
                         raise ValueError("No JSON object found in response")
                     
                     files = parsed_data.get("files", {})
@@ -418,7 +406,12 @@ export default function App() {{
             await write_files(optimized_files)
             logger.info("Successfully compiled and saved optimized files to sandbox")
         except Exception as file_err:
-            logger.error(f"Failed to write optimized files: {file_err}")
+            logger.error(f"Failed to compile optimized files: {file_err}. Falling back to original generated files.")
+            optimized_files = generated_files
+            try:
+                await write_files(generated_files)
+            except Exception as rollback_err:
+                logger.error(f"Failed to rollback files in sandbox: {rollback_err}")
             
         final_code_json = json.dumps({"files": optimized_files}, indent=2)
         

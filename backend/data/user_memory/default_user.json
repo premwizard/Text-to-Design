@@ -1,0 +1,109 @@
+{
+  "userId": "default_user",
+  "preferences": {
+    "theme": {
+      "dark": 10,
+      "light": 1
+    },
+    "style": {
+      "dark-modern": 10,
+      "minimal": 1
+    },
+    "borderRadius": {},
+    "spacing": {},
+    "favoriteColors": {
+      "emerald": 2,
+      "zinc": 1,
+      "indigo": 7,
+      "violet": 1
+    },
+    "preferredLayouts": {
+      "navbar: top, sidebar: left": 3,
+      "navbar: top, sidebar: none": 8
+    },
+    "commonComponents": {
+      "herosection": 10,
+      "bentofeatures": 8,
+      "pricingplan": 4,
+      "footer": 9,
+      "gallerysection": 1,
+      "amenitiessection": 1,
+      "bookingformsection": 1,
+      "reviewcarousel": 1,
+      "contactsection": 1,
+      "roomlistings": 2,
+      "bookingsummary": 1,
+      "testimonials": 1,
+      "navbar": 2,
+      "roomcards": 1,
+      "bookingform": 1,
+      "pricing": 1,
+      "cards": 1
+    }
+  },
+  "history": [
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "luxury dark",
+      "primaryColor": "emerald"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "minimal",
+      "theme": "luxury-minimal",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "violet"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    }
+  ],
+  "settings": {
+    "enabled": true
+  }
+}

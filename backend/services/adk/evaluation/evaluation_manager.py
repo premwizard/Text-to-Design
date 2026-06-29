@@ -27,7 +27,8 @@ class EvaluationManager:
                     # Check keys to handle schema migration/updates
                     for key in ["compile_successes", "compile_total", "generations_successes", "generations_total", 
                                 "edits_successes", "edits_total", "prompt_understanding_runs", "prompt_understanding_matches",
-                                "critic_scores", "vision_scores", "agent_runs"]:
+                                "critic_scores", "vision_scores", "agent_runs",
+                                "understanding_failures", "planning_failures", "pipeline_abort_count"]:
                         if key not in data:
                             if "scores" in key:
                                 data[key] = []
@@ -51,7 +52,10 @@ class EvaluationManager:
             "prompt_understanding_matches": 9,
             "critic_scores": [8.0, 8.2, 8.5],
             "vision_scores": [8.3, 8.5, 8.6],
-            "agent_runs": {}
+            "agent_runs": {},
+            "understanding_failures": 0,
+            "planning_failures": 0,
+            "pipeline_abort_count": 0
         }
 
     def _save_metrics(self):
@@ -83,6 +87,21 @@ class EvaluationManager:
         self.metrics["prompt_understanding_runs"] += 1
         if matched:
             self.metrics["prompt_understanding_matches"] += 1
+        self._save_metrics()
+
+    def record_understanding_failure(self):
+        self.metrics.setdefault("understanding_failures", 0)
+        self.metrics["understanding_failures"] += 1
+        self._save_metrics()
+
+    def record_planning_failure(self):
+        self.metrics.setdefault("planning_failures", 0)
+        self.metrics["planning_failures"] += 1
+        self._save_metrics()
+
+    def record_pipeline_abort(self):
+        self.metrics.setdefault("pipeline_abort_count", 0)
+        self.metrics["pipeline_abort_count"] += 1
         self._save_metrics()
 
     def record_critic_score(self, score: float):
@@ -147,7 +166,10 @@ class EvaluationManager:
             "promptAccuracy": round(prompt_acc, 1),
             "averageCriticScore": round(avg_critic, 2),
             "averageVisionScore": round(avg_vision, 2),
-            "agentPerformance": agent_perf
+            "agentPerformance": agent_perf,
+            "understandingFailures": self.metrics.get("understanding_failures", 0),
+            "planningFailures": self.metrics.get("planning_failures", 0),
+            "pipelineAbortCount": self.metrics.get("pipeline_abort_count", 0)
         }
 
 def get_evaluation_manager():

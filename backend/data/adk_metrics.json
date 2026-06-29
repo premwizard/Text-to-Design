@@ -1,46 +1,118 @@
 {
-  "compile_successes": 18,
-  "compile_total": 20,
-  "generations_successes": 9,
-  "generations_total": 10,
+  "compile_successes": 21,
+  "compile_total": 47,
+  "generations_successes": 10,
+  "generations_total": 23,
   "edits_successes": 5,
   "edits_total": 5,
-  "prompt_understanding_runs": 11,
-  "prompt_understanding_matches": 10,
+  "prompt_understanding_runs": 25,
+  "prompt_understanding_matches": 23,
   "critic_scores": [
     8.0,
     8.2,
-    8.5
+    8.5,
+    7.98,
+    7.98,
+    7.58,
+    6.78,
+    8.38,
+    8.38,
+    8.38,
+    7.58,
+    7.58,
+    6.78,
+    8.38,
+    8.38,
+    8.38
   ],
   "vision_scores": [
     8.3,
     8.5,
-    8.6
+    8.6,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3,
+    8.3
   ],
   "agent_runs": {
     "router_agent": {
-      "runs": 12,
-      "duration_sum": 0.23999999999999996,
+      "runs": 29,
+      "duration_sum": 0.5800000000000002,
       "failures": 0,
       "tool_calls_count": 0
     },
     "memory": {
-      "runs": 2,
-      "duration_sum": 37.49416518211365,
+      "runs": 18,
+      "duration_sum": 87.97903633117676,
       "failures": 0,
       "tool_calls_count": 0
     },
     "understanding": {
-      "runs": 1,
-      "duration_sum": 49.18495845794678,
+      "runs": 15,
+      "duration_sum": 614.7587637901306,
       "failures": 0,
       "tool_calls_count": 0
     },
     "retrieval": {
-      "runs": 1,
-      "duration_sum": 0.11903929710388184,
+      "runs": 15,
+      "duration_sum": 1.1258432865142822,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "planning": {
+      "runs": 14,
+      "duration_sum": 532.6766080856323,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "generating": {
+      "runs": 14,
+      "duration_sum": 3918.0087978839874,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "vision": {
+      "runs": 14,
+      "duration_sum": 0.05936312675476074,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "critic": {
+      "runs": 13,
+      "duration_sum": 547.5352852344513,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "optimizing": {
+      "runs": 13,
+      "duration_sum": 738.6686964035034,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "sanitizer": {
+      "runs": 2,
+      "duration_sum": 0.04676985740661621,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "code_validator": {
+      "runs": 2,
+      "duration_sum": 0.011323690414428711,
       "failures": 0,
       "tool_calls_count": 0
     }
-  }
+  },
+  "understanding_failures": 0,
+  "planning_failures": 0,
+  "pipeline_abort_count": 0
 }

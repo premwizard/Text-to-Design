@@ -20,9 +20,14 @@ class DebugLogger:
         DEBUG_LOGS_DIR.mkdir(parents=True, exist_ok=True)
         self.log_file = DEBUG_LOGS_DIR / f"{self.session_id}.log"
         
-    def log(self, stage: str, status: str, message: str):
+    def log(self, stage: str, status: str, message: str, error: str = None, fix_applied: str = None):
         timestamp = time.strftime("%H:%M:%S")
-        log_line = f"[{timestamp}] [{stage}] [{status}]\n{message}\n\n"
+        log_line = f"[{timestamp}] [Agent: {stage}] [Status: {status}]\n"
+        if error:
+            log_line += f"[Error: {error}]\n"
+        if fix_applied:
+            log_line += f"[Fix Applied: {fix_applied}]\n"
+        log_line += f"{message}\n\n"
         try:
             with open(self.log_file, "a", encoding="utf-8") as f:
                 f.write(log_line)

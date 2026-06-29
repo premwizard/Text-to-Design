@@ -1540,3 +1540,574 @@ Validating file: App.jsx
 File: App.jsx
 Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
 
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:18] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:18] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:45:56] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:45:56] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [PASSED]
+File: App.jsx
+
+[12:47:36] [VALIDATION] [START]
+Validating file: App.jsx
+
+[12:47:36] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [PASSED]
+File: App.jsx
+
+[13:13:42] [VALIDATION] [START]
+Validating file: App.jsx
+
+[13:13:42] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '###'
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains file/filename header
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '<!--'
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Contains forbidden token '```'
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [PASSED]
+File: App.jsx
+
+[14:56:59] [VALIDATION] [START]
+Validating file: App.jsx
+
+[14:56:59] [VALIDATION] [FAILED]
+File: App.jsx
+Reason: Malformed import/export line:         export default function App() { return <div>Hello</div>; }
+
+[15:13:11] [CODE_VALIDATION] [FAIL]
+- App.jsx: Missing 'export default'. Every React component must have a default export.
+
+[15:13:11] [CODE_VALIDATION] [PASS]
+All files passed validation.
+
+[17:04:23] [SANITIZATION] [COMPLETE]
+Sanitized 2 files.
+
+[17:04:41] [SANITIZATION] [COMPLETE]
+Sanitized 2 files.
+
+[17:12:23] [VALIDATION] [START]
+Validating file: components/Navbar.jsx
+
+[17:12:23] [VALIDATION] [PASSED]
+File: components/Navbar.jsx
+
+[17:12:23] [VALIDATION] [START]
+Validating file: components/HeroSection.jsx
+
+[17:12:23] [VALIDATION] [PASSED]
+File: components/HeroSection.jsx
+
+[17:12:23] [VALIDATION] [START]
+Validating file: components/AboutSection.jsx
+
+[17:12:23] [VALIDATION] [PASSED]
+File: components/AboutSection.jsx
+
+[17:12:23] [VALIDATION] [START]
+Validating file: components/PortfolioSection.jsx
+
+[17:12:23] [VALIDATION] [PASSED]
+File: components/PortfolioSection.jsx
+
+[17:12:23] [VALIDATION] [START]
+Validating file: components/ContactSection.jsx
+
+[17:12:23] [VALIDATION] [PASSED]
+File: components/ContactSection.jsx
+
+[17:12:23] [VALIDATION] [START]
+Validating file: components/Footer.jsx
+
+[17:12:23] [VALIDATION] [PASSED]
+File: components/Footer.jsx
+
+[17:12:23] [VALIDATION] [START]
+Validating file: App.jsx
+
+[17:12:23] [VALIDATION] [PASSED]
+File: App.jsx
+
+[17:12:23] [VALIDATION] [START]
+Validating file: components/Sidebar.jsx
+
+[17:12:23] [VALIDATION] [FAILED]
+File: components/Sidebar.jsx
+Reason: Malformed import/export line:       <p className="text-xs text-zinc-500 mt-1">Placeholder stub generated automatically to resolve missing import.</p>
+

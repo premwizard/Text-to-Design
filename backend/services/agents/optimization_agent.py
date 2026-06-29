@@ -13,7 +13,7 @@ Your changes must:
 2. Enhance UI premium details (add hover scale effects, glassmorphic shadows, smooth transitions: 'transition-all duration-300').
 3. Keep the file names and structure identical.
 4. Do NOT import or use 'lucide-react-native'. Use standard 'lucide-react' for web icons.
-5. Do NOT import or use 'react-router-dom', 'framer-motion', 'recharts', 'chart.js', or any external packages. For links/navigation, use standard <a> tags or state toggles, NOT <Link> or useNavigate.
+5. Allowed packages are: react, react-dom, lucide-react, react-router-dom. Do NOT import or use 'framer-motion', 'recharts', 'chart.js', or any external packages.
 
 Output ONLY a single JSON object containing all modified and unmodified files with this exact schema (no markdown formatting, no descriptions):
 {
@@ -75,14 +75,20 @@ async def run_optimization(files: dict[str, str], critic_feedback: dict, is_sing
                         raise final_err
 
             if "files" in parsed:
+                from backend.project_runner import cleanGeneratedCode
                 result = {}
                 for k, v in parsed["files"].items():
                     orig_content = files.get(k, "")
-                    if not v or len(v.strip()) < 30 or ("export default" not in v and orig_content):
-                        logger.warning(f"Optimization Agent returned empty or malformed code for '{k}'. Falling back to original content.")
+                    if not v:
+                        logger.warning(f"Optimization Agent returned empty code for '{k}'. Falling back to original content.")
+                        result[k] = orig_content
+                        continue
+                    cleaned = cleanGeneratedCode(v)
+                    if len(cleaned.strip()) < 30 or ("export default" not in cleaned and orig_content):
+                        logger.warning(f"Optimization Agent returned malformed/incomplete code for '{k}'. Falling back to original content.")
                         result[k] = orig_content
                     else:
-                        result[k] = v
+                        result[k] = cleaned
                 # Preserve any original files omitted from the parsed result
                 for k, orig_content in files.items():
                     if k not in result:

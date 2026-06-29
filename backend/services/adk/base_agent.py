@@ -19,13 +19,38 @@ class BaseADKAgent:
         start_time = time.time()
         self.tool_calls = []
         
-        while attempts < self.retries:
+        # Retry AI failures 3 times (total 4 attempts)
+        total_attempts = 4
+        
+        while attempts < total_attempts:
             attempts += 1
             try:
-                logger.info(f"[ADK] Running Agent: {self.name} (Attempt {attempts}/{self.retries})")
+                logger.info(f"[ADK] Running Agent: {self.name} (Attempt {attempts}/{total_attempts})")
                 
                 # Execute actual subclass logic
                 res = await self._execute(input_data, **kwargs)
+                
+                # Treat return dictionary with "error" key as an AI failure and retry
+                if isinstance(res, dict) and "error" in res:
+                    err_msg = res["error"]
+                    logger.warning(f"[ADK] Agent {self.name} returned error on attempt {attempts}: {err_msg}")
+                    if attempts < total_attempts:
+                        backoff = 2 ** (attempts - 1)
+                        logger.info(f"[ADK] Exponential backoff: Sleeping for {backoff}s before retry...")
+                        await asyncio.sleep(backoff)
+                        continue
+                    
+                    # If this was the last attempt, record failure and return the error result
+                    duration = time.time() - start_time
+                    from backend.services.adk.evaluation.evaluation_manager import get_evaluation_manager
+                    get_evaluation_manager().record_agent_run(
+                        agent_name=self.name,
+                        duration=duration,
+                        status="FAILED",
+                        error=err_msg,
+                        tool_calls=self.tool_calls
+                    )
+                    return res
                 
                 duration = time.time() - start_time
                 logger.info(f"[ADK] Agent: {self.name} | Duration: {duration:.2f}s | Status: SUCCESS")
@@ -40,13 +65,16 @@ class BaseADKAgent:
                 
                 return res
             except Exception as e:
-                logger.exception(f"[ADK] Agent {self.name} failed on attempt {attempts}: {e}")
+                logger.exception(f"[ADK] Agent {self.name} failed with exception on attempt {attempts}: {e}")
                 last_exception = e
-                if attempts < self.retries:
-                    await asyncio.sleep(0.2)
+                if attempts < total_attempts:
+                    backoff = 2 ** (attempts - 1)
+                    logger.info(f"[ADK] Exponential backoff: Sleeping for {backoff}s before retry...")
+                    await asyncio.sleep(backoff)
+                    continue
         
         duration = time.time() - start_time
-        logger.error(f"[ADK] Agent: {self.name} failed after {self.retries} attempts. Duration: {duration:.2f}s")
+        logger.error(f"[ADK] Agent: {self.name} failed after {total_attempts} attempts. Duration: {duration:.2f}s")
         
         from backend.services.adk.evaluation.evaluation_manager import get_evaluation_manager
         get_evaluation_manager().record_agent_run(
@@ -57,7 +85,9 @@ class BaseADKAgent:
             tool_calls=self.tool_calls
         )
         
-        raise last_exception
+        if last_exception:
+            raise last_exception
+        return {"error": "Maximum retries reached with unknown error"}
 
     async def _execute(self, input_data: dict, **kwargs) -> dict:
         raise NotImplementedError("Subclasses must implement _execute")

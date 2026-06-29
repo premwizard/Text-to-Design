@@ -8,6 +8,50 @@ from backend.services.adk.evaluation.evaluation_manager import get_evaluation_ma
 
 logger = logging.getLogger("backend.services.adk.orchestrator")
 
+def has_error(result):
+    return isinstance(result, dict) and result.get("error")
+
+def build_fallback_design_plan(prompt: str, intent_json: dict, rag_json: dict) -> dict:
+    prompt_lower = prompt.lower()
+    
+    # Heuristics based on prompt content
+    if any(keyword in prompt_lower for keyword in ["hotel", "booking", "stay", "room", "resort"]):
+        sections = ["Navbar", "HeroSection", "RoomCards", "PricingPlan", "Footer"]
+        product_name = "LuxuryStay"
+        tagline = "Book your dream stay"
+    elif any(keyword in prompt_lower for keyword in ["crypto", "trading", "coin", "wallet", "finance", "token"]):
+        sections = ["Navbar", "HeroSection", "CryptoCards", "TransactionTable", "Footer"]
+        product_name = "CryptoVault"
+        tagline = "Trade crypto securely"
+    elif any(keyword in prompt_lower for keyword in ["portfolio", "designer", "creative", "artist", "resume"]):
+        sections = ["Navbar", "HeroSection", "PortfolioGrid", "ContactSection", "Footer"]
+        product_name = "CreativeSpace"
+        tagline = "Showcase your work"
+    else:
+        # Default generic landing page sections
+        sections = ["Navbar", "HeroSection", "BentoFeatures", "PricingPlan", "Footer"]
+        product_name = "NexusApp"
+        tagline = "Innovate your workflow"
+
+    # Blends styling from RAG matched styling or defaults
+    styling = rag_json.get("styling", {}) if isinstance(rag_json, dict) else {}
+    return {
+        "productName": product_name,
+        "tagline": tagline,
+        "layout": {
+            "sidebar": "none",
+            "navbar": "top",
+            "mainSections": sections
+        },
+        "styling": {
+            "font_heading": styling.get("font_heading", "Space Grotesk") if styling else "Space Grotesk",
+            "font_body": styling.get("font_body", "Inter") if styling else "Inter",
+            "bg_color": styling.get("bg_color", "bg-slate-950") if styling else "bg-slate-950",
+            "primary_color": styling.get("primary_color", "indigo") if styling else "indigo",
+            "text_color": styling.get("text_color", "text-zinc-100") if styling else "text-zinc-100"
+        }
+    }
+
 async def run_adk_orchestration_stream(
     user_prompt: str, 
     user_id: str = None, 
@@ -50,8 +94,25 @@ async def run_adk_orchestration_stream(
         yield {"type": "agent_start", "agent": "understanding", "message": "Analyzing prompt requirements and blending design memory..."}
         
         understanding_agent = registry.get_agent("understanding")
-        intent_json = await understanding_agent.run({"prompt": user_prompt, "memory_prefs": memory_prefs})
         
+        intent_json = None
+        try:
+            intent_json = await understanding_agent.run({"prompt": user_prompt, "memory_prefs": memory_prefs})
+        except Exception as e:
+            logger.error(f"UnderstandingAgent raised exception: {e}")
+            intent_json = {"error": str(e)}
+
+        if has_error(intent_json):
+            logger.error(f"UnderstandingAgent failed: {intent_json.get('error')}")
+            get_evaluation_manager().record_understanding_failure()
+            get_evaluation_manager().record_pipeline_abort()
+            yield {
+                "type": "pipeline_error",
+                "step": "understanding",
+                "error": intent_json.get("error")
+            }
+            return
+            
         yield {"type": "agent_complete", "agent": "understanding", "output": intent_json}
         await asyncio.sleep(0.3)
 
@@ -166,24 +227,32 @@ async def run_adk_orchestration_stream(
                     cleaned = re.sub(r'\n?```\s*$', '', cleaned)
                     cleaned = cleaned.strip()
                     
-                    start_idx = cleaned.find('{')
-                    end_idx = cleaned.rfind('}')
-                    if start_idx != -1 and end_idx != -1:
-                        json_str = cleaned[start_idx:end_idx+1]
-                        try:
-                            parsed_data = json.loads(json_str)
-                        except json.JSONDecodeError:
-                            from backend.routes.generate_ui import _repair_json_escapes, _repair_truncated_json
-                            repaired = _repair_json_escapes(json_str)
-                            try:
-                                parsed_data = json.loads(repaired)
-                            except json.JSONDecodeError:
-                                truncation_repaired = _repair_truncated_json(repaired)
-                                parsed_data = json.loads(truncation_repaired)
-                    else:
+                    from backend.routes.generate_ui import parse_json_robust
+                    parsed_data = parse_json_robust(cleaned)
+                    if not parsed_data:
                         raise ValueError("No JSON object found in response")
                     
                     files = parsed_data.get("files", {})
+                    
+                    sanitizer_agent = registry.get_agent("sanitizer")
+                    validator_agent = registry.get_agent("code_validator")
+                    fixer_agent = registry.get_agent("auto_fixer")
+                    max_fixes = 2
+                    fix_attempts = 0
+                    while fix_attempts < max_fixes:
+                        san_res = await sanitizer_agent.run({"files": files})
+                        files = san_res.get("files", files)
+                        
+                        val_res = await validator_agent.run({"files": files})
+                        if val_res.get("valid"):
+                            break
+                        errors = val_res.get("errors", [])
+                        yield {"type": "timeline", "variation_id": variation_id, "step": f"Auto Fixing (Attempt {fix_attempts + 1})"}
+                        fix_res = await fixer_agent.run({"files": files, "errors": errors})
+                        files = fix_res.get("files", files)
+                        fix_attempts += 1
+                        await asyncio.sleep(0.3)
+                        
                     from backend.project_runner import write_files
                     await write_files(files, variation_id=variation_id)
                     yield {"type": "agent_complete", "agent": "render", "variation_id": variation_id, "output": {"variation_id": variation_id, "status": "compiled"}}
@@ -219,8 +288,30 @@ async def run_adk_orchestration_stream(
         yield {"type": "agent_start", "agent": "planning", "message": "Structuring visual styles and component architecture blueprints..."}
         
         planning_agent = registry.get_agent("planning")
-        design_plan = await planning_agent.run({"intent_json": intent_json, "rag_json": rag_json, "prompt": user_prompt})
         
+        design_plan = None
+        try:
+            design_plan = await planning_agent.run({"intent_json": intent_json, "rag_json": rag_json, "prompt": user_prompt})
+        except Exception as e:
+            logger.error(f"PlanningAgent raised exception: {e}")
+            design_plan = {"error": str(e)}
+
+        if has_error(design_plan) or not design_plan.get("layout", {}).get("mainSections"):
+            logger.warning("PlanningAgent failed or returned empty sections. Attempting fallback planning using heuristics...")
+            get_evaluation_manager().record_planning_failure()
+            
+            design_plan = build_fallback_design_plan(user_prompt, intent_json, rag_json)
+            
+            if has_error(design_plan) or not design_plan.get("layout", {}).get("mainSections"):
+                logger.error("Fallback planning failed as well. Aborting pipeline.")
+                get_evaluation_manager().record_pipeline_abort()
+                yield {
+                    "type": "pipeline_error",
+                    "step": "planning",
+                    "error": design_plan.get("error") if isinstance(design_plan, dict) else "Planning failed and fallback plan is invalid"
+                }
+                return
+
         plan_record = {
             "product_name": design_plan.get("productName", "App"),
             "tagline": design_plan.get("tagline", ""),
@@ -278,6 +369,36 @@ async def run_adk_orchestration_stream(
                 
         yield {"type": "agent_complete", "agent": "generating", "output": {"file_count": len(generated_files)}}
         await asyncio.sleep(0.3)
+
+        # ==========================================
+        # STEP 5.5: CODE VALIDATION & AUTO FIXING
+        # ==========================================
+        logger.info("[ADK] Executing Code Validation & Auto Fixing")
+        sanitizer_agent = registry.get_agent("sanitizer")
+        validator_agent = registry.get_agent("code_validator")
+        fixer_agent = registry.get_agent("auto_fixer")
+        
+        max_fixes = 2
+        fix_attempts = 0
+        while fix_attempts < max_fixes:
+            san_res = await sanitizer_agent.run({"files": generated_files})
+            generated_files = san_res.get("files", generated_files)
+            
+            val_res = await validator_agent.run({"files": generated_files})
+            if val_res.get("valid"):
+                logger.info("[ADK] Code validation passed.")
+                break
+                
+            errors = val_res.get("errors", [])
+            yield {"type": "timeline", "step": f"Auto Fixing (Attempt {fix_attempts + 1})"}
+            yield {"type": "agent_start", "agent": "auto_fixer", "message": f"Repairing {len(errors)} broken files..."}
+            
+            fix_res = await fixer_agent.run({"files": generated_files, "errors": errors})
+            generated_files = fix_res.get("files", generated_files)
+            
+            yield {"type": "agent_complete", "agent": "auto_fixer", "output": {"status": "fixed"}}
+            fix_attempts += 1
+            await asyncio.sleep(0.3)
 
         # ==========================================
         # STEP 6: SANDBOX RENDER & SCREENSHOT CAPTURE
@@ -357,9 +478,14 @@ async def run_adk_orchestration_stream(
             get_evaluation_manager().record_compile(success=True)
             get_evaluation_manager().record_generation(success=True)
         except Exception as file_err:
-            logger.error(f"Failed to write optimized files: {file_err}")
+            logger.error(f"Failed to compile optimized files: {file_err}. Falling back to original generated files.")
+            optimized_files = generated_files
             get_evaluation_manager().record_compile(success=False)
             get_evaluation_manager().record_generation(success=False)
+            try:
+                await compiler_tool.execute(files=generated_files)
+            except Exception as rollback_err:
+                logger.error(f"Failed to rollback files in sandbox: {rollback_err}")
             
         final_code_json = json.dumps({"files": optimized_files}, indent=2)
         
@@ -399,7 +525,14 @@ async def run_adk_orchestration_stream(
         except Exception as hist_err:
             logger.error(f"Failed to save history: {hist_err}")
         
-        yield {"type": "final_code", "code": final_code_json}
+        # Phase 9: Return explicit structured JSON output
+        final_response_payload = {
+            "success": True,
+            "files": optimized_files,
+            "errors": [],
+            "warnings": []
+        }
+        yield {"type": "final_code", "data": final_response_payload}
         yield {"type": "timeline", "step": "Finalizing Project"}
         
     except Exception as exc:
@@ -410,7 +543,15 @@ async def run_adk_orchestration_stream(
             save_failure_snapshot(session_id, built_files, str(exc))
         except Exception as snap_err:
             logger.error(f"Failed to save failure snapshot: {snap_err}")
-        yield {"error": str(exc)}
+            built_files = {}
+            
+        error_payload = {
+            "success": False,
+            "files": built_files,
+            "errors": [str(exc)],
+            "warnings": []
+        }
+        yield {"type": "final_code", "data": error_payload}
 
 
 async def run_adk_edit_orchestration_stream(

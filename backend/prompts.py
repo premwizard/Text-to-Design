@@ -183,11 +183,10 @@ REACT RULES
 
 DO NOT USE:
   ❌ CSS files or CSS modules
-  ❌ React Router, Link, useNavigate, BrowserRouter
   ❌ fetch(), axios, useQuery, or any data fetching
   ❌ framer-motion, gsap, recharts, chart.js, d3
   ❌ next/image, next/link, or anything from next
-  ❌ Any npm package except: react, react-dom, lucide-react, tailwindcss
+  ❌ Any npm package except: react, react-dom, lucide-react, react-router-dom, tailwindcss
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CRITICAL OUTPUT CONTRACT
@@ -209,6 +208,14 @@ explanations
 If generated, regenerate the file. Nothing may appear before the first import or export statement in any file.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRE-FLIGHT VALIDATION CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Before printing the final JSON, verify:
+1. Every opened JSX tag (e.g. <div className="...">) has a matching closing tag (e.g. </div>) or is self-closing (e.g. <br />).
+2. Every array, object, function body, and bracket is completely closed.
+3. Every file has exactly one "export default function [ComponentName]".
+4. Do NOT truncate or leave incomplete code blocks (like "// rest of component"). Every file must be fully functional.
+
 ORIGINAL USER REQUEST (for content/copy inspiration):
 "{user_prompt}"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

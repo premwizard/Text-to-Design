@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "timestamp": 1782724090,
+    "prompt": "Luxury hotel booking page",
+    "files": {
+      "App.jsx": "import React from 'react';\n\n\nexport default function App() {\n  return (\n    <div className=\"min-h-screen bg-zinc-950 text-white flex flex-col p-4 sm:p-6 lg:p-8\">\n\n    </div>\n  );\n}\n"
+    },
+    "metadata": {
+      "critic_score": 8.38,
+      "session_id": "session_1782724044"
+    }
+  }
+]

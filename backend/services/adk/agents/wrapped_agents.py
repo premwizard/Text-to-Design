@@ -77,6 +77,11 @@ class GenerationADKAgent(BaseADKAgent):
         layout = design_plan.get("layout", {})
         main_sections = layout.get("mainSections", [])
         
+        # Validate and reject empty sections
+        main_sections = [sec for sec in main_sections if sec and sec.strip()]
+        if not main_sections:
+            raise ValueError("Generator rejected: mainSections is empty. Cannot generate a page with no sections.")
+        
         planned_components = []
         if layout.get("navbar") == "top":
             planned_components.append("Navbar")
@@ -86,6 +91,10 @@ class GenerationADKAgent(BaseADKAgent):
         for sec in main_sections:
             if sec not in planned_components:
                 planned_components.append(sec)
+                
+        # Validate and reject empty planned components
+        if not planned_components:
+            raise ValueError("Generator rejected: planned components list is empty. Cannot generate a blank project.")
                 
         logger.info(f"Planned components: {planned_components}")
         generated_files = {}
@@ -107,12 +116,14 @@ class GenerationADKAgent(BaseADKAgent):
             comp_code = ""
             async for chunk in generate_component_stream(comp_name, design_plan, rag_json, generated_files):
                 comp_code += chunk
+                if event_callback:
+                    await event_callback({"chunk": chunk, "component": comp_name})
                 
             # Automation Fallback in case of rate limits or failures
             if not comp_code or len(comp_code.strip()) < 50:
                 logger.warning(f"Empty code for {comp_name}, using fallback template.")
                 comp_code = f"""import React from 'react';
-
+ 
 export default function {comp_name}() {{
   return (
     <div className="py-20 text-center bg-zinc-900 border border-zinc-800 rounded-xl my-4 px-4">
@@ -134,6 +145,8 @@ export default function {comp_name}() {{
         app_code = ""
         async for chunk in generate_app_stream(design_plan, planned_components):
             app_code += chunk
+            if event_callback:
+                await event_callback({"chunk": chunk, "component": "App"})
             
         if not app_code or len(app_code.strip()) < 50:
             logger.warning("Empty root App.jsx, using fallback template.")
@@ -144,7 +157,7 @@ export default function {comp_name}() {{
                 renders += f"      <{comp} />\n"
             app_code = f"""import React from 'react';
 {imports}
-
+ 
 export default function App() {{
   return (
     <div className="min-h-screen bg-zinc-950 text-white flex flex-col p-4 sm:p-6 lg:p-8">
@@ -153,6 +166,10 @@ export default function App() {{
   );
 }}
 """
+        # Validate generated App.jsx
+        if not app_code or "export default" not in app_code or len(app_code.strip()) < 50:
+            raise ValueError("Generator rejected: generated App.jsx is blank or invalid.")
+            
         generated_files["App.jsx"] = app_code
         return {"files": generated_files}
 
@@ -225,3 +242,39 @@ class EditADKAgent(BaseADKAgent):
         
         from backend.services.agents.edit_agent import run_edit_planning
         return await run_edit_planning(edit_prompt, current_files, design_metadata)
+
+@register_adk_agent("sanitizer")
+class SanitizerADKAgent(BaseADKAgent):
+    def __init__(self):
+        super().__init__("sanitizer")
+        
+    async def _execute(self, input_data: dict, **kwargs) -> dict:
+        files = input_data.get("files")
+        
+        from backend.services.agents.sanitizer_agent import run_code_sanitization
+        sanitized_files = await run_code_sanitization(files)
+        return {"files": sanitized_files}
+
+@register_adk_agent("code_validator")
+class ValidatorADKAgent(BaseADKAgent):
+    def __init__(self):
+        super().__init__("code_validator")
+        
+    async def _execute(self, input_data: dict, **kwargs) -> dict:
+        files = input_data.get("files")
+        
+        from backend.services.agents.code_validator_agent import run_code_validation
+        return await run_code_validation(files)
+        
+@register_adk_agent("auto_fixer")
+class FixerADKAgent(BaseADKAgent):
+    def __init__(self):
+        super().__init__("auto_fixer")
+        
+    async def _execute(self, input_data: dict, **kwargs) -> dict:
+        files = input_data.get("files")
+        errors = input_data.get("errors")
+        
+        from backend.services.agents.auto_fixer_agent import run_auto_fixer
+        fixed_files = await run_auto_fixer(files, errors)
+        return {"files": fixed_files}

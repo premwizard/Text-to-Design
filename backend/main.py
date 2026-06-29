@@ -38,17 +38,21 @@ logger = logging.getLogger("backend")
 app = FastAPI(title="Text to UI Design API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://synapseai-ebon.vercel.app",
-        "http://localhost:5173",
-        "https://text-to-design.vercel.app",
-        "http://localhost:8000",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization", "Cache-Control", "Pragma"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
+from fastapi.responses import JSONResponse
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Global unhandled exception: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"status": "error", "message": "An unexpected server error occurred. See backend logs."}
+    )
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

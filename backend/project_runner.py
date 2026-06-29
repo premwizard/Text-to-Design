@@ -293,6 +293,66 @@ async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tupl
             except Exception:
                 pass
 
+def validate_cross_file_imports(files: dict[str, str]) -> None:
+    """
+    Scans the given files for internal relative imports (e.g. from './components/XYZ')
+    and ensures that the target component actually exists in the files dictionary
+    or has a basic stub so that Vite/esbuild doesn't crash on unresolved imports.
+    """
+    import os
+    import re
+    for filepath, content in list(files.items()):
+        # Normalize target paths
+        matches = re.findall(r'\bfrom\s+[\'"](\.[^\'"]+)[\'"]', content)
+        matches += re.findall(r'\bimport\s+[\'"](\.[^\'"]+)[\'"]', content)
+        
+        for imp_path in matches:
+            # Resolve relative import from the perspective of the importing file
+            dir_name = os.path.dirname(filepath)
+            resolved_path = os.path.normpath(os.path.join(dir_name, imp_path))
+            # Replace backslashes with forward slashes for cross-platform matching
+            resolved_path = resolved_path.replace("\\", "/").lstrip("./")
+            
+            # Possible extensions to try
+            possible_keys = [
+                resolved_path, 
+                resolved_path + ".jsx", 
+                resolved_path + ".js", 
+                resolved_path.rstrip("/") + "/index.jsx", 
+                resolved_path.rstrip("/") + "/index.js"
+            ]
+            found = False
+            for pk in possible_keys:
+                if pk in files:
+                    found = True
+                    break
+                    
+            if not found:
+                # The imported component is missing! Auto-create a stub to prevent compilation failures.
+                comp_name = resolved_path.split("/")[-1]
+                # Capitalize first letter
+                comp_name = comp_name[0].upper() + comp_name[1:] if comp_name else "Placeholder"
+                if comp_name.endswith(".jsx"):
+                    comp_name = comp_name[:-4]
+                elif comp_name.endswith(".js"):
+                    comp_name = comp_name[:-3]
+                
+                # Check where to write the stub. Default to appending .jsx
+                stub_key = resolved_path if resolved_path.endswith((".jsx", ".js")) else (resolved_path + ".jsx")
+                print(f"[AUTO_REPAIR] Cross-file import validation: Auto-creating missing component stub {stub_key} for {comp_name}")
+                stub_code = f"""import React from 'react';
+
+export default function {comp_name}() {{
+  return (
+    <div className="p-8 text-center bg-zinc-900 border border-zinc-800 rounded-xl my-4">
+      <h3 className="text-lg font-bold text-zinc-300">{comp_name}</h3>
+      <p className="text-xs text-zinc-500 mt-1">Placeholder stub generated automatically to resolve missing import.</p>
+    </div>
+  );
+}}
+"""
+                files[stub_key] = stub_code
+
 async def write_files(files: dict[str, str], variation_id: str = None, bypass_validation: bool = False) -> list[str]:
     """
     Write a dict of { "relative/path.jsx": "file content" } into sandbox/src/.
@@ -314,6 +374,9 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
         cleaned_files[rel_path] = cleaned_content
 
     if not bypass_validation:
+        # Cross-file import consistency check
+        validate_cross_file_imports(cleaned_files)
+        
         for rel_path, cleaned_content in cleaned_files.items():
             if not validateGeneratedCode(cleaned_content, rel_path):
                 log_corrupted_run(cleaned_files, f"Static validation failed for {rel_path}")
@@ -325,6 +388,10 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
             log_corrupted_run(cleaned_files, err_msg)
             log_framework_error(err_msg, cleaned_files)
             raise ValueError(f"JSX compilation failed: {err_msg}")
+
+    # Mutate the input files dict in place so that the caller gets the cleaned/stubbed files
+    files.clear()
+    files.update(cleaned_files)
 
     # 2. Write new files to disk
     written = []
@@ -493,87 +560,90 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
 
-        # Compile and verify step with a retry loop
-        max_attempts = 3
-        for attempt in range(1, max_attempts + 1):
-            outfile_js = f"dist/assets/{variation_id}.js"
-            outfile_css = f"dist/assets/{variation_id}.css"
-            abs_outfile_js = SANDBOX_DIR / outfile_js
-            abs_outfile_css = SANDBOX_DIR / outfile_css
-            
+    # Compile and verify step with a retry loop
+    active_vid = variation_id or "index"
+    entry_point = f"src/{variation_id}/main.jsx" if variation_id else "src/main.jsx"
+    
+    max_attempts = 3
+    for attempt in range(1, max_attempts + 1):
+        outfile_js = f"dist/assets/{active_vid}.js"
+        outfile_css = f"dist/assets/{active_vid}.css"
+        abs_outfile_js = SANDBOX_DIR / outfile_js
+        abs_outfile_css = SANDBOX_DIR / outfile_css
+        
+        print("=" * 80)
+        print(f"STEP 6.5: Running esbuild for {active_vid} (Attempt {attempt}/{max_attempts})")
+        print(f"[DEBUG] Target compilation folder: {SANDBOX_DIR}")
+        print(f"[DEBUG] Output JS file path: {abs_outfile_js}")
+        print(f"[DEBUG] Output CSS file path: {abs_outfile_css}")
+        
+        cmd = f"npx --yes esbuild {entry_point} --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
+        print(f"[DEBUG] Executing command: {cmd}")
+        
+        result = subprocess.run(
+            cmd,
+            cwd=str(SANDBOX_DIR),
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        
+        if result.returncode == 0:
+            print("esbuild compilation successful")
+            print(f"[DEBUG] Generated JS file exists: {abs_outfile_js.exists()}")
+            print(f"[DEBUG] Generated CSS file exists: {abs_outfile_css.exists()}")
             print("=" * 80)
-            print(f"STEP 6.5: Running esbuild for {variation_id} (Attempt {attempt}/{max_attempts})")
-            print(f"[DEBUG] Target compilation folder: {SANDBOX_DIR}")
-            print(f"[DEBUG] Output JS file path: {abs_outfile_js}")
-            print(f"[DEBUG] Output CSS file path: {abs_outfile_css}")
+            break
+        else:
+            print(f"esbuild compilation failed: {result.stderr}")
+            print("=" * 80)
+            if attempt == max_attempts:
+                raise ValueError(f"esbuild compilation failed after {max_attempts} attempts: {result.stderr}")
             
-            cmd = f"npx --yes esbuild src/{variation_id}/main.jsx --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
-            print(f"[DEBUG] Executing command: {cmd}")
-            
-            result = subprocess.run(
-                cmd,
-                cwd=str(SANDBOX_DIR),
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
-            )
-            
-            if result.returncode == 0:
-                print("esbuild compilation successful")
-                print(f"[DEBUG] Generated JS file exists: {abs_outfile_js.exists()}")
-                print(f"[DEBUG] Generated CSS file exists: {abs_outfile_css.exists()}")
-                print("=" * 80)
-                break
-            else:
-                print(f"esbuild compilation failed: {result.stderr}")
-                print("=" * 80)
-                if attempt == max_attempts:
-                    raise ValueError(f"esbuild compilation failed after {max_attempts} attempts: {result.stderr}")
-                
-                # Auto-repair logic
-                match = re.search(r'(src/[^:\s]+\.jsx?)', result.stderr)
-                if match:
-                    error_file_rel = match.group(1)
-                    error_file_abs = SANDBOX_DIR / error_file_rel
-                    if error_file_abs.exists():
-                        print(f"[Auto-Fix] Repairing offending file: {error_file_rel}")
-                        broken_code = error_file_abs.read_text(encoding="utf-8")
-                        
-                        from backend.services.ai_router import generate_ai
-                        from backend.prompts import FIX_SYSTEM_PROMPT
-                        from backend.routes.generate_ui import _repair_jsx
-                        
-                        system_instructions = FIX_SYSTEM_PROMPT.format(
-                            broken_code=broken_code,
-                            error=result.stderr
+            # Auto-repair logic
+            match = re.search(r'(src/[^:\s]+\.jsx?)', result.stderr)
+            if match:
+                error_file_rel = match.group(1)
+                error_file_abs = SANDBOX_DIR / error_file_rel
+                if error_file_abs.exists():
+                    print(f"[Auto-Fix] Repairing offending file: {error_file_rel}")
+                    broken_code = error_file_abs.read_text(encoding="utf-8")
+                    
+                    from backend.services.ai_router import generate_ai
+                    from backend.prompts import FIX_SYSTEM_PROMPT
+                    from backend.routes.generate_ui import _repair_jsx
+                    
+                    system_instructions = FIX_SYSTEM_PROMPT.format(
+                        broken_code=broken_code,
+                        error=result.stderr
+                    )
+                    
+                    try:
+                        # Invoke AI text generation
+                        ai_response = await generate_ai(
+                            task_type="fix",
+                            system_prompt=system_instructions,
+                            user_prompt=f"Fix this component. The error is: {result.stderr}",
+                            temperature=0.1,
+                            stream=False
                         )
+                        fixed_code_raw = ai_response.choices[0].message.content.strip()
                         
-                        try:
-                            # Invoke AI text generation
-                            ai_response = await generate_ai(
-                                task_type="fix",
-                                system_prompt=system_instructions,
-                                user_prompt=f"Fix this component. The error is: {result.stderr}",
-                                temperature=0.1,
-                                stream=False
-                            )
-                            fixed_code_raw = ai_response.choices[0].message.content.strip()
-                            
-                            # Clean and repair fixed code
-                            fixed_code = cleanGeneratedCode(fixed_code_raw)
-                            fixed_code = _repair_jsx(fixed_code)
-                            
-                            # Write fixed code back to disk
-                            error_file_abs.write_text(fixed_code, encoding="utf-8")
-                            print(f"[Auto-Fix] Rewrote repaired file: {error_file_rel}")
-                        except Exception as ai_err:
-                            print(f"[Auto-Fix] AI repair request failed: {ai_err}")
-                            break
-                    else:
+                        # Clean and repair fixed code
+                        fixed_code = cleanGeneratedCode(fixed_code_raw)
+                        fixed_code = _repair_jsx(fixed_code)
+                        
+                        # Write fixed code back to disk
+                        error_file_abs.write_text(fixed_code, encoding="utf-8")
+                        print(f"[Auto-Fix] Rewrote repaired file: {error_file_rel}")
+                    except Exception as ai_err:
+                        print(f"[Auto-Fix] AI repair request failed: {ai_err}")
                         break
                 else:
                     break
+            else:
+                break
 
     # STEP 7: Read sandbox/src/App.jsx back from disk and print first 10 lines
     app_path = (SRC_DIR / variation_id / "App.jsx") if variation_id else (SRC_DIR / "App.jsx")

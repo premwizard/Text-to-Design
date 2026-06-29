@@ -113,6 +113,170 @@ def _repair_truncated_json(raw: str) -> str:
     return ''.join(result)
 
 
+def parse_json_robust(raw: str) -> dict:
+    """
+    Attempts multiple strategies to parse a JSON string containing files.
+    Always returns a dictionary (either successfully parsed files, or a fallback structure).
+    """
+    import json
+    import re
+    from pathlib import Path
+    
+    # Find outer bounds
+    start_idx = raw.find('{')
+    end_idx = raw.rfind('}')
+    if start_idx == -1 or end_idx == -1:
+        return {}
+        
+    json_str = raw[start_idx:end_idx+1]
+    
+    # Strategy 1: Direct parse
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        pass
+        
+    # Strategy 2: Escape repair
+    try:
+        repaired = _repair_json_escapes(json_str)
+        return json.loads(repaired)
+    except json.JSONDecodeError:
+        pass
+        
+    # Strategy 3: Truncation repair
+    try:
+        repaired = _repair_json_escapes(json_str)
+        truncation_repaired = _repair_truncated_json(repaired)
+        return json.loads(truncation_repaired)
+    except json.JSONDecodeError:
+        pass
+
+    # Strategy 4: Fallback regex character-by-character parser for files
+    files = {}
+    try:
+        # Search for file keys
+        file_keys = re.findall(r'["\'](App\.jsx|components/[\w\.\-]+?\.jsx?)["\']\s*:', json_str)
+        for key in file_keys:
+            key_idx = json_str.find(f'"{key}"')
+            if key_idx == -1:
+                key_idx = json_str.find(f"'{key}'")
+            if key_idx == -1:
+                continue
+            
+            val_start = json_str.find(':', key_idx)
+            if val_start == -1:
+                continue
+            
+            # Find next quote starting character
+            curr = val_start + 1
+            quote_char = None
+            while curr < len(json_str):
+                if json_str[curr] in ('"', "'", '`'):
+                    quote_char = json_str[curr]
+                    val_start = curr
+                    break
+                curr += 1
+                
+            if quote_char is None:
+                continue
+            
+            val_content = []
+            escaped = False
+            curr = val_start + 1
+            while curr < len(json_str):
+                ch = json_str[curr]
+                if escaped:
+                    val_content.append(ch)
+                    escaped = False
+                elif ch == '\\':
+                    val_content.append(ch)
+                    escaped = True
+                elif ch == quote_char:
+                    break
+                else:
+                    val_content.append(ch)
+                curr += 1
+                
+            raw_val = "".join(val_content)
+            try:
+                decoded_val = json.loads(f'"{raw_val}"')
+            except Exception:
+                decoded_val = raw_val.replace('\\n', '\n').replace('\\t', '\t').replace('\\"', '"').replace('\\\\', '\\')
+            
+            files[key] = decoded_val
+            
+        if files:
+            return {"files": files}
+    except Exception as e:
+        logging.error(f"[parse_json_robust] Regex fallback parser failed: {e}")
+        
+    return {}
+
+
+
+
+def _count_unbalanced_braces(code: str) -> int:
+    """
+    Counts how many '{' are unbalanced, ignoring any braces inside string literals
+    and comments to prevent over/under-counting.
+    """
+    if not code:
+        return 0
+    in_string = False
+    string_char = None
+    escaped = False
+    in_single_line_comment = False
+    in_multi_line_comment = False
+    open_braces = 0
+    i = 0
+    length = len(code)
+    while i < length:
+        ch = code[i]
+        if escaped:
+            escaped = False
+            i += 1
+            continue
+        if in_single_line_comment:
+            if ch == '\n':
+                in_single_line_comment = False
+            i += 1
+            continue
+        if in_multi_line_comment:
+            if ch == '*' and i + 1 < length and code[i+1] == '/':
+                in_multi_line_comment = False
+                i += 2
+            else:
+                i += 1
+            continue
+        if in_string:
+            if ch == '\\':
+                escaped = True
+            elif ch == string_char:
+                in_string = False
+                string_char = None
+            i += 1
+            continue
+        if ch == '/' and i + 1 < length:
+            if code[i+1] == '/':
+                in_single_line_comment = True
+                i += 2
+                continue
+            elif code[i+1] == '*':
+                in_multi_line_comment = True
+                i += 2
+                continue
+        if ch in ('"', "'", '`'):
+            in_string = True
+            string_char = ch
+            i += 1
+            continue
+        if ch == '{':
+            open_braces += 1
+        elif ch == '}':
+            open_braces -= 1
+        i += 1
+    return open_braces
+
 def _repair_jsx(code: str) -> str:
     """
     Post-process LLM JSX output to ensure it is complete and balanced:
@@ -156,7 +320,7 @@ def _repair_jsx(code: str) -> str:
         code = '\n'.join(lines)
 
     # ── 2. Balance curly braces ────────────────────────────────────────────
-    open_braces = code.count('{') - code.count('}')
+    open_braces = _count_unbalanced_braces(code)
     if open_braces > 0:
         code = code.rstrip()
         code += '\n' + '  ' * max(open_braces - 1, 0) + '\n'.join(['}'] * open_braces)
