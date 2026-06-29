@@ -338,109 +338,29 @@ async def stream_jsx(request: StreamRequest):
             # AI Router handles client initialization based on env keys internally
 
             if request.current_code:
-                # EDIT MODE (Single Variation)
-                try:
-                    parsed = json.loads(request.current_code)
-                    meta_str = json.dumps(parsed.get("meta", {}), indent=2)
-                except Exception:
-                    meta_str = "{}"
+                from backend.services.adk.router_agent import RouterAgent
+                router_agent = RouterAgent()
+                async for event in router_agent.route_request({
+                    "prompt": request.prompt,
+                    "current_code": request.current_code,
+                    "user_id": request.user_id,
+                    "generation_mode": request.generation_mode,
+                    "variation_count": request.variation_count
+                }):
+                    yield f"data: {json.dumps(event)}\n\n"
 
-                system_instructions = (
-                    EDIT_SYSTEM_PROMPT
-                    .replace('{meta}', meta_str)
-                    .replace('{current_files}', request.current_code)
-                    .replace('{edit_prompt}', request.prompt)
-                )
-                user_message = f"Edit request: {request.prompt}"
-                
-                response = generate_ai(
-                    task_type="editor",
-                    system_prompt=system_instructions,
-                    user_prompt=user_message,
-                    temperature=1.0,
-                    stream=True
-                )
-                
-                from backend.services.debug.debug_logger import DebugLogger
-                db_logger = DebugLogger()
-                db_logger.log("STREAM_PARSER", "START", f"Streaming edit code changes for request...")
-                
-                full_code = ""
-                chunk_count = 0
-                async for chunk in response:
-                    if isinstance(chunk, dict):
-                        if chunk.get("type") == "fallback":
-                            full_code = ""
-                            yield f"data: {json.dumps({'type': 'fallback', 'message': chunk.get('message')})}\n\n"
-                            continue
-                        elif chunk.get("type") == "emergency":
-                            yield f"data: {json.dumps({'error': chunk.get('message')})}\n\n"
-                            yield "data: [DONE]\n\n"
-                            return
-                    
-                    content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
-                    if content:
-                        full_code += content
-                        chunk_count += 1
-                        if chunk_count % 50 == 1:
-                            db_logger.log("STREAM_PARSER", "STREAMING", f"Received chunk count: {chunk_count}")
-                        yield f"data: {json.dumps({'chunk': content})}\n\n"
-
-                db_logger.log("STREAM_PARSER", "STREAM_COMPLETE", f"Total chunks received: {chunk_count}. Code length: {len(full_code)}")
-                
-                # Check for truncation/missing parts
-                if not full_code.strip().endswith("}") and not full_code.strip().endswith("```"):
-                    db_logger.log("STREAM_PARSER", "WARNING", "Stream output does not end cleanly with } or code block markers. May be truncated.")
-
-                # Parse and write files
-                cleaned = full_code.strip()
-                cleaned = re.sub(r'^```(?:json|jsx|javascript|js|react|tsx|ts)?\s*\n?', '', cleaned, flags=re.IGNORECASE)
-                cleaned = re.sub(r'\n?```\s*$', '', cleaned)
-                cleaned = re.sub(r'^<!--.*?-->\s*', '', cleaned, flags=re.DOTALL)
-                cleaned = re.sub(r'\s*<!--.*?-->$', '', cleaned, flags=re.DOTALL)
-                cleaned = cleaned.strip()
-
-                start_idx = cleaned.find('{')
-                end_idx = cleaned.rfind('}')
-                if start_idx != -1 and end_idx != -1:
-                    json_str = cleaned[start_idx:end_idx+1]
-                    try:
-                        parsed_data = json.loads(json_str)
-                    except json.JSONDecodeError as first_err:
-                        repaired = _repair_json_escapes(json_str)
-                        try:
-                            parsed_data = json.loads(repaired)
-                        except json.JSONDecodeError as second_err:
-                            truncation_repaired = _repair_truncated_json(repaired)
-                            parsed_data = json.loads(truncation_repaired)
-                else:
-                    raise ValueError("No valid JSON object found in response")
-                
-                files = parsed_data.get("files", {})
-                db_logger.log("STREAM_PARSER", "EXTRACTED_FILES", f"Parsed file keys: {list(files.keys())}")
-                for filename, filecontent in files.items():
-                    db_logger.log("STREAM_PARSER", "FILE_SUMMARY", f"File: {filename} (length: {len(filecontent)} chars)")
-                    
-                from backend.project_runner import cleanGeneratedCode, write_files
-                cleaned_files = {k: cleanGeneratedCode(v) for k, v in files.items()}
-                
-                # Single variation defaults to root or varA (if the UI expects a var)
-                # But for backwards compatibility, just use the variation_id from frontend if passed. 
-                # Actually, edits don't need a variation loop, but they do need to be written to the correct folder.
-                # In Edit mode, frontend handles save_files itself usually, but backend `/stream-jsx` does it too.
-                # We'll just write it to root for now, or we can skip writing in `/stream-jsx` entirely and let frontend call `/save-files`!
-                await write_files(cleaned_files)
 
             else:
                 # ─── GENERATE MULTI-AGENT PIPELINE ────────────────────────
-                from backend.services.agents.orchestrator import run_orchestration_stream
-                
-                async for event in run_orchestration_stream(
-                    request.prompt, 
-                    request.user_id,
-                    generation_mode=request.generation_mode,
-                    variation_count=request.variation_count
-                ):
+                from backend.services.adk.router_agent import RouterAgent
+                router_agent = RouterAgent()
+                async for event in router_agent.route_request({
+                    "prompt": request.prompt,
+                    "current_code": request.current_code,
+                    "user_id": request.user_id,
+                    "generation_mode": request.generation_mode,
+                    "variation_count": request.variation_count
+                }):
                     yield f"data: {json.dumps(event)}\n\n"
 
             yield "data: [DONE]\n\n"
@@ -470,21 +390,16 @@ class RollbackRequest(BaseModel):
 async def edit_ui(request: EditUIRequest):
     async def edit_event_generator():
         try:
-            # Parse current_code (which contains {"files": {...}})
-            try:
-                parsed = json.loads(request.current_code)
-                current_files = parsed.get("files", {})
-            except Exception:
-                current_files = {}
-
-            from backend.services.agents.orchestrator import run_edit_orchestration_stream
-            async for event in run_edit_orchestration_stream(
-                user_id=request.user_id,
-                session_id=request.session_id,
-                edit_prompt=request.edit_prompt,
-                current_files=current_files,
-                design_metadata=request.design_metadata
-            ):
+            from backend.services.adk.router_agent import RouterAgent
+            router_agent = RouterAgent()
+            async for event in router_agent.route_request({
+                "prompt": request.edit_prompt,
+                "current_code": request.current_code,
+                "user_id": request.user_id,
+                "session_id": request.session_id,
+                "design_metadata": request.design_metadata,
+                "action": "edit"
+            }):
                 yield f"data: {json.dumps(event)}\n\n"
 
             yield "data: [DONE]\n\n"
@@ -494,6 +409,12 @@ async def edit_ui(request: EditUIRequest):
             yield "data: [DONE]\n\n"
 
     return StreamingResponse(edit_event_generator(), media_type="text/event-stream")
+
+@router.get("/adk-metrics")
+async def get_adk_metrics():
+    from backend.services.adk.evaluation.evaluation_manager import get_evaluation_manager
+    return get_evaluation_manager().get_dashboard_metrics()
+
 
 @router.get("/edit-history")
 async def get_edit_history(user_id: str, session_id: str):
