@@ -57,7 +57,19 @@ async def run_optimization(files: dict[str, str], critic_feedback: dict, is_sing
             json_str = output_text[start_idx:end_idx+1]
             parsed = json.loads(json_str)
             if "files" in parsed:
-                return parsed["files"]
+                result = {}
+                for k, v in parsed["files"].items():
+                    orig_content = files.get(k, "")
+                    if not v or len(v.strip()) < 30 or ("export default" not in v and orig_content):
+                        logger.warning(f"Optimization Agent returned empty or malformed code for '{k}'. Falling back to original content.")
+                        result[k] = orig_content
+                    else:
+                        result[k] = v
+                # Preserve any original files omitted from the parsed result
+                for k, orig_content in files.items():
+                    if k not in result:
+                        result[k] = orig_content
+                return result
             else:
                 return files
         else:

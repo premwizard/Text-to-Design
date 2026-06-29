@@ -2,54 +2,40 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 4
+      "dark": 1,
+      "light": 1
     },
     "style": {
-      "minimal": 4
+      "dark-modern": 1,
+      "minimal": 1
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "zinc": 4
+      "violet": 1,
+      "zinc": 1
     },
     "preferredLayouts": {
-      "navbar: top, sidebar: none": 3,
-      "navbar: top, sidebar: left": 1
+      "navbar: top, sidebar: none": 2
     },
     "commonComponents": {
-      "herosection": 4,
-      "featuredproducts": 3,
-      "categories": 3,
-      "testimonialcarousel": 2,
-      "footer": 4,
-      "bentofeatures": 1,
-      "transactiontable": 1,
-      "pricingplan": 1
+      "herosection": 1,
+      "categoryshowcase": 1,
+      "productgrid": 1,
+      "footer": 1
     }
   },
   "history": [
     {
-      "prompt": "Build a e-commerce store: Online store front",
-      "style": "minimal",
-      "theme": "minimal light",
-      "primaryColor": "zinc"
-    },
-    {
-      "prompt": "Build a e-commerce store: Online store front",
-      "style": "minimal",
-      "theme": "light",
-      "primaryColor": "zinc"
-    },
-    {
-      "prompt": "Build a e-commerce store: Online store front",
-      "style": "minimal",
-      "theme": "minimal light",
-      "primaryColor": "zinc"
-    },
-    {
       "prompt": "Build a analytics dashboard: Analytics and data view",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "violet"
+    },
+    {
+      "prompt": "Build a e-commerce store: Online store front",
       "style": "minimal",
-      "theme": "light",
+      "theme": "minimal light",
       "primaryColor": "zinc"
     }
   ],

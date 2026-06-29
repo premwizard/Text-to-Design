@@ -88,6 +88,29 @@ async def health_check():
     return {"status": "ok"}
 
 
+@app.post("/log-debug-event")
+async def log_debug_event_direct(request: Request):
+    try:
+        data = await request.json()
+        session_id = data.get("session_id")
+        stage = data.get("stage", "UNKNOWN")
+        status = data.get("status", "INFO")
+        message = data.get("message", "")
+        
+        from backend.services.debug.debug_logger import DebugLogger
+        logger = DebugLogger(session_id)
+        logger.log(stage, status, message)
+        return {"status": "ok"}
+    except Exception as e:
+        logger.error(f"Failed to log debug event direct: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/preview/log-debug-event")
+async def log_debug_event_preview_direct(request: Request):
+    return await log_debug_event_direct(request)
+
+
 app.include_router(generate_router)
 app.include_router(fix_jsx_router)
 

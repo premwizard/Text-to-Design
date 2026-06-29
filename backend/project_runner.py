@@ -61,6 +61,12 @@ def validateGeneratedCode(code: str, filename: str) -> bool:
     db_logger = DebugLogger()
     db_logger.log("VALIDATION", "START", f"Validating file: {filename}")
 
+    # 0. Reject empty or extremely short code files
+    if not code or len(code.strip()) < 30:
+        log_invalid_file(filename, "Empty or too short code", code or "")
+        db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Code is empty or too short.")
+        return False
+
     # 1. Reject files containing forbidden patterns
     forbidden_tokens = ["<!--", "-->", "```", "###"]
     for token in forbidden_tokens:

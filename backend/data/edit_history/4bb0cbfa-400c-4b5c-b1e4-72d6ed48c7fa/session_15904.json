@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "timestamp": 1782668124,
+    "prompt": "Build a analytics dashboard: Analytics and data view",
+    "files": {
+      "App.jsx": ""
+    },
+    "metadata": {
+      "critic_score": 8.38,
+      "session_id": "session_15904"
+    }
+  }
+]

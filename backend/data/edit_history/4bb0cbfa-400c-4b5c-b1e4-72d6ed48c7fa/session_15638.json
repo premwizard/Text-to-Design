@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "timestamp": 1782667859,
+    "prompt": "Build a e-commerce store: Online store front",
+    "files": {
+      "App.jsx": ""
+    },
+    "metadata": {
+      "critic_score": 8.38,
+      "session_id": "session_15638"
+    }
+  }
+]

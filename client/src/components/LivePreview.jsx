@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { normalizeApiBaseUrl, normalizeSandboxUrl } from '../lib/urlHelpers';
 
+const ENABLE_DEBUG_LOGGING = false;
+
 export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId, sessionId }) {
   let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
   let SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
@@ -16,19 +18,29 @@ export function LivePreview({ code, loading = false, statusText = '', generation
   const prevLoading = useRef(loading);
   const prevCode = useRef(code);
 
+  const loggingFailedRef = useRef(false);
+  const failureCountRef = useRef(0);
+
   const postDebugEvent = async (payload) => {
+    if (!ENABLE_DEBUG_LOGGING) return;
+    if (loggingFailedRef.current) return;
+
     try {
       const res = await fetch(`${API_BASE}/log-debug-event`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      if (res.ok) return;
+      if (res.ok) {
+        failureCountRef.current = 0;
+        return;
+      }
     } catch (e) {}
 
     // Fallback directly to localhost ports to bypass cached/unrestarted dev server proxies
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       const fallbackPorts = ['8000', '8001'];
+      let fallbackSuccess = false;
       for (const port of fallbackPorts) {
         try {
           const res = await fetch(`http://localhost:${port}/log-debug-event`, {
@@ -36,9 +48,23 @@ export function LivePreview({ code, loading = false, statusText = '', generation
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
-          if (res.ok) return;
+          if (res.ok) {
+            fallbackSuccess = true;
+            break;
+          }
         } catch (e) {}
       }
+      if (fallbackSuccess) {
+        failureCountRef.current = 0;
+        return;
+      }
+    }
+
+    // Track consecutive logging failures
+    failureCountRef.current += 1;
+    if (failureCountRef.current >= 3) {
+      loggingFailedRef.current = true;
+      console.warn("Debug logging server is offline/unavailable. Disabling preview logging to avoid console pollution.");
     }
   };
 

@@ -72,10 +72,14 @@ class JSXPatchEngine:
                         stream=False
                     )
                     code = response.choices[0].message.content.strip()
-                    patched_files[clean_path] = cleanGeneratedCode(code)
+                    cleaned_code = cleanGeneratedCode(code)
+                    if not cleaned_code or len(cleaned_code.strip()) < 30:
+                        raise ValueError(f"Generated new component '{clean_path}' is empty or too short.")
+                    patched_files[clean_path] = cleaned_code
                     logger.info(f"Created new component {clean_path}")
                 except Exception as exc:
                     logger.error(f"Failed to build new component {clean_path}: {exc}")
+                    raise exc
                     
             else:
                 # 2. PATCH EXISTING COMPONENT
@@ -97,7 +101,11 @@ class JSXPatchEngine:
                         stream=False
                     )
                     code = response.choices[0].message.content.strip()
-                    patched_files[clean_path] = cleanGeneratedCode(code)
+                    cleaned_code = cleanGeneratedCode(code)
+                    if not cleaned_code or len(cleaned_code.strip()) < 30 or ("export default" not in cleaned_code and "export " not in cleaned_code):
+                        logger.warning(f"Patch Engine returned empty or malformed code for '{clean_path}'. Keeping original code.")
+                    else:
+                        patched_files[clean_path] = cleaned_code
                     logger.info(f"Patched component {clean_path}")
                 except Exception as exc:
                     logger.error(f"Failed to patch component {clean_path}: {exc}")
@@ -127,10 +135,14 @@ class JSXPatchEngine:
                     stream=False
                 )
                 code = response.choices[0].message.content.strip()
-                patched_files["App.jsx"] = cleanGeneratedCode(code)
+                cleaned_code = cleanGeneratedCode(code)
+                if not cleaned_code or len(cleaned_code.strip()) < 30:
+                    raise ValueError("App.jsx mount generation returned empty or invalid code.")
+                patched_files["App.jsx"] = cleaned_code
                 logger.info("Successfully updated App.jsx mounts.")
             except Exception as exc:
                 logger.error(f"Failed to auto-mount components in App.jsx: {exc}")
+                raise exc
                 
         return patched_files
 from pathlib import Path

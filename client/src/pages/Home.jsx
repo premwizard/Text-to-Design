@@ -36,16 +36,26 @@ function cleanGeneratedCode(code) {
   return cleaned.trim();
 }
 
-function validateGeneratedCode(code) {
-  if (!code) return true;
+function validateGeneratedCode(code, filename) {
+  if (!code || code.trim().length < 30) {
+    console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Code is empty or too short (length: ${code ? code.length : 0})`);
+    return false;
+  }
   const forbiddenTokens = ["<!--", "-->", "```", "###"];
   for (const token of forbiddenTokens) {
     if (code.includes(token)) {
+      console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Contains forbidden token: ${token}`);
       return false;
     }
   }
-  if (/\bfile:/i.test(code)) return false;
-  if (/\bfilename:/i.test(code)) return false;
+  if (/\bfile:/i.test(code)) {
+    console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Contains forbidden pattern 'file:'`);
+    return false;
+  }
+  if (/\bfilename:/i.test(code)) {
+    console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Contains forbidden pattern 'filename:'`);
+    return false;
+  }
   
   // Highlight spans checks
   const highlightingPatterns = [
@@ -59,6 +69,7 @@ function validateGeneratedCode(code) {
   ];
   for (const pattern of highlightingPatterns) {
     if (pattern.test(code)) {
+      console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Matches syntax highlighting span pattern: ${pattern.toString()}`);
       return false;
     }
   }
@@ -68,6 +79,7 @@ function validateGeneratedCode(code) {
   for (const line of lines) {
     if ((line.includes("import") || line.includes("export")) && 
         (line.includes("<") || line.includes(">") || line.includes("class=") || line.includes("className="))) {
+      console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Malformed import/export line: ${line}`);
       return false;
     }
   }
@@ -92,42 +104,45 @@ function Home() {
   const { user } = useAuth();
   const [recentProjects, setRecentProjects] = useState([]);
   
-  const [previewStatus, setPreviewStatus] = useState('IDLE'); // 'IDLE', 'LOADING', 'COMPILING', 'LOADED', 'RENDERED', 'RUNTIME_ERROR'
-  const [compileStatus, setCompileStatus] = useState('IDLE'); // 'IDLE', 'COMPILING', 'SUCCESS', 'FAILED'
-  const [latestConsoleLog, setLatestConsoleLog] = useState('');
-
-  // Handle preview iframe postMessage listeners
+  // Handle preview iframe postMessage listeners and log directly to console
   useEffect(() => {
     const handleMessage = (e) => {
       if (e.data?.type === 'preview_console') {
-        setLatestConsoleLog(`[${e.data.logType}] ${e.data.message}`);
-        if (e.data.logType === 'error') {
-          setPreviewStatus('RUNTIME_ERROR');
-        }
+        console.log(`[IFRAME CONSOLE] [${e.data.logType}] ${e.data.message}`);
       } else if (e.data?.type === 'runtime_error') {
-        setPreviewStatus('RUNTIME_ERROR');
+        console.error(`[IFRAME RUNTIME ERROR] ${e.data.error}\nStack:\n${e.data.stack}`);
       } else if (e.data?.type === 'preview_rendered') {
-        setPreviewStatus('RENDERED');
+        console.log(`[IFRAME DOM] DOM successfully rendered.`);
       }
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  // Update statuses when loading / compilation / errors update
+  // Log pipeline stages, compilation and status updates to console
+  useEffect(() => {
+    if (sessionId) {
+      console.log(`[PIPELINE SESSION ID] ${sessionId}`);
+    }
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (timelineStep || agentStatus) {
+      console.log(`[PIPELINE STATUS] Stage: ${timelineStep || 'None'} | Agent: ${agentStatus || 'Idle'}`);
+    }
+  }, [timelineStep, agentStatus]);
+
   useEffect(() => {
     if (loading) {
-      setPreviewStatus('LOADING');
-      setCompileStatus('COMPILING');
+      console.log("[PIPELINE STATUS] Compilation initiated (COMPILING)");
     }
   }, [loading]);
 
   useEffect(() => {
     if (error || localError) {
-      setCompileStatus('FAILED');
-      setPreviewStatus('COMPILE_ERROR');
+      console.error(`[PIPELINE STATUS] Compilation failed: ${error || localError}`);
     } else if (code && !loading) {
-      setCompileStatus('SUCCESS');
+      console.log("[PIPELINE STATUS] Compilation successful (SUCCESS)");
     }
   }, [error, localError, code, loading]);
 
@@ -212,7 +227,7 @@ function Home() {
     const sanitizedFiles = {};
     for (const [filename, fileContent] of Object.entries(files)) {
       const cleaned = cleanGeneratedCode(fileContent);
-      if (!validateGeneratedCode(cleaned)) {
+      if (!validateGeneratedCode(cleaned, filename)) {
         hasInvalidFile = true;
         break;
       }
@@ -613,75 +628,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Live Pipeline Debug Overlay */}
-      {sessionId && (
-        <div className="fixed bottom-24 right-6 z-40 max-w-sm w-full glass-panel border border-white/10 rounded-2xl p-4 shadow-2xl text-left text-xs text-zinc-300">
-          <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-2">
-            <span className="font-display font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-              Pipeline Live Debugger
-            </span>
-            <span className="text-[10px] text-zinc-500 font-mono select-all">
-              Session: {sessionId}
-            </span>
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-zinc-500 font-medium">Current Stage:</span>
-              <span className="font-semibold text-zinc-150 capitalize">
-                {timelineStep || (loading ? 'Generating Code' : 'Idle')}
-              </span>
-            </div>
-            
-            <div className="flex justify-between">
-              <span className="text-zinc-500 font-medium">Agent Status:</span>
-              <span className="font-mono text-[10px] font-bold text-violet-400 uppercase">
-                {agentStatus || 'Idle'}
-              </span>
-            </div>
 
-            <div className="flex justify-between">
-              <span className="text-zinc-500 font-medium">esbuild Compile:</span>
-              <span className={cn(
-                "font-bold uppercase text-[10px] px-1.5 py-0.5 rounded",
-                compileStatus === 'SUCCESS' ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" :
-                compileStatus === 'FAILED' ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" :
-                compileStatus === 'COMPILING' ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
-                "bg-zinc-850 text-zinc-400"
-              )}>
-                {compileStatus}
-              </span>
-            </div>
-
-            <div className="flex justify-between">
-              <span className="text-zinc-500 font-medium">Preview Render:</span>
-              <span className={cn(
-                "font-bold uppercase text-[10px] px-1.5 py-0.5 rounded",
-                previewStatus === 'RENDERED' ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" :
-                previewStatus === 'RUNTIME_ERROR' ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" :
-                previewStatus === 'COMPILE_ERROR' ? "bg-red-500/10 text-red-400 border border-red-500/20" :
-                previewStatus === 'LOADING' ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
-                "bg-zinc-850 text-zinc-400"
-              )}>
-                {previewStatus}
-              </span>
-            </div>
-
-            {(error || localError) && (
-              <div className="mt-2 p-2 bg-rose-950/20 border border-rose-500/10 rounded-lg text-[10px] text-rose-400 font-mono break-all max-h-20 overflow-y-auto">
-                <strong>Error:</strong> {error || localError}
-              </div>
-            )}
-
-            {latestConsoleLog && (
-              <div className="mt-2 p-2 bg-zinc-950/60 border border-zinc-850 rounded-lg text-[9px] text-zinc-500 font-mono truncate">
-                <strong>Console:</strong> {latestConsoleLog}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Action modal popups */}
       {modalContent && (
