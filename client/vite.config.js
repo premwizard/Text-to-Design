@@ -29,6 +29,7 @@ export default defineConfig(({ mode }) => {
         '/edit-ui': { target: backendTarget, changeOrigin: true },
         '/edit-history': { target: backendTarget, changeOrigin: true },
         '/log-debug-event': { target: backendTarget, changeOrigin: true },
+        '/adk-metrics': { target: backendTarget, changeOrigin: true },
       },
     },
   }

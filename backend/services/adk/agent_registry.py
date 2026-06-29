@@ -19,9 +19,19 @@ class AgentRegistry:
         self._agents[name] = agent_class
 
     def get_agent(self, name: str):
+        if not self._agents:
+            logger.info("[ADK] Registry empty. Force-loading agents...")
+            import importlib
+            import backend.services.adk.agents
+            import backend.services.adk.agents.wrapped_agents
+            try:
+                importlib.reload(backend.services.adk.agents)
+                importlib.reload(backend.services.adk.agents.wrapped_agents)
+            except Exception as e:
+                logger.error(f"[ADK] Failed to reload agents modules: {e}")
         agent_cls = self._agents.get(name)
         if not agent_cls:
-            raise KeyError(f"Agent '{name}' is not registered.")
+            raise KeyError(f"Agent '{name}' is not registered. Registered agents: {self.list_agents()}")
         return agent_cls()
 
     def list_agents(self):

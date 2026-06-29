@@ -1,0 +1,46 @@
+{
+  "compile_successes": 18,
+  "compile_total": 20,
+  "generations_successes": 9,
+  "generations_total": 10,
+  "edits_successes": 5,
+  "edits_total": 5,
+  "prompt_understanding_runs": 11,
+  "prompt_understanding_matches": 10,
+  "critic_scores": [
+    8.0,
+    8.2,
+    8.5
+  ],
+  "vision_scores": [
+    8.3,
+    8.5,
+    8.6
+  ],
+  "agent_runs": {
+    "router_agent": {
+      "runs": 12,
+      "duration_sum": 0.23999999999999996,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "memory": {
+      "runs": 2,
+      "duration_sum": 37.49416518211365,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "understanding": {
+      "runs": 1,
+      "duration_sum": 49.18495845794678,
+      "failures": 0,
+      "tool_calls_count": 0
+    },
+    "retrieval": {
+      "runs": 1,
+      "duration_sum": 0.11903929710388184,
+      "failures": 0,
+      "tool_calls_count": 0
+    }
+  }
+}

@@ -31,9 +31,19 @@ class ToolRegistry:
         self._tools[name] = tool_instance
 
     def get_tool(self, name: str) -> BaseADKTool:
+        if not self._tools:
+            logger.info("[ADK] Registry empty. Force-loading tools...")
+            import importlib
+            import backend.services.adk.tools
+            import backend.services.adk.tools.wrapped_tools
+            try:
+                importlib.reload(backend.services.adk.tools)
+                importlib.reload(backend.services.adk.tools.wrapped_tools)
+            except Exception as e:
+                logger.error(f"[ADK] Failed to reload tools modules: {e}")
         tool = self._tools.get(name)
         if not tool:
-            raise KeyError(f"Tool '{name}' is not registered.")
+            raise KeyError(f"Tool '{name}' is not registered. Registered tools: {self.list_tools()}")
         return tool
 
     def list_tools(self):

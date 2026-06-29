@@ -27,6 +27,10 @@ from backend.routes.fix_jsx import router as fix_jsx_router
 from backend.services.logger import setup_logging
 from backend.rag.manager import setup_rag
 
+# Ensure ADK agents and tools are registered at startup
+import backend.services.adk.agents
+import backend.services.adk.tools
+
 load_dotenv()
 setup_logging()
 logger = logging.getLogger("backend")
