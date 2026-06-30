@@ -1,0 +1,2 @@
+# Backward-compatibility shim — provider has moved to backend.app.services.providers.openrouter_provider
+from backend.app.services.providers.openrouter_provider import generate_text, generate_stream  # noqa: F401
