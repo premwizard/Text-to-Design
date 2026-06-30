@@ -28,6 +28,12 @@ from backend.routes.generate import router as my_test_generate_router
 from backend.services.logger import setup_logging
 from backend.rag.manager import setup_rag
 
+# New clean architecture routes
+from backend.routes.generate_routes import router as generate_routes_router
+from backend.routes.memory_routes import router as memory_routes_router
+from backend.routes.preview_routes import router as preview_routes_router
+from backend.routes.metrics_routes import router as metrics_routes_router
+
 # Ensure ADK agents and tools are registered at startup
 import backend.services.adk.agents
 import backend.services.adk.tools
@@ -123,6 +129,12 @@ async def log_debug_event_preview_direct(request: Request):
 app.include_router(generate_router)
 app.include_router(fix_jsx_router)
 app.include_router(my_test_generate_router)
+
+# New clean architecture routes (non-conflicting, additive)
+app.include_router(generate_routes_router)
+app.include_router(memory_routes_router)
+app.include_router(preview_routes_router)
+app.include_router(metrics_routes_router)
 
 # Alias API routes under /preview to support preview-hosted frontend paths
 app.include_router(generate_router, prefix="/preview")

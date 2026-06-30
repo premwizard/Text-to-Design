@@ -5,11 +5,11 @@ import os
 from backend.services.prompt_optimizer import optimize_prompt
 from backend.config.ai_models import PROVIDERS_CONFIG, get_provider_fallback_order
 
-# Dynamically load providers
-import backend.services.groq_provider as groq_provider
-import backend.services.gemini_provider as gemini_provider
-import backend.services.openai_provider as openai_provider
-import backend.services.openrouter_provider as openrouter_provider
+# Load providers from the canonical providers/ package
+import backend.providers.groq_provider as groq_provider
+import backend.providers.gemini_provider as gemini_provider
+import backend.providers.openai_provider as openai_provider
+import backend.providers.openrouter_provider as openrouter_provider
 
 PROVIDERS = {
     "groq": groq_provider,

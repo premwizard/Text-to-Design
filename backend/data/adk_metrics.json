@@ -5,8 +5,8 @@
   "generations_total": 24,
   "edits_successes": 5,
   "edits_total": 5,
-  "prompt_understanding_runs": 29,
-  "prompt_understanding_matches": 27,
+  "prompt_understanding_runs": 30,
+  "prompt_understanding_matches": 28,
   "critic_scores": [
     8.0,
     8.2,
@@ -60,27 +60,27 @@
       "tool_calls_count": 0
     },
     "understanding": {
-      "runs": 19,
-      "duration_sum": 767.9081773757935,
+      "runs": 20,
+      "duration_sum": 862.4570600986481,
       "failures": 0,
       "tool_calls_count": 0
     },
     "retrieval": {
-      "runs": 19,
-      "duration_sum": 1.6787843704223633,
+      "runs": 20,
+      "duration_sum": 1.7666306495666504,
       "failures": 0,
       "tool_calls_count": 0
     },
     "planning": {
-      "runs": 19,
-      "duration_sum": 719.961911201477,
+      "runs": 20,
+      "duration_sum": 820.7092969417572,
       "failures": 0,
       "tool_calls_count": 0
     },
     "generating": {
-      "runs": 17,
-      "duration_sum": 4073.392711877823,
-      "failures": 2,
+      "runs": 18,
+      "duration_sum": 4080.4633164405823,
+      "failures": 3,
       "tool_calls_count": 0
     },
     "vision": {
