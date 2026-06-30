@@ -11,7 +11,7 @@ from backend.services.agents.full_app_generation import (
     run_auto_fix_generation
 )
 from backend.services.agents.sanitizer_agent import run_code_sanitization
-from backend.services.agents.code_validator_agent import run_code_validation, escape_json_chunk
+from backend.services.agents.code_validator_agent import run_code_validation
 from backend.services.agents.vision_agent import run_vision_agent
 from backend.services.vision.screenshot_service import capture_sandbox_screenshots
 from backend.services.agents.ui_critic_agent import run_ui_critic
