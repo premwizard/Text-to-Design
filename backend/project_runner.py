@@ -369,8 +369,10 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
 
     # 1. Clean every file content and validate first
     cleaned_files = {}
+    from backend.utils.jsx_sanitizer import sanitize_jsx
     for rel_path, content in files.items():
         cleaned_content = cleanGeneratedCode(content)
+        cleaned_content = await sanitize_jsx(cleaned_content, rel_path)
         cleaned_files[rel_path] = cleaned_content
 
     if not bypass_validation:

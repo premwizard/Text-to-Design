@@ -5,8 +5,8 @@
   "generations_total": 24,
   "edits_successes": 5,
   "edits_total": 5,
-  "prompt_understanding_runs": 27,
-  "prompt_understanding_matches": 25,
+  "prompt_understanding_runs": 29,
+  "prompt_understanding_matches": 27,
   "critic_scores": [
     8.0,
     8.2,
@@ -48,39 +48,39 @@
   ],
   "agent_runs": {
     "router_agent": {
-      "runs": 31,
-      "duration_sum": 0.6200000000000002,
+      "runs": 34,
+      "duration_sum": 0.6800000000000003,
       "failures": 0,
       "tool_calls_count": 0
     },
     "memory": {
-      "runs": 20,
-      "duration_sum": 119.96784591674805,
+      "runs": 23,
+      "duration_sum": 121.2457947731018,
       "failures": 0,
       "tool_calls_count": 0
     },
     "understanding": {
-      "runs": 17,
-      "duration_sum": 726.2194154262543,
+      "runs": 19,
+      "duration_sum": 767.9081773757935,
       "failures": 0,
       "tool_calls_count": 0
     },
     "retrieval": {
-      "runs": 17,
-      "duration_sum": 1.393183708190918,
+      "runs": 19,
+      "duration_sum": 1.6787843704223633,
       "failures": 0,
       "tool_calls_count": 0
     },
     "planning": {
-      "runs": 17,
-      "duration_sum": 690.3105554580688,
+      "runs": 19,
+      "duration_sum": 719.961911201477,
       "failures": 0,
       "tool_calls_count": 0
     },
     "generating": {
-      "runs": 15,
-      "duration_sum": 4059.2372901439667,
-      "failures": 0,
+      "runs": 17,
+      "duration_sum": 4073.392711877823,
+      "failures": 2,
       "tool_calls_count": 0
     },
     "vision": {
