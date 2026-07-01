@@ -227,7 +227,7 @@ async def run_adk_orchestration_stream(
                     cleaned = re.sub(r'\n?```\s*$', '', cleaned)
                     cleaned = cleaned.strip()
                     
-                    from backend.app.api.routes.generate_ui import parse_json_robust
+                    from backend.app.utils.jsx_parser import parse_json_robust
                     parsed_data = parse_json_robust(cleaned)
                     if not parsed_data:
                         raise ValueError("No JSON object found in response")
@@ -465,7 +465,7 @@ async def run_adk_orchestration_stream(
         yield {"type": "timeline", "step": "Optimizing Design"}
         yield {"type": "agent_start", "agent": "optimizing", "message": "Applying visual critic revisions and interactive styling improvements..."}
         
-        optimization_agent = registry.get_agent("optimizing")
+        optimization_agent = registry.get_agent("optimization")
         optimized_files = await optimization_agent.run({
             "files": generated_files,
             "critic_feedback": critic_feedback,

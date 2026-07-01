@@ -40,14 +40,17 @@ class VisionAgent:
         mobile_b64 = encode_image_base64(mobile_path) if mobile_path else ""
         
         # Ensure we have at least one screenshot before running vision model
-        openai_key = get_env("OPENAI_API_KEY")
+        openrouter_key = get_env("OPENROUTER_API_KEY")
         
-        if not openai_key or not (desktop_b64 or tablet_b64 or mobile_b64):
-            logger.warning("OPENAI_API_KEY missing or screenshot base64 strings empty. Running offline fallback critic.")
+        if not openrouter_key or not (desktop_b64 or tablet_b64 or mobile_b64):
+            logger.warning("OPENROUTER_API_KEY missing or screenshot base64 strings empty. Running offline fallback critic.")
             return self._fallback_visual_analysis(metadata)
             
         try:
-            client = openai.AsyncOpenAI(api_key=openai_key)
+            client = openai.AsyncOpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=openrouter_key
+            )
             
             audit_prompt = (
                 "You are an elite web UI auditor and visual critic. "
@@ -88,7 +91,7 @@ class VisionAgent:
                 content_list.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{mobile_b64}"}})
                 
             response = await client.chat.completions.create(
-                model="gpt-4o",
+                model="openai/gpt-4o",
                 messages=[{"role": "user", "content": content_list}],
                 temperature=0.2,
                 max_tokens=800,
@@ -101,7 +104,7 @@ class VisionAgent:
             return parsed
             
         except Exception as exc:
-            logger.error(f"Failed to query OpenAI Vision API: {exc}. Reverting to fallback analysis.")
+            logger.error(f"Failed to query OpenRouter Vision API: {exc}. Reverting to fallback analysis.")
             return self._fallback_visual_analysis(metadata)
 
     def _fallback_visual_analysis(self, metadata: dict = None) -> dict:

@@ -95,10 +95,11 @@ class CriticADKAgent(BaseADKAgent):
         super().__init__("critic")
 
     async def _execute(self, input_data: dict, **kwargs) -> dict:
-        design_plan = input_data.get("design_plan")
         files = input_data.get("files")
+        vision_feedback = input_data.get("vision_feedback")
+        is_single_mode = input_data.get("is_single_mode", False)
         from backend.app.agents.ui_critic_agent import run_ui_critic
-        return await run_ui_critic(design_plan, files)
+        return await run_ui_critic(files, vision_feedback, is_single_mode)
 
 
 @register_adk_agent("vision")
@@ -121,10 +122,10 @@ class OptimizationADKAgent(BaseADKAgent):
 
     async def _execute(self, input_data: dict, **kwargs) -> dict:
         files = input_data.get("files")
-        design_plan = input_data.get("design_plan")
-        critic_output = input_data.get("critic_output")
+        critic_feedback = input_data.get("critic_feedback")
+        is_single_mode = input_data.get("is_single_mode", False)
         from backend.app.agents.optimization_agent import run_optimization
-        return await run_optimization(files, design_plan, critic_output)
+        return await run_optimization(files, critic_feedback, is_single_mode)
 
 
 @register_adk_agent("edit")
@@ -138,3 +139,50 @@ class EditADKAgent(BaseADKAgent):
         design_metadata = input_data.get("design_metadata")
         from backend.app.agents.edit_agent import run_edit_planning
         return await run_edit_planning(edit_prompt, current_files, design_metadata)
+
+
+@register_adk_agent("sanitizer")
+class SanitizerADKAgent(BaseADKAgent):
+    def __init__(self):
+        super().__init__("sanitizer")
+
+    async def _execute(self, input_data: dict, **kwargs) -> dict:
+        files = input_data.get("files", {})
+        from backend.app.agents.sanitizer_agent import run_sanitizer
+        return await run_sanitizer(files)
+
+@register_adk_agent("code_validator")
+class CodeValidatorADKAgent(BaseADKAgent):
+    def __init__(self):
+        super().__init__("code_validator")
+
+    async def _execute(self, input_data: dict, **kwargs) -> dict:
+        files = input_data.get("files", {})
+        from backend.app.agents.code_validator_agent import run_code_validation
+        return await run_code_validation(files)
+
+@register_adk_agent("auto_fixer")
+class AutoFixerADKAgent(BaseADKAgent):
+    def __init__(self):
+        super().__init__("auto_fixer")
+
+    async def _execute(self, input_data: dict, **kwargs) -> dict:
+        files = input_data.get("files", {})
+        errors = input_data.get("errors", [])
+        from backend.app.agents.full_app_generation import run_auto_fix_generation
+        
+        # Only pass the broken files to the auto-fixer
+        broken_files = {}
+        for err in errors:
+            fname = err.get("file")
+            if fname and fname in files:
+                broken_files[fname] = files[fname]
+                
+        fixed_files = await run_auto_fix_generation(broken_files, errors)
+        
+        # Merge fixed files back into original files
+        merged_files = files.copy()
+        for fname, fcode in fixed_files.items():
+            merged_files[fname] = fcode
+            
+        return {"files": merged_files}

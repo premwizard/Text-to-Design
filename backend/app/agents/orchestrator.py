@@ -179,7 +179,7 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None, genera
                     cleaned = re.sub(r'\n?```\s*$', '', cleaned)
                     cleaned = cleaned.strip()
                     
-                    from backend.app.api.routes.generate_ui import parse_json_robust
+                    from backend.app.utils.jsx_parser import parse_json_robust
                     parsed_data = parse_json_robust(cleaned)
                     if not parsed_data:
                         raise ValueError("No JSON object found in response")

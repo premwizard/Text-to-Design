@@ -1,0 +1,37 @@
+{
+  "userId": "test_user_1",
+  "preferences": {
+    "theme": {
+      "dark": 1
+    },
+    "style": {
+      "dark-modern": 1
+    },
+    "borderRadius": {},
+    "spacing": {},
+    "favoriteColors": {
+      "indigo": 1
+    },
+    "preferredLayouts": {
+      "navbar: top, sidebar: left": 1
+    },
+    "commonComponents": {
+      "herosection": 1,
+      "chartgrid": 1,
+      "datacardgrid": 1,
+      "transactiontable": 1,
+      "footer": 1
+    }
+  },
+  "history": [
+    {
+      "prompt": "A modern analytics dashboard with a dark theme",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    }
+  ],
+  "settings": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,173 @@
+[13:02:56] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ProductGridSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 32. Expected </div> from line 23
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 54. Expected </nav> from line 15
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 71. Expected </div> from line 62
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 73 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 74 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </nav> found on line 75 without an opening tag
+- [components/ProductGridSection.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 79. Expected </div> from line 61
+- [components/ProductGridSection.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 81 without an opening tag
+
+[13:04:09] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ProductGridSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 32. Expected </div> from line 23
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 54. Expected </nav> from line 15
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 71. Expected </div> from line 62
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 73 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 74 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </nav> found on line 75 without an opening tag
+- [components/ProductGridSection.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 79. Expected </div> from line 61
+- [components/ProductGridSection.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 81 without an opening tag
+
+[13:11:00] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/CategoryShowcase' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ProductGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+- [components/CategoryShowcase.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 54. Expected </div> from line 34
+- [components/CategoryShowcase.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 56. Expected </section> from line 32
+- [components/CategoryShowcase.jsx] UNMATCHED_CLOSING_TAG: Closing tag </section> found on line 57 without an opening tag
+- [components/ProductGrid.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 97. Expected </section> from line 65
+- [components/ProductGrid.jsx] UNMATCHED_CLOSING_TAG: Closing tag </section> found on line 103 without an opening tag
+
+[13:11:42] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar.jsx' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection.jsx' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/CategoryShowcase.jsx' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ProductGrid.jsx' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer.jsx' is not allowed
+- [components/CategoryShowcase.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 54. Expected </React.Fragment> from line 36
+- [components/CategoryShowcase.jsx] MISMATCHED_TAG: Mismatched closing tag </React.Fragment> on line 55. Expected </div> from line 34
+- [components/CategoryShowcase.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 57. Expected </section> from line 32
+- [components/CategoryShowcase.jsx] UNMATCHED_CLOSING_TAG: Closing tag </section> found on line 58 without an opening tag
+- [components/ProductGrid.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 95. Expected </React.Fragment> from line 69
+- [components/ProductGrid.jsx] MISMATCHED_TAG: Mismatched closing tag </React.Fragment> on line 96. Expected </div> from line 67
+- [components/ProductGrid.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 98. Expected </section> from line 65
+- [components/ProductGrid.jsx] UNMATCHED_CLOSING_TAG: Closing tag </section> found on line 104 without an opening tag
+
+[13:17:37] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ProductGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 60. Expected </div> from line 53
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 64. Expected </nav> from line 16
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </nav> found on line 81 without an opening tag
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 57. Expected </li> from line 50
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </li> on line 58. Expected </ul> from line 48
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </ul> on line 60. Expected </div> from line 46
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 74. Expected </div> from line 67
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 81. Expected </div> from line 65
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 88. Expected </div> from line 34
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 95. Expected </footer> from line 33
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 96 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 97 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 98 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 103 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </footer> found on line 104 without an opening tag
+
+[13:18:15] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ProductGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 60. Expected </div> from line 53
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </div> on line 64. Expected </nav> from line 16
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </nav> found on line 81 without an opening tag
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 57. Expected </li> from line 50
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </li> on line 58. Expected </ul> from line 48
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </ul> on line 60. Expected </div> from line 46
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 74. Expected </div> from line 67
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 81. Expected </div> from line 65
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 88. Expected </div> from line 34
+- [components/Footer.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 95. Expected </footer> from line 33
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 96 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 97 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 98 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 103 without an opening tag
+- [components/Footer.jsx] UNMATCHED_CLOSING_TAG: Closing tag </footer> found on line 104 without an opening tag
+
+[14:32:52] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Sidebar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ChartGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/DataCardGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/TransactionTable' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 40. Expected </div> from line 28
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 54. Expected </div> from line 16
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 61. Expected </nav> from line 12
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </a> found on line 68 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 69 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 71 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 72 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </nav> found on line 73 without an opening tag
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 25. Expected </aside> from line 19
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 44. Expected </li> from line 35
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </li> on line 45. Expected </ul> from line 33
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </ul> on line 47. Expected </nav> from line 32
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </nav> on line 48. Expected </div> from line 26
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 58. Expected </div> from line 49
+- [components/Sidebar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 59 without an opening tag
+- [components/Sidebar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 60 without an opening tag
+- [components/Sidebar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </aside> found on line 61 without an opening tag
+- [components/ChartGrid.jsx] INVALID_IMPORT: 'recharts' is not allowed
+- [components/TransactionTable.jsx] MISMATCHED_TAG: Mismatched closing tag </select> on line 55. Expected </div> from line 35
+- [components/TransactionTable.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 89 without an opening tag
+
+[14:34:22] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Sidebar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/ChartGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/DataCardGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/TransactionTable' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 40. Expected </div> from line 28
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 54. Expected </div> from line 16
+- [components/Navbar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 61. Expected </nav> from line 12
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </a> found on line 68 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 69 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 71 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 72 without an opening tag
+- [components/Navbar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </nav> found on line 73 without an opening tag
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </button> on line 25. Expected </aside> from line 19
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 44. Expected </li> from line 35
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </li> on line 45. Expected </ul> from line 33
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </ul> on line 47. Expected </nav> from line 32
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </nav> on line 48. Expected </div> from line 26
+- [components/Sidebar.jsx] MISMATCHED_TAG: Mismatched closing tag </a> on line 58. Expected </div> from line 49
+- [components/Sidebar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 59 without an opening tag
+- [components/Sidebar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </div> found on line 60 without an opening tag
+- [components/Sidebar.jsx] UNMATCHED_CLOSING_TAG: Closing tag </aside> found on line 61 without an opening tag
+- [components/ChartGrid.jsx] INVALID_IMPORT: 'recharts' is not allowed
+- [components/TransactionTable.jsx] MISSING_EXPORT: Component must have 'export default' or 'export const'
+- [components/TransactionTable.jsx] UNCLOSED_BRACKET: Unclosed bracket '{' starting on line 21
+- [components/TransactionTable.jsx] UNCLOSED_BRACKET: Unclosed bracket '(' starting on line 31
+- [components/TransactionTable.jsx] UNCLOSED_BRACKET: Unclosed bracket '{' starting on line 69
+- [components/TransactionTable.jsx] UNCLOSED_BRACKET: Unclosed bracket '(' starting on line 69
+- [components/TransactionTable.jsx] UNCLOSED_BRACKET: Unclosed bracket '(' starting on line 69
+- [components/TransactionTable.jsx] UNCLOSED_BRACKET: Unclosed bracket '{' starting on line 77
+- [components/TransactionTable.jsx] MISMATCHED_TAG: Mismatched closing tag </select> on line 55. Expected </div> from line 35
+- [components/TransactionTable.jsx] UNCLOSED_TAG: Tag <div> is not closed (started on line 58)
+- [components/TransactionTable.jsx] UNCLOSED_TAG: Tag <table> is not closed (started on line 59)
+- [components/TransactionTable.jsx] UNCLOSED_TAG: Tag <tbody> is not closed (started on line 68)
+- [components/TransactionTable.jsx] UNCLOSED_TAG: Tag <tr> is not closed (started on line 70)
+- [components/TransactionTable.jsx] UNCLOSED_TAG: Tag <td> is not closed (started on line 76)
+
+[14:45:28] [Agent: CODE_VALIDATION] [Status: FAIL]
+- [App.jsx] INVALID_IMPORT: './components/Navbar' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/HeroSection' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/BentoFeatures' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/CardGrid' is not allowed
+- [App.jsx] INVALID_IMPORT: './components/Footer' is not allowed
+

@@ -2,5 +2,6 @@
 from backend.app.agents.wrapped_agents import (  # noqa: F401
     MemoryADKAgent, PromptUnderstandingADKAgent, RetrievalADKAgent,
     PlanningADKAgent, GenerationADKAgent, CriticADKAgent,
-    VisionADKAgent, OptimizationADKAgent, EditADKAgent
+    VisionADKAgent, OptimizationADKAgent, EditADKAgent,
+    SanitizerADKAgent
 )

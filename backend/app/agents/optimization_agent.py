@@ -62,7 +62,7 @@ async def run_optimization(files: dict[str, str], critic_feedback: dict, is_sing
                 parsed = json.loads(json_str)
             except json.JSONDecodeError as parse_err:
                 logger.warning(f"Optimization JSON parsing failed: {parse_err}. Attempting auto-repairs...")
-                from backend.app.api.routes.generate_ui import _repair_json_escapes, _repair_truncated_json
+                from backend.app.utils.jsx_parser import _repair_json_escapes, _repair_truncated_json
                 try:
                     repaired = _repair_json_escapes(json_str)
                     parsed = json.loads(repaired)

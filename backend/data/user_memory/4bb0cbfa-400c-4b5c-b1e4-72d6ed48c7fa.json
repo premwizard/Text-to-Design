@@ -1,37 +1,15 @@
 {
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
-    "theme": {
-      "light": 1
-    },
-    "style": {
-      "minimal": 1
-    },
+    "theme": {},
+    "style": {},
     "borderRadius": {},
     "spacing": {},
-    "favoriteColors": {
-      "zinc": 1
-    },
-    "preferredLayouts": {
-      "navbar: top, sidebar: none": 1
-    },
-    "commonComponents": {
-      "navbar": 1,
-      "herosection": 1,
-      "aboutsection": 1,
-      "bentofeatures": 1,
-      "contactsection": 1,
-      "footer": 1
-    }
+    "favoriteColors": {},
+    "preferredLayouts": {},
+    "commonComponents": {}
   },
-  "history": [
-    {
-      "prompt": "Build a portfolio website: Creative personal site",
-      "style": "minimal",
-      "theme": "minimal light",
-      "primaryColor": "zinc"
-    }
-  ],
+  "history": [],
   "settings": {
     "enabled": true
   }
