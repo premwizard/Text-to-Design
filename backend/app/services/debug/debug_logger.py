@@ -5,7 +5,6 @@ import logging
 import contextvars
 from pathlib import Path
 
-DEBUG_LOGS_DIR = Path(__file__).parent.parent.parent / "data" / "debug_logs"
 SNAPSHOT_DIR = Path(__file__).parent.parent.parent / "data" / "failure_snapshots"
 
 session_id_var = contextvars.ContextVar("session_id", default="global_debug")
@@ -17,8 +16,6 @@ class DebugLogger:
         else:
             self.session_id = session_id_var.get()
         self.session_id = self.session_id or "default_session"
-        DEBUG_LOGS_DIR.mkdir(parents=True, exist_ok=True)
-        self.log_file = DEBUG_LOGS_DIR / f"{self.session_id}.log"
         
     def log(self, stage: str, status: str, message: str, error: str = None, fix_applied: str = None):
         timestamp = time.strftime("%H:%M:%S")
@@ -27,12 +24,8 @@ class DebugLogger:
             log_line += f"[Error: {error}]\n"
         if fix_applied:
             log_line += f"[Fix Applied: {fix_applied}]\n"
-        log_line += f"{message}\n\n"
-        try:
-            with open(self.log_file, "a", encoding="utf-8") as f:
-                f.write(log_line)
-        except Exception as e:
-            logging.error(f"Failed to write to debug log {self.log_file}: {e}")
+        log_line += f"{message}"
+        logging.info(log_line)
 
 def save_failure_snapshot(session_id: str, files: dict, compile_output: str, screenshot_paths: dict = None):
     try:
@@ -49,13 +42,8 @@ def save_failure_snapshot(session_id: str, files: dict, compile_output: str, scr
             
         # 2. Save compile output
         (target_dir / "compile_output.txt").write_text(compile_output or "", encoding="utf-8")
-        
-        # 3. Copy logs if available
-        log_file = DEBUG_LOGS_DIR / f"{session_id}.log"
-        if log_file.exists():
-            shutil.copy2(log_file, target_dir / "session.log")
             
-        # 4. Copy screenshots if available
+        # 3. Copy screenshots if available
         if screenshot_paths:
             screenshot_dir = target_dir / "screenshots"
             screenshot_dir.mkdir(parents=True, exist_ok=True)
