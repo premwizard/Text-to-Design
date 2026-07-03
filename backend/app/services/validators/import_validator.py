@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger("backend.app.utils.validators.import_validator")
 
 FORBIDDEN_IMPORTS = ["react-native", "lucide-react-native", "next/", "expo", "@react-navigation", "@chakra-ui/", "styled-components", "mui", "antd"]
-ALLOWED_IMPORTS = ["react", "react-dom", "react-router-dom", "lucide-react"]
+ALLOWED_IMPORTS = ["react", "react-dom", "react-router-dom", "lucide-react", "vite", "@vitejs/plugin-react"]
 
 def validate_imports(code: str, filename: str) -> tuple[bool, str]:
     """

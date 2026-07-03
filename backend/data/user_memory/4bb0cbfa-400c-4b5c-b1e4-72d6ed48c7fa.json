@@ -1,15 +1,37 @@
 {
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
-    "theme": {},
-    "style": {},
+    "theme": {
+      "light": 1
+    },
+    "style": {
+      "minimal": 1
+    },
     "borderRadius": {},
     "spacing": {},
-    "favoriteColors": {},
-    "preferredLayouts": {},
-    "commonComponents": {}
+    "favoriteColors": {
+      "zinc": 1
+    },
+    "preferredLayouts": {
+      "navbar: top, sidebar: none": 1
+    },
+    "commonComponents": {
+      "herosection": 1,
+      "featuressection": 1,
+      "testimonialcarousel": 1,
+      "pricingplan": 1,
+      "calltoactionsection": 1,
+      "footersection": 1
+    }
   },
-  "history": [],
+  "history": [
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    }
+  ],
   "settings": {
     "enabled": true
   }

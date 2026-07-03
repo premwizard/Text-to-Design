@@ -453,7 +453,7 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
         # Generate varX.html in sandbox dir
         html_path = SANDBOX_DIR / f"{variation_id}.html"
         print(f"[DEBUG] Generating HTML file: {html_path}")
-        print(f"[DEBUG] Asset paths used in HTML: /dist/assets/{variation_id}.css and /dist/assets/{variation_id}.js")
+        print(f"[DEBUG] Asset paths used in HTML: /preview/assets/{variation_id}.css and /preview/assets/{variation_id}.js")
         html_content = f"""<!doctype html>
 <html lang="en">
   <head>
@@ -481,6 +481,8 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Raw compiled CSS from bundler as fallback -->
+    <link rel="stylesheet" href="/preview/assets/{variation_id}.css" />
+
     <!-- Preview Debugger & Global Error Catching -->
     <script>
       console.log("[PREVIEW DEBUG] Initializing Variation {variation_id} preview...");
@@ -557,7 +559,7 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/dist/assets/{variation_id}.js"></script>
+    <script type="module" src="/preview/assets/{variation_id}.js"></script>
   </body>
 </html>"""
         html_path.write_text(html_content, encoding="utf-8")
