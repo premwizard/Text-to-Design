@@ -93,7 +93,7 @@ Sections to import and render:
 - Allowed libraries:
   * react
   * lucide-react
-  * react-router-dom
+  * react-router-dom (CRITICAL: Always use <HashRouter> instead of <BrowserRouter> for sandbox compatibility. Avoid BrowserRouter completely.)
 - Forbidden imports:
   * react-native
   * lucide-react-native

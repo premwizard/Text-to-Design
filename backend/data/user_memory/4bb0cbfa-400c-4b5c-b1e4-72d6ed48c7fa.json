@@ -2,31 +2,31 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 11
+      "light": 12
     },
     "style": {
-      "minimal": 11
+      "minimal": 12
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "zinc": 11
+      "zinc": 12
     },
     "preferredLayouts": {
       "navbar: top, sidebar: none": 10,
-      "navbar: none, sidebar: none": 1
+      "navbar: none, sidebar: none": 2
     },
     "commonComponents": {
-      "herosection": 9,
+      "herosection": 10,
       "featuressection": 4,
-      "testimonialcarousel": 9,
+      "testimonialcarousel": 10,
       "pricingplan": 4,
       "calltoactionsection": 2,
       "footersection": 1,
       "navbar": 2,
       "bentofeatures": 2,
       "projectssection": 1,
-      "footer": 10,
+      "footer": 11,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -36,17 +36,12 @@
       "metriccardssection": 1,
       "analyticschartssection": 1,
       "datatablesection": 1,
-      "transactiontable": 1
+      "transactiontable": 1,
+      "chartssection": 1
     }
   },
   "history": [
     {
-      "prompt": "Build a portfolio website: Creative personal site",
-      "style": "minimal",
-      "theme": "minimal light",
-      "primaryColor": "zinc"
-    },
-    {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "minimal",
       "theme": "minimal light",
@@ -96,6 +91,12 @@
     },
     {
       "prompt": "Build a e-commerce store: Online store front",
+      "style": "minimal",
+      "theme": "light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a analytics dashboard: Analytics and data view",
       "style": "minimal",
       "theme": "light",
       "primaryColor": "zinc"

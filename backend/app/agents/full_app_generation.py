@@ -40,7 +40,7 @@ Layout Context:
 
 ━━━ DEVELOPMENT GUIDELINES ━━━
 - Generate ONLY standard React web components for Vite.
-- Allowed libraries: react, lucide-react, react-router-dom
+- Allowed libraries: react, lucide-react, react-router-dom (CRITICAL: Always use <HashRouter> instead of <BrowserRouter>. Avoid BrowserRouter completely.)
 - App.jsx must import fonts and apply global styles via <style> tag.
 - Apply mobile-first responsive Tailwind classes (sm:, md:, lg:).
 - Design it with a premium visual feel, leveraging nice hover states and subtle gradients.

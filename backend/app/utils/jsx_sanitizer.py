@@ -61,14 +61,17 @@ async def validate_ast(code: str, filename: str) -> bool:
         # We execute in utils dir so node can find the script, but pass the absolute path of temp_file
         cmd = f"node {babel_script.resolve()} {temp_file.resolve()}"
         
-        proc = await asyncio.create_subprocess_shell(
-            cmd,
-            # Run in sandbox dir where @babel/parser is installed in node_modules
-            cwd=str(SANDBOX_DIR),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
-        stdout, stderr = await proc.communicate()
+        def _run_babel():
+            return subprocess.run(
+                cmd,
+                cwd=str(SANDBOX_DIR),
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            
+        proc = await asyncio.to_thread(_run_babel)
+        stdout, stderr = proc.stdout, proc.stderr
         
         if proc.returncode == 0:
             print(f"[DEBUG] [JSX-Sanitizer] Validation successful for {filename}")

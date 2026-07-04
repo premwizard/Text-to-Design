@@ -250,15 +250,19 @@ async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tupl
         temp_outfile = SANDBOX_DIR / "dist/assets/validate_temp.js"
         temp_outfile.parent.mkdir(parents=True, exist_ok=True)
         
-        cmd = "npx --yes esbuild src_validate_temp/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
+        cmd = 'npx --yes esbuild src_validate_temp/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic --define:process.env.NODE_ENV=\\"production\\"'
         
-        proc = await asyncio.create_subprocess_shell(
-            cmd,
-            cwd=str(SANDBOX_DIR),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
-        stdout, stderr = await proc.communicate()
+        def _run_esbuild():
+            return subprocess.run(
+                cmd,
+                cwd=str(SANDBOX_DIR),
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            
+        proc = await asyncio.to_thread(_run_esbuild)
+        stdout, stderr = proc.stdout, proc.stderr
         
         if temp_outfile.exists():
             try:
@@ -589,7 +593,7 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
         print(f"[DEBUG] Output JS file path: {abs_outfile_js}")
         print(f"[DEBUG] Output CSS file path: {abs_outfile_css}")
         
-        cmd = f"npx --yes esbuild {entry_point} --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
+        cmd = f'npx --yes esbuild {entry_point} --bundle --outfile={outfile_js} --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic --define:process.env.NODE_ENV=\\"production\\"'
         print(f"[DEBUG] Executing command: {cmd}")
         
         result = subprocess.run(
