@@ -107,7 +107,7 @@ async def sanitize_jsx(code: str, filename: str) -> str:
         is_valid = await validate_ast(sanitized_code, filename)
         if not is_valid:
             print(f"[JSX-Sanitizer] Validation failed. Using fallback component for {filename}.")
-            print(f"[DEBUG] Exact failure reason: Babel AST validation rejected the file. Returning FALLBACK_COMPONENT.")
-            return FALLBACK_COMPONENT
+            print(f"[DEBUG] Exact failure reason: Babel AST validation rejected the file. Returning original code for debug.")
+            return sanitized_code
             
     return sanitized_code

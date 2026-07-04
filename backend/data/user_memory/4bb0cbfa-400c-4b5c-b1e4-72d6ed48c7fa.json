@@ -2,30 +2,31 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 8
+      "light": 10
     },
     "style": {
-      "minimal": 8
+      "minimal": 10
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "zinc": 8
+      "zinc": 10
     },
     "preferredLayouts": {
-      "navbar: top, sidebar: none": 8
+      "navbar: top, sidebar: none": 9,
+      "navbar: none, sidebar: none": 1
     },
     "commonComponents": {
-      "herosection": 6,
+      "herosection": 8,
       "featuressection": 4,
-      "testimonialcarousel": 6,
-      "pricingplan": 3,
+      "testimonialcarousel": 8,
+      "pricingplan": 4,
       "calltoactionsection": 2,
       "footersection": 1,
       "navbar": 2,
-      "bentofeatures": 1,
+      "bentofeatures": 2,
       "projectssection": 1,
-      "footer": 7,
+      "footer": 9,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -34,7 +35,8 @@
       "filterssection": 1,
       "metriccardssection": 1,
       "analyticschartssection": 1,
-      "datatablesection": 1
+      "datatablesection": 1,
+      "transactiontable": 1
     }
   },
   "history": [
@@ -82,6 +84,18 @@
     },
     {
       "prompt": "Build a e-commerce store: Online store front",
+      "style": "minimal",
+      "theme": "light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a portfolio website: Creative personal site",
+      "style": "minimal",
+      "theme": "light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a analytics dashboard: Analytics and data view",
       "style": "minimal",
       "theme": "light",
       "primaryColor": "zinc"

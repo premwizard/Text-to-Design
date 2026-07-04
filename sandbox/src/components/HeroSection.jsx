@@ -2,11 +2,31 @@ import React from 'react';
 
 function HeroSection() {
   return (
-    <section className="bg-white py-10 md:py-16 lg:py-20">
-      <div className="container mx-auto p-4 md:p-6 lg:p-8 flex flex-col items-center">
-        <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold text-zinc-900 mb-4 md:mb-6 lg:mb-8">Unlock powerful insights with your data.</h1>
-        <p className="text-lg md:text-xl lg:text-2xl text-zinc-900 mb-8 md:mb-10 lg:mb-12 text-center">Discover the power of data-driven decision making with MetricStream.</p>
-        <button className="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 py-2 md:py-3 lg:py-4 px-4 md:px-6 lg:px-8 rounded-md transition duration-200">Get Started</button>
+    <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20 md:py-28 lg:py-36">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16 lg:gap-20">
+        <div className="text-slate-900 space-y-6 md:space-y-8 lg:space-y-10">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight">
+            Unlocking Insights, <span className="text-blue-600">Amplifying Success</span>
+          </h1>
+          <p className="text-slate-600 text-lg md:text-xl lg:text-2xl leading-relaxed">
+            Discover the power of data with TechPulse. We provide cutting-edge solutions to transform your business operations and drive growth.
+          </p>
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-lg">
+              Get Started
+            </button>
+            <button className="bg-white border border-slate-300 hover:border-blue-400 text-slate-700 hover:text-blue-600 font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-lg">
+              Learn More
+            </button>
+          </div>
+        </div>
+        <div className="hidden md:flex justify-center items-center">
+          <img
+            src="https://via.placeholder.com/600x450/60a5fa/ffffff?text=TechPulse+Hero"
+            alt="Abstract data visualization"
+            className="w-full max-w-md lg:max-w-lg h-auto object-cover rounded-xl shadow-xl transform hover:scale-105 transition-transform duration-500"
+          />
+        </div>
       </div>
     </section>
   );

@@ -12,14 +12,27 @@ const code = fs.readFileSync(filename, 'utf-8');
 try {
   parser.parse(code, {
     sourceType: 'module',
-    plugins: ['jsx', 'classProperties', 'dynamicImport']
+    plugins: ['jsx', 'typescript', 'dynamicImport', 'classProperties']
   });
   console.log("VALID");
   process.exit(0);
 } catch (e) {
-  const line = e.loc ? e.loc.line : 'unknown';
-  const column = e.loc ? e.loc.column : 'unknown';
-  console.error(`Parser Error: ${e.message}`);
-  console.error(`Line: ${line}, Column: ${column}`);
+  console.error("=".repeat(80));
+  console.error("[DEBUG] FULL AST ERROR");
+  console.error(`File: ${filename}`);
+  console.error(`Error type: ${e.name || typeof e}`);
+  console.error(`Error message: ${e.message}`);
+  
+  if (e.loc) {
+    console.error(`Line: ${e.loc.line}`);
+    console.error(`Column: ${e.loc.column}`);
+    const lines = code.split('\n');
+    const errorLine = lines[e.loc.line - 1] || "";
+    console.error(`Code at line: ${errorLine}`);
+    console.error(`              ${' '.repeat(Math.max(0, e.loc.column))}^`);
+  }
+  
+  if (e.stack) console.error(e.stack);
+  console.error("=".repeat(80));
   process.exit(1);
 }

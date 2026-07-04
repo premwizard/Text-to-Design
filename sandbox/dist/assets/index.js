@@ -30,7 +30,7 @@ var require_react_development = __commonJS({
     "use strict";
     (function() {
       function defineDeprecationWarning(methodName, info) {
-        Object.defineProperty(Component.prototype, methodName, {
+        Object.defineProperty(Component4.prototype, methodName, {
           get: function() {
             console.warn(
               "%s(...) is deprecated in plain JavaScript React classes. %s",
@@ -55,7 +55,7 @@ var require_react_development = __commonJS({
           publicInstance
         ), didWarnStateUpdateForUnmountedComponent[warningKey] = true);
       }
-      function Component(props, context, updater) {
+      function Component4(props, context, updater) {
         this.props = props;
         this.context = context;
         this.refs = emptyObject;
@@ -239,9 +239,9 @@ var require_react_development = __commonJS({
         return newKey;
       }
       function validateChildKeys(node) {
-        isValidElement(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
+        isValidElement2(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement2(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
       }
-      function isValidElement(object) {
+      function isValidElement2(object) {
         return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
       }
       function escape(key) {
@@ -310,13 +310,13 @@ var require_react_development = __commonJS({
           var childKey = "" === nameSoFar ? "." + getElementKey(invokeCallback, 0) : nameSoFar;
           isArrayImpl(callback) ? (escapedPrefix = "", null != childKey && (escapedPrefix = childKey.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function(c) {
             return c;
-          })) : null != callback && (isValidElement(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(
+          })) : null != callback && (isValidElement2(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(
             callback,
             escapedPrefix + (null == callback.key || invokeCallback && invokeCallback.key === callback.key ? "" : ("" + callback.key).replace(
               userProvidedKeyEscapeRegex,
               "$&/"
             ) + "/") + childKey
-          ), "" !== nameSoFar && null != invokeCallback && isValidElement(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
+          ), "" !== nameSoFar && null != invokeCallback && isValidElement2(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
           return 1;
         }
         invokeCallback = 0;
@@ -508,15 +508,15 @@ var require_react_development = __commonJS({
         }
       }, assign = Object.assign, emptyObject = {};
       Object.freeze(emptyObject);
-      Component.prototype.isReactComponent = {};
-      Component.prototype.setState = function(partialState, callback) {
+      Component4.prototype.isReactComponent = {};
+      Component4.prototype.setState = function(partialState, callback) {
         if ("object" !== typeof partialState && "function" !== typeof partialState && null != partialState)
           throw Error(
             "takes an object of state variables to update or a function which returns an object of state variables."
           );
         this.updater.enqueueSetState(this, partialState, callback, "setState");
       };
-      Component.prototype.forceUpdate = function(callback) {
+      Component4.prototype.forceUpdate = function(callback) {
         this.updater.enqueueForceUpdate(this, callback, "forceUpdate");
       };
       var deprecatedAPIs = {
@@ -531,10 +531,10 @@ var require_react_development = __commonJS({
       };
       for (fnName in deprecatedAPIs)
         deprecatedAPIs.hasOwnProperty(fnName) && defineDeprecationWarning(fnName, deprecatedAPIs[fnName]);
-      ComponentDummy.prototype = Component.prototype;
+      ComponentDummy.prototype = Component4.prototype;
       deprecatedAPIs = PureComponent.prototype = new ComponentDummy();
       deprecatedAPIs.constructor = PureComponent;
-      assign(deprecatedAPIs, Component.prototype);
+      assign(deprecatedAPIs, Component4.prototype);
       deprecatedAPIs.isPureReactComponent = true;
       var isArrayImpl = Array.isArray, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = {
         H: null,
@@ -613,7 +613,7 @@ var require_react_development = __commonJS({
           }) || [];
         },
         only: function(children) {
-          if (!isValidElement(children))
+          if (!isValidElement2(children))
             throw Error(
               "React.Children.only expected to receive a single React element child."
             );
@@ -622,7 +622,7 @@ var require_react_development = __commonJS({
       };
       exports.Activity = REACT_ACTIVITY_TYPE;
       exports.Children = fnName;
-      exports.Component = Component;
+      exports.Component = Component4;
       exports.Fragment = REACT_FRAGMENT_TYPE;
       exports.Profiler = REACT_PROFILER_TYPE;
       exports.PureComponent = PureComponent;
@@ -847,7 +847,7 @@ var require_react_development = __commonJS({
         });
         return elementType;
       };
-      exports.isValidElement = isValidElement;
+      exports.isValidElement = isValidElement2;
       exports.lazy = function(ctor) {
         ctor = { _status: -1, _result: ctor };
         var lazyType = {
@@ -1328,7 +1328,7 @@ var require_react_dom_development = __commonJS({
         return dispatcher;
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var React4 = require_react(), Internals = {
+      var React22 = require_react(), Internals = {
         d: {
           f: noop,
           r: function() {
@@ -1346,7 +1346,7 @@ var require_react_dom_development = __commonJS({
         },
         p: 0,
         findDOMNode: null
-      }, REACT_PORTAL_TYPE = Symbol.for("react.portal"), ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      }, REACT_PORTAL_TYPE = Symbol.for("react.portal"), ReactSharedInternals = React22.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       "function" === typeof Map && null != Map.prototype && "function" === typeof Map.prototype.forEach && "function" === typeof Set && null != Set.prototype && "function" === typeof Set.prototype.clear && "function" === typeof Set.prototype.forEach || console.error(
         "React depends on Map and Set built-in types. Make sure that you load a polyfill in older browsers. https://reactjs.org/link/react-polyfills"
       );
@@ -2881,7 +2881,7 @@ var require_react_dom_client_development = __commonJS({
         "number" === type && getActiveElement(node.ownerDocument) === node || node.defaultValue === "" + value || (node.defaultValue = "" + value);
       }
       function validateOptionProps(element, props) {
-        null == props.value && ("object" === typeof props.children && null !== props.children ? React4.Children.forEach(props.children, function(child) {
+        null == props.value && ("object" === typeof props.children && null !== props.children ? React22.Children.forEach(props.children, function(child) {
           null == child || "string" === typeof child || "number" === typeof child || "bigint" === typeof child || didWarnInvalidChild || (didWarnInvalidChild = true, console.error(
             "Cannot infer the option value of complex children. Pass a `value` prop or use a plain string as children to <option>."
           ));
@@ -4881,9 +4881,9 @@ var require_react_dom_client_development = __commonJS({
         this._debugHookTypes = null;
         hasBadMapPolyfill || "function" !== typeof Object.preventExtensions || Object.preventExtensions(this);
       }
-      function shouldConstruct(Component) {
-        Component = Component.prototype;
-        return !(!Component || !Component.isReactComponent);
+      function shouldConstruct(Component4) {
+        Component4 = Component4.prototype;
+        return !(!Component4 || !Component4.isReactComponent);
       }
       function createWorkInProgress(current2, pendingProps) {
         var workInProgress2 = current2.alternate;
@@ -6892,13 +6892,13 @@ var require_react_dom_client_development = __commonJS({
           if (!objectIs(nextDeps[i], prevDeps[i])) return false;
         return true;
       }
-      function renderWithHooks(current2, workInProgress2, Component, props, secondArg, nextRenderLanes) {
+      function renderWithHooks(current2, workInProgress2, Component4, props, secondArg, nextRenderLanes) {
         renderLanes = nextRenderLanes;
         currentlyRenderingFiber = workInProgress2;
         hookTypesDev = null !== current2 ? current2._debugHookTypes : null;
         hookTypesUpdateIndexDev = -1;
         ignorePreviousDependencies = null !== current2 && current2.type !== workInProgress2.type;
-        if ("[object AsyncFunction]" === Object.prototype.toString.call(Component) || "[object AsyncGeneratorFunction]" === Object.prototype.toString.call(Component))
+        if ("[object AsyncFunction]" === Object.prototype.toString.call(Component4) || "[object AsyncGeneratorFunction]" === Object.prototype.toString.call(Component4))
           nextRenderLanes = getComponentNameFromFiber(currentlyRenderingFiber), didWarnAboutAsyncClientComponent.has(nextRenderLanes) || (didWarnAboutAsyncClientComponent.add(nextRenderLanes), console.error(
             "%s is an async Client Component. Only Server Components can be async at the moment. This error is often caused by accidentally adding `'use client'` to a module that was originally written for the server.",
             null === nextRenderLanes ? "An unknown Component" : "<" + nextRenderLanes + ">"
@@ -6908,11 +6908,11 @@ var require_react_dom_client_development = __commonJS({
         workInProgress2.lanes = 0;
         ReactSharedInternals.H = null !== current2 && null !== current2.memoizedState ? HooksDispatcherOnUpdateInDEV : null !== hookTypesDev ? HooksDispatcherOnMountWithHookTypesInDEV : HooksDispatcherOnMountInDEV;
         shouldDoubleInvokeUserFnsInHooksDEV = nextRenderLanes = (workInProgress2.mode & StrictLegacyMode) !== NoMode;
-        var children = callComponentInDEV(Component, props, secondArg);
+        var children = callComponentInDEV(Component4, props, secondArg);
         shouldDoubleInvokeUserFnsInHooksDEV = false;
         didScheduleRenderPhaseUpdateDuringThisPass && (children = renderWithHooksAgain(
           workInProgress2,
-          Component,
+          Component4,
           props,
           secondArg
         ));
@@ -6921,7 +6921,7 @@ var require_react_dom_client_development = __commonJS({
           try {
             children = renderWithHooksAgain(
               workInProgress2,
-              Component,
+              Component4,
               props,
               secondArg
             );
@@ -6960,7 +6960,7 @@ var require_react_dom_client_development = __commonJS({
           "`use` was called from inside a try/catch block. This is not allowed and can lead to unexpected behavior. To handle errors triggered by `use`, wrap your component in a error boundary."
         )));
       }
-      function renderWithHooksAgain(workInProgress2, Component, props, secondArg) {
+      function renderWithHooksAgain(workInProgress2, Component4, props, secondArg) {
         currentlyRenderingFiber = workInProgress2;
         var numberOfReRenders = 0;
         do {
@@ -6983,7 +6983,7 @@ var require_react_dom_client_development = __commonJS({
           }
           hookTypesUpdateIndexDev = -1;
           ReactSharedInternals.H = HooksDispatcherOnRerenderInDEV;
-          children = callComponentInDEV(Component, props, secondArg);
+          children = callComponentInDEV(Component4, props, secondArg);
         } while (didScheduleRenderPhaseUpdateDuringThisPass);
         return children;
       }
@@ -7856,7 +7856,7 @@ var require_react_dom_client_development = __commonJS({
       function releaseAsyncTransition() {
         ReactSharedInternals.asyncTransitions--;
       }
-      function startTransition(fiber, queue, pendingState, finishedState, callback) {
+      function startTransition3(fiber, queue, pendingState, finishedState, callback) {
         var previousPriority = ReactDOMSharedInternals.p;
         ReactDOMSharedInternals.p = 0 !== previousPriority && previousPriority < ContinuousEventPriority ? previousPriority : ContinuousEventPriority;
         var prevTransition = ReactSharedInternals.T, currentTransition = {};
@@ -7909,7 +7909,7 @@ var require_react_dom_client_development = __commonJS({
           );
         var queue = ensureFormComponentIsStateful(formFiber).queue;
         startHostActionTimer(formFiber);
-        startTransition(
+        startTransition3(
           formFiber,
           queue,
           pendingState,
@@ -7970,7 +7970,7 @@ var require_react_dom_client_development = __commonJS({
       }
       function mountTransition() {
         var stateHook = mountStateImpl(false);
-        stateHook = startTransition.bind(
+        stateHook = startTransition3.bind(
           null,
           currentlyRenderingFiber,
           stateHook.queue,
@@ -8204,17 +8204,17 @@ var require_react_dom_client_development = __commonJS({
           null
         ));
       }
-      function resolveClassComponentProps(Component, baseProps) {
+      function resolveClassComponentProps(Component4, baseProps) {
         var newProps = baseProps;
         if ("ref" in baseProps) {
           newProps = {};
           for (var propName in baseProps)
             "ref" !== propName && (newProps[propName] = baseProps[propName]);
         }
-        if (Component = Component.defaultProps) {
+        if (Component4 = Component4.defaultProps) {
           newProps === baseProps && (newProps = assign({}, newProps));
-          for (var _propName in Component)
-            void 0 === newProps[_propName] && (newProps[_propName] = Component[_propName]);
+          for (var _propName in Component4)
+            void 0 === newProps[_propName] && (newProps[_propName] = Component4[_propName]);
         }
         return newProps;
       }
@@ -8443,8 +8443,8 @@ var require_react_dom_client_development = __commonJS({
           renderLanes2
         );
       }
-      function updateForwardRef(current2, workInProgress2, Component, nextProps, renderLanes2) {
-        Component = Component.render;
+      function updateForwardRef(current2, workInProgress2, Component4, nextProps, renderLanes2) {
+        Component4 = Component4.render;
         var ref = workInProgress2.ref;
         if ("ref" in nextProps) {
           var propsWithoutRef = {};
@@ -8455,7 +8455,7 @@ var require_react_dom_client_development = __commonJS({
         nextProps = renderWithHooks(
           current2,
           workInProgress2,
-          Component,
+          Component4,
           propsWithoutRef,
           ref,
           renderLanes2
@@ -8468,19 +8468,19 @@ var require_react_dom_client_development = __commonJS({
         reconcileChildren(current2, workInProgress2, nextProps, renderLanes2);
         return workInProgress2.child;
       }
-      function updateMemoComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
+      function updateMemoComponent(current2, workInProgress2, Component4, nextProps, renderLanes2) {
         if (null === current2) {
-          var type = Component.type;
-          if ("function" === typeof type && !shouldConstruct(type) && void 0 === type.defaultProps && null === Component.compare)
-            return Component = resolveFunctionForHotReloading(type), workInProgress2.tag = 15, workInProgress2.type = Component, validateFunctionComponentInDev(workInProgress2, type), updateSimpleMemoComponent(
+          var type = Component4.type;
+          if ("function" === typeof type && !shouldConstruct(type) && void 0 === type.defaultProps && null === Component4.compare)
+            return Component4 = resolveFunctionForHotReloading(type), workInProgress2.tag = 15, workInProgress2.type = Component4, validateFunctionComponentInDev(workInProgress2, type), updateSimpleMemoComponent(
               current2,
               workInProgress2,
-              Component,
+              Component4,
               nextProps,
               renderLanes2
             );
           current2 = createFiberFromTypeAndProps(
-            Component.type,
+            Component4.type,
             null,
             nextProps,
             workInProgress2,
@@ -8494,9 +8494,9 @@ var require_react_dom_client_development = __commonJS({
         type = current2.child;
         if (!checkScheduledUpdateOrContext(current2, renderLanes2)) {
           var prevProps = type.memoizedProps;
-          Component = Component.compare;
-          Component = null !== Component ? Component : shallowEqual;
-          if (Component(prevProps, nextProps) && current2.ref === workInProgress2.ref)
+          Component4 = Component4.compare;
+          Component4 = null !== Component4 ? Component4 : shallowEqual;
+          if (Component4(prevProps, nextProps) && current2.ref === workInProgress2.ref)
             return bailoutOnAlreadyFinishedWork(
               current2,
               workInProgress2,
@@ -8509,7 +8509,7 @@ var require_react_dom_client_development = __commonJS({
         current2.return = workInProgress2;
         return workInProgress2.child = current2;
       }
-      function updateSimpleMemoComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
+      function updateSimpleMemoComponent(current2, workInProgress2, Component4, nextProps, renderLanes2) {
         if (null !== current2) {
           var prevProps = current2.memoizedProps;
           if (shallowEqual(prevProps, nextProps) && current2.ref === workInProgress2.ref && workInProgress2.type === current2.type)
@@ -8521,7 +8521,7 @@ var require_react_dom_client_development = __commonJS({
         return updateFunctionComponent(
           current2,
           workInProgress2,
-          Component,
+          Component4,
           nextProps,
           renderLanes2
         );
@@ -8711,9 +8711,9 @@ var require_react_dom_client_development = __commonJS({
             workInProgress2.flags |= 4194816;
         }
       }
-      function updateFunctionComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
-        if (Component.prototype && "function" === typeof Component.prototype.render) {
-          var componentName2 = getComponentNameFromType(Component) || "Unknown";
+      function updateFunctionComponent(current2, workInProgress2, Component4, nextProps, renderLanes2) {
+        if (Component4.prototype && "function" === typeof Component4.prototype.render) {
+          var componentName2 = getComponentNameFromType(Component4) || "Unknown";
           didWarnAboutBadClass[componentName2] || (console.error(
             "The <%s /> component appears to have a render method, but doesn't extend React.Component. This is likely to cause errors. Change %s to extend React.Component instead.",
             componentName2,
@@ -8724,15 +8724,15 @@ var require_react_dom_client_development = __commonJS({
           workInProgress2,
           null
         );
-        null === current2 && (validateFunctionComponentInDev(workInProgress2, workInProgress2.type), Component.contextTypes && (componentName2 = getComponentNameFromType(Component) || "Unknown", didWarnAboutContextTypes[componentName2] || (didWarnAboutContextTypes[componentName2] = true, console.error(
+        null === current2 && (validateFunctionComponentInDev(workInProgress2, workInProgress2.type), Component4.contextTypes && (componentName2 = getComponentNameFromType(Component4) || "Unknown", didWarnAboutContextTypes[componentName2] || (didWarnAboutContextTypes[componentName2] = true, console.error(
           "%s uses the legacy contextTypes API which was removed in React 19. Use React.createContext() with React.useContext() instead. (https://react.dev/link/legacy-context)",
           componentName2
         ))));
         prepareToReadContext(workInProgress2);
-        Component = renderWithHooks(
+        Component4 = renderWithHooks(
           current2,
           workInProgress2,
-          Component,
+          Component4,
           nextProps,
           void 0,
           renderLanes2
@@ -8742,30 +8742,30 @@ var require_react_dom_client_development = __commonJS({
           return bailoutHooks(current2, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
         isHydrating && nextProps && pushMaterializedTreeId(workInProgress2);
         workInProgress2.flags |= 1;
-        reconcileChildren(current2, workInProgress2, Component, renderLanes2);
+        reconcileChildren(current2, workInProgress2, Component4, renderLanes2);
         return workInProgress2.child;
       }
-      function replayFunctionComponent(current2, workInProgress2, nextProps, Component, secondArg, renderLanes2) {
+      function replayFunctionComponent(current2, workInProgress2, nextProps, Component4, secondArg, renderLanes2) {
         prepareToReadContext(workInProgress2);
         hookTypesUpdateIndexDev = -1;
         ignorePreviousDependencies = null !== current2 && current2.type !== workInProgress2.type;
         workInProgress2.updateQueue = null;
         nextProps = renderWithHooksAgain(
           workInProgress2,
-          Component,
+          Component4,
           nextProps,
           secondArg
         );
         finishRenderingHooks(current2, workInProgress2);
-        Component = checkDidRenderIdHook();
+        Component4 = checkDidRenderIdHook();
         if (null !== current2 && !didReceiveUpdate)
           return bailoutHooks(current2, workInProgress2, renderLanes2), bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
-        isHydrating && Component && pushMaterializedTreeId(workInProgress2);
+        isHydrating && Component4 && pushMaterializedTreeId(workInProgress2);
         workInProgress2.flags |= 1;
         reconcileChildren(current2, workInProgress2, nextProps, renderLanes2);
         return workInProgress2.child;
       }
-      function updateClassComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
+      function updateClassComponent(current2, workInProgress2, Component4, nextProps, renderLanes2) {
         switch (shouldErrorImpl(workInProgress2)) {
           case false:
             var _instance = workInProgress2.stateNode, state = new workInProgress2.type(
@@ -8797,18 +8797,18 @@ var require_react_dom_client_development = __commonJS({
         prepareToReadContext(workInProgress2);
         if (null === workInProgress2.stateNode) {
           state = emptyContextObject;
-          _instance = Component.contextType;
-          "contextType" in Component && null !== _instance && (void 0 === _instance || _instance.$$typeof !== REACT_CONTEXT_TYPE) && !didWarnAboutInvalidateContextType.has(Component) && (didWarnAboutInvalidateContextType.add(Component), lane = void 0 === _instance ? " However, it is set to undefined. This can be caused by a typo or by mixing up named and default imports. This can also happen due to a circular dependency, so try moving the createContext() call to a separate file." : "object" !== typeof _instance ? " However, it is set to a " + typeof _instance + "." : _instance.$$typeof === REACT_CONSUMER_TYPE ? " Did you accidentally pass the Context.Consumer instead?" : " However, it is set to an object with keys {" + Object.keys(_instance).join(", ") + "}.", console.error(
+          _instance = Component4.contextType;
+          "contextType" in Component4 && null !== _instance && (void 0 === _instance || _instance.$$typeof !== REACT_CONTEXT_TYPE) && !didWarnAboutInvalidateContextType.has(Component4) && (didWarnAboutInvalidateContextType.add(Component4), lane = void 0 === _instance ? " However, it is set to undefined. This can be caused by a typo or by mixing up named and default imports. This can also happen due to a circular dependency, so try moving the createContext() call to a separate file." : "object" !== typeof _instance ? " However, it is set to a " + typeof _instance + "." : _instance.$$typeof === REACT_CONSUMER_TYPE ? " Did you accidentally pass the Context.Consumer instead?" : " However, it is set to an object with keys {" + Object.keys(_instance).join(", ") + "}.", console.error(
             "%s defines an invalid contextType. contextType should point to the Context object returned by React.createContext().%s",
-            getComponentNameFromType(Component) || "Component",
+            getComponentNameFromType(Component4) || "Component",
             lane
           ));
           "object" === typeof _instance && null !== _instance && (state = readContext(_instance));
-          _instance = new Component(nextProps, state);
+          _instance = new Component4(nextProps, state);
           if (workInProgress2.mode & StrictLegacyMode) {
             setIsStrictModeForDevtools(true);
             try {
-              _instance = new Component(nextProps, state);
+              _instance = new Component4(nextProps, state);
             } finally {
               setIsStrictModeForDevtools(false);
             }
@@ -8818,20 +8818,20 @@ var require_react_dom_client_development = __commonJS({
           workInProgress2.stateNode = _instance;
           _instance._reactInternals = workInProgress2;
           _instance._reactInternalInstance = fakeInternalInstance;
-          "function" === typeof Component.getDerivedStateFromProps && null === state && (state = getComponentNameFromType(Component) || "Component", didWarnAboutUninitializedState.has(state) || (didWarnAboutUninitializedState.add(state), console.error(
+          "function" === typeof Component4.getDerivedStateFromProps && null === state && (state = getComponentNameFromType(Component4) || "Component", didWarnAboutUninitializedState.has(state) || (didWarnAboutUninitializedState.add(state), console.error(
             "`%s` uses `getDerivedStateFromProps` but its initial state is %s. This is not recommended. Instead, define the initial state by assigning an object to `this.state` in the constructor of `%s`. This ensures that `getDerivedStateFromProps` arguments have a consistent shape.",
             state,
             null === _instance.state ? "null" : "undefined",
             state
           )));
-          if ("function" === typeof Component.getDerivedStateFromProps || "function" === typeof _instance.getSnapshotBeforeUpdate) {
+          if ("function" === typeof Component4.getDerivedStateFromProps || "function" === typeof _instance.getSnapshotBeforeUpdate) {
             var foundWillUpdateName = lane = state = null;
             "function" === typeof _instance.componentWillMount && true !== _instance.componentWillMount.__suppressDeprecationWarning ? state = "componentWillMount" : "function" === typeof _instance.UNSAFE_componentWillMount && (state = "UNSAFE_componentWillMount");
             "function" === typeof _instance.componentWillReceiveProps && true !== _instance.componentWillReceiveProps.__suppressDeprecationWarning ? lane = "componentWillReceiveProps" : "function" === typeof _instance.UNSAFE_componentWillReceiveProps && (lane = "UNSAFE_componentWillReceiveProps");
             "function" === typeof _instance.componentWillUpdate && true !== _instance.componentWillUpdate.__suppressDeprecationWarning ? foundWillUpdateName = "componentWillUpdate" : "function" === typeof _instance.UNSAFE_componentWillUpdate && (foundWillUpdateName = "UNSAFE_componentWillUpdate");
             if (null !== state || null !== lane || null !== foundWillUpdateName) {
-              _instance = getComponentNameFromType(Component) || "Component";
-              var newApiName = "function" === typeof Component.getDerivedStateFromProps ? "getDerivedStateFromProps()" : "getSnapshotBeforeUpdate()";
+              _instance = getComponentNameFromType(Component4) || "Component";
+              var newApiName = "function" === typeof Component4.getDerivedStateFromProps ? "getDerivedStateFromProps()" : "getSnapshotBeforeUpdate()";
               didWarnAboutLegacyLifecyclesAndDerivedState.has(_instance) || (didWarnAboutLegacyLifecyclesAndDerivedState.add(_instance), console.error(
                 "Unsafe legacy lifecycles will not be called for components using new component APIs.\n\n%s uses %s but also contains the following legacy lifecycles:%s%s%s\n\nThe above lifecycles should be removed. Learn more about this warning here:\nhttps://react.dev/link/unsafe-component-lifecycles",
                 _instance,
@@ -8843,8 +8843,8 @@ var require_react_dom_client_development = __commonJS({
             }
           }
           _instance = workInProgress2.stateNode;
-          state = getComponentNameFromType(Component) || "Component";
-          _instance.render || (Component.prototype && "function" === typeof Component.prototype.render ? console.error(
+          state = getComponentNameFromType(Component4) || "Component";
+          _instance.render || (Component4.prototype && "function" === typeof Component4.prototype.render ? console.error(
             "No `render` method found on the %s instance: did you accidentally return an object from the constructor?",
             state
           ) : console.error(
@@ -8863,11 +8863,11 @@ var require_react_dom_client_development = __commonJS({
             "contextType was defined as an instance property on %s. Use a static property to define contextType instead.",
             state
           );
-          Component.childContextTypes && !didWarnAboutChildContextTypes.has(Component) && (didWarnAboutChildContextTypes.add(Component), console.error(
+          Component4.childContextTypes && !didWarnAboutChildContextTypes.has(Component4) && (didWarnAboutChildContextTypes.add(Component4), console.error(
             "%s uses the legacy childContextTypes API which was removed in React 19. Use React.createContext() instead. (https://react.dev/link/legacy-context)",
             state
           ));
-          Component.contextTypes && !didWarnAboutContextTypes$1.has(Component) && (didWarnAboutContextTypes$1.add(Component), console.error(
+          Component4.contextTypes && !didWarnAboutContextTypes$1.has(Component4) && (didWarnAboutContextTypes$1.add(Component4), console.error(
             "%s uses the legacy contextTypes API which was removed in React 19. Use React.createContext() with static contextType instead. (https://react.dev/link/legacy-context)",
             state
           ));
@@ -8875,9 +8875,9 @@ var require_react_dom_client_development = __commonJS({
             "%s has a method called componentShouldUpdate(). Did you mean shouldComponentUpdate()? The name is phrased as a question because the function is expected to return a value.",
             state
           );
-          Component.prototype && Component.prototype.isPureReactComponent && "undefined" !== typeof _instance.shouldComponentUpdate && console.error(
+          Component4.prototype && Component4.prototype.isPureReactComponent && "undefined" !== typeof _instance.shouldComponentUpdate && console.error(
             "%s has a method called shouldComponentUpdate(). shouldComponentUpdate should not be used when extending React.PureComponent. Please extend React.Component if shouldComponentUpdate is used.",
-            getComponentNameFromType(Component) || "A pure component"
+            getComponentNameFromType(Component4) || "A pure component"
           );
           "function" === typeof _instance.componentDidUnmount && console.error(
             "%s has a method called componentDidUnmount(). But there is no such lifecycle method. Did you mean componentWillUnmount()?",
@@ -8905,9 +8905,9 @@ var require_react_dom_client_development = __commonJS({
             state,
             state
           );
-          "function" !== typeof _instance.getSnapshotBeforeUpdate || "function" === typeof _instance.componentDidUpdate || didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.has(Component) || (didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.add(Component), console.error(
+          "function" !== typeof _instance.getSnapshotBeforeUpdate || "function" === typeof _instance.componentDidUpdate || didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.has(Component4) || (didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate.add(Component4), console.error(
             "%s: getSnapshotBeforeUpdate() should be used with componentDidUpdate(). This component defines getSnapshotBeforeUpdate() only.",
-            getComponentNameFromType(Component)
+            getComponentNameFromType(Component4)
           ));
           "function" === typeof _instance.getDerivedStateFromProps && console.error(
             "%s: getDerivedStateFromProps() is defined as an instance method and will be ignored. Instead, declare it as a static method.",
@@ -8917,12 +8917,12 @@ var require_react_dom_client_development = __commonJS({
             "%s: getDerivedStateFromError() is defined as an instance method and will be ignored. Instead, declare it as a static method.",
             state
           );
-          "function" === typeof Component.getSnapshotBeforeUpdate && console.error(
+          "function" === typeof Component4.getSnapshotBeforeUpdate && console.error(
             "%s: getSnapshotBeforeUpdate() is defined as a static method and will be ignored. Instead, declare it as an instance method.",
             state
           );
           (lane = _instance.state) && ("object" !== typeof lane || isArrayImpl(lane)) && console.error("%s.state: must be set to an object or null", state);
-          "function" === typeof _instance.getChildContext && "object" !== typeof Component.childContextTypes && console.error(
+          "function" === typeof _instance.getChildContext && "object" !== typeof Component4.childContextTypes && console.error(
             "%s.getChildContext(): childContextTypes must be defined in order to use getChildContext().",
             state
           );
@@ -8931,9 +8931,9 @@ var require_react_dom_client_development = __commonJS({
           _instance.state = workInProgress2.memoizedState;
           _instance.refs = {};
           initializeUpdateQueue(workInProgress2);
-          state = Component.contextType;
+          state = Component4.contextType;
           _instance.context = "object" === typeof state && null !== state ? readContext(state) : emptyContextObject;
-          _instance.state === nextProps && (state = getComponentNameFromType(Component) || "Component", didWarnAboutDirectlyAssigningPropsToState.has(state) || (didWarnAboutDirectlyAssigningPropsToState.add(state), console.error(
+          _instance.state === nextProps && (state = getComponentNameFromType(Component4) || "Component", didWarnAboutDirectlyAssigningPropsToState.has(state) || (didWarnAboutDirectlyAssigningPropsToState.add(state), console.error(
             "%s: It is not recommended to assign props directly to state because updates to props won't be reflected in state. In most cases, it is better to use props directly.",
             state
           )));
@@ -8946,14 +8946,14 @@ var require_react_dom_client_development = __commonJS({
             _instance
           );
           _instance.state = workInProgress2.memoizedState;
-          state = Component.getDerivedStateFromProps;
+          state = Component4.getDerivedStateFromProps;
           "function" === typeof state && (applyDerivedStateFromProps(
             workInProgress2,
-            Component,
+            Component4,
             state,
             nextProps
           ), _instance.state = workInProgress2.memoizedState);
-          "function" === typeof Component.getDerivedStateFromProps || "function" === typeof _instance.getSnapshotBeforeUpdate || "function" !== typeof _instance.UNSAFE_componentWillMount && "function" !== typeof _instance.componentWillMount || (state = _instance.state, "function" === typeof _instance.componentWillMount && _instance.componentWillMount(), "function" === typeof _instance.UNSAFE_componentWillMount && _instance.UNSAFE_componentWillMount(), state !== _instance.state && (console.error(
+          "function" === typeof Component4.getDerivedStateFromProps || "function" === typeof _instance.getSnapshotBeforeUpdate || "function" !== typeof _instance.UNSAFE_componentWillMount && "function" !== typeof _instance.componentWillMount || (state = _instance.state, "function" === typeof _instance.componentWillMount && _instance.componentWillMount(), "function" === typeof _instance.UNSAFE_componentWillMount && _instance.UNSAFE_componentWillMount(), state !== _instance.state && (console.error(
             "%s.componentWillMount(): Assigning directly to this.state is deprecated (except inside a component's constructor). Use setState instead.",
             getComponentNameFromFiber(workInProgress2) || "Component"
           ), classComponentUpdater.enqueueReplaceState(
@@ -8967,13 +8967,13 @@ var require_react_dom_client_development = __commonJS({
         } else if (null === current2) {
           _instance = workInProgress2.stateNode;
           var unresolvedOldProps = workInProgress2.memoizedProps;
-          lane = resolveClassComponentProps(Component, unresolvedOldProps);
+          lane = resolveClassComponentProps(Component4, unresolvedOldProps);
           _instance.props = lane;
           var oldContext = _instance.context;
-          foundWillUpdateName = Component.contextType;
+          foundWillUpdateName = Component4.contextType;
           state = emptyContextObject;
           "object" === typeof foundWillUpdateName && null !== foundWillUpdateName && (state = readContext(foundWillUpdateName));
-          newApiName = Component.getDerivedStateFromProps;
+          newApiName = Component4.getDerivedStateFromProps;
           foundWillUpdateName = "function" === typeof newApiName || "function" === typeof _instance.getSnapshotBeforeUpdate;
           unresolvedOldProps = workInProgress2.pendingProps !== unresolvedOldProps;
           foundWillUpdateName || "function" !== typeof _instance.UNSAFE_componentWillReceiveProps && "function" !== typeof _instance.componentWillReceiveProps || (unresolvedOldProps || oldContext !== state) && callComponentWillReceiveProps(
@@ -8990,12 +8990,12 @@ var require_react_dom_client_development = __commonJS({
           oldContext = workInProgress2.memoizedState;
           unresolvedOldProps || oldState !== oldContext || hasForceUpdate ? ("function" === typeof newApiName && (applyDerivedStateFromProps(
             workInProgress2,
-            Component,
+            Component4,
             newApiName,
             nextProps
           ), oldContext = workInProgress2.memoizedState), (lane = hasForceUpdate || checkShouldComponentUpdate(
             workInProgress2,
-            Component,
+            Component4,
             lane,
             nextProps,
             oldState,
@@ -9006,14 +9006,14 @@ var require_react_dom_client_development = __commonJS({
           _instance = workInProgress2.stateNode;
           cloneUpdateQueue(current2, workInProgress2);
           state = workInProgress2.memoizedProps;
-          foundWillUpdateName = resolveClassComponentProps(Component, state);
+          foundWillUpdateName = resolveClassComponentProps(Component4, state);
           _instance.props = foundWillUpdateName;
           newApiName = workInProgress2.pendingProps;
           oldState = _instance.context;
-          oldContext = Component.contextType;
+          oldContext = Component4.contextType;
           lane = emptyContextObject;
           "object" === typeof oldContext && null !== oldContext && (lane = readContext(oldContext));
-          unresolvedOldProps = Component.getDerivedStateFromProps;
+          unresolvedOldProps = Component4.getDerivedStateFromProps;
           (oldContext = "function" === typeof unresolvedOldProps || "function" === typeof _instance.getSnapshotBeforeUpdate) || "function" !== typeof _instance.UNSAFE_componentWillReceiveProps && "function" !== typeof _instance.componentWillReceiveProps || (state !== newApiName || oldState !== lane) && callComponentWillReceiveProps(
             workInProgress2,
             _instance,
@@ -9028,12 +9028,12 @@ var require_react_dom_client_development = __commonJS({
           var newState = workInProgress2.memoizedState;
           state !== newApiName || oldState !== newState || hasForceUpdate || null !== current2 && null !== current2.dependencies && checkIfContextChanged(current2.dependencies) ? ("function" === typeof unresolvedOldProps && (applyDerivedStateFromProps(
             workInProgress2,
-            Component,
+            Component4,
             unresolvedOldProps,
             nextProps
           ), newState = workInProgress2.memoizedState), (foundWillUpdateName = hasForceUpdate || checkShouldComponentUpdate(
             workInProgress2,
-            Component,
+            Component4,
             foundWillUpdateName,
             nextProps,
             oldState,
@@ -9051,9 +9051,9 @@ var require_react_dom_client_development = __commonJS({
         if (lane || state) {
           lane = workInProgress2.stateNode;
           setCurrentFiber(workInProgress2);
-          if (state && "function" !== typeof Component.getDerivedStateFromError)
-            Component = null, profilerStartTime = -1;
-          else if (Component = callRenderInDEV(lane), workInProgress2.mode & StrictLegacyMode) {
+          if (state && "function" !== typeof Component4.getDerivedStateFromError)
+            Component4 = null, profilerStartTime = -1;
+          else if (Component4 = callRenderInDEV(lane), workInProgress2.mode & StrictLegacyMode) {
             setIsStrictModeForDevtools(true);
             try {
               callRenderInDEV(lane);
@@ -9070,9 +9070,9 @@ var require_react_dom_client_development = __commonJS({
           ), workInProgress2.child = reconcileChildFibers(
             workInProgress2,
             null,
-            Component,
+            Component4,
             renderLanes2
-          )) : reconcileChildren(current2, workInProgress2, Component, renderLanes2);
+          )) : reconcileChildren(current2, workInProgress2, Component4, renderLanes2);
           workInProgress2.memoizedState = lane.state;
           current2 = workInProgress2.child;
         } else
@@ -9094,19 +9094,19 @@ var require_react_dom_client_development = __commonJS({
         reconcileChildren(current2, workInProgress2, nextChildren, renderLanes2);
         return workInProgress2.child;
       }
-      function validateFunctionComponentInDev(workInProgress2, Component) {
-        Component && Component.childContextTypes && console.error(
+      function validateFunctionComponentInDev(workInProgress2, Component4) {
+        Component4 && Component4.childContextTypes && console.error(
           "childContextTypes cannot be defined on a function component.\n  %s.childContextTypes = ...",
-          Component.displayName || Component.name || "Component"
+          Component4.displayName || Component4.name || "Component"
         );
-        "function" === typeof Component.getDerivedStateFromProps && (workInProgress2 = getComponentNameFromType(Component) || "Unknown", didWarnAboutGetDerivedStateOnFunctionComponent[workInProgress2] || (console.error(
+        "function" === typeof Component4.getDerivedStateFromProps && (workInProgress2 = getComponentNameFromType(Component4) || "Unknown", didWarnAboutGetDerivedStateOnFunctionComponent[workInProgress2] || (console.error(
           "%s: Function components do not support getDerivedStateFromProps.",
           workInProgress2
         ), didWarnAboutGetDerivedStateOnFunctionComponent[workInProgress2] = true));
-        "object" === typeof Component.contextType && null !== Component.contextType && (Component = getComponentNameFromType(Component) || "Unknown", didWarnAboutContextTypeOnFunctionComponent[Component] || (console.error(
+        "object" === typeof Component4.contextType && null !== Component4.contextType && (Component4 = getComponentNameFromType(Component4) || "Unknown", didWarnAboutContextTypeOnFunctionComponent[Component4] || (console.error(
           "%s: Function components do not support contextType.",
-          Component
-        ), didWarnAboutContextTypeOnFunctionComponent[Component] = true));
+          Component4
+        ), didWarnAboutContextTypeOnFunctionComponent[Component4] = true));
       }
       function mountSuspenseOffscreenState(renderLanes2) {
         return { baseLanes: renderLanes2, cachePool: getSuspendedCache() };
@@ -17380,13 +17380,13 @@ var require_react_dom_client_development = __commonJS({
         hydrationInstance = hydrationInstance.nextSibling;
         for (var depth = 0; hydrationInstance; ) {
           if (8 === hydrationInstance.nodeType) {
-            var data = hydrationInstance.data;
-            if (data === SUSPENSE_END_DATA || data === ACTIVITY_END_DATA) {
+            var data2 = hydrationInstance.data;
+            if (data2 === SUSPENSE_END_DATA || data2 === ACTIVITY_END_DATA) {
               if (0 === depth)
                 return getNextHydratable(hydrationInstance.nextSibling);
               depth--;
             } else
-              data !== SUSPENSE_START_DATA && data !== SUSPENSE_FALLBACK_START_DATA && data !== SUSPENSE_PENDING_START_DATA && data !== SUSPENSE_QUEUED_START_DATA && data !== ACTIVITY_START_DATA || depth++;
+              data2 !== SUSPENSE_START_DATA && data2 !== SUSPENSE_FALLBACK_START_DATA && data2 !== SUSPENSE_PENDING_START_DATA && data2 !== SUSPENSE_QUEUED_START_DATA && data2 !== ACTIVITY_START_DATA || depth++;
           }
           hydrationInstance = hydrationInstance.nextSibling;
         }
@@ -17396,12 +17396,12 @@ var require_react_dom_client_development = __commonJS({
         targetInstance = targetInstance.previousSibling;
         for (var depth = 0; targetInstance; ) {
           if (8 === targetInstance.nodeType) {
-            var data = targetInstance.data;
-            if (data === SUSPENSE_START_DATA || data === SUSPENSE_FALLBACK_START_DATA || data === SUSPENSE_PENDING_START_DATA || data === SUSPENSE_QUEUED_START_DATA || data === ACTIVITY_START_DATA) {
+            var data2 = targetInstance.data;
+            if (data2 === SUSPENSE_START_DATA || data2 === SUSPENSE_FALLBACK_START_DATA || data2 === SUSPENSE_PENDING_START_DATA || data2 === SUSPENSE_QUEUED_START_DATA || data2 === ACTIVITY_START_DATA) {
               if (0 === depth) return targetInstance;
               depth--;
             } else
-              data !== SUSPENSE_END_DATA && data !== ACTIVITY_END_DATA || depth++;
+              data2 !== SUSPENSE_END_DATA && data2 !== ACTIVITY_END_DATA || depth++;
           }
           targetInstance = targetInstance.previousSibling;
         }
@@ -18513,14 +18513,14 @@ var require_react_dom_client_development = __commonJS({
         ));
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var Scheduler = require_scheduler(), React4 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = Symbol.for("react.element"), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy");
+      var Scheduler = require_scheduler(), React22 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = Symbol.for("react.element"), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy");
       Symbol.for("react.scope");
       var REACT_ACTIVITY_TYPE = Symbol.for("react.activity");
       Symbol.for("react.legacy_hidden");
       Symbol.for("react.tracing_marker");
       var REACT_MEMO_CACHE_SENTINEL = Symbol.for("react.memo_cache_sentinel");
       Symbol.for("react.view_transition");
-      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
+      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React22.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
         pending: false,
         data: null,
         method: null,
@@ -19759,11 +19759,11 @@ var require_react_dom_client_development = __commonJS({
         pendingLegacyContextWarning = /* @__PURE__ */ new Map();
       };
       var callComponent = {
-        react_stack_bottom_frame: function(Component, props, secondArg) {
+        react_stack_bottom_frame: function(Component4, props, secondArg) {
           var wasRendering = isRendering;
           isRendering = true;
           try {
-            return Component(props, secondArg);
+            return Component4(props, secondArg);
           } finally {
             isRendering = wasRendering;
           }
@@ -21308,7 +21308,7 @@ var require_react_dom_client_development = __commonJS({
         }
       };
       (function() {
-        var isomorphicReactPackageVersion = React4.version;
+        var isomorphicReactPackageVersion = React22.version;
         if ("19.2.6" !== isomorphicReactPackageVersion)
           throw Error(
             'Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:\n  - react:      ' + (isomorphicReactPackageVersion + "\n  - react-dom:  19.2.6\nLearn more: https://react.dev/warnings/version-mismatch")
@@ -21657,23 +21657,23 @@ var require_react_jsx_runtime_development = __commonJS({
         );
       }
       function validateChildKeys(node) {
-        isValidElement(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
+        isValidElement2(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement2(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
       }
-      function isValidElement(object) {
+      function isValidElement2(object) {
         return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
       }
-      var React4 = require_react(), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
+      var React22 = require_react(), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = React22.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
         return null;
       };
-      React4 = {
+      React22 = {
         react_stack_bottom_frame: function(callStackForError) {
           return callStackForError();
         }
       };
       var specialPropKeyWarningShown;
       var didWarnAboutElementRef = {};
-      var unknownOwnerDebugStack = React4.react_stack_bottom_frame.bind(
-        React4,
+      var unknownOwnerDebugStack = React22.react_stack_bottom_frame.bind(
+        React22,
         UnknownOwner
       )();
       var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
@@ -21718,23 +21718,3320 @@ var require_jsx_runtime = __commonJS({
 });
 
 // src/main.jsx
-var import_react3 = __toESM(require_react(), 1);
+var import_react12 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
 // src/App.jsx
-var import_react = __toESM(require_react(), 1);
-var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-function SafeComponent() {
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex items-center justify-center w-full min-h-[200px] bg-red-950/30 border-2 border-red-500/50 rounded-xl p-8", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-center space-y-2", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-red-400 font-bold text-xl", children: "Component failed safely" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-red-400/80 text-sm max-w-md mx-auto", children: "The generated JSX was malformed and failed compilation. The fallback component is being displayed to prevent the preview from crashing." })
-  ] }) });
+var import_react10 = __toESM(require_react(), 1);
+
+// src/components/Navbar.jsx
+var import_react3 = __toESM(require_react(), 1);
+
+// node_modules/react-router/dist/development/chunk-4ZMWKKQ3.mjs
+var React = __toESM(require_react(), 1);
+var React2 = __toESM(require_react(), 1);
+var React3 = __toESM(require_react(), 1);
+var React4 = __toESM(require_react(), 1);
+var React9 = __toESM(require_react(), 1);
+var React8 = __toESM(require_react(), 1);
+var React7 = __toESM(require_react(), 1);
+var React6 = __toESM(require_react(), 1);
+var React5 = __toESM(require_react(), 1);
+var React10 = __toESM(require_react(), 1);
+var React11 = __toESM(require_react(), 1);
+var ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|[\\/]{2})/i;
+var PROTOCOL_RELATIVE_URL_REGEX = /^[\\/]{2}/;
+function normalizeProtocolRelativeUrl(url, protocol) {
+  return protocol + url.replace(/\\/g, "/");
+}
+var PopStateEventType = "popstate";
+function isLocation(obj) {
+  return typeof obj === "object" && obj != null && "pathname" in obj && "search" in obj && "hash" in obj && "state" in obj && "key" in obj;
+}
+function createBrowserHistory(options = {}) {
+  function createBrowserLocation(window2, globalHistory) {
+    let maskedLocation = globalHistory.state?.masked;
+    let { pathname, search, hash } = maskedLocation || window2.location;
+    return createLocation(
+      "",
+      { pathname, search, hash },
+      // state defaults to `null` because `window.history.state` does
+      globalHistory.state && globalHistory.state.usr || null,
+      globalHistory.state && globalHistory.state.key || "default",
+      maskedLocation ? {
+        pathname: window2.location.pathname,
+        search: window2.location.search,
+        hash: window2.location.hash
+      } : void 0
+    );
+  }
+  function createBrowserHref(window2, to) {
+    return typeof to === "string" ? to : createPath(to);
+  }
+  return getUrlBasedHistory(
+    createBrowserLocation,
+    createBrowserHref,
+    null,
+    options
+  );
+}
+function invariant(value, message) {
+  if (value === false || value === null || typeof value === "undefined") {
+    throw new Error(message);
+  }
+}
+function warning(cond, message) {
+  if (!cond) {
+    if (typeof console !== "undefined") console.warn(message);
+    try {
+      throw new Error(message);
+    } catch (e) {
+    }
+  }
+}
+function createKey() {
+  return Math.random().toString(36).substring(2, 10);
+}
+function getHistoryState(location, index) {
+  return {
+    usr: location.state,
+    key: location.key,
+    idx: index,
+    masked: location.mask ? {
+      pathname: location.pathname,
+      search: location.search,
+      hash: location.hash
+    } : void 0
+  };
+}
+function createLocation(current, to, state = null, key, mask) {
+  let location = {
+    pathname: typeof current === "string" ? current : current.pathname,
+    search: "",
+    hash: "",
+    ...typeof to === "string" ? parsePath(to) : to,
+    state,
+    // TODO: This could be cleaned up.  push/replace should probably just take
+    // full Locations now and avoid the need to run through this flow at all
+    // But that's a pretty big refactor to the current test suite so going to
+    // keep as is for the time being and just let any incoming keys take precedence
+    key: to && to.key || key || createKey(),
+    mask
+  };
+  return location;
+}
+function createPath({
+  pathname = "/",
+  search = "",
+  hash = ""
+}) {
+  if (search && search !== "?")
+    pathname += search.charAt(0) === "?" ? search : "?" + search;
+  if (hash && hash !== "#")
+    pathname += hash.charAt(0) === "#" ? hash : "#" + hash;
+  return pathname;
+}
+function parsePath(path) {
+  let parsedPath = {};
+  if (path) {
+    let hashIndex = path.indexOf("#");
+    if (hashIndex >= 0) {
+      parsedPath.hash = path.substring(hashIndex);
+      path = path.substring(0, hashIndex);
+    }
+    let searchIndex = path.indexOf("?");
+    if (searchIndex >= 0) {
+      parsedPath.search = path.substring(searchIndex);
+      path = path.substring(0, searchIndex);
+    }
+    if (path) {
+      parsedPath.pathname = path;
+    }
+  }
+  return parsedPath;
+}
+function getUrlBasedHistory(getLocation, createHref2, validateLocation, options = {}) {
+  let { window: window2 = document.defaultView, v5Compat = false } = options;
+  let globalHistory = window2.history;
+  let action = "POP";
+  let listener = null;
+  let index = getIndex();
+  if (index == null) {
+    index = 0;
+    globalHistory.replaceState({ ...globalHistory.state, idx: index }, "");
+  }
+  function getIndex() {
+    let state = globalHistory.state || { idx: null };
+    return state.idx;
+  }
+  function handlePop() {
+    action = "POP";
+    let nextIndex = getIndex();
+    let delta = nextIndex == null ? null : nextIndex - index;
+    index = nextIndex;
+    if (listener) {
+      listener({ action, location: history.location, delta });
+    }
+  }
+  function push(to, state) {
+    action = "PUSH";
+    let location = isLocation(to) ? to : createLocation(history.location, to, state);
+    if (validateLocation) validateLocation(location, to);
+    index = getIndex() + 1;
+    let historyState = getHistoryState(location, index);
+    let url = history.createHref(location.mask || location);
+    try {
+      globalHistory.pushState(historyState, "", url);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "DataCloneError") {
+        throw error;
+      }
+      window2.location.assign(url);
+    }
+    if (v5Compat && listener) {
+      listener({ action, location: history.location, delta: 1 });
+    }
+  }
+  function replace2(to, state) {
+    action = "REPLACE";
+    let location = isLocation(to) ? to : createLocation(history.location, to, state);
+    if (validateLocation) validateLocation(location, to);
+    index = getIndex();
+    let historyState = getHistoryState(location, index);
+    let url = history.createHref(location.mask || location);
+    globalHistory.replaceState(historyState, "", url);
+    if (v5Compat && listener) {
+      listener({ action, location: history.location, delta: 0 });
+    }
+  }
+  function createURL(to) {
+    return createBrowserURLImpl(window2, to);
+  }
+  let history = {
+    get action() {
+      return action;
+    },
+    get location() {
+      return getLocation(window2, globalHistory);
+    },
+    listen(fn) {
+      if (listener) {
+        throw new Error("A history only accepts one active listener");
+      }
+      window2.addEventListener(PopStateEventType, handlePop);
+      listener = fn;
+      return () => {
+        window2.removeEventListener(PopStateEventType, handlePop);
+        listener = null;
+      };
+    },
+    createHref(to) {
+      return createHref2(window2, to);
+    },
+    createURL,
+    encodeLocation(to) {
+      let url = createURL(to);
+      return {
+        pathname: url.pathname,
+        search: url.search,
+        hash: url.hash
+      };
+    },
+    push,
+    replace: replace2,
+    go(n) {
+      return globalHistory.go(n);
+    }
+  };
+  return history;
+}
+function createBrowserURLImpl(windowImpl, to, isAbsolute = false) {
+  let base = "http://localhost";
+  if (windowImpl) {
+    base = windowImpl.location.origin !== "null" ? windowImpl.location.origin : windowImpl.location.href;
+  }
+  invariant(base, "No window.location.(origin|href) available to create URL");
+  let href = typeof to === "string" ? to : createPath(to);
+  href = href.replace(/ $/, "%20");
+  if (!isAbsolute && PROTOCOL_RELATIVE_URL_REGEX.test(href)) {
+    href = base + href;
+  }
+  return new URL(href, base);
+}
+var _map;
+_map = /* @__PURE__ */ new WeakMap();
+function matchRoutes(routes, locationArg, basename = "/") {
+  return matchRoutesImpl(routes, locationArg, basename, false);
+}
+function matchRoutesImpl(routes, locationArg, basename, allowPartial, precomputedBranches) {
+  let location = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
+  let pathname = stripBasename(location.pathname || "/", basename);
+  if (pathname == null) {
+    return null;
+  }
+  let branches = precomputedBranches ?? flattenAndRankRoutes(routes);
+  let matches = null;
+  let decoded = decodePath(pathname);
+  for (let i = 0; matches == null && i < branches.length; ++i) {
+    matches = matchRouteBranch(
+      branches[i],
+      decoded,
+      allowPartial
+    );
+  }
+  return matches;
+}
+function convertRouteMatchToUiMatch(match, loaderData) {
+  let { route, pathname, params } = match;
+  return {
+    id: route.id,
+    pathname,
+    params,
+    data: loaderData[route.id],
+    loaderData: loaderData[route.id],
+    handle: route.handle
+  };
+}
+function flattenAndRankRoutes(routes) {
+  let branches = flattenRoutes(routes);
+  rankRouteBranches(branches);
+  return branches;
+}
+function flattenRoutes(routes, branches = [], parentsMeta = [], parentPath = "", _hasParentOptionalSegments = false) {
+  let flattenRoute = (route, index, hasParentOptionalSegments = _hasParentOptionalSegments, relativePath) => {
+    let meta = {
+      relativePath: relativePath === void 0 ? route.path || "" : relativePath,
+      caseSensitive: route.caseSensitive === true,
+      childrenIndex: index,
+      route
+    };
+    if (meta.relativePath.startsWith("/")) {
+      if (!meta.relativePath.startsWith(parentPath) && hasParentOptionalSegments) {
+        return;
+      }
+      invariant(
+        meta.relativePath.startsWith(parentPath),
+        `Absolute route path "${meta.relativePath}" nested under path "${parentPath}" is not valid. An absolute child route path must start with the combined path of all its parent routes.`
+      );
+      meta.relativePath = meta.relativePath.slice(parentPath.length);
+    }
+    let path = joinPaths([parentPath, meta.relativePath]);
+    let routesMeta = parentsMeta.concat(meta);
+    if (route.children && route.children.length > 0) {
+      invariant(
+        // Our types know better, but runtime JS may not!
+        // @ts-expect-error
+        route.index !== true,
+        `Index routes must not have child routes. Please remove all child routes from route path "${path}".`
+      );
+      flattenRoutes(
+        route.children,
+        branches,
+        routesMeta,
+        path,
+        hasParentOptionalSegments
+      );
+    }
+    if (route.path == null && !route.index) {
+      return;
+    }
+    branches.push({
+      path,
+      score: computeScore(path, route.index),
+      routesMeta: routesMeta.map((meta2, i) => {
+        let [matcher, params] = compilePath(
+          meta2.relativePath,
+          meta2.caseSensitive,
+          i === routesMeta.length - 1
+        );
+        return {
+          ...meta2,
+          matcher,
+          compiledParams: params
+        };
+      })
+    });
+  };
+  routes.forEach((route, index) => {
+    if (route.path === "" || !route.path?.includes("?")) {
+      flattenRoute(route, index);
+    } else {
+      for (let exploded of explodeOptionalSegments(route.path)) {
+        flattenRoute(route, index, true, exploded);
+      }
+    }
+  });
+  return branches;
+}
+function explodeOptionalSegments(path) {
+  let segments = path.split("/");
+  if (segments.length === 0) return [];
+  let [first, ...rest] = segments;
+  let isOptional = first.endsWith("?");
+  let required = first.replace(/\?$/, "");
+  if (rest.length === 0) {
+    return isOptional ? [required, ""] : [required];
+  }
+  let restExploded = explodeOptionalSegments(rest.join("/"));
+  let result = [];
+  result.push(
+    ...restExploded.map(
+      (subpath) => subpath === "" ? required : [required, subpath].join("/")
+    )
+  );
+  if (isOptional) {
+    result.push(...restExploded);
+  }
+  return result.map(
+    (exploded) => path.startsWith("/") && exploded === "" ? "/" : exploded
+  );
+}
+function rankRouteBranches(branches) {
+  branches.sort(
+    (a, b) => a.score !== b.score ? b.score - a.score : compareIndexes(
+      a.routesMeta.map((meta) => meta.childrenIndex),
+      b.routesMeta.map((meta) => meta.childrenIndex)
+    )
+  );
+}
+var paramRe = /^:[\w-]+$/;
+var dynamicSegmentValue = 3;
+var indexRouteValue = 2;
+var emptySegmentValue = 1;
+var staticSegmentValue = 10;
+var splatPenalty = -2;
+var isSplat = (s) => s === "*";
+function computeScore(path, index) {
+  let segments = path.split("/");
+  let initialScore = segments.length;
+  if (segments.some(isSplat)) {
+    initialScore += splatPenalty;
+  }
+  if (index) {
+    initialScore += indexRouteValue;
+  }
+  return segments.filter((s) => !isSplat(s)).reduce(
+    (score, segment) => score + (paramRe.test(segment) ? dynamicSegmentValue : segment === "" ? emptySegmentValue : staticSegmentValue),
+    initialScore
+  );
+}
+function compareIndexes(a, b) {
+  let siblings = a.length === b.length && a.slice(0, -1).every((n, i) => n === b[i]);
+  return siblings ? (
+    // If two routes are siblings, we should try to match the earlier sibling
+    // first. This allows people to have fine-grained control over the matching
+    // behavior by simply putting routes with identical paths in the order they
+    // want them tried.
+    a[a.length - 1] - b[b.length - 1]
+  ) : (
+    // Otherwise, it doesn't really make sense to rank non-siblings by index,
+    // so they sort equally.
+    0
+  );
+}
+function matchRouteBranch(branch, pathname, allowPartial = false) {
+  let { routesMeta } = branch;
+  let matchedParams = {};
+  let matchedPathname = "/";
+  let matches = [];
+  for (let i = 0; i < routesMeta.length; ++i) {
+    let meta = routesMeta[i];
+    let end = i === routesMeta.length - 1;
+    let remainingPathname = matchedPathname === "/" ? pathname : pathname.slice(matchedPathname.length) || "/";
+    let pattern = {
+      path: meta.relativePath,
+      caseSensitive: meta.caseSensitive,
+      end
+    };
+    let match = (
+      // Use precomputed matcher if it exists
+      meta.matcher && meta.compiledParams ? matchPathImpl(
+        pattern,
+        remainingPathname,
+        meta.matcher,
+        meta.compiledParams
+      ) : matchPath(pattern, remainingPathname)
+    );
+    let route = meta.route;
+    if (!match && end && allowPartial && !routesMeta[routesMeta.length - 1].route.index) {
+      match = matchPath(
+        {
+          path: meta.relativePath,
+          caseSensitive: meta.caseSensitive,
+          end: false
+        },
+        remainingPathname
+      );
+    }
+    if (!match) {
+      return null;
+    }
+    Object.assign(matchedParams, match.params);
+    matches.push({
+      // TODO: Can this as be avoided?
+      params: matchedParams,
+      pathname: joinPaths([matchedPathname, match.pathname]),
+      pathnameBase: normalizePathname(
+        joinPaths([matchedPathname, match.pathnameBase])
+      ),
+      route
+    });
+    if (match.pathnameBase !== "/") {
+      matchedPathname = joinPaths([matchedPathname, match.pathnameBase]);
+    }
+  }
+  return matches;
+}
+function matchPath(pattern, pathname) {
+  if (typeof pattern === "string") {
+    pattern = { path: pattern, caseSensitive: false, end: true };
+  }
+  let [matcher, compiledParams] = compilePath(
+    pattern.path,
+    pattern.caseSensitive,
+    pattern.end
+  );
+  return matchPathImpl(pattern, pathname, matcher, compiledParams);
+}
+function matchPathImpl(pattern, pathname, matcher, compiledParams) {
+  let match = pathname.match(matcher);
+  if (!match) return null;
+  let matchedPathname = match[0];
+  let pathnameBase = matchedPathname.replace(/(.)\/+$/, "$1");
+  let captureGroups = match.slice(1);
+  let params = compiledParams.reduce(
+    (memo2, { paramName, isOptional }, index) => {
+      if (paramName === "*") {
+        let splatValue = captureGroups[index] || "";
+        pathnameBase = matchedPathname.slice(0, matchedPathname.length - splatValue.length).replace(/(.)\/+$/, "$1");
+      }
+      const value = captureGroups[index];
+      if (isOptional && !value) {
+        memo2[paramName] = void 0;
+      } else {
+        memo2[paramName] = (value || "").replace(/%2F/g, "/");
+      }
+      return memo2;
+    },
+    {}
+  );
+  return {
+    params,
+    pathname: matchedPathname,
+    pathnameBase,
+    pattern
+  };
+}
+function compilePath(path, caseSensitive = false, end = true) {
+  warning(
+    path === "*" || !path.endsWith("*") || path.endsWith("/*"),
+    `Route path "${path}" will be treated as if it were "${path.replace(/\*$/, "/*")}" because the \`*\` character must always follow a \`/\` in the pattern. To get rid of this warning, please change the route path to "${path.replace(/\*$/, "/*")}".`
+  );
+  let params = [];
+  let regexpSource = "^" + path.replace(/\/*\*?$/, "").replace(/^\/*/, "/").replace(/[\\.*+^${}|()[\]]/g, "\\$&").replace(
+    /\/:([\w-]+)(\?)?/g,
+    (match, paramName, isOptional, index, str) => {
+      params.push({ paramName, isOptional: isOptional != null });
+      if (isOptional) {
+        let nextChar = str.charAt(index + match.length);
+        if (nextChar && nextChar !== "/") {
+          return "/([^\\/]*)";
+        }
+        return "(?:/([^\\/]*))?";
+      }
+      return "/([^\\/]+)";
+    }
+  ).replace(/\/([\w-]+)\?(\/|$)/g, "(/$1)?$2");
+  if (path.endsWith("*")) {
+    params.push({ paramName: "*" });
+    regexpSource += path === "*" || path === "/*" ? "(.*)$" : "(?:\\/(.+)|\\/*)$";
+  } else if (end) {
+    regexpSource += "\\/*$";
+  } else if (path !== "" && path !== "/") {
+    regexpSource += "(?:(?=\\/|$))";
+  } else {
+  }
+  let matcher = new RegExp(regexpSource, caseSensitive ? void 0 : "i");
+  return [matcher, params];
+}
+function decodePath(value) {
+  try {
+    return value.split("/").map((v) => decodeURIComponent(v).replace(/\//g, "%2F")).join("/");
+  } catch (error) {
+    warning(
+      false,
+      `The URL path "${value}" could not be decoded because it is a malformed URL segment. This is probably due to a bad percent encoding (${error}).`
+    );
+    return value;
+  }
+}
+function stripBasename(pathname, basename) {
+  if (basename === "/") return pathname;
+  if (!pathname.toLowerCase().startsWith(basename.toLowerCase())) {
+    return null;
+  }
+  let startIndex = basename.endsWith("/") ? basename.length - 1 : basename.length;
+  let nextChar = pathname.charAt(startIndex);
+  if (nextChar && nextChar !== "/") {
+    return null;
+  }
+  return pathname.slice(startIndex) || "/";
+}
+function resolvePath(to, fromPathname = "/") {
+  let {
+    pathname: toPathname,
+    search = "",
+    hash = ""
+  } = typeof to === "string" ? parsePath(to) : to;
+  let pathname;
+  if (toPathname) {
+    toPathname = removeDoubleSlashes(toPathname);
+    if (toPathname.startsWith("/")) {
+      pathname = resolvePathname(toPathname.substring(1), "/");
+    } else {
+      pathname = resolvePathname(toPathname, fromPathname);
+    }
+  } else {
+    pathname = fromPathname;
+  }
+  return {
+    pathname,
+    search: normalizeSearch(search),
+    hash: normalizeHash(hash)
+  };
+}
+function resolvePathname(relativePath, fromPathname) {
+  let segments = removeTrailingSlash(fromPathname).split("/");
+  let relativeSegments = relativePath.split("/");
+  relativeSegments.forEach((segment) => {
+    if (segment === "..") {
+      if (segments.length > 1) segments.pop();
+    } else if (segment !== ".") {
+      segments.push(segment);
+    }
+  });
+  return segments.length > 1 ? segments.join("/") : "/";
+}
+function getInvalidPathError(char, field, dest, path) {
+  return `Cannot include a '${char}' character in a manually specified \`to.${field}\` field [${JSON.stringify(
+    path
+  )}].  Please separate it out to the \`to.${dest}\` field. Alternatively you may provide the full path as a string in <Link to="..."> and the router will parse it for you.`;
+}
+function getPathContributingMatches(matches) {
+  return matches.filter(
+    (match, index) => index === 0 || match.route.path && match.route.path.length > 0
+  );
+}
+function getResolveToMatches(matches) {
+  let pathMatches = getPathContributingMatches(matches);
+  return pathMatches.map(
+    (match, idx) => idx === pathMatches.length - 1 ? match.pathname : match.pathnameBase
+  );
+}
+function resolveTo(toArg, routePathnames, locationPathname, isPathRelative = false) {
+  let to;
+  if (typeof toArg === "string") {
+    to = parsePath(toArg);
+  } else {
+    to = { ...toArg };
+    invariant(
+      !to.pathname || !to.pathname.includes("?"),
+      getInvalidPathError("?", "pathname", "search", to)
+    );
+    invariant(
+      !to.pathname || !to.pathname.includes("#"),
+      getInvalidPathError("#", "pathname", "hash", to)
+    );
+    invariant(
+      !to.search || !to.search.includes("#"),
+      getInvalidPathError("#", "search", "hash", to)
+    );
+  }
+  let isEmptyPath = toArg === "" || to.pathname === "";
+  let toPathname = isEmptyPath ? "/" : to.pathname;
+  let from;
+  if (toPathname == null) {
+    from = locationPathname;
+  } else {
+    let routePathnameIndex = routePathnames.length - 1;
+    if (!isPathRelative && toPathname.startsWith("..")) {
+      let toSegments = toPathname.split("/");
+      while (toSegments[0] === "..") {
+        toSegments.shift();
+        routePathnameIndex -= 1;
+      }
+      to.pathname = toSegments.join("/");
+    }
+    from = routePathnameIndex >= 0 ? routePathnames[routePathnameIndex] : "/";
+  }
+  let path = resolvePath(to, from);
+  let hasExplicitTrailingSlash = toPathname && toPathname !== "/" && toPathname.endsWith("/");
+  let hasCurrentTrailingSlash = (isEmptyPath || toPathname === ".") && locationPathname.endsWith("/");
+  if (!path.pathname.endsWith("/") && (hasExplicitTrailingSlash || hasCurrentTrailingSlash)) {
+    path.pathname += "/";
+  }
+  return path;
+}
+var removeDoubleSlashes = (path) => path.replace(/[\\/]{2,}/g, "/");
+var joinPaths = (paths) => removeDoubleSlashes(paths.join("/"));
+var removeTrailingSlash = (path) => path.replace(/\/+$/, "");
+var normalizePathname = (pathname) => removeTrailingSlash(pathname).replace(/^\/*/, "/");
+var normalizeSearch = (search) => !search || search === "?" ? "" : search.startsWith("?") ? search : "?" + search;
+var normalizeHash = (hash) => !hash || hash === "#" ? "" : hash.startsWith("#") ? hash : "#" + hash;
+var ErrorResponseImpl = class {
+  constructor(status, statusText, data2, internal = false) {
+    this.status = status;
+    this.statusText = statusText || "";
+    this.internal = internal;
+    if (data2 instanceof Error) {
+      this.data = data2.toString();
+      this.error = data2;
+    } else {
+      this.data = data2;
+    }
+  }
+};
+function isRouteErrorResponse(error) {
+  return error != null && typeof error.status === "number" && typeof error.statusText === "string" && typeof error.internal === "boolean" && "data" in error;
+}
+function getRoutePattern(matches) {
+  let parts = matches.map((m) => m.route.path).filter(Boolean);
+  return joinPaths(parts) || "/";
+}
+var isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
+function parseToInfo(_to, basename) {
+  let to = _to;
+  if (typeof to !== "string" || !ABSOLUTE_URL_REGEX.test(to)) {
+    return {
+      absoluteURL: void 0,
+      isExternal: false,
+      to
+    };
+  }
+  let absoluteURL = to;
+  let isExternal = false;
+  if (isBrowser) {
+    try {
+      let currentUrl = new URL(window.location.href);
+      let targetUrl = PROTOCOL_RELATIVE_URL_REGEX.test(to) ? new URL(normalizeProtocolRelativeUrl(to, currentUrl.protocol)) : new URL(to);
+      let path = stripBasename(targetUrl.pathname, basename);
+      if (targetUrl.origin === currentUrl.origin && path != null) {
+        to = path + targetUrl.search + targetUrl.hash;
+      } else {
+        isExternal = true;
+      }
+    } catch (e) {
+      warning(
+        false,
+        `<Link to="${to}"> contains an invalid URL which will probably break when clicked - please update to a valid URL path.`
+      );
+    }
+  }
+  return {
+    absoluteURL,
+    isExternal,
+    to
+  };
+}
+var UninstrumentedSymbol = Symbol("Uninstrumented");
+var objectProtoNames = Object.getOwnPropertyNames(Object.prototype).sort().join("\0");
+var validMutationMethodsArr = [
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE"
+];
+var validMutationMethods = new Set(
+  validMutationMethodsArr
+);
+var validRequestMethodsArr = [
+  "GET",
+  ...validMutationMethodsArr
+];
+var validRequestMethods = new Set(validRequestMethodsArr);
+var ResetLoaderDataSymbol = Symbol("ResetLoaderData");
+var _routes;
+var _branches;
+var _hmrRoutes;
+var _hmrBranches;
+_routes = /* @__PURE__ */ new WeakMap();
+_branches = /* @__PURE__ */ new WeakMap();
+_hmrRoutes = /* @__PURE__ */ new WeakMap();
+_hmrBranches = /* @__PURE__ */ new WeakMap();
+var invalidProtocols = [
+  "about:",
+  "blob:",
+  "chrome:",
+  "chrome-untrusted:",
+  "content:",
+  "data:",
+  "devtools:",
+  "file:",
+  "filesystem:",
+  // eslint-disable-next-line no-script-url
+  "javascript:"
+];
+function hasInvalidProtocol(location) {
+  try {
+    return invalidProtocols.includes(new URL(location).protocol);
+  } catch {
+    return false;
+  }
+}
+var DataRouterContext = React.createContext(null);
+DataRouterContext.displayName = "DataRouter";
+var DataRouterStateContext = React.createContext(null);
+DataRouterStateContext.displayName = "DataRouterState";
+var RSCRouterContext = React.createContext(false);
+function useIsRSCRouterContext() {
+  return React.useContext(RSCRouterContext);
+}
+var ViewTransitionContext = React.createContext({
+  isTransitioning: false
+});
+ViewTransitionContext.displayName = "ViewTransition";
+var FetchersContext = React.createContext(
+  /* @__PURE__ */ new Map()
+);
+FetchersContext.displayName = "Fetchers";
+var AwaitContext = React.createContext(null);
+AwaitContext.displayName = "Await";
+var NavigationContext = React.createContext(
+  null
+);
+NavigationContext.displayName = "Navigation";
+var LocationContext = React.createContext(
+  null
+);
+LocationContext.displayName = "Location";
+var RouteContext = React.createContext({
+  outlet: null,
+  matches: [],
+  isDataRoute: false
+});
+RouteContext.displayName = "Route";
+var RouteErrorContext = React.createContext(null);
+RouteErrorContext.displayName = "RouteError";
+var ENABLE_DEV_WARNINGS = true;
+var ERROR_DIGEST_BASE = "REACT_ROUTER_ERROR";
+var ERROR_DIGEST_REDIRECT = "REDIRECT";
+var ERROR_DIGEST_ROUTE_ERROR_RESPONSE = "ROUTE_ERROR_RESPONSE";
+function decodeRedirectErrorDigest(digest) {
+  if (digest.startsWith(`${ERROR_DIGEST_BASE}:${ERROR_DIGEST_REDIRECT}:{`)) {
+    try {
+      let parsed = JSON.parse(digest.slice(28));
+      if (typeof parsed === "object" && parsed && typeof parsed.status === "number" && typeof parsed.statusText === "string" && typeof parsed.location === "string" && typeof parsed.reloadDocument === "boolean" && typeof parsed.replace === "boolean") {
+        return parsed;
+      }
+    } catch {
+    }
+  }
+}
+function decodeRouteErrorResponseDigest(digest) {
+  if (digest.startsWith(
+    `${ERROR_DIGEST_BASE}:${ERROR_DIGEST_ROUTE_ERROR_RESPONSE}:{`
+  )) {
+    try {
+      let parsed = JSON.parse(digest.slice(40));
+      if (typeof parsed === "object" && parsed && typeof parsed.status === "number" && typeof parsed.statusText === "string") {
+        return new ErrorResponseImpl(
+          parsed.status,
+          parsed.statusText,
+          parsed.data
+        );
+      }
+    } catch {
+    }
+  }
+}
+function useHref(to, { relative } = {}) {
+  invariant(
+    useInRouterContext(),
+    // TODO: This error is probably because they somehow have 2 versions of the
+    // router loaded. We can help them understand how to avoid that.
+    `useHref() may be used only in the context of a <Router> component.`
+  );
+  let { basename, navigator: navigator2 } = React2.useContext(NavigationContext);
+  let { hash, pathname, search } = useResolvedPath(to, { relative });
+  let joinedPathname = pathname;
+  if (basename !== "/") {
+    joinedPathname = pathname === "/" ? basename : joinPaths([basename, pathname]);
+  }
+  return navigator2.createHref({ pathname: joinedPathname, search, hash });
+}
+function useInRouterContext() {
+  return React2.useContext(LocationContext) != null;
+}
+function useLocation() {
+  invariant(
+    useInRouterContext(),
+    // TODO: This error is probably because they somehow have 2 versions of the
+    // router loaded. We can help them understand how to avoid that.
+    `useLocation() may be used only in the context of a <Router> component.`
+  );
+  return React2.useContext(LocationContext).location;
+}
+var navigateEffectWarning = `You should call navigate() in a React.useEffect(), not when your component is first rendered.`;
+function useIsomorphicLayoutEffect(cb) {
+  let isStatic = React2.useContext(NavigationContext).static;
+  if (!isStatic) {
+    React2.useLayoutEffect(cb);
+  }
+}
+function useNavigate() {
+  let { isDataRoute } = React2.useContext(RouteContext);
+  return isDataRoute ? useNavigateStable() : useNavigateUnstable();
+}
+function useNavigateUnstable() {
+  invariant(
+    useInRouterContext(),
+    // TODO: This error is probably because they somehow have 2 versions of the
+    // router loaded. We can help them understand how to avoid that.
+    `useNavigate() may be used only in the context of a <Router> component.`
+  );
+  let dataRouterContext = React2.useContext(DataRouterContext);
+  let { basename, navigator: navigator2 } = React2.useContext(NavigationContext);
+  let { matches } = React2.useContext(RouteContext);
+  let { pathname: locationPathname } = useLocation();
+  let routePathnamesJson = JSON.stringify(getResolveToMatches(matches));
+  let activeRef = React2.useRef(false);
+  useIsomorphicLayoutEffect(() => {
+    activeRef.current = true;
+  });
+  let navigate = React2.useCallback(
+    (to, options = {}) => {
+      warning(activeRef.current, navigateEffectWarning);
+      if (!activeRef.current) return;
+      if (typeof to === "number") {
+        navigator2.go(to);
+        return;
+      }
+      let path = resolveTo(
+        to,
+        JSON.parse(routePathnamesJson),
+        locationPathname,
+        options.relative === "path"
+      );
+      if (dataRouterContext == null && basename !== "/") {
+        path.pathname = path.pathname === "/" ? basename : joinPaths([basename, path.pathname]);
+      }
+      (!!options.replace ? navigator2.replace : navigator2.push)(
+        path,
+        options.state,
+        options
+      );
+    },
+    [
+      basename,
+      navigator2,
+      routePathnamesJson,
+      locationPathname,
+      dataRouterContext
+    ]
+  );
+  return navigate;
+}
+var OutletContext = React2.createContext(null);
+function useResolvedPath(to, { relative } = {}) {
+  let { matches } = React2.useContext(RouteContext);
+  let { pathname: locationPathname } = useLocation();
+  let routePathnamesJson = JSON.stringify(getResolveToMatches(matches));
+  return React2.useMemo(
+    () => resolveTo(
+      to,
+      JSON.parse(routePathnamesJson),
+      locationPathname,
+      relative === "path"
+    ),
+    [to, routePathnamesJson, locationPathname, relative]
+  );
+}
+function useRoutes(routes, locationArg) {
+  return useRoutesImpl(routes, locationArg);
+}
+function useRoutesImpl(routes, locationArg, dataRouterOpts) {
+  invariant(
+    useInRouterContext(),
+    // TODO: This error is probably because they somehow have 2 versions of the
+    // router loaded. We can help them understand how to avoid that.
+    `useRoutes() may be used only in the context of a <Router> component.`
+  );
+  let { navigator: navigator2 } = React2.useContext(NavigationContext);
+  let { matches: parentMatches } = React2.useContext(RouteContext);
+  let routeMatch = parentMatches[parentMatches.length - 1];
+  let parentParams = routeMatch ? routeMatch.params : {};
+  let parentPathname = routeMatch ? routeMatch.pathname : "/";
+  let parentPathnameBase = routeMatch ? routeMatch.pathnameBase : "/";
+  let parentRoute = routeMatch && routeMatch.route;
+  if (ENABLE_DEV_WARNINGS) {
+    let parentPath = parentRoute && parentRoute.path || "";
+    warningOnce(
+      parentPathname,
+      !parentRoute || parentPath.endsWith("*") || parentPath.endsWith("*?"),
+      `You rendered descendant <Routes> (or called \`useRoutes()\`) at "${parentPathname}" (under <Route path="${parentPath}">) but the parent route path has no trailing "*". This means if you navigate deeper, the parent won't match anymore and therefore the child routes will never render.
+
+Please change the parent <Route path="${parentPath}"> to <Route path="${parentPath === "/" ? "*" : `${parentPath}/*`}">.`
+    );
+  }
+  let locationFromContext = useLocation();
+  let location;
+  if (locationArg) {
+    let parsedLocationArg = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
+    invariant(
+      parentPathnameBase === "/" || parsedLocationArg.pathname?.startsWith(parentPathnameBase),
+      `When overriding the location using \`<Routes location>\` or \`useRoutes(routes, location)\`, the location pathname must begin with the portion of the URL pathname that was matched by all parent routes. The current pathname base is "${parentPathnameBase}" but pathname "${parsedLocationArg.pathname}" was given in the \`location\` prop.`
+    );
+    location = parsedLocationArg;
+  } else {
+    location = locationFromContext;
+  }
+  let pathname = location.pathname || "/";
+  let remainingPathname = pathname;
+  if (parentPathnameBase !== "/") {
+    let parentSegments = parentPathnameBase.replace(/^\//, "").split("/");
+    let segments = pathname.replace(/^\//, "").split("/");
+    remainingPathname = "/" + segments.slice(parentSegments.length).join("/");
+  }
+  let matches = dataRouterOpts && dataRouterOpts.state.matches.length ? (
+    // If we're in a data router, use the matches we've already identified but ensure
+    // we have the latest route instances from the manifest in case elements have changed
+    dataRouterOpts.state.matches.map(
+      (m) => Object.assign(m, {
+        route: dataRouterOpts.manifest[m.route.id] || m.route
+      })
+    )
+  ) : matchRoutes(routes, { pathname: remainingPathname });
+  if (ENABLE_DEV_WARNINGS) {
+    warning(
+      parentRoute || matches != null,
+      `No routes matched location "${location.pathname}${location.search}${location.hash}" `
+    );
+    warning(
+      matches == null || matches[matches.length - 1].route.element !== void 0 || matches[matches.length - 1].route.Component !== void 0 || matches[matches.length - 1].route.lazy !== void 0,
+      `Matched leaf route at location "${location.pathname}${location.search}${location.hash}" does not have an element or Component. This means it will render an <Outlet /> with a null value by default resulting in an "empty" page.`
+    );
+  }
+  let renderedMatches = _renderMatches(
+    matches && matches.map(
+      (match) => Object.assign({}, match, {
+        params: Object.assign({}, parentParams, match.params),
+        pathname: joinPaths([
+          parentPathnameBase,
+          // Re-encode pathnames that were decoded inside matchRoutes.
+          // Pre-encode `%`, `?` and `#` ahead of `encodeLocation` because it uses
+          // `new URL()` internally and we need to prevent it from treating
+          // them as separators
+          navigator2.encodeLocation ? navigator2.encodeLocation(
+            match.pathname.replace(/%/g, "%25").replace(/\?/g, "%3F").replace(/#/g, "%23")
+          ).pathname : match.pathname
+        ]),
+        pathnameBase: match.pathnameBase === "/" ? parentPathnameBase : joinPaths([
+          parentPathnameBase,
+          // Re-encode pathnames that were decoded inside matchRoutes
+          // Pre-encode `%`, `?` and `#` ahead of `encodeLocation` because it uses
+          // `new URL()` internally and we need to prevent it from treating
+          // them as separators
+          navigator2.encodeLocation ? navigator2.encodeLocation(
+            match.pathnameBase.replace(/%/g, "%25").replace(/\?/g, "%3F").replace(/#/g, "%23")
+          ).pathname : match.pathnameBase
+        ])
+      })
+    ),
+    parentMatches,
+    dataRouterOpts
+  );
+  if (locationArg && renderedMatches) {
+    return /* @__PURE__ */ React2.createElement(
+      LocationContext.Provider,
+      {
+        value: {
+          location: {
+            pathname: "/",
+            search: "",
+            hash: "",
+            state: null,
+            key: "default",
+            mask: void 0,
+            ...location
+          },
+          navigationType: "POP"
+          /* Pop */
+        }
+      },
+      renderedMatches
+    );
+  }
+  return renderedMatches;
+}
+function DefaultErrorComponent() {
+  let error = useRouteError();
+  let message = isRouteErrorResponse(error) ? `${error.status} ${error.statusText}` : error instanceof Error ? error.message : JSON.stringify(error);
+  let stack = error instanceof Error ? error.stack : null;
+  let lightgrey = "rgba(200,200,200, 0.5)";
+  let preStyles = { padding: "0.5rem", backgroundColor: lightgrey };
+  let codeStyles = { padding: "2px 4px", backgroundColor: lightgrey };
+  let devInfo = null;
+  if (ENABLE_DEV_WARNINGS) {
+    console.error(
+      "Error handled by React Router default ErrorBoundary:",
+      error
+    );
+    devInfo = /* @__PURE__ */ React2.createElement(React2.Fragment, null, /* @__PURE__ */ React2.createElement("p", null, "\u{1F4BF} Hey developer \u{1F44B}"), /* @__PURE__ */ React2.createElement("p", null, "You can provide a way better UX than this when your app throws errors by providing your own ", /* @__PURE__ */ React2.createElement("code", { style: codeStyles }, "ErrorBoundary"), " or", " ", /* @__PURE__ */ React2.createElement("code", { style: codeStyles }, "errorElement"), " prop on your route."));
+  }
+  return /* @__PURE__ */ React2.createElement(React2.Fragment, null, /* @__PURE__ */ React2.createElement("h2", null, "Unexpected Application Error!"), /* @__PURE__ */ React2.createElement("h3", { style: { fontStyle: "italic" } }, message), stack ? /* @__PURE__ */ React2.createElement("pre", { style: preStyles }, stack) : null, devInfo);
+}
+var defaultErrorElement = /* @__PURE__ */ React2.createElement(DefaultErrorComponent, null);
+var RenderErrorBoundary = class extends React2.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      location: props.location,
+      revalidation: props.revalidation,
+      error: props.error
+    };
+  }
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+  static getDerivedStateFromProps(props, state) {
+    if (state.location !== props.location || state.revalidation !== "idle" && props.revalidation === "idle") {
+      return {
+        error: props.error,
+        location: props.location,
+        revalidation: props.revalidation
+      };
+    }
+    return {
+      error: props.error !== void 0 ? props.error : state.error,
+      location: state.location,
+      revalidation: props.revalidation || state.revalidation
+    };
+  }
+  componentDidCatch(error, errorInfo) {
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    } else {
+      console.error(
+        "React Router caught the following error during render",
+        error
+      );
+    }
+  }
+  render() {
+    let error = this.state.error;
+    if (this.context && typeof error === "object" && error && "digest" in error && typeof error.digest === "string") {
+      const decoded = decodeRouteErrorResponseDigest(error.digest);
+      if (decoded) error = decoded;
+    }
+    let result = error !== void 0 ? /* @__PURE__ */ React2.createElement(RouteContext.Provider, { value: this.props.routeContext }, /* @__PURE__ */ React2.createElement(
+      RouteErrorContext.Provider,
+      {
+        value: error,
+        children: this.props.component
+      }
+    )) : this.props.children;
+    if (this.context) {
+      return /* @__PURE__ */ React2.createElement(RSCErrorHandler, { error }, result);
+    }
+    return result;
+  }
+};
+RenderErrorBoundary.contextType = RSCRouterContext;
+var errorRedirectHandledMap = /* @__PURE__ */ new WeakMap();
+function RSCErrorHandler({
+  children,
+  error
+}) {
+  let { basename } = React2.useContext(NavigationContext);
+  if (typeof error === "object" && error && "digest" in error && typeof error.digest === "string") {
+    let redirect2 = decodeRedirectErrorDigest(error.digest);
+    if (redirect2) {
+      let existingRedirect = errorRedirectHandledMap.get(error);
+      if (existingRedirect) throw existingRedirect;
+      let parsed = parseToInfo(redirect2.location, basename);
+      let target = parsed.absoluteURL || parsed.to;
+      if (hasInvalidProtocol(target)) {
+        throw new Error("Invalid redirect location");
+      }
+      if (isBrowser && !errorRedirectHandledMap.get(error)) {
+        if (parsed.isExternal || redirect2.reloadDocument) {
+          window.location.href = target;
+        } else {
+          const redirectPromise = Promise.resolve().then(
+            () => window.__reactRouterDataRouter.navigate(parsed.to, {
+              replace: redirect2.replace
+            })
+          );
+          errorRedirectHandledMap.set(error, redirectPromise);
+          throw redirectPromise;
+        }
+      }
+      return /* @__PURE__ */ React2.createElement("meta", { httpEquiv: "refresh", content: `0;url=${target}` });
+    }
+  }
+  return children;
+}
+function RenderedRoute({ routeContext, match, children }) {
+  let dataRouterContext = React2.useContext(DataRouterContext);
+  if (dataRouterContext && dataRouterContext.static && dataRouterContext.staticContext && (match.route.errorElement || match.route.ErrorBoundary)) {
+    dataRouterContext.staticContext._deepestRenderedBoundaryId = match.route.id;
+  }
+  return /* @__PURE__ */ React2.createElement(RouteContext.Provider, { value: routeContext }, children);
+}
+function _renderMatches(matches, parentMatches = [], dataRouterOpts) {
+  let dataRouterState = dataRouterOpts?.state;
+  if (matches == null) {
+    if (!dataRouterState) {
+      return null;
+    }
+    if (dataRouterState.errors) {
+      matches = dataRouterState.matches;
+    } else if (parentMatches.length === 0 && !dataRouterState.initialized && dataRouterState.matches.length > 0) {
+      matches = dataRouterState.matches;
+    } else {
+      return null;
+    }
+  }
+  let renderedMatches = matches;
+  let errors = dataRouterState?.errors;
+  if (errors != null) {
+    let errorIndex = renderedMatches.findIndex(
+      (m) => m.route.id && errors?.[m.route.id] !== void 0
+    );
+    invariant(
+      errorIndex >= 0,
+      `Could not find a matching route for errors on route IDs: ${Object.keys(
+        errors
+      ).join(",")}`
+    );
+    renderedMatches = renderedMatches.slice(
+      0,
+      Math.min(renderedMatches.length, errorIndex + 1)
+    );
+  }
+  let renderFallback = false;
+  let fallbackIndex = -1;
+  if (dataRouterOpts && dataRouterState) {
+    renderFallback = dataRouterState.renderFallback;
+    for (let i = 0; i < renderedMatches.length; i++) {
+      let match = renderedMatches[i];
+      if (match.route.HydrateFallback || match.route.hydrateFallbackElement) {
+        fallbackIndex = i;
+      }
+      if (match.route.id) {
+        let { loaderData, errors: errors2 } = dataRouterState;
+        let needsToRunLoader = match.route.loader && !loaderData.hasOwnProperty(match.route.id) && (!errors2 || errors2[match.route.id] === void 0);
+        if (match.route.lazy || needsToRunLoader) {
+          if (dataRouterOpts.isStatic) {
+            renderFallback = true;
+          }
+          if (fallbackIndex >= 0) {
+            renderedMatches = renderedMatches.slice(0, fallbackIndex + 1);
+          } else {
+            renderedMatches = [renderedMatches[0]];
+          }
+          break;
+        }
+      }
+    }
+  }
+  let onErrorHandler = dataRouterOpts?.onError;
+  let onError = dataRouterState && onErrorHandler ? (error, errorInfo) => {
+    onErrorHandler(error, {
+      location: dataRouterState.location,
+      params: dataRouterState.matches?.[0]?.params ?? {},
+      pattern: getRoutePattern(dataRouterState.matches),
+      errorInfo
+    });
+  } : void 0;
+  return renderedMatches.reduceRight(
+    (outlet, match, index) => {
+      let error;
+      let shouldRenderHydrateFallback = false;
+      let errorElement = null;
+      let hydrateFallbackElement = null;
+      if (dataRouterState) {
+        error = errors && match.route.id ? errors[match.route.id] : void 0;
+        errorElement = match.route.errorElement || defaultErrorElement;
+        if (renderFallback) {
+          if (fallbackIndex < 0 && index === 0) {
+            warningOnce(
+              "route-fallback",
+              false,
+              "No `HydrateFallback` element provided to render during initial hydration"
+            );
+            shouldRenderHydrateFallback = true;
+            hydrateFallbackElement = null;
+          } else if (fallbackIndex === index) {
+            shouldRenderHydrateFallback = true;
+            hydrateFallbackElement = match.route.hydrateFallbackElement || null;
+          }
+        }
+      }
+      let matches2 = parentMatches.concat(renderedMatches.slice(0, index + 1));
+      let getChildren = () => {
+        let children;
+        if (error) {
+          children = errorElement;
+        } else if (shouldRenderHydrateFallback) {
+          children = hydrateFallbackElement;
+        } else if (match.route.Component) {
+          children = /* @__PURE__ */ React2.createElement(match.route.Component, null);
+        } else if (match.route.element) {
+          children = match.route.element;
+        } else {
+          children = outlet;
+        }
+        return /* @__PURE__ */ React2.createElement(
+          RenderedRoute,
+          {
+            match,
+            routeContext: {
+              outlet,
+              matches: matches2,
+              isDataRoute: dataRouterState != null
+            },
+            children
+          }
+        );
+      };
+      return dataRouterState && (match.route.ErrorBoundary || match.route.errorElement || index === 0) ? /* @__PURE__ */ React2.createElement(
+        RenderErrorBoundary,
+        {
+          location: dataRouterState.location,
+          revalidation: dataRouterState.revalidation,
+          component: errorElement,
+          error,
+          children: getChildren(),
+          routeContext: { outlet: null, matches: matches2, isDataRoute: true },
+          onError
+        }
+      ) : getChildren();
+    },
+    null
+  );
+}
+function getDataRouterConsoleError(hookName) {
+  return `${hookName} must be used within a data router.  See https://reactrouter.com/en/main/routers/picking-a-router.`;
+}
+function useDataRouterContext(hookName) {
+  let ctx = React2.useContext(DataRouterContext);
+  invariant(ctx, getDataRouterConsoleError(hookName));
+  return ctx;
+}
+function useDataRouterState(hookName) {
+  let state = React2.useContext(DataRouterStateContext);
+  invariant(state, getDataRouterConsoleError(hookName));
+  return state;
+}
+function useRouteContext(hookName) {
+  let route = React2.useContext(RouteContext);
+  invariant(route, getDataRouterConsoleError(hookName));
+  return route;
+}
+function useCurrentRouteId(hookName) {
+  let route = useRouteContext(hookName);
+  let thisRoute = route.matches[route.matches.length - 1];
+  invariant(
+    thisRoute.route.id,
+    `${hookName} can only be used on routes that contain a unique "id"`
+  );
+  return thisRoute.route.id;
+}
+function useRouteId() {
+  return useCurrentRouteId(
+    "useRouteId"
+    /* UseRouteId */
+  );
+}
+function useNavigation() {
+  let state = useDataRouterState(
+    "useNavigation"
+    /* UseNavigation */
+  );
+  return React2.useMemo(() => {
+    let { matches, historyAction, ...rest } = state.navigation;
+    return rest;
+  }, [state.navigation]);
+}
+function useMatches() {
+  let { matches, loaderData } = useDataRouterState(
+    "useMatches"
+    /* UseMatches */
+  );
+  return React2.useMemo(
+    () => matches.map((m) => convertRouteMatchToUiMatch(m, loaderData)),
+    [matches, loaderData]
+  );
+}
+function useRouteError() {
+  let error = React2.useContext(RouteErrorContext);
+  let state = useDataRouterState(
+    "useRouteError"
+    /* UseRouteError */
+  );
+  let routeId = useCurrentRouteId(
+    "useRouteError"
+    /* UseRouteError */
+  );
+  if (error !== void 0) {
+    return error;
+  }
+  return state.errors?.[routeId];
+}
+function useNavigateStable() {
+  let { router } = useDataRouterContext(
+    "useNavigate"
+    /* UseNavigateStable */
+  );
+  let id = useCurrentRouteId(
+    "useNavigate"
+    /* UseNavigateStable */
+  );
+  let activeRef = React2.useRef(false);
+  useIsomorphicLayoutEffect(() => {
+    activeRef.current = true;
+  });
+  let navigate = React2.useCallback(
+    async (to, options = {}) => {
+      warning(activeRef.current, navigateEffectWarning);
+      if (!activeRef.current) return;
+      if (typeof to === "number") {
+        await router.navigate(to);
+      } else {
+        await router.navigate(to, { fromRouteId: id, ...options });
+      }
+    },
+    [router, id]
+  );
+  return navigate;
+}
+var alreadyWarned = {};
+function warningOnce(key, cond, message) {
+  if (!cond && !alreadyWarned[key]) {
+    alreadyWarned[key] = true;
+    warning(false, message);
+  }
+}
+var USE_OPTIMISTIC = "useOptimistic";
+var useOptimisticImpl = React3[USE_OPTIMISTIC];
+var MemoizedDataRoutes = React3.memo(DataRoutes2);
+function DataRoutes2({
+  routes,
+  manifest,
+  future,
+  state,
+  isStatic,
+  onError
+}) {
+  return useRoutesImpl(routes, void 0, {
+    manifest,
+    state,
+    isStatic,
+    onError,
+    future
+  });
+}
+function Route(props) {
+  invariant(
+    false,
+    `A <Route> is only ever to be used as the child of <Routes> element, never rendered directly. Please wrap your <Route> in a <Routes>.`
+  );
+}
+function Router({
+  basename: basenameProp = "/",
+  children = null,
+  location: locationProp,
+  navigationType = "POP",
+  navigator: navigator2,
+  static: staticProp = false,
+  useTransitions
+}) {
+  invariant(
+    !useInRouterContext(),
+    `You cannot render a <Router> inside another <Router>. You should never have more than one in your app.`
+  );
+  let basename = basenameProp.replace(/^\/*/, "/");
+  let navigationContext = React3.useMemo(
+    () => ({
+      basename,
+      navigator: navigator2,
+      static: staticProp,
+      useTransitions,
+      future: {}
+    }),
+    [basename, navigator2, staticProp, useTransitions]
+  );
+  if (typeof locationProp === "string") {
+    locationProp = parsePath(locationProp);
+  }
+  let {
+    pathname = "/",
+    search = "",
+    hash = "",
+    state = null,
+    key = "default",
+    mask
+  } = locationProp;
+  let locationContext = React3.useMemo(() => {
+    let trailingPathname = stripBasename(pathname, basename);
+    if (trailingPathname == null) {
+      return null;
+    }
+    return {
+      location: {
+        pathname: trailingPathname,
+        search,
+        hash,
+        state,
+        key,
+        mask
+      },
+      navigationType
+    };
+  }, [basename, pathname, search, hash, state, key, navigationType, mask]);
+  warning(
+    locationContext != null,
+    `<Router basename="${basename}"> is not able to match the URL "${pathname}${search}${hash}" because it does not start with the basename, so the <Router> won't render anything.`
+  );
+  if (locationContext == null) {
+    return null;
+  }
+  return /* @__PURE__ */ React3.createElement(NavigationContext.Provider, { value: navigationContext }, /* @__PURE__ */ React3.createElement(LocationContext.Provider, { children, value: locationContext }));
+}
+function Routes({
+  children,
+  location
+}) {
+  return useRoutes(createRoutesFromChildren(children), location);
+}
+function createRoutesFromChildren(children, parentPath = []) {
+  let routes = [];
+  React3.Children.forEach(children, (element, index) => {
+    if (!React3.isValidElement(element)) {
+      return;
+    }
+    let treePath = [...parentPath, index];
+    if (element.type === React3.Fragment) {
+      routes.push.apply(
+        routes,
+        createRoutesFromChildren(element.props.children, treePath)
+      );
+      return;
+    }
+    invariant(
+      element.type === Route,
+      `[${typeof element.type === "string" ? element.type : element.type.name}] is not a <Route> component. All component children of <Routes> must be a <Route> or <React.Fragment>`
+    );
+    invariant(
+      !element.props.index || !element.props.children,
+      "An index route cannot have child routes."
+    );
+    let route = {
+      id: element.props.id || treePath.join("-"),
+      caseSensitive: element.props.caseSensitive,
+      element: element.props.element,
+      Component: element.props.Component,
+      index: element.props.index,
+      path: element.props.path,
+      middleware: element.props.middleware,
+      loader: element.props.loader,
+      action: element.props.action,
+      hydrateFallbackElement: element.props.hydrateFallbackElement,
+      HydrateFallback: element.props.HydrateFallback,
+      errorElement: element.props.errorElement,
+      ErrorBoundary: element.props.ErrorBoundary,
+      hasErrorBoundary: element.props.hasErrorBoundary === true || element.props.ErrorBoundary != null || element.props.errorElement != null,
+      shouldRevalidate: element.props.shouldRevalidate,
+      handle: element.props.handle,
+      lazy: element.props.lazy
+    };
+    if (element.props.children) {
+      route.children = createRoutesFromChildren(
+        element.props.children,
+        treePath
+      );
+    }
+    routes.push(route);
+  });
+  return routes;
+}
+var defaultMethod = "get";
+var defaultEncType = "application/x-www-form-urlencoded";
+function isHtmlElement(object) {
+  return typeof HTMLElement !== "undefined" && object instanceof HTMLElement;
+}
+function isButtonElement(object) {
+  return isHtmlElement(object) && object.tagName.toLowerCase() === "button";
+}
+function isFormElement(object) {
+  return isHtmlElement(object) && object.tagName.toLowerCase() === "form";
+}
+function isInputElement(object) {
+  return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
+}
+function isModifiedEvent(event) {
+  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+}
+function shouldProcessLinkClick(event, target) {
+  return event.button === 0 && // Ignore everything but left clicks
+  (!target || target === "_self") && // Let browser handle "target=_blank" etc.
+  !isModifiedEvent(event);
+}
+var _formDataSupportsSubmitter = null;
+function isFormDataSubmitterSupported() {
+  if (_formDataSupportsSubmitter === null) {
+    try {
+      new FormData(
+        document.createElement("form"),
+        // @ts-expect-error if FormData supports the submitter parameter, this will throw
+        0
+      );
+      _formDataSupportsSubmitter = false;
+    } catch (e) {
+      _formDataSupportsSubmitter = true;
+    }
+  }
+  return _formDataSupportsSubmitter;
+}
+var supportedFormEncTypes = /* @__PURE__ */ new Set([
+  "application/x-www-form-urlencoded",
+  "multipart/form-data",
+  "text/plain"
+]);
+function getFormEncType(encType) {
+  if (encType != null && !supportedFormEncTypes.has(encType)) {
+    warning(
+      false,
+      `"${encType}" is not a valid \`encType\` for \`<Form>\`/\`<fetcher.Form>\` and will default to "${defaultEncType}"`
+    );
+    return null;
+  }
+  return encType;
+}
+function getFormSubmissionInfo(target, basename) {
+  let method;
+  let action;
+  let encType;
+  let formData;
+  let body;
+  if (isFormElement(target)) {
+    let attr = target.getAttribute("action");
+    action = attr ? stripBasename(attr, basename) : null;
+    method = target.getAttribute("method") || defaultMethod;
+    encType = getFormEncType(target.getAttribute("enctype")) || defaultEncType;
+    formData = new FormData(target);
+  } else if (isButtonElement(target) || isInputElement(target) && (target.type === "submit" || target.type === "image")) {
+    let form = target.form;
+    if (form == null) {
+      throw new Error(
+        `Cannot submit a <button> or <input type="submit"> without a <form>`
+      );
+    }
+    let attr = target.getAttribute("formaction") || form.getAttribute("action");
+    action = attr ? stripBasename(attr, basename) : null;
+    method = target.getAttribute("formmethod") || form.getAttribute("method") || defaultMethod;
+    encType = getFormEncType(target.getAttribute("formenctype")) || getFormEncType(form.getAttribute("enctype")) || defaultEncType;
+    formData = new FormData(form, target);
+    if (!isFormDataSubmitterSupported()) {
+      let { name, type, value } = target;
+      if (type === "image") {
+        let prefix = name ? `${name}.` : "";
+        formData.append(`${prefix}x`, "0");
+        formData.append(`${prefix}y`, "0");
+      } else if (name) {
+        formData.append(name, value);
+      }
+    }
+  } else if (isHtmlElement(target)) {
+    throw new Error(
+      `Cannot submit element that is not <form>, <button>, or <input type="submit|image">`
+    );
+  } else {
+    method = defaultMethod;
+    action = null;
+    encType = defaultEncType;
+    body = target;
+  }
+  if (formData && encType === "text/plain") {
+    body = formData;
+    formData = void 0;
+  }
+  return { action, method: method.toLowerCase(), encType, formData, body };
+}
+var objectProtoNames2 = Object.getOwnPropertyNames(Object.prototype).sort().join("\0");
+var ESCAPE_LOOKUP = {
+  "&": "\\u0026",
+  ">": "\\u003e",
+  "<": "\\u003c",
+  "\u2028": "\\u2028",
+  "\u2029": "\\u2029"
+};
+var ESCAPE_REGEX = /[&><\u2028\u2029]/g;
+function escapeHtml(html) {
+  return html.replace(ESCAPE_REGEX, (match) => ESCAPE_LOOKUP[match]);
+}
+function invariant2(value, message) {
+  if (value === false || value === null || typeof value === "undefined") {
+    throw new Error(message);
+  }
+}
+var SingleFetchRedirectSymbol = Symbol("SingleFetchRedirect");
+function singleFetchUrl(reqUrl, basename, trailingSlashAware, extension) {
+  let url = typeof reqUrl === "string" ? new URL(
+    reqUrl,
+    // This can be called during the SSR flow via PrefetchPageLinksImpl so
+    // don't assume window is available
+    typeof window === "undefined" ? "server://singlefetch/" : window.location.origin
+  ) : reqUrl;
+  if (trailingSlashAware) {
+    if (url.pathname.endsWith("/")) {
+      url.pathname = `${url.pathname}_.${extension}`;
+    } else {
+      url.pathname = `${url.pathname}.${extension}`;
+    }
+  } else {
+    if (url.pathname === "/") {
+      url.pathname = `_root.${extension}`;
+    } else if (basename && stripBasename(url.pathname, basename) === "/") {
+      url.pathname = `${removeTrailingSlash(basename)}/_root.${extension}`;
+    } else {
+      url.pathname = `${removeTrailingSlash(url.pathname)}.${extension}`;
+    }
+  }
+  return url;
+}
+async function loadRouteModule(route, routeModulesCache) {
+  if (route.id in routeModulesCache) {
+    return routeModulesCache[route.id];
+  }
+  try {
+    let routeModule = await import(
+      /* @vite-ignore */
+      /* webpackIgnore: true */
+      route.module
+    );
+    routeModulesCache[route.id] = routeModule;
+    return routeModule;
+  } catch (error) {
+    console.error(
+      `Error loading route module \`${route.module}\`, reloading page...`
+    );
+    console.error(error);
+    if (window.__reactRouterContext && window.__reactRouterContext.isSpaMode && // @ts-expect-error
+    import.meta.hot) {
+      throw error;
+    }
+    window.location.reload();
+    return new Promise(() => {
+    });
+  }
+}
+function isPageLinkDescriptor(object) {
+  return object != null && typeof object.page === "string";
+}
+function isHtmlLinkDescriptor(object) {
+  if (object == null) {
+    return false;
+  }
+  if (object.href == null) {
+    return object.rel === "preload" && typeof object.imageSrcSet === "string" && typeof object.imageSizes === "string";
+  }
+  return typeof object.rel === "string" && typeof object.href === "string";
+}
+async function getKeyedPrefetchLinks(matches, manifest, routeModules) {
+  let links = await Promise.all(
+    matches.map(async (match) => {
+      let route = manifest.routes[match.route.id];
+      if (route) {
+        let mod = await loadRouteModule(route, routeModules);
+        return mod.links ? mod.links() : [];
+      }
+      return [];
+    })
+  );
+  return dedupeLinkDescriptors(
+    links.flat(1).filter(isHtmlLinkDescriptor).filter((link) => link.rel === "stylesheet" || link.rel === "preload").map(
+      (link) => link.rel === "stylesheet" ? { ...link, rel: "prefetch", as: "style" } : { ...link, rel: "prefetch" }
+    )
+  );
+}
+function getNewMatchesForLinks(page, nextMatches, currentMatches, manifest, location, mode) {
+  let isNew = (match, index) => {
+    if (!currentMatches[index]) return true;
+    return match.route.id !== currentMatches[index].route.id;
+  };
+  let matchPathChanged = (match, index) => {
+    return (
+      // param change, /users/123 -> /users/456
+      currentMatches[index].pathname !== match.pathname || // splat param changed, which is not present in match.path
+      // e.g. /files/images/avatar.jpg -> files/finances.xls
+      currentMatches[index].route.path?.endsWith("*") && currentMatches[index].params["*"] !== match.params["*"]
+    );
+  };
+  if (mode === "assets") {
+    return nextMatches.filter(
+      (match, index) => isNew(match, index) || matchPathChanged(match, index)
+    );
+  }
+  if (mode === "data") {
+    return nextMatches.filter((match, index) => {
+      let manifestRoute = manifest.routes[match.route.id];
+      if (!manifestRoute || !manifestRoute.hasLoader) {
+        return false;
+      }
+      if (isNew(match, index) || matchPathChanged(match, index)) {
+        return true;
+      }
+      if (match.route.shouldRevalidate) {
+        let routeChoice = match.route.shouldRevalidate({
+          currentUrl: new URL(
+            location.pathname + location.search + location.hash,
+            window.origin
+          ),
+          currentParams: currentMatches[0]?.params || {},
+          nextUrl: new URL(page, window.origin),
+          nextParams: match.params,
+          defaultShouldRevalidate: true
+        });
+        if (typeof routeChoice === "boolean") {
+          return routeChoice;
+        }
+      }
+      return true;
+    });
+  }
+  return [];
+}
+function getModuleLinkHrefs(matches, manifest, { includeHydrateFallback } = {}) {
+  return dedupeHrefs(
+    matches.map((match) => {
+      let route = manifest.routes[match.route.id];
+      if (!route) return [];
+      let hrefs = [route.module];
+      if (route.clientActionModule) {
+        hrefs = hrefs.concat(route.clientActionModule);
+      }
+      if (route.clientLoaderModule) {
+        hrefs = hrefs.concat(route.clientLoaderModule);
+      }
+      if (includeHydrateFallback && route.hydrateFallbackModule) {
+        hrefs = hrefs.concat(route.hydrateFallbackModule);
+      }
+      if (route.imports) {
+        hrefs = hrefs.concat(route.imports);
+      }
+      return hrefs;
+    }).flat(1)
+  );
+}
+function dedupeHrefs(hrefs) {
+  return [...new Set(hrefs)];
+}
+function sortKeys(obj) {
+  let sorted = {};
+  let keys = Object.keys(obj).sort();
+  for (let key of keys) {
+    sorted[key] = obj[key];
+  }
+  return sorted;
+}
+function dedupeLinkDescriptors(descriptors, preloads) {
+  let set = /* @__PURE__ */ new Set();
+  let preloadsSet = new Set(preloads);
+  return descriptors.reduce((deduped, descriptor) => {
+    let alreadyModulePreload = preloads && !isPageLinkDescriptor(descriptor) && descriptor.as === "script" && descriptor.href && preloadsSet.has(descriptor.href);
+    if (alreadyModulePreload) {
+      return deduped;
+    }
+    let key = JSON.stringify(sortKeys(descriptor));
+    if (!set.has(key)) {
+      set.add(key);
+      deduped.push({ key, link: descriptor });
+    }
+    return deduped;
+  }, []);
+}
+function useDataRouterContext2() {
+  let context = React8.useContext(DataRouterContext);
+  invariant2(
+    context,
+    "You must render this element inside a <DataRouterContext.Provider> element"
+  );
+  return context;
+}
+function useDataRouterStateContext() {
+  let context = React8.useContext(DataRouterStateContext);
+  invariant2(
+    context,
+    "You must render this element inside a <DataRouterStateContext.Provider> element"
+  );
+  return context;
+}
+var FrameworkContext = React8.createContext(void 0);
+FrameworkContext.displayName = "FrameworkContext";
+function useFrameworkContext() {
+  let context = React8.useContext(FrameworkContext);
+  invariant2(
+    context,
+    "You must render this element inside a <HydratedRouter> element"
+  );
+  return context;
+}
+function usePrefetchBehavior(prefetch, theirElementProps) {
+  let frameworkContext = React8.useContext(FrameworkContext);
+  let [maybePrefetch, setMaybePrefetch] = React8.useState(false);
+  let [shouldPrefetch, setShouldPrefetch] = React8.useState(false);
+  let { onFocus, onBlur, onMouseEnter, onMouseLeave, onTouchStart } = theirElementProps;
+  let ref = React8.useRef(null);
+  React8.useEffect(() => {
+    if (prefetch === "render") {
+      setShouldPrefetch(true);
+    }
+    if (prefetch === "viewport") {
+      let callback = (entries) => {
+        entries.forEach((entry) => {
+          setShouldPrefetch(entry.isIntersecting);
+        });
+      };
+      let observer = new IntersectionObserver(callback, { threshold: 0.5 });
+      if (ref.current) observer.observe(ref.current);
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [prefetch]);
+  React8.useEffect(() => {
+    if (maybePrefetch) {
+      let id = setTimeout(() => {
+        setShouldPrefetch(true);
+      }, 100);
+      return () => {
+        clearTimeout(id);
+      };
+    }
+  }, [maybePrefetch]);
+  let setIntent = () => {
+    setMaybePrefetch(true);
+  };
+  let cancelIntent = () => {
+    setMaybePrefetch(false);
+    setShouldPrefetch(false);
+  };
+  if (!frameworkContext) {
+    return [false, ref, {}];
+  }
+  if (prefetch !== "intent") {
+    return [shouldPrefetch, ref, {}];
+  }
+  return [
+    shouldPrefetch,
+    ref,
+    {
+      onFocus: composeEventHandlers(onFocus, setIntent),
+      onBlur: composeEventHandlers(onBlur, cancelIntent),
+      onMouseEnter: composeEventHandlers(onMouseEnter, setIntent),
+      onMouseLeave: composeEventHandlers(onMouseLeave, cancelIntent),
+      onTouchStart: composeEventHandlers(onTouchStart, setIntent)
+    }
+  ];
+}
+function composeEventHandlers(theirHandler, ourHandler) {
+  return (event) => {
+    theirHandler && theirHandler(event);
+    if (!event.defaultPrevented) {
+      ourHandler(event);
+    }
+  };
+}
+function PrefetchPageLinks({ page, ...linkProps }) {
+  let rsc = useIsRSCRouterContext();
+  let { nonce: contextNonce } = useFrameworkContext();
+  let { router } = useDataRouterContext2();
+  let matches = React8.useMemo(
+    () => matchRoutes(router.routes, page, router.basename),
+    [router.routes, page, router.basename]
+  );
+  if (!matches) {
+    return null;
+  }
+  if (linkProps.nonce == null && contextNonce) {
+    linkProps = { ...linkProps, nonce: contextNonce };
+  }
+  if (rsc) {
+    return /* @__PURE__ */ React8.createElement(RSCPrefetchPageLinksImpl, { page, matches, ...linkProps });
+  }
+  return /* @__PURE__ */ React8.createElement(PrefetchPageLinksImpl, { page, matches, ...linkProps });
+}
+function useKeyedPrefetchLinks(matches) {
+  let { manifest, routeModules } = useFrameworkContext();
+  let [keyedPrefetchLinks, setKeyedPrefetchLinks] = React8.useState([]);
+  React8.useEffect(() => {
+    let interrupted = false;
+    void getKeyedPrefetchLinks(matches, manifest, routeModules).then(
+      (links) => {
+        if (!interrupted) {
+          setKeyedPrefetchLinks(links);
+        }
+      }
+    );
+    return () => {
+      interrupted = true;
+    };
+  }, [matches, manifest, routeModules]);
+  return keyedPrefetchLinks;
+}
+function RSCPrefetchPageLinksImpl({
+  page,
+  matches: nextMatches,
+  ...linkProps
+}) {
+  let location = useLocation();
+  let { future } = useFrameworkContext();
+  let { basename } = useDataRouterContext2();
+  let dataHrefs = React8.useMemo(() => {
+    if (page === location.pathname + location.search + location.hash) {
+      return [];
+    }
+    let url = singleFetchUrl(
+      page,
+      basename,
+      future.v8_trailingSlashAwareDataRequests,
+      "rsc"
+    );
+    let hasSomeRoutesWithShouldRevalidate = false;
+    let targetRoutes = [];
+    for (let match of nextMatches) {
+      if (typeof match.route.shouldRevalidate === "function") {
+        hasSomeRoutesWithShouldRevalidate = true;
+      } else {
+        targetRoutes.push(match.route.id);
+      }
+    }
+    if (hasSomeRoutesWithShouldRevalidate && targetRoutes.length > 0) {
+      url.searchParams.set("_routes", targetRoutes.join(","));
+    }
+    return [url.pathname + url.search];
+  }, [
+    basename,
+    future.v8_trailingSlashAwareDataRequests,
+    page,
+    location,
+    nextMatches
+  ]);
+  return /* @__PURE__ */ React8.createElement(React8.Fragment, null, dataHrefs.map((href) => /* @__PURE__ */ React8.createElement("link", { key: href, rel: "prefetch", as: "fetch", href, ...linkProps })));
+}
+function PrefetchPageLinksImpl({
+  page,
+  matches: nextMatches,
+  ...linkProps
+}) {
+  let location = useLocation();
+  let { future, manifest, routeModules } = useFrameworkContext();
+  let { basename } = useDataRouterContext2();
+  let { loaderData, matches } = useDataRouterStateContext();
+  let newMatchesForData = React8.useMemo(
+    () => getNewMatchesForLinks(
+      page,
+      nextMatches,
+      matches,
+      manifest,
+      location,
+      "data"
+    ),
+    [page, nextMatches, matches, manifest, location]
+  );
+  let newMatchesForAssets = React8.useMemo(
+    () => getNewMatchesForLinks(
+      page,
+      nextMatches,
+      matches,
+      manifest,
+      location,
+      "assets"
+    ),
+    [page, nextMatches, matches, manifest, location]
+  );
+  let dataHrefs = React8.useMemo(() => {
+    if (page === location.pathname + location.search + location.hash) {
+      return [];
+    }
+    let routesParams = /* @__PURE__ */ new Set();
+    let foundOptOutRoute = false;
+    nextMatches.forEach((m) => {
+      let manifestRoute = manifest.routes[m.route.id];
+      if (!manifestRoute || !manifestRoute.hasLoader) {
+        return;
+      }
+      if (!newMatchesForData.some((m2) => m2.route.id === m.route.id) && m.route.id in loaderData && routeModules[m.route.id]?.shouldRevalidate) {
+        foundOptOutRoute = true;
+      } else if (manifestRoute.hasClientLoader) {
+        foundOptOutRoute = true;
+      } else {
+        routesParams.add(m.route.id);
+      }
+    });
+    if (routesParams.size === 0) {
+      return [];
+    }
+    let url = singleFetchUrl(
+      page,
+      basename,
+      future.v8_trailingSlashAwareDataRequests,
+      "data"
+    );
+    if (foundOptOutRoute && routesParams.size > 0) {
+      url.searchParams.set(
+        "_routes",
+        nextMatches.filter((m) => routesParams.has(m.route.id)).map((m) => m.route.id).join(",")
+      );
+    }
+    return [url.pathname + url.search];
+  }, [
+    basename,
+    future.v8_trailingSlashAwareDataRequests,
+    loaderData,
+    location,
+    manifest,
+    newMatchesForData,
+    nextMatches,
+    page,
+    routeModules
+  ]);
+  let moduleHrefs = React8.useMemo(
+    () => getModuleLinkHrefs(newMatchesForAssets, manifest),
+    [newMatchesForAssets, manifest]
+  );
+  let keyedPrefetchLinks = useKeyedPrefetchLinks(newMatchesForAssets);
+  return /* @__PURE__ */ React8.createElement(React8.Fragment, null, dataHrefs.map((href) => /* @__PURE__ */ React8.createElement("link", { key: href, rel: "prefetch", as: "fetch", href, ...linkProps })), moduleHrefs.map((href) => /* @__PURE__ */ React8.createElement("link", { key: href, rel: "modulepreload", href, ...linkProps })), keyedPrefetchLinks.map(({ key, link }) => (
+    // these don't spread `linkProps` because they are full link descriptors
+    // already with their own props
+    /* @__PURE__ */ React8.createElement(
+      "link",
+      {
+        key,
+        nonce: linkProps.nonce,
+        ...link,
+        crossOrigin: link.crossOrigin ?? linkProps.crossOrigin
+      }
+    )
+  )));
+}
+function mergeRefs(...refs) {
+  return (value) => {
+    refs.forEach((ref) => {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        ref.current = value;
+      }
+    });
+  };
+}
+var isBrowser2 = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
+try {
+  if (isBrowser2) {
+    window.__reactRouterVersion = // @ts-expect-error
+    "7.18.0";
+  }
+} catch (e) {
+}
+function BrowserRouter({
+  basename,
+  children,
+  useTransitions,
+  window: window2
+}) {
+  let historyRef = React10.useRef();
+  if (historyRef.current == null) {
+    historyRef.current = createBrowserHistory({ window: window2, v5Compat: true });
+  }
+  let history = historyRef.current;
+  let [state, setStateImpl] = React10.useState({
+    action: history.action,
+    location: history.location
+  });
+  let setState = React10.useCallback(
+    (newState) => {
+      if (useTransitions === false) {
+        setStateImpl(newState);
+      } else {
+        React10.startTransition(() => setStateImpl(newState));
+      }
+    },
+    [useTransitions]
+  );
+  React10.useLayoutEffect(() => history.listen(setState), [history, setState]);
+  return /* @__PURE__ */ React10.createElement(
+    Router,
+    {
+      basename,
+      children,
+      location: state.location,
+      navigationType: state.action,
+      navigator: history,
+      useTransitions
+    }
+  );
+}
+function HistoryRouter({
+  basename,
+  children,
+  history,
+  useTransitions
+}) {
+  let [state, setStateImpl] = React10.useState({
+    action: history.action,
+    location: history.location
+  });
+  let setState = React10.useCallback(
+    (newState) => {
+      if (useTransitions === false) {
+        setStateImpl(newState);
+      } else {
+        React10.startTransition(() => setStateImpl(newState));
+      }
+    },
+    [useTransitions]
+  );
+  React10.useLayoutEffect(() => history.listen(setState), [history, setState]);
+  return /* @__PURE__ */ React10.createElement(
+    Router,
+    {
+      basename,
+      children,
+      location: state.location,
+      navigationType: state.action,
+      navigator: history,
+      useTransitions
+    }
+  );
+}
+HistoryRouter.displayName = "unstable_HistoryRouter";
+var Link = React10.forwardRef(
+  function LinkWithRef({
+    onClick,
+    discover = "render",
+    prefetch = "none",
+    relative,
+    reloadDocument,
+    replace: replace2,
+    mask,
+    state,
+    target,
+    to,
+    preventScrollReset,
+    viewTransition,
+    defaultShouldRevalidate,
+    ...rest
+  }, forwardedRef) {
+    let { basename, navigator: navigator2, useTransitions } = React10.useContext(NavigationContext);
+    let isAbsolute = typeof to === "string" && ABSOLUTE_URL_REGEX.test(to);
+    let parsed = parseToInfo(to, basename);
+    to = parsed.to;
+    let href = useHref(to, { relative });
+    let location = useLocation();
+    let maskedHref = null;
+    if (mask) {
+      let resolved = resolveTo(
+        mask,
+        [],
+        location.mask ? location.mask.pathname : "/",
+        true
+      );
+      if (basename !== "/") {
+        resolved.pathname = resolved.pathname === "/" ? basename : joinPaths([basename, resolved.pathname]);
+      }
+      maskedHref = navigator2.createHref(resolved);
+    }
+    let [shouldPrefetch, prefetchRef, prefetchHandlers] = usePrefetchBehavior(
+      prefetch,
+      rest
+    );
+    let internalOnClick = useLinkClickHandler(to, {
+      replace: replace2,
+      mask,
+      state,
+      target,
+      preventScrollReset,
+      relative,
+      viewTransition,
+      defaultShouldRevalidate,
+      useTransitions
+    });
+    function handleClick(event) {
+      if (onClick) onClick(event);
+      if (!event.defaultPrevented) {
+        internalOnClick(event);
+      }
+    }
+    let isSpaLink = !(parsed.isExternal || reloadDocument);
+    let link = (
+      // eslint-disable-next-line jsx-a11y/anchor-has-content
+      /* @__PURE__ */ React10.createElement(
+        "a",
+        {
+          ...rest,
+          ...prefetchHandlers,
+          href: (isSpaLink ? maskedHref : void 0) || parsed.absoluteURL || href,
+          onClick: isSpaLink ? handleClick : onClick,
+          ref: mergeRefs(forwardedRef, prefetchRef),
+          target,
+          "data-discover": !isAbsolute && discover === "render" ? "true" : void 0
+        }
+      )
+    );
+    return shouldPrefetch && !isAbsolute ? /* @__PURE__ */ React10.createElement(React10.Fragment, null, link, /* @__PURE__ */ React10.createElement(PrefetchPageLinks, { page: href })) : link;
+  }
+);
+Link.displayName = "Link";
+var NavLink = React10.forwardRef(
+  function NavLinkWithRef({
+    "aria-current": ariaCurrentProp = "page",
+    caseSensitive = false,
+    className: classNameProp = "",
+    end = false,
+    style: styleProp,
+    to,
+    viewTransition,
+    children,
+    ...rest
+  }, ref) {
+    let path = useResolvedPath(to, { relative: rest.relative });
+    let location = useLocation();
+    let routerState = React10.useContext(DataRouterStateContext);
+    let { navigator: navigator2, basename } = React10.useContext(NavigationContext);
+    let isTransitioning = routerState != null && // Conditional usage is OK here because the usage of a data router is static
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useViewTransitionState(path) && viewTransition === true;
+    let toPathname = navigator2.encodeLocation ? navigator2.encodeLocation(path).pathname : path.pathname;
+    let locationPathname = location.pathname;
+    let nextLocationPathname = routerState && routerState.navigation && routerState.navigation.location ? routerState.navigation.location.pathname : null;
+    if (!caseSensitive) {
+      locationPathname = locationPathname.toLowerCase();
+      nextLocationPathname = nextLocationPathname ? nextLocationPathname.toLowerCase() : null;
+      toPathname = toPathname.toLowerCase();
+    }
+    if (nextLocationPathname && basename) {
+      nextLocationPathname = stripBasename(nextLocationPathname, basename) || nextLocationPathname;
+    }
+    const endSlashPosition = toPathname !== "/" && toPathname.endsWith("/") ? toPathname.length - 1 : toPathname.length;
+    let isActive = locationPathname === toPathname || !end && locationPathname.startsWith(toPathname) && locationPathname.charAt(endSlashPosition) === "/";
+    let isPending = nextLocationPathname != null && (nextLocationPathname === toPathname || !end && nextLocationPathname.startsWith(toPathname) && nextLocationPathname.charAt(toPathname.length) === "/");
+    let renderProps = {
+      isActive,
+      isPending,
+      isTransitioning
+    };
+    let ariaCurrent = isActive ? ariaCurrentProp : void 0;
+    let className;
+    if (typeof classNameProp === "function") {
+      className = classNameProp(renderProps);
+    } else {
+      className = [
+        classNameProp,
+        isActive ? "active" : null,
+        isPending ? "pending" : null,
+        isTransitioning ? "transitioning" : null
+      ].filter(Boolean).join(" ");
+    }
+    let style = typeof styleProp === "function" ? styleProp(renderProps) : styleProp;
+    return /* @__PURE__ */ React10.createElement(
+      Link,
+      {
+        ...rest,
+        "aria-current": ariaCurrent,
+        className,
+        ref,
+        style,
+        to,
+        viewTransition
+      },
+      typeof children === "function" ? children(renderProps) : children
+    );
+  }
+);
+NavLink.displayName = "NavLink";
+var Form = React10.forwardRef(
+  ({
+    discover = "render",
+    fetcherKey,
+    navigate,
+    reloadDocument,
+    replace: replace2,
+    state,
+    method = defaultMethod,
+    action,
+    onSubmit,
+    relative,
+    preventScrollReset,
+    viewTransition,
+    defaultShouldRevalidate,
+    ...props
+  }, forwardedRef) => {
+    let { useTransitions } = React10.useContext(NavigationContext);
+    let submit = useSubmit();
+    let formAction = useFormAction(action, { relative });
+    let formMethod = method.toLowerCase() === "get" ? "get" : "post";
+    let isAbsolute = typeof action === "string" && ABSOLUTE_URL_REGEX.test(action);
+    let submitHandler = (event) => {
+      onSubmit && onSubmit(event);
+      if (event.defaultPrevented) return;
+      event.preventDefault();
+      let submitter = event.nativeEvent.submitter;
+      let submitMethod = submitter?.getAttribute("formmethod") || method;
+      let doSubmit = () => submit(submitter || event.currentTarget, {
+        fetcherKey,
+        method: submitMethod,
+        navigate,
+        replace: replace2,
+        state,
+        relative,
+        preventScrollReset,
+        viewTransition,
+        defaultShouldRevalidate
+      });
+      if (useTransitions && navigate !== false) {
+        React10.startTransition(() => doSubmit());
+      } else {
+        doSubmit();
+      }
+    };
+    return /* @__PURE__ */ React10.createElement(
+      "form",
+      {
+        ref: forwardedRef,
+        method: formMethod,
+        action: formAction,
+        onSubmit: reloadDocument ? onSubmit : submitHandler,
+        ...props,
+        "data-discover": !isAbsolute && discover === "render" ? "true" : void 0
+      }
+    );
+  }
+);
+Form.displayName = "Form";
+function ScrollRestoration({
+  getKey,
+  storageKey,
+  ...props
+}) {
+  let remixContext = React10.useContext(FrameworkContext);
+  let { basename } = React10.useContext(NavigationContext);
+  let location = useLocation();
+  let matches = useMatches();
+  useScrollRestoration({ getKey, storageKey });
+  let ssrKey = React10.useMemo(
+    () => {
+      if (!remixContext || !getKey) return null;
+      let userKey = getScrollRestorationKey(
+        location,
+        matches,
+        basename,
+        getKey
+      );
+      return userKey !== location.key ? userKey : null;
+    },
+    // Nah, we only need this the first time for the SSR render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  if (!remixContext || remixContext.isSpaMode) {
+    return null;
+  }
+  let restoreScroll = ((storageKey2, restoreKey) => {
+    if (!window.history.state || !window.history.state.key) {
+      let key = Math.random().toString(32).slice(2);
+      window.history.replaceState({ key }, "");
+    }
+    try {
+      let positions = JSON.parse(sessionStorage.getItem(storageKey2) || "{}");
+      let storedY = positions[restoreKey || window.history.state.key];
+      if (typeof storedY === "number") {
+        window.scrollTo(0, storedY);
+      }
+    } catch (error) {
+      console.error(error);
+      sessionStorage.removeItem(storageKey2);
+    }
+  }).toString();
+  if (props.nonce == null && remixContext?.nonce) {
+    props.nonce = remixContext.nonce;
+  }
+  return /* @__PURE__ */ React10.createElement(
+    "script",
+    {
+      ...props,
+      suppressHydrationWarning: true,
+      dangerouslySetInnerHTML: {
+        __html: `(${restoreScroll})(${escapeHtml(
+          JSON.stringify(storageKey || SCROLL_RESTORATION_STORAGE_KEY)
+        )}, ${escapeHtml(JSON.stringify(ssrKey))})`
+      }
+    }
+  );
+}
+ScrollRestoration.displayName = "ScrollRestoration";
+function getDataRouterConsoleError2(hookName) {
+  return `${hookName} must be used within a data router.  See https://reactrouter.com/en/main/routers/picking-a-router.`;
+}
+function useDataRouterContext3(hookName) {
+  let ctx = React10.useContext(DataRouterContext);
+  invariant(ctx, getDataRouterConsoleError2(hookName));
+  return ctx;
+}
+function useDataRouterState2(hookName) {
+  let state = React10.useContext(DataRouterStateContext);
+  invariant(state, getDataRouterConsoleError2(hookName));
+  return state;
+}
+function useLinkClickHandler(to, {
+  target,
+  replace: replaceProp,
+  mask,
+  state,
+  preventScrollReset,
+  relative,
+  viewTransition,
+  defaultShouldRevalidate,
+  useTransitions
+} = {}) {
+  let navigate = useNavigate();
+  let location = useLocation();
+  let path = useResolvedPath(to, { relative });
+  return React10.useCallback(
+    (event) => {
+      if (shouldProcessLinkClick(event, target)) {
+        event.preventDefault();
+        let replace2 = replaceProp !== void 0 ? replaceProp : createPath(location) === createPath(path);
+        let doNavigate = () => navigate(to, {
+          replace: replace2,
+          mask,
+          state,
+          preventScrollReset,
+          relative,
+          viewTransition,
+          defaultShouldRevalidate
+        });
+        if (useTransitions) {
+          React10.startTransition(() => doNavigate());
+        } else {
+          doNavigate();
+        }
+      }
+    },
+    [
+      location,
+      navigate,
+      path,
+      replaceProp,
+      mask,
+      state,
+      target,
+      to,
+      preventScrollReset,
+      relative,
+      viewTransition,
+      defaultShouldRevalidate,
+      useTransitions
+    ]
+  );
+}
+var fetcherId = 0;
+var getUniqueFetcherId = () => `__${String(++fetcherId)}__`;
+function useSubmit() {
+  let { router } = useDataRouterContext3(
+    "useSubmit"
+    /* UseSubmit */
+  );
+  let { basename } = React10.useContext(NavigationContext);
+  let currentRouteId = useRouteId();
+  let routerFetch = router.fetch;
+  let routerNavigate = router.navigate;
+  return React10.useCallback(
+    async (target, options = {}) => {
+      let { action, method, encType, formData, body } = getFormSubmissionInfo(
+        target,
+        basename
+      );
+      if (options.navigate === false) {
+        let key = options.fetcherKey || getUniqueFetcherId();
+        await routerFetch(key, currentRouteId, options.action || action, {
+          defaultShouldRevalidate: options.defaultShouldRevalidate,
+          preventScrollReset: options.preventScrollReset,
+          formData,
+          body,
+          formMethod: options.method || method,
+          formEncType: options.encType || encType,
+          flushSync: options.flushSync
+        });
+      } else {
+        await routerNavigate(options.action || action, {
+          defaultShouldRevalidate: options.defaultShouldRevalidate,
+          preventScrollReset: options.preventScrollReset,
+          formData,
+          body,
+          formMethod: options.method || method,
+          formEncType: options.encType || encType,
+          replace: options.replace,
+          state: options.state,
+          fromRouteId: currentRouteId,
+          flushSync: options.flushSync,
+          viewTransition: options.viewTransition
+        });
+      }
+    },
+    [routerFetch, routerNavigate, basename, currentRouteId]
+  );
+}
+function useFormAction(action, { relative } = {}) {
+  let { basename } = React10.useContext(NavigationContext);
+  let routeContext = React10.useContext(RouteContext);
+  invariant(routeContext, "useFormAction must be used inside a RouteContext");
+  let [match] = routeContext.matches.slice(-1);
+  let path = { ...useResolvedPath(action ? action : ".", { relative }) };
+  let location = useLocation();
+  if (action == null) {
+    path.search = location.search;
+    let params = new URLSearchParams(path.search);
+    let indexValues = params.getAll("index");
+    let hasNakedIndexParam = indexValues.some((v) => v === "");
+    if (hasNakedIndexParam) {
+      params.delete("index");
+      indexValues.filter((v) => v).forEach((v) => params.append("index", v));
+      let qs = params.toString();
+      path.search = qs ? `?${qs}` : "";
+    }
+  }
+  if ((!action || action === ".") && match.route.index) {
+    path.search = path.search ? path.search.replace(/^\?/, "?index&") : "?index";
+  }
+  if (basename !== "/") {
+    path.pathname = path.pathname === "/" ? basename : joinPaths([basename, path.pathname]);
+  }
+  return createPath(path);
+}
+var SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
+var savedScrollPositions = {};
+function getScrollRestorationKey(location, matches, basename, getKey) {
+  let key = null;
+  if (getKey) {
+    if (basename !== "/") {
+      key = getKey(
+        {
+          ...location,
+          pathname: stripBasename(location.pathname, basename) || location.pathname
+        },
+        matches
+      );
+    } else {
+      key = getKey(location, matches);
+    }
+  }
+  if (key == null) {
+    key = location.key;
+  }
+  return key;
+}
+function useScrollRestoration({
+  getKey,
+  storageKey
+} = {}) {
+  let { router } = useDataRouterContext3(
+    "useScrollRestoration"
+    /* UseScrollRestoration */
+  );
+  let { restoreScrollPosition, preventScrollReset } = useDataRouterState2(
+    "useScrollRestoration"
+    /* UseScrollRestoration */
+  );
+  let { basename } = React10.useContext(NavigationContext);
+  let location = useLocation();
+  let matches = useMatches();
+  let navigation2 = useNavigation();
+  React10.useEffect(() => {
+    window.history.scrollRestoration = "manual";
+    return () => {
+      window.history.scrollRestoration = "auto";
+    };
+  }, []);
+  usePageHide(
+    React10.useCallback(() => {
+      if (navigation2.state === "idle") {
+        let key = getScrollRestorationKey(location, matches, basename, getKey);
+        savedScrollPositions[key] = window.scrollY;
+      }
+      try {
+        sessionStorage.setItem(
+          storageKey || SCROLL_RESTORATION_STORAGE_KEY,
+          JSON.stringify(savedScrollPositions)
+        );
+      } catch (error) {
+        warning(
+          false,
+          `Failed to save scroll positions in sessionStorage, <ScrollRestoration /> will not work properly (${error}).`
+        );
+      }
+      window.history.scrollRestoration = "auto";
+    }, [navigation2.state, getKey, basename, location, matches, storageKey])
+  );
+  if (typeof document !== "undefined") {
+    React10.useLayoutEffect(() => {
+      try {
+        let sessionPositions = sessionStorage.getItem(
+          storageKey || SCROLL_RESTORATION_STORAGE_KEY
+        );
+        if (sessionPositions) {
+          savedScrollPositions = JSON.parse(sessionPositions);
+        }
+      } catch (e) {
+      }
+    }, [storageKey]);
+    React10.useLayoutEffect(() => {
+      let disableScrollRestoration = router?.enableScrollRestoration(
+        savedScrollPositions,
+        () => window.scrollY,
+        getKey ? (location2, matches2) => getScrollRestorationKey(location2, matches2, basename, getKey) : void 0
+      );
+      return () => disableScrollRestoration && disableScrollRestoration();
+    }, [router, basename, getKey]);
+    React10.useLayoutEffect(() => {
+      if (restoreScrollPosition === false) {
+        return;
+      }
+      if (typeof restoreScrollPosition === "number") {
+        window.scrollTo(0, restoreScrollPosition);
+        return;
+      }
+      try {
+        if (location.hash) {
+          let el = document.getElementById(
+            decodeURIComponent(location.hash.slice(1))
+          );
+          if (el) {
+            el.scrollIntoView();
+            return;
+          }
+        }
+      } catch {
+        warning(
+          false,
+          `"${location.hash.slice(
+            1
+          )}" is not a decodable element ID. The view will not scroll to it.`
+        );
+      }
+      if (preventScrollReset === true) {
+        return;
+      }
+      window.scrollTo(0, 0);
+    }, [location, restoreScrollPosition, preventScrollReset]);
+  }
+}
+function usePageHide(callback, options) {
+  let { capture } = options || {};
+  React10.useEffect(() => {
+    let opts = capture != null ? { capture } : void 0;
+    window.addEventListener("pagehide", callback, opts);
+    return () => {
+      window.removeEventListener("pagehide", callback, opts);
+    };
+  }, [callback, capture]);
+}
+function useViewTransitionState(to, { relative } = {}) {
+  let vtContext = React10.useContext(ViewTransitionContext);
+  invariant(
+    vtContext != null,
+    "`useViewTransitionState` must be used within `react-router-dom`'s `RouterProvider`.  Did you accidentally import `RouterProvider` from `react-router`?"
+  );
+  let { basename } = useDataRouterContext3(
+    "useViewTransitionState"
+    /* useViewTransitionState */
+  );
+  let path = useResolvedPath(to, { relative });
+  if (!vtContext.isTransitioning) {
+    return false;
+  }
+  let currentPath = stripBasename(vtContext.currentLocation.pathname, basename) || vtContext.currentLocation.pathname;
+  let nextPath = stripBasename(vtContext.nextLocation.pathname, basename) || vtContext.nextLocation.pathname;
+  return matchPath(path.pathname, nextPath) != null || matchPath(path.pathname, currentPath) != null;
 }
 
-// src/ErrorBoundary.jsx
-var import_react2 = __toESM(require_react(), 1);
+// node_modules/lucide-react/dist/esm/createLucideIcon.js
+var import_react2 = __toESM(require_react());
+
+// node_modules/lucide-react/dist/esm/shared/src/utils.js
+var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+var mergeClasses = (...classes) => classes.filter((className, index, array) => {
+  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
+}).join(" ").trim();
+
+// node_modules/lucide-react/dist/esm/Icon.js
+var import_react = __toESM(require_react());
+
+// node_modules/lucide-react/dist/esm/defaultAttributes.js
+var defaultAttributes = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+};
+
+// node_modules/lucide-react/dist/esm/Icon.js
+var Icon = (0, import_react.forwardRef)(
+  ({
+    color = "currentColor",
+    size = 24,
+    strokeWidth = 2,
+    absoluteStrokeWidth,
+    className = "",
+    children,
+    iconNode,
+    ...rest
+  }, ref) => {
+    return (0, import_react.createElement)(
+      "svg",
+      {
+        ref,
+        ...defaultAttributes,
+        width: size,
+        height: size,
+        stroke: color,
+        strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
+        className: mergeClasses("lucide", className),
+        ...rest
+      },
+      [
+        ...iconNode.map(([tag, attrs]) => (0, import_react.createElement)(tag, attrs)),
+        ...Array.isArray(children) ? children : [children]
+      ]
+    );
+  }
+);
+
+// node_modules/lucide-react/dist/esm/createLucideIcon.js
+var createLucideIcon = (iconName, iconNode) => {
+  const Component4 = (0, import_react2.forwardRef)(
+    ({ className, ...props }, ref) => (0, import_react2.createElement)(Icon, {
+      ref,
+      iconNode,
+      className: mergeClasses(`lucide-${toKebabCase(iconName)}`, className),
+      ...props
+    })
+  );
+  Component4.displayName = `${iconName}`;
+  return Component4;
+};
+
+// node_modules/lucide-react/dist/esm/icons/chevron-left.js
+var ChevronLeft = createLucideIcon("ChevronLeft", [
+  ["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]
+]);
+
+// node_modules/lucide-react/dist/esm/icons/chevron-right.js
+var ChevronRight = createLucideIcon("ChevronRight", [
+  ["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]
+]);
+
+// node_modules/lucide-react/dist/esm/icons/menu.js
+var Menu = createLucideIcon("Menu", [
+  ["line", { x1: "4", x2: "20", y1: "12", y2: "12", key: "1e0a9i" }],
+  ["line", { x1: "4", x2: "20", y1: "6", y2: "6", key: "1owob3" }],
+  ["line", { x1: "4", x2: "20", y1: "18", y2: "18", key: "yk5zj1" }]
+]);
+
+// node_modules/lucide-react/dist/esm/icons/x.js
+var X = createLucideIcon("X", [
+  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
+  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
+]);
+
+// src/components/Navbar.jsx
+var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+function Navbar() {
+  const [isOpen, setIsOpen] = (0, import_react3.useState)(false);
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", { className: "sticky top-0 z-50 bg-white shadow-sm md:shadow-md", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "container mx-auto flex items-center justify-between px-4 py-4 md:px-6 lg:px-8", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", className: "text-slate-900 font-bold text-xl md:text-2xl lg:text-3xl tracking-tight", children: "TechPulse" }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "button",
+      {
+        className: "md:hidden p-2 rounded-md text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-200 transition-colors duration-200",
+        onClick: () => setIsOpen(!isOpen),
+        "aria-label": "Toggle navigation",
+        children: isOpen ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, { size: 24 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Menu, { size: 24 })
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      "ul",
+      {
+        className: `fixed inset-x-0 top-[64px] bg-white shadow-lg p-4 flex flex-col space-y-4 md:static md:flex md:flex-row md:space-x-6 lg:space-x-10 md:space-y-0 md:p-0 md:shadow-none md:justify-end md:items-center transition-transform duration-300 ease-in-out ${isOpen ? "translate-y-0" : "-translate-y-full md:translate-y-0"}
+            }`,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            Link,
+            {
+              to: "/",
+              className: "block text-slate-600 hover:text-slate-900 font-medium text-lg transition-colors duration-200 py-2 md:py-0",
+              onClick: () => setIsOpen(false),
+              children: "Home"
+            }
+          ) }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            Link,
+            {
+              to: "/",
+              className: "block text-slate-600 hover:text-slate-900 font-medium text-lg transition-colors duration-200 py-2 md:py-0",
+              onClick: () => setIsOpen(false),
+              children: "About"
+            }
+          ) }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            Link,
+            {
+              to: "/",
+              className: "block text-slate-600 hover:text-slate-900 font-medium text-lg transition-colors duration-200 py-2 md:py-0",
+              onClick: () => setIsOpen(false),
+              children: "Contact"
+            }
+          ) }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg transition-colors duration-200 text-lg", children: "Sign Up" }) })
+        ]
+      }
+    )
+  ] }) });
+}
+var Navbar_default = Navbar;
+
+// src/components/HeroSection.jsx
+var import_react4 = __toESM(require_react(), 1);
 var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-var ErrorBoundary = class extends import_react2.default.Component {
+function HeroSection() {
+  return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("section", { className: "bg-gradient-to-br from-blue-50 to-indigo-100 py-20 md:py-28 lg:py-36", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "container mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16 lg:gap-20", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "text-slate-900 space-y-6 md:space-y-8 lg:space-y-10", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h1", { className: "text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight", children: [
+        "Unlocking Insights, ",
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "text-blue-600", children: "Amplifying Success" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-slate-600 text-lg md:text-xl lg:text-2xl leading-relaxed", children: "Discover the power of data with TechPulse. We provide cutting-edge solutions to transform your business operations and drive growth." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-lg", children: "Get Started" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "bg-white border border-slate-300 hover:border-blue-400 text-slate-700 hover:text-blue-600 font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-lg", children: "Learn More" })
+      ] })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "hidden md:flex justify-center items-center", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      "img",
+      {
+        src: "https://via.placeholder.com/600x450/60a5fa/ffffff?text=TechPulse+Hero",
+        alt: "Abstract data visualization",
+        className: "w-full max-w-md lg:max-w-lg h-auto object-cover rounded-xl shadow-xl transform hover:scale-105 transition-transform duration-500"
+      }
+    ) })
+  ] }) });
+}
+var HeroSection_default = HeroSection;
+
+// src/components/Footer.jsx
+var import_react5 = __toESM(require_react(), 1);
+var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+function Footer() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("footer", { className: "bg-slate-800 py-10 md:py-12 lg:py-16 text-white", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "container mx-auto px-4 md:px-6 lg:px-8 text-center", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "text-slate-300 text-base md:text-lg leading-relaxed", children: [
+      "\xA9 ",
+      (/* @__PURE__ */ new Date()).getFullYear(),
+      " TechPulse. All rights reserved."
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex justify-center space-x-6 mt-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("a", { href: "#", className: "text-slate-400 hover:text-blue-400 transition-colors duration-200 text-base md:text-lg", children: "Privacy Policy" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("a", { href: "#", className: "text-slate-400 hover:text-blue-400 transition-colors duration-200 text-base md:text-lg", children: "Terms of Service" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("a", { href: "#", className: "text-slate-400 hover:text-blue-400 transition-colors duration-200 text-base md:text-lg", children: "Contact Us" })
+    ] })
+  ] }) });
+}
+var Footer_default = Footer;
+
+// src/components/BentoFeatures.jsx
+var import_react6 = __toESM(require_react(), 1);
+var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+function BentoFeatures() {
+  const features = [
+    {
+      title: "Advanced Analytics",
+      description: "Gain deep insights with powerful data analysis tools and interactive dashboards.",
+      icon: "\u{1F4CA}"
+    },
+    {
+      title: "Seamless Integration",
+      description: "Connect effortlessly with your existing systems and workflows.",
+      icon: "\u{1F517}"
+    },
+    {
+      title: "Real-time Reporting",
+      description: "Access up-to-the-minute reports to make informed decisions faster.",
+      icon: "\u23F1\uFE0F"
+    },
+    {
+      title: "Scalable Solutions",
+      description: "Our platform grows with your business, from startups to enterprises.",
+      icon: "\u{1F4C8}"
+    },
+    {
+      title: "Secure Data Handling",
+      description: "Your data is protected with industry-leading security protocols.",
+      icon: "\u{1F512}"
+    },
+    {
+      title: "User-Friendly Interface",
+      description: "Intuitive design ensures a smooth and efficient user experience.",
+      icon: "\u2728"
+    }
+  ];
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("section", { className: "bg-slate-50 py-16 md:py-24 lg:py-32", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "container mx-auto px-4 md:px-6 lg:px-8", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("h2", { className: "text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-slate-900 mb-12 md:mb-16 lg:mb-20 leading-tight", children: [
+      "Discover Our ",
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "text-blue-600", children: "Core Features" })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10", children: features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+      "div",
+      {
+        className: "bg-white p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-slate-100 flex flex-col items-start space-y-4",
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "text-4xl md:text-5xl lg:text-6xl mb-2", role: "img", "aria-label": feature.title, children: feature.icon }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { className: "text-xl md:text-2xl font-bold text-slate-900 leading-snug", children: feature.title }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-slate-600 text-base md:text-lg leading-relaxed", children: feature.description })
+        ]
+      },
+      index
+    )) })
+  ] }) });
+}
+var BentoFeatures_default = BentoFeatures;
+
+// src/components/TestimonialCarousel.jsx
+var import_react7 = __toESM(require_react(), 1);
+var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+function TestimonialCarousel() {
+  const [testimonials] = (0, import_react7.useState)([
+    {
+      id: 1,
+      text: "TechPulse has been instrumental in helping us make data-driven decisions. Their platform is intuitive and powerful!",
+      author: "John Doe, CEO of InnovateCorp"
+    },
+    {
+      id: 2,
+      text: "The insights provided by TechPulse have been invaluable to our business. We've seen a significant improvement in efficiency.",
+      author: "Jane Smith, Marketing Director at GrowthHub"
+    },
+    {
+      id: 3,
+      text: "TechPulse has helped us streamline our operations and improve efficiency. The support team is also fantastic!",
+      author: "Bob Johnson, Operations Manager at Streamline Solutions"
+    },
+    {
+      id: 4,
+      text: "A truly transformative tool! TechPulse provides clarity where there was once complexity. Highly recommended.",
+      author: "Alice Brown, Product Lead at Visionary Inc."
+    }
+  ]);
+  const [activeIndex, setActiveIndex] = (0, import_react7.useState)(0);
+  (0, import_react7.useEffect)(() => {
+    const intervalId = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    }, 6e3);
+    return () => clearInterval(intervalId);
+  }, [testimonials.length]);
+  const goToNext = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+  };
+  const goToPrevious = () => {
+    setActiveIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
+  };
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bg-blue-600 py-16 md:py-24 lg:py-32 text-white", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "container mx-auto px-4 md:px-6 lg:px-8 text-center", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("h2", { className: "text-3xl md:text-5xl lg:text-6xl font-extrabold mb-12 md:mb-16 lg:mb-20 leading-tight", children: [
+      "What Our ",
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "text-blue-200", children: "Clients Say" })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "relative max-w-3xl mx-auto bg-blue-700 rounded-xl shadow-2xl p-8 md:p-10 lg:p-12 flex flex-col items-center justify-center min-h-[250px] md:min-h-[300px]", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("blockquote", { className: "text-lg md:text-xl lg:text-2xl italic leading-relaxed mb-6 md:mb-8", children: [
+        '"',
+        testimonials[activeIndex].text,
+        '"'
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "text-blue-200 font-semibold text-base md:text-lg lg:text-xl", children: [
+        "- ",
+        testimonials[activeIndex].author
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        "button",
+        {
+          onClick: goToPrevious,
+          className: "absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200",
+          "aria-label": "Previous testimonial",
+          children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ChevronLeft, { size: 24 })
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        "button",
+        {
+          onClick: goToNext,
+          className: "absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200",
+          "aria-label": "Next testimonial",
+          children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ChevronRight, { size: 24 })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "flex justify-center mt-8 md:mt-10 lg:mt-12 space-x-3", children: testimonials.map((testimonial, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      "button",
+      {
+        className: `w-3 h-3 rounded-full transition-all duration-300 ${activeIndex === index ? "bg-blue-200 w-4 h-4" : "bg-blue-400 opacity-50"}`,
+        onClick: () => setActiveIndex(index),
+        "aria-label": `Go to testimonial ${index + 1}`
+      },
+      testimonial.id
+    )) })
+  ] }) });
+}
+var TestimonialCarousel_default = TestimonialCarousel;
+
+// src/components/PricingPlan.jsx
+var import_react8 = __toESM(require_react(), 1);
+var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+function PricingPlan() {
+  const [selectedPlan, setSelectedPlan] = import_react8.default.useState("monthly");
+  const handlePlanChange = (e) => {
+    setSelectedPlan(e.target.value);
+  };
+  const plans = {
+    monthly: {
+      title: "Basic Monthly",
+      price: "$29.99/month",
+      features: [
+        "100 transactions/month",
+        "1GB cloud storage",
+        "Basic analytics reports",
+        "Email support"
+      ]
+    },
+    yearly: {
+      title: "Premium Yearly",
+      price: "$299.99/year",
+      features: [
+        "Unlimited transactions",
+        "10GB cloud storage",
+        "Advanced analytics & insights",
+        "Priority email & chat support",
+        "Customizable dashboards"
+      ]
+    }
+  };
+  const currentPlan = plans[selectedPlan];
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "container mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-32", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("h2", { className: "text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-slate-900 mb-10 md:mb-12 lg:mb-16 leading-tight", children: [
+      "Flexible ",
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-blue-600", children: "Pricing Plans" })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex flex-col items-center justify-center space-y-8", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex bg-slate-100 rounded-lg p-1 shadow-inner", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          "button",
+          {
+            className: `py-2 px-6 rounded-md text-lg font-medium transition-all duration-300 ${selectedPlan === "monthly" ? "bg-blue-600 text-white shadow" : "text-slate-700 hover:bg-slate-200"}`,
+            onClick: () => setSelectedPlan("monthly"),
+            children: "Monthly"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          "button",
+          {
+            className: `py-2 px-6 rounded-md text-lg font-medium transition-all duration-300 ${selectedPlan === "yearly" ? "bg-blue-600 text-white shadow" : "text-slate-700 hover:bg-slate-200"}`,
+            onClick: () => setSelectedPlan("yearly"),
+            children: "Yearly"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "w-full max-w-md bg-white rounded-xl shadow-xl border border-slate-200 p-8 md:p-10 text-center transform hover:scale-105 transition-transform duration-300", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-3xl font-bold text-slate-900 mb-4 leading-snug", children: currentPlan.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-5xl font-extrabold text-blue-600 mb-6", children: currentPlan.price }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("ul", { className: "space-y-3 text-slate-700 text-lg mb-8", children: currentPlan.features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("li", { className: "flex items-center justify-center", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            "svg",
+            {
+              className: "w-5 h-5 text-green-500 mr-2",
+              fill: "none",
+              stroke: "currentColor",
+              viewBox: "0 0 24 24",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "path",
+                {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2",
+                  d: "M5 13l4 4L19 7"
+                }
+              )
+            }
+          ),
+          feature
+        ] }, index)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-xl", children: "Choose Plan" })
+      ] })
+    ] })
+  ] });
+}
+var PricingPlan_default = PricingPlan;
+
+// src/components/TransactionTable.jsx
+var import_react9 = __toESM(require_react(), 1);
+var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+function TransactionTable() {
+  const [transactions, setTransactions] = (0, import_react9.useState)([]);
+  const [searchTerm, setSearchTerm] = (0, import_react9.useState)("");
+  const [loading, setLoading] = (0, import_react9.useState)(true);
+  const [error, setError] = (0, import_react9.useState)(null);
+  (0, import_react9.useEffect)(() => {
+    const fetchTransactions = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        await new Promise((resolve) => setTimeout(resolve, 1e3));
+        const data2 = [
+          { id: 1, date: "2023-01-01", amount: 100, type: "Credit", description: "Online Purchase" },
+          { id: 2, date: "2023-01-02", amount: 200, type: "Debit", description: "Subscription Renewal" },
+          { id: 3, date: "2023-01-03", amount: 300, type: "Credit", description: "Salary Deposit" },
+          { id: 4, date: "2023-01-04", amount: 50, type: "Debit", description: "Coffee Shop" },
+          { id: 5, date: "2023-01-05", amount: 150, type: "Credit", description: "Refund" }
+        ];
+        setTransactions(data2);
+      } catch (err) {
+        setError("Failed to fetch transactions.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTransactions();
+  }, []);
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  const filteredTransactions = transactions.filter(
+    (transaction) => transaction.date.includes(searchTerm) || transaction.type.toLowerCase().includes(searchTerm.toLowerCase()) || transaction.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "container mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24 lg:py-32", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("h2", { className: "text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-slate-900 mb-10 md:mb-12 lg:mb-16 leading-tight", children: [
+      "Your Recent ",
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "text-blue-600", children: "Transactions" })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "mb-8 flex justify-center", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+      "input",
+      {
+        type: "search",
+        placeholder: "Search by date, type, or description...",
+        className: "w-full max-w-lg py-3 px-5 rounded-lg bg-white border border-slate-300 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-lg",
+        value: searchTerm,
+        onChange: handleSearch,
+        "aria-label": "Search transactions"
+      }
+    ) }),
+    loading && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "text-center text-slate-600 text-lg md:text-xl py-8", children: "Loading transactions..." }),
+    error && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "text-center text-red-600 text-lg md:text-xl py-8", children: [
+      "Error: ",
+      error
+    ] }),
+    !loading && !error && (transactions.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "text-center text-slate-600 text-lg md:text-xl py-8", children: "No transactions found." }) : /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "overflow-x-auto rounded-lg shadow-lg border border-slate-200", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("table", { className: "min-w-full bg-white divide-y divide-slate-200", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("thead", { className: "bg-slate-50", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("tr", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "th",
+          {
+            scope: "col",
+            className: "px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider",
+            children: "Date"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "th",
+          {
+            scope: "col",
+            className: "px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider",
+            children: "Amount"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "th",
+          {
+            scope: "col",
+            className: "px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider",
+            children: "Type"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "th",
+          {
+            scope: "col",
+            className: "px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider",
+            children: "Description"
+          }
+        )
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("tbody", { className: "divide-y divide-slate-200", children: filteredTransactions.map((transaction) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("tr", { className: "hover:bg-slate-50 transition-colors duration-150", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("td", { className: "px-6 py-4 whitespace-nowrap text-base text-slate-800", children: transaction.date }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("td", { className: "px-6 py-4 whitespace-nowrap text-base font-medium text-slate-900", children: [
+          "$",
+          transaction.amount.toFixed(2)
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          "td",
+          {
+            className: `px-6 py-4 whitespace-nowrap text-base font-medium ${transaction.type === "Credit" ? "text-green-600" : "text-red-600"}`,
+            children: transaction.type
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("td", { className: "px-6 py-4 whitespace-nowrap text-base text-slate-800", children: transaction.description })
+      ] }, transaction.id)) })
+    ] }) }))
+  ] });
+}
+var TransactionTable_default = TransactionTable;
+
+// src/App.jsx
+var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+function App() {
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(BrowserRouter, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("style", { children: `
+          @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+          body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #f8fafc; /* Light slate background for better contrast */
+            color: #334155;
+          }
+        ` }),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Navbar_default, {}),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Routes, { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      Route,
+      {
+        path: "/",
+        element: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(import_jsx_runtime8.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(HeroSection_default, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(BentoFeatures_default, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(TestimonialCarousel_default, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(PricingPlan_default, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(TransactionTable_default, {})
+        ] })
+      }
+    ) }),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Footer_default, {})
+  ] });
+}
+var App_default = App;
+
+// src/ErrorBoundary.jsx
+var import_react11 = __toESM(require_react(), 1);
+var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+var ErrorBoundary = class extends import_react11.default.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
@@ -21752,9 +25049,9 @@ var ErrorBoundary = class extends import_react2.default.Component {
   }
   render() {
     if (this.state.hasError) {
-      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { padding: "2rem", color: "#f87171", fontFamily: "sans-serif", backgroundColor: "#09090b", height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { style: { fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1rem" }, children: "Component Crashed" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { color: "#a1a1aa" }, children: "A React runtime error occurred." })
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { padding: "2rem", color: "#f87171", fontFamily: "sans-serif", backgroundColor: "#09090b", height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { style: { fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1rem" }, children: "Component Crashed" }),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { style: { color: "#a1a1aa" }, children: "A React runtime error occurred." })
       ] });
     }
     return this.props.children;
@@ -21762,9 +25059,9 @@ var ErrorBoundary = class extends import_react2.default.Component {
 };
 
 // src/main.jsx
-var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
 (0, import_client.createRoot)(document.getElementById("root")).render(
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_react3.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ErrorBoundary, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SafeComponent, {}) }) })
+  /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_react12.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(ErrorBoundary, { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(App_default, {}) }) })
 );
 /*! Bundled license information:
 
@@ -21821,5 +25118,34 @@ react/cjs/react-jsx-runtime.development.js:
    *
    * This source code is licensed under the MIT license found in the
    * LICENSE file in the root directory of this source tree.
+   *)
+
+react-router/dist/development/chunk-4ZMWKKQ3.mjs:
+react-router/dist/development/index.mjs:
+  (**
+   * react-router v7.18.0
+   *
+   * Copyright (c) Remix Software Inc.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE.md file in the root directory of this source tree.
+   *
+   * @license MIT
+   *)
+
+lucide-react/dist/esm/shared/src/utils.js:
+lucide-react/dist/esm/defaultAttributes.js:
+lucide-react/dist/esm/Icon.js:
+lucide-react/dist/esm/createLucideIcon.js:
+lucide-react/dist/esm/icons/chevron-left.js:
+lucide-react/dist/esm/icons/chevron-right.js:
+lucide-react/dist/esm/icons/menu.js:
+lucide-react/dist/esm/icons/x.js:
+lucide-react/dist/esm/lucide-react.js:
+  (**
+   * @license lucide-react v0.468.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
    *)
 */
