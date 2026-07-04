@@ -2,31 +2,31 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 12
+      "light": 13
     },
     "style": {
-      "minimal": 12
+      "minimal": 13
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "zinc": 12
+      "zinc": 13
     },
     "preferredLayouts": {
-      "navbar: top, sidebar: none": 10,
+      "navbar: top, sidebar: none": 11,
       "navbar: none, sidebar: none": 2
     },
     "commonComponents": {
-      "herosection": 10,
+      "herosection": 11,
       "featuressection": 4,
-      "testimonialcarousel": 10,
+      "testimonialcarousel": 11,
       "pricingplan": 4,
       "calltoactionsection": 2,
       "footersection": 1,
       "navbar": 2,
       "bentofeatures": 2,
       "projectssection": 1,
-      "footer": 11,
+      "footer": 12,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -41,12 +41,6 @@
     }
   },
   "history": [
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "minimal",
-      "theme": "minimal light",
-      "primaryColor": "zinc"
-    },
     {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "minimal",
@@ -97,6 +91,12 @@
     },
     {
       "prompt": "Build a analytics dashboard: Analytics and data view",
+      "style": "minimal",
+      "theme": "light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a portfolio website: Creative personal site",
       "style": "minimal",
       "theme": "light",
       "primaryColor": "zinc"
