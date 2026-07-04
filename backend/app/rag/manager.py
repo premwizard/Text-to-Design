@@ -1,11 +1,9 @@
 import logging
 from pathlib import Path
 from typing import List
-
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
 
 from backend.app.utils.env import get_env
 
@@ -26,15 +24,13 @@ def _load_documents() -> List[Document]:
     return documents
 
 
-def _create_embeddings() -> OpenAIEmbeddings | None:
-    openai_key = get_env("OPENAI_API_KEY")
-    if not openai_key:
-        logger.warning("OPENAI_API_KEY missing: RAG embeddings are disabled")
-        return None
-    return OpenAIEmbeddings(openai_api_key=openai_key)
+def _create_embeddings() -> None:
+    # RAG embeddings are currently disabled as OpenAI was removed.
+    # Return None or implement an alternative embedding model here.
+    return None
 
 
-def _build_store(embeddings: OpenAIEmbeddings) -> Chroma:
+def _build_store(embeddings) -> Chroma:
     documents = _load_documents()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=50)
     chunks = text_splitter.split_documents(documents)
@@ -62,7 +58,7 @@ def setup_rag() -> None:
         logger.info("Using existing RAG vector store")
 
 
-def _get_store(embeddings: OpenAIEmbeddings) -> Chroma:
+def _get_store(embeddings) -> Chroma:
     return Chroma(
         persist_directory=str(PERSIST_DIR),
         embedding_function=embeddings,

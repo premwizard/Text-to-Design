@@ -19,10 +19,6 @@ PROVIDERS_CONFIG = {
         "llama-3.3-70b-versatile",
         "llama-3.1-8b-instant"
     ],
-    "openai": [
-        "gpt-4o-mini",
-        "gpt-4o"
-    ],
     "openrouter": [
         "anthropic/claude-3.5-haiku",
         "anthropic/claude-3.5-sonnet",
@@ -30,7 +26,7 @@ PROVIDERS_CONFIG = {
     ]
 }
 
-DEFAULT_PROVIDER_FALLBACK_ORDER = "gemini,groq,openai,openrouter"
+DEFAULT_PROVIDER_FALLBACK_ORDER = "gemini,groq,openrouter"
 
 
 def get_provider_fallback_order() -> list[str]:

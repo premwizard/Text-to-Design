@@ -12,13 +12,11 @@ from backend.app.core.config.ai_models import PROVIDERS_CONFIG, get_provider_fal
 # Load providers from the canonical providers/ package
 import backend.app.services.providers.groq_provider as groq_provider
 import backend.app.services.providers.gemini_provider as gemini_provider
-import backend.app.services.providers.openai_provider as openai_provider
 import backend.app.services.providers.openrouter_provider as openrouter_provider
 
 PROVIDERS = {
     "groq": groq_provider,
     "gemini": gemini_provider,
-    "openai": openai_provider,
     "openrouter": openrouter_provider
 }
 
@@ -67,9 +65,6 @@ def get_available_provider_order():
     available = []
     for p in provider_order:
         p_lower = p.lower()
-        if p_lower == "openai" and not os.getenv("OPENAI_API_KEY"):
-            logging.warning("[Router] Skipping OpenAI - OPENAI_API_KEY missing.")
-            continue
         if p_lower == "openrouter" and not os.getenv("OPENROUTER_API_KEY"):
             logging.warning("[Router] Skipping OpenRouter - OPENROUTER_API_KEY missing.")
             continue
