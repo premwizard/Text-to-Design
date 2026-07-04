@@ -2,29 +2,46 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 1
+      "light": 3
     },
     "style": {
-      "minimal": 1
+      "minimal": 3
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "zinc": 1
+      "zinc": 3
     },
     "preferredLayouts": {
-      "navbar: top, sidebar: none": 1
+      "navbar: top, sidebar: none": 3
     },
     "commonComponents": {
-      "herosection": 1,
-      "featuressection": 1,
-      "testimonialcarousel": 1,
+      "herosection": 3,
+      "featuressection": 2,
+      "testimonialcarousel": 3,
       "pricingplan": 1,
-      "calltoactionsection": 1,
-      "footersection": 1
+      "calltoactionsection": 2,
+      "footersection": 1,
+      "navbar": 1,
+      "bentofeatures": 1,
+      "projectssection": 1,
+      "footer": 2,
+      "pricingsection": 1
     }
   },
   "history": [
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a portfolio website: Creative personal site",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
     {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "minimal",

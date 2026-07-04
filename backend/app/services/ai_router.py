@@ -2,6 +2,10 @@ import logging
 import anyio
 import time
 import os
+import json
+import random
+import hashlib
+import asyncio
 from backend.app.services.prompt_optimizer import optimize_prompt
 from backend.app.core.config.ai_models import PROVIDERS_CONFIG, get_provider_fallback_order
 
@@ -19,22 +23,14 @@ PROVIDERS = {
 }
 
 FALLBACK_KEYWORDS = [
-    "429",
-    "rate_limit",
-    "quota",
-    "capacity",
-    "busy",
-    "timeout",
-    "temporarily unavailable",
-    "service unavailable",
-    "too many requests",
-    "resource_exhausted",
-    "rate limit exceeded",
-    "connection reset",
-    "connection aborted"
+    "429", "rate_limit", "quota", "capacity", "busy", "timeout",
+    "temporarily unavailable", "service unavailable", "too many requests",
+    "resource_exhausted", "rate limit exceeded", "connection reset", "connection aborted"
 ]
 
 MODEL_COOLDOWNS = {}
+PROMPT_CACHE = {}
+API_SEMAPHORE = asyncio.Semaphore(2)
 
 def is_rate_limited(error: Exception) -> bool:
     error_text = str(error).lower()
@@ -80,132 +76,161 @@ def get_available_provider_order():
         available.append(p)
     return available
 
+def _get_cache_key(messages, temperature, max_tokens, stream):
+    key_dict = {
+        "messages": messages,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+        "stream": stream
+    }
+    return hashlib.md5(json.dumps(key_dict, sort_keys=True).encode()).hexdigest()
+
 async def _stream_ai(task_type: str, system_prompt: str, user_prompt: str, temperature: float = 0.7, max_tokens: int = None):
     sys_p, usr_p = optimize_prompt(system_prompt, user_prompt)
     messages = _build_messages(sys_p, usr_p)
     
-    provider_order = get_available_provider_order()
-    
-    # We will track if we ever switched models or providers to yield a fallback message
-    first_attempt = True
-    
-    for provider_name in provider_order:
-        provider = PROVIDERS.get(provider_name.lower())
-        if not provider:
-            continue
-            
-        models = PROVIDERS_CONFIG.get(provider_name.lower(), [])
-        if not models:
-            continue
- 
-        provider_success = False
- 
-        for model_name in get_next_model(provider_name):
-            if not first_attempt:
-                yield {"type": "fallback", "message": f"Switching to backup model ({model_name})..."}
-            first_attempt = False
- 
-            logging.info(f"[Router] Trying {provider_name.capitalize()} model: {model_name}")
-            
-            # Retry loop for rate limits
-            max_retries = 3
-            retry_delays = [2, 5, 10]
-            for attempt in range(max_retries):
-                try:
-                    response_stream = provider.generate_stream(
-                        model=model_name,
-                        messages=messages,
-                        temperature=temperature,
-                        max_tokens=max_tokens
-                    )
-                    
-                    async for chunk in response_stream:
-                        yield chunk
-                        
-                    logging.info(f"[Router] Success with {model_name}")
-                    provider_success = True
-                    return
-                    
-                except Exception as e:
-                    if is_rate_limited(e) and attempt < max_retries:
-                        sleep_time = retry_delays[attempt]
-                        logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time}s... (Attempt {attempt+1}/{max_retries})")
-                        await anyio.sleep(sleep_time)
-                        continue
-                        
-                    logging.warning(f"[Router] Failed with {model_name}: {e}")
-                    
-                    if is_rate_limited(e):
-                        logging.info(f"[Router] Rate limited on {model_name}")
-                        mark_model_cooldown(model_name, cooldown_minutes=0.25)
-                    else:
-                        logging.warning(f"[Router] Unrecoverable error on {model_name}. Marking cooldown and trying next.")
-                        mark_model_cooldown(model_name, cooldown_minutes=1)
-                    break  # Go to next model
+    # Fast path caching (if stream is cached, yield it entirely as one chunk for simplicity)
+    cache_key = _get_cache_key(messages, temperature, max_tokens, True)
+    if cache_key in PROMPT_CACHE:
+        logging.info(f"[Router] Cache hit for {task_type}")
+        class MockChoice:
+            def __init__(self, c):
+                class MockDelta:
+                    def __init__(self, c):
+                        self.content = c
+                self.delta = MockDelta(c)
+        class MockChunk:
+            def __init__(self, c):
+                self.choices = [MockChoice(c)]
+        yield MockChunk(PROMPT_CACHE[cache_key])
+        return
         
-        if not provider_success:
-            logging.info(f"[Router] All {provider_name.capitalize()} models exhausted")
-            logging.info(f"[Router] Switching to next provider")
- 
-    # Emergency response
+    provider_order = get_available_provider_order()
+    first_attempt = True
+    full_response = ""
+    
+    async with API_SEMAPHORE:
+        for provider_name in provider_order:
+            provider = PROVIDERS.get(provider_name.lower())
+            if not provider:
+                continue
+                
+            models = PROVIDERS_CONFIG.get(provider_name.lower(), [])
+            if not models:
+                continue
+
+            provider_success = False
+
+            for model_name in get_next_model(provider_name):
+                if not first_attempt:
+                    yield {"type": "fallback", "message": f"Switching to backup model ({model_name})..."}
+                first_attempt = False
+
+                logging.info(f"[Router] Trying {provider_name.capitalize()} model: {model_name}")
+                
+                max_retries = 3
+                for attempt in range(max_retries):
+                    try:
+                        response_stream = provider.generate_stream(
+                            model=model_name,
+                            messages=messages,
+                            temperature=temperature,
+                            max_tokens=max_tokens
+                        )
+                        
+                        async for chunk in response_stream:
+                            if hasattr(chunk, "choices") and chunk.choices[0].delta.content:
+                                full_response += chunk.choices[0].delta.content
+                            yield chunk
+                            
+                        logging.info(f"[Router] Success with {model_name}")
+                        PROMPT_CACHE[cache_key] = full_response
+                        provider_success = True
+                        return
+                        
+                    except Exception as e:
+                        if is_rate_limited(e) and attempt < max_retries:
+                            sleep_time = random.uniform(0, 1) + (2 ** attempt)
+                            logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time:.2f}s... (Attempt {attempt+1}/{max_retries})")
+                            await anyio.sleep(sleep_time)
+                            continue
+                            
+                        logging.warning(f"[Router] Failed with {model_name}: {e}")
+                        
+                        if is_rate_limited(e):
+                            logging.info(f"[Router] Rate limited on {model_name}")
+                            mark_model_cooldown(model_name, cooldown_minutes=0.25)
+                        else:
+                            logging.warning(f"[Router] Unrecoverable error on {model_name}. Marking cooldown and trying next.")
+                            mark_model_cooldown(model_name, cooldown_minutes=1)
+                        break
+            
+            if not provider_success:
+                logging.info(f"[Router] All {provider_name.capitalize()} models exhausted. Switching to next provider.")
+
     logging.error("[Router] All models and providers exhausted.")
     yield {"type": "emergency", "message": "AI providers are temporarily busy. Please retry in a moment."}
- 
- 
+
+
 async def _execute_ai(task_type: str, system_prompt: str, user_prompt: str, temperature: float = 0.7, max_tokens: int = None):
     sys_p, usr_p = optimize_prompt(system_prompt, user_prompt)
     messages = _build_messages(sys_p, usr_p)
     
+    cache_key = _get_cache_key(messages, temperature, max_tokens, False)
+    if cache_key in PROMPT_CACHE:
+        logging.info(f"[Router] Cache hit for {task_type}")
+        return PROMPT_CACHE[cache_key]
+        
     provider_order = get_available_provider_order()
     
-    for provider_name in provider_order:
-        provider = PROVIDERS.get(provider_name.lower())
-        if not provider:
-            continue
-            
-        models = PROVIDERS_CONFIG.get(provider_name.lower(), [])
-        if not models:
-            continue
- 
-        provider_success = False
- 
-        for model_name in get_next_model(provider_name):
-            logging.info(f"[Router] Trying {provider_name.capitalize()} model: {model_name}")
-            
-            max_retries = 3
-            retry_delays = [2, 5, 10]
-            for attempt in range(max_retries):
-                try:
-                    response = await provider.generate_text(
-                        model=model_name,
-                        messages=messages,
-                        temperature=temperature,
-                        max_tokens=max_tokens
-                    )
-                    logging.info(f"[Router] Success with {model_name}")
-                    return response
-                    
-                except Exception as e:
-                    if is_rate_limited(e) and attempt < max_retries:
-                        sleep_time = retry_delays[attempt]
-                        logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time}s... (Attempt {attempt+1}/{max_retries})")
-                        await anyio.sleep(sleep_time)
-                        continue
+    async with API_SEMAPHORE:
+        for provider_name in provider_order:
+            provider = PROVIDERS.get(provider_name.lower())
+            if not provider:
+                continue
+                
+            models = PROVIDERS_CONFIG.get(provider_name.lower(), [])
+            if not models:
+                continue
+
+            provider_success = False
+
+            for model_name in get_next_model(provider_name):
+                logging.info(f"[Router] Trying {provider_name.capitalize()} model: {model_name}")
+                
+                max_retries = 3
+                for attempt in range(max_retries):
+                    try:
+                        response = await provider.generate_text(
+                            model=model_name,
+                            messages=messages,
+                            temperature=temperature,
+                            max_tokens=max_tokens
+                        )
+                        logging.info(f"[Router] Success with {model_name}")
+                        PROMPT_CACHE[cache_key] = response
+                        return response
                         
-                    logging.warning(f"[Router] Failed with {model_name}: {e}")
-                    
-                    if is_rate_limited(e):
-                        logging.info(f"[Router] Rate limited on {model_name}")
-                        mark_model_cooldown(model_name, cooldown_minutes=0.25)
-                    else:
-                        logging.warning(f"[Router] Unrecoverable error on {model_name}. Marking cooldown and trying next.")
-                        mark_model_cooldown(model_name, cooldown_minutes=1)
-                    break
-        
-        if not provider_success:
-            logging.info(f"[Router] All {provider_name.capitalize()} models exhausted")
-            logging.info(f"[Router] Switching to next provider")
- 
+                    except Exception as e:
+                        if is_rate_limited(e) and attempt < max_retries:
+                            sleep_time = random.uniform(0, 1) + (2 ** attempt)
+                            logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time:.2f}s... (Attempt {attempt+1}/{max_retries})")
+                            await anyio.sleep(sleep_time)
+                            continue
+                            
+                        logging.warning(f"[Router] Failed with {model_name}: {e}")
+                        
+                        if is_rate_limited(e):
+                            logging.info(f"[Router] Rate limited on {model_name}")
+                            mark_model_cooldown(model_name, cooldown_minutes=0.25)
+                        else:
+                            logging.warning(f"[Router] Unrecoverable error on {model_name}. Marking cooldown and trying next.")
+                            mark_model_cooldown(model_name, cooldown_minutes=1)
+                        break
+            
+            if not provider_success:
+                logging.info(f"[Router] All {provider_name.capitalize()} models exhausted. Switching to next provider.")
+
     class MockMessage:
         content = '{"error": "AI providers are temporarily busy. Please retry in a moment."}'
     class MockChoice:
@@ -214,7 +239,6 @@ async def _execute_ai(task_type: str, system_prompt: str, user_prompt: str, temp
         choices = [MockChoice()]
         
     return MockResponse()
-
 
 def generate_ai(task_type: str, system_prompt: str, user_prompt: str, stream: bool = False, temperature: float = 0.7, max_tokens: int = None):
     if stream:

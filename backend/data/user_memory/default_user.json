@@ -2,11 +2,11 @@
   "userId": "default_user",
   "preferences": {
     "theme": {
-      "dark": 10,
+      "dark": 11,
       "light": 1
     },
     "style": {
-      "dark-modern": 10,
+      "dark-modern": 11,
       "minimal": 1
     },
     "borderRadius": {},
@@ -14,16 +14,16 @@
     "favoriteColors": {
       "emerald": 2,
       "zinc": 1,
-      "indigo": 7,
+      "indigo": 8,
       "violet": 1
     },
     "preferredLayouts": {
       "navbar: top, sidebar: left": 3,
-      "navbar: top, sidebar: none": 8
+      "navbar: top, sidebar: none": 9
     },
     "commonComponents": {
-      "herosection": 10,
-      "bentofeatures": 8,
+      "herosection": 11,
+      "bentofeatures": 9,
       "pricingplan": 4,
       "footer": 9,
       "gallerysection": 1,
@@ -42,12 +42,6 @@
     }
   },
   "history": [
-    {
-      "prompt": "Luxury hotel booking page",
-      "style": "dark-modern",
-      "theme": "luxury dark",
-      "primaryColor": "emerald"
-    },
     {
       "prompt": "Luxury hotel booking page",
       "style": "minimal",
@@ -98,6 +92,12 @@
     },
     {
       "prompt": "Luxury hotel booking page",
+      "style": "dark-modern",
+      "theme": "premium dark",
+      "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Create a simple modern hero section with a blue button",
       "style": "dark-modern",
       "theme": "premium dark",
       "primaryColor": "indigo"

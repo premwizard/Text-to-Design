@@ -79,7 +79,7 @@ def cleanGeneratedCode(code: str) -> str:
 
 
 def validateGeneratedCode(code: str, filename: str) -> bool:
-    from backend.services.debug.debug_logger import DebugLogger
+    from backend.app.services.debug.debug_logger import DebugLogger
     db_logger = DebugLogger()
     db_logger.log("VALIDATION", "START", f"Validating file: {filename}")
 
@@ -127,7 +127,7 @@ def validateGeneratedCode(code: str, filename: str) -> bool:
             raise ValueError(f"Static validation failed: File {filename} contains malformed import/export line: {line}")
 
     # 4. Import Validator check
-    from backend.services.validators.import_validator import validate_imports
+    from backend.app.utils.validators.import_validator import validate_imports
     is_valid_imports, err_msg = validate_imports(code, filename)
     if not is_valid_imports:
         log_invalid_file(filename, "Forbidden imports", code)
@@ -217,7 +217,7 @@ async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tupl
     temp_src_dir = SANDBOX_DIR / "src_validate_temp"
     temp_src_dir.mkdir(parents=True, exist_ok=True)
     
-    from backend.services.debug.debug_logger import DebugLogger
+    from backend.app.services.debug.debug_logger import DebugLogger
     db_logger = DebugLogger()
     db_logger.log("COMPILE", "START", f"Dry-run compilation checking. Target variation: {variation_id}. Proposed files: {list(cleaned_files.keys())}")
     
@@ -399,7 +399,7 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
     written = []
     new_component_paths = set()
     
-    from backend.services.debug.debug_logger import DebugLogger
+    from backend.app.services.debug.debug_logger import DebugLogger
     db_logger = DebugLogger()
     import hashlib
     
@@ -614,7 +614,7 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
                     print(f"[Auto-Fix] Repairing offending file: {error_file_rel}")
                     broken_code = error_file_abs.read_text(encoding="utf-8")
                     
-                    from backend.services.ai_router import generate_ai
+                    from backend.app.services.ai_router import generate_ai
                     from backend.prompts import FIX_SYSTEM_PROMPT
                     from backend.routes.generate_ui import _repair_jsx
                     

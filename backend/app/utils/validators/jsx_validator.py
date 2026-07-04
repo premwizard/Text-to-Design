@@ -34,7 +34,7 @@ def validate_generated_code(files: List[Dict[str, str]]) -> dict:
         
         for match in imports:
             pkg = match.group(1)
-            if pkg not in ALLOWED_IMPORTS:
+            if pkg not in ALLOWED_IMPORTS and not pkg.startswith('.'):
                 errors.append({
                     "file": filename,
                     "type": "INVALID_IMPORT",
@@ -82,48 +82,8 @@ def validate_generated_code(files: List[Dict[str, str]]) -> dict:
             })
             
         # 4. Tag Validation (Stack-Based)
-        # Note: This is a simplified JSX parser that won't handle deeply complex JS expressions inside tags
-        # but it will catch structural unclosed tags.
-        tag_stack = []
-        
-        # Regex to find opening and closing tags (ignoring contents and self-closing tags)
-        # <Tag> or </Tag>
-        tag_pattern = re.compile(r'<\s*(/?)\s*([a-zA-Z0-9_.-]+)[^>]*?(/?)>')
-        
-        for i, line in enumerate(lines):
-            for match in tag_pattern.finditer(line):
-                is_closing = match.group(1) == '/'
-                tag_name = match.group(2)
-                is_self_closing = match.group(3) == '/'
-                
-                # Skip self-closing tags or implicitly self-closing standard tags
-                if is_self_closing or tag_name.lower() in SELF_CLOSING_TAGS:
-                    continue
-                    
-                if not is_closing:
-                    tag_stack.append((tag_name, i + 1))
-                else:
-                    if not tag_stack:
-                        errors.append({
-                            "file": filename,
-                            "type": "UNMATCHED_CLOSING_TAG",
-                            "message": f"Closing tag </{tag_name}> found on line {i + 1} without an opening tag"
-                        })
-                    else:
-                        top_tag, line_num = tag_stack.pop()
-                        if top_tag != tag_name:
-                            errors.append({
-                                "file": filename,
-                                "type": "MISMATCHED_TAG",
-                                "message": f"Mismatched closing tag </{tag_name}> on line {i + 1}. Expected </{top_tag}> from line {line_num}"
-                            })
-                            
-        for tag_name, line_num in tag_stack:
-            errors.append({
-                "file": filename,
-                "type": "UNCLOSED_TAG",
-                "message": f"Tag <{tag_name}> is not closed (started on line {line_num})"
-            })
+        # Removed: Regex cannot reliably parse JSX tags with arrow functions (e.g. onClick={() => {}})
+        # which causes many false positive MISMATCHED_TAG errors.
             
         all_errors.extend(errors)
         

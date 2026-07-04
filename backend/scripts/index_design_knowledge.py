@@ -7,7 +7,7 @@ from pathlib import Path
 # Setup path so it finds backend package correctly
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from backend.services.vector_db.chroma_service import ChromaService
+from backend.app.repositories.chroma_service import ChromaService
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("backend.scripts.index_design_knowledge")

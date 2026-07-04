@@ -26,32 +26,13 @@ export default function SafeComponent() {
 def sanitize_regex(code: str, filename: str) -> str:
     original_code = code
     
-    # 1. Remove broken font fragments like DM_Sans'] or Inter']
-    code = re.sub(r"[A-Za-z_]+'\]\s*", "", code)
-    code = re.sub(r"[A-Za-z_]+\\]\s*", "", code)
-    code = re.sub(r"fontFamily:\s*['\"][A-Za-z_\s]+['\"]\s*,?", "", code)
-    
-    # 2. Fix duplicated/broken className merging
-    # Example to fix: className="abc" "def" -> className="abc def"
-    def merge_spaced_classnames(match):
-        class_str1 = match.group(1).strip()
-        class_str2 = match.group(2).strip()
-        merged = f"{class_str1} {class_str2}".strip()
-        return f'className="{merged}"'
-
-    code = re.sub(r'className="([^"]*)"\s+"([^"]*)"', merge_spaced_classnames, code)
-
-    # Example to fix: className="abc"bg-black" (which happens after removing DM_Sans'])
-    def fix_stray_classes(match):
-        inner = match.group(1).strip()
-        stray = match.group(2).strip()
-        merged = f"{inner} {stray}".strip()
-        return f'className="{merged}"'
-
-    code = re.sub(r'className="([^"]*)"([^">]+)"', fix_stray_classes, code)
+    # Minimal sanitization: only remove markdown fences and extra backticks
+    code = re.sub(r'^```[a-zA-Z]*\n', '', code, flags=re.MULTILINE)
+    code = re.sub(r'^```\s*$', '', code, flags=re.MULTILINE)
+    code = code.strip()
 
     if code != original_code:
-        print(f"[JSX-Sanitizer] Fixed corrupted JSX in {filename}")
+        print(f"[JSX-Sanitizer] Cleaned markdown from JSX in {filename}")
 
     return code
 
