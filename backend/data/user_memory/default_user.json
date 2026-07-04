@@ -2,30 +2,30 @@
   "userId": "default_user",
   "preferences": {
     "theme": {
-      "dark": 12,
+      "dark": 13,
       "light": 1
     },
     "style": {
-      "dark-modern": 12,
+      "dark-modern": 13,
       "minimal": 1
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "emerald": 3,
+      "emerald": 4,
       "zinc": 1,
       "indigo": 8,
       "violet": 1
     },
     "preferredLayouts": {
       "navbar: top, sidebar: left": 3,
-      "navbar: top, sidebar: none": 10
+      "navbar: top, sidebar: none": 11
     },
     "commonComponents": {
-      "herosection": 12,
-      "bentofeatures": 10,
+      "herosection": 13,
+      "bentofeatures": 11,
       "pricingplan": 4,
-      "footer": 10,
+      "footer": 11,
       "gallerysection": 1,
       "amenitiessection": 1,
       "bookingformsection": 1,
@@ -42,12 +42,6 @@
     }
   },
   "history": [
-    {
-      "prompt": "Luxury hotel booking page",
-      "style": "dark-modern",
-      "theme": "premium dark",
-      "primaryColor": "indigo"
-    },
     {
       "prompt": "Luxury hotel booking page",
       "style": "dark-modern",
@@ -95,6 +89,12 @@
       "style": "dark-modern",
       "theme": "premium dark",
       "primaryColor": "indigo"
+    },
+    {
+      "prompt": "Build a simple e-commerce store front with a hero section",
+      "style": "dark-modern",
+      "theme": "dark",
+      "primaryColor": "emerald"
     },
     {
       "prompt": "Build a simple e-commerce store front with a hero section",
