@@ -208,26 +208,34 @@ function Home() {
   }, [location.state?.initialPrompt]);
 
   useEffect(() => {
+    console.log("[DEBUG] [Home] 'code' state updated. length:", code ? code.length : 0);
     if (!code) return;
     let files = null;
     try {
       let cleanedCode = code.trim();
-      cleanedCode = cleanedCode.replace(/^```(?:json|jsx|js)?\s*\n?/i, '');
+      cleanedCode = cleanedCode.replace(/^```(?:json|jsx|js|react)?\s*\n?/i, '');
       cleanedCode = cleanedCode.replace(/\n?```\s*$/, '');
       cleanedCode = cleanedCode.trim();
       if (cleanedCode.startsWith('{')) {
         const parsed = JSON.parse(cleanedCode);
         if (parsed && parsed.files) files = parsed.files;
       }
-    } catch (e) {}
+      console.log("[DEBUG] [Home] Parsed files from code state:", files ? Object.keys(files) : null);
+    } catch (e) {
+      console.error("[DEBUG] [Home] Error parsing code state JSON:", e);
+    }
 
-    if (!files) return;
+    if (!files) {
+      console.log("[DEBUG] [Home] No valid files found in code. Aborting preview update.");
+      return;
+    }
 
     let hasInvalidFile = false;
     const sanitizedFiles = {};
     for (const [filename, fileContent] of Object.entries(files)) {
       const cleaned = cleanGeneratedCode(fileContent);
       if (!validateGeneratedCode(cleaned, filename)) {
+        console.warn("[DEBUG] [Home] File failed static validation frontend side:", filename);
         hasInvalidFile = true;
         break;
       }
@@ -235,12 +243,14 @@ function Home() {
     }
 
     if (hasInvalidFile) {
+      console.error("[DEBUG] [Home] Validation failed. Not passing to preview.");
       setLocalError("Generated code validation failed.");
       return;
     } else {
       setLocalError("");
     }
 
+    console.log("[DEBUG] [Home] Final sanitizedFiles populated into sandboxFiles state:", Object.keys(sanitizedFiles));
     setSandboxFiles(sanitizedFiles);
 
     const timer = setTimeout(async () => {

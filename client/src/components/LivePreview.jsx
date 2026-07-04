@@ -112,6 +112,7 @@ export function LivePreview({ code, loading = false, statusText = '', generation
 
   useEffect(() => {
     if ((prevLoading.current && !loading) || (prevCode.current !== code && !loading)) {
+      console.log(`[DEBUG] [LivePreview] Triggering iframe reload! reloadCounter incremented. Loading transitioned: ${prevLoading.current && !loading}, Code changed: ${prevCode.current !== code && !loading}`);
       setReloadCounter(prev => prev + 1);
     }
     prevLoading.current = loading;

@@ -1,61 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react'; // Changed ArrowRight to Menu/X for better UX
+import { House } from 'lucide-react';
 
 function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-sm md:shadow-md">
-      <div className="container mx-auto flex items-center justify-between px-4 py-4 md:px-6 lg:px-8">
-        <Link to="/" className="text-slate-900 font-bold text-xl md:text-2xl lg:text-3xl tracking-tight">
-          TechPulse
-        </Link>
-        <button
-          className="md:hidden p-2 rounded-md text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-200 transition-colors duration-200"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle navigation"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-        <ul
-          className={`fixed inset-x-0 top-[64px] bg-white shadow-lg p-4 flex flex-col space-y-4 md:static md:flex md:flex-row md:space-x-6 lg:space-x-10 md:space-y-0 md:p-0 md:shadow-none md:justify-end md:items-center transition-transform duration-300 ease-in-out ${isOpen ? 'translate-y-0' : '-translate-y-full md:translate-y-0'}
-            }`}
-        >
-          <li>
-            <Link
-              to="/"
-              className="block text-slate-600 hover:text-slate-900 font-medium text-lg transition-colors duration-200 py-2 md:py-0"
-              onClick={() => setIsOpen(false)}
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/"
-              className="block text-slate-600 hover:text-slate-900 font-medium text-lg transition-colors duration-200 py-2 md:py-0"
-              onClick={() => setIsOpen(false)}
-            >
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/"
-              className="block text-slate-600 hover:text-slate-900 font-medium text-lg transition-colors duration-200 py-2 md:py-0"
-              onClick={() => setIsOpen(false)}
-            >
-              Contact
-            </Link>
-          </li>
-          <li>
-            <button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg transition-colors duration-200 text-lg">
-              Sign Up
-            </button>
-          </li>
-        </ul>
-      </div>
+    <nav className="flex justify-between items-center py-4 md:px-12 px-4 bg-white">
+      <Link to="/" className="flex items-center">
+        <House size={24} className="mr-2 text-zinc-900" aria-label="Home Icon" />
+        <span className="text-lg font-bold text-zinc-900">Veloce</span>
+      </Link>
+      <button
+        className="md:hidden flex justify-center w-8 h-8 bg-zinc-100 rounded-md"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="sr-only">Menu</span>
+      </button>
+      <ul
+        className={`md:flex flex-grow justify-end ${isOpen ? 'block' : 'hidden'}
+          md:items-center md:pb-0 pb-4 absolute md:static bg-white md:z-auto z-10 left-0 w-full md:w-auto md:pl-0 pl-4 md:pt-0 pt-4 md:shadow-none shadow-md`}
+      >
+        <li className="md:ml-8 md:my-0 my-4">
+          <Link
+            to="/"
+            className="block text-zinc-900 hover:text-zinc-700 transition duration-200"
+          >
+            Home
+          </Link>
+        </li>
+        <li className="md:ml-8 md:my-0 my-4">
+          <Link
+            to="/about"
+            className="block text-zinc-900 hover:text-zinc-700 transition duration-200"
+          >
+            About
+          </Link>
+        </li>
+        <li className="md:ml-8 md:my-0 my-4">
+          <Link
+            to="/contact"
+            className="block text-zinc-900 hover:text-zinc-700 transition duration-200"
+          >
+            Contact
+          </Link>
+        </li>
+      </ul>
     </nav>
   );
 }

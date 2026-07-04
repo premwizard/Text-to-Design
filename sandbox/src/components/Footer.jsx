@@ -1,23 +1,39 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
-    <footer className="bg-slate-800 py-10 md:py-12 lg:py-16 text-white">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 text-center">
-        <p className="text-slate-300 text-base md:text-lg leading-relaxed">
-          &copy; {new Date().getFullYear()} TechPulse. All rights reserved.
+    <footer className="py-8 md:px-12 px-4 bg-zinc-100 text-zinc-900">
+      <div className="container mx-auto p-4 md:p-6 lg:p-12 bg-zinc-100 rounded-md shadow-md">
+        <ul className="flex flex-wrap justify-center mb-8 md:mb-12 lg:mb-16">
+          <li className="md:mr-8 mr-4 md:my-0 my-4">
+            <Link
+              to="/"
+              className="block text-zinc-900 hover:text-zinc-700 transition duration-200"
+            >
+              Home
+            </Link>
+          </li>
+          <li className="md:mr-8 mr-4 md:my-0 my-4">
+            <Link
+              to="/about"
+              className="block text-zinc-900 hover:text-zinc-700 transition duration-200"
+            >
+              About
+            </Link>
+          </li>
+          <li className="md:mr-8 mr-4 md:my-0 my-4">
+            <Link
+              to="/contact"
+              className="block text-zinc-900 hover:text-zinc-700 transition duration-200"
+            >
+              Contact
+            </Link>
+          </li>
+        </ul>
+        <p className="text-lg text-zinc-900 text-center">
+          2024 Veloce. All rights reserved.
         </p>
-        <div className="flex justify-center space-x-6 mt-6">
-          <a href="#" className="text-slate-400 hover:text-blue-400 transition-colors duration-200 text-base md:text-lg">
-            Privacy Policy
-          </a>
-          <a href="#" className="text-slate-400 hover:text-blue-400 transition-colors duration-200 text-base md:text-lg">
-            Terms of Service
-          </a>
-          <a href="#" className="text-slate-400 hover:text-blue-400 transition-colors duration-200 text-base md:text-lg">
-            Contact Us
-          </a>
-        </div>
       </div>
     </footer>
   );

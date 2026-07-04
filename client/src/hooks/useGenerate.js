@@ -63,6 +63,7 @@ export function useGenerate() {
     setGenerationId(prev => prev + 1);
 
     try {
+      console.log(`[DEBUG] API Request start: POST ${API_BASE}/stream-jsx`, { prompt, generationMode });
       const response = await fetch(`${API_BASE}/stream-jsx`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,6 +80,7 @@ export function useGenerate() {
         throw new Error(`Server error ${response.status}: ${response.statusText}`);
       }
 
+      console.log(`[DEBUG] API Response received (SSE connection opened)`);
       const reader  = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
@@ -101,12 +103,19 @@ export function useGenerate() {
           const payload = trimmed.slice(6).trim();
 
           if (payload === '[DONE]') {
+            console.log("[DEBUG] API SSE Stream finished with [DONE]");
             done = true;
             break;
           }
 
           try {
             const parsed = JSON.parse(payload);
+            
+            // Periodically log non-verbose events for debugging
+            if (parsed.type !== 'timeline' && parsed.type !== 'agent_timeline' && !parsed.chunk) {
+               console.log(`[DEBUG] SSE Payload Received [${parsed.type || 'unknown'}]:`, parsed);
+            }
+            
             if (parsed.error) {
               setError(parsed.error);
               done = true;
@@ -146,8 +155,11 @@ export function useGenerate() {
               setStatusText(parsed.message || parsed.step);
             }
             if (parsed.type === "final_code") {
-              setCode(parsed.code);
-              fullCodeAccumulator = parsed.code;
+              console.log("[DEBUG] Final Code Payload:", parsed);
+              const actualData = parsed.data || parsed.code;
+              const stringified = typeof actualData === 'string' ? actualData : JSON.stringify(actualData, null, 2);
+              setCode(stringified);
+              fullCodeAccumulator = stringified;
             }
             if (parsed.type === "emergency") {
               setError(parsed.message || "AI providers are temporarily busy.");
