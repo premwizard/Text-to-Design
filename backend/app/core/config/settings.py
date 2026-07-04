@@ -3,7 +3,6 @@ config/settings.py
 Centralized application settings from environment variables.
 All env access should go through this module.
 """
-import os
 from backend.app.utils.env import get_env
 
 

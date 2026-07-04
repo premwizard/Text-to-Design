@@ -3,9 +3,7 @@ services/validation_service.py
 JSX validation and code sanitization service.
 Extracts validation logic from project_runner.py into a focused service.
 """
-import re
 import logging
-from pathlib import Path
 
 logger = logging.getLogger("backend.app.services.validation")
 

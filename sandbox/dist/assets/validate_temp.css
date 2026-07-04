@@ -1,4 +1,6 @@
+@import "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap";
+
 /* src_validate_temp/index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+  font-family: "DM Sans", sans-serif;
+}

@@ -34,7 +34,7 @@ Output must start with {{ and end with }}. No extra text.
 """
 
 async def run_prompt_understanding(user_prompt: str, memory_prefs: dict) -> dict:
-    logger.info(f"Running Prompt Understanding Agent with personalization details.")
+    logger.info("Running Prompt Understanding Agent with personalization details.")
     
     prefs_str = json.dumps(memory_prefs) if memory_prefs else "No saved preferences yet."
     sys_prompt = SYSTEM_PROMPT.format(memory_preferences=prefs_str)

@@ -33,13 +33,7 @@ class ChromaTool(BaseADKTool):
         return None
 
 
-class ScreenshotTool(BaseADKTool):
-    def __init__(self):
-        super().__init__("Screenshot capture")
 
-    async def execute(self, **kwargs) -> any:
-        from backend.app.services.vision.screenshot_service import capture_sandbox_screenshots
-        return await capture_sandbox_screenshots()
 
 
 class CompilerTool(BaseADKTool):
@@ -96,21 +90,7 @@ class JSXValidatorTool(BaseADKTool):
         return None
 
 
-class VisionAnalyzerTool(BaseADKTool):
-    def __init__(self):
-        super().__init__("Vision analyzer")
 
-    def validate_input(self, **kwargs):
-        if "screenshot_paths" not in kwargs:
-            raise ValueError("Parameter 'screenshot_paths' is required")
-
-    async def execute(self, **kwargs) -> any:
-        from backend.app.agents.vision_agent import run_vision_agent
-        return await run_vision_agent(
-            kwargs.get("screenshot_paths"),
-            kwargs.get("metadata"),
-            kwargs.get("is_single_mode", False)
-        )
 
 
 class HistoryManagerTool(BaseADKTool):
@@ -140,9 +120,7 @@ class HistoryManagerTool(BaseADKTool):
 # Register all tools into the central tool registry
 registry = get_tool_registry()
 registry.register_tool("chroma", ChromaTool())
-registry.register_tool("screenshot", ScreenshotTool())
 registry.register_tool("compiler", CompilerTool())
 registry.register_tool("file_writer", FileWriterTool())
 registry.register_tool("jsx_validator", JSXValidatorTool())
-registry.register_tool("vision_analyzer", VisionAnalyzerTool())
 registry.register_tool("history_manager", HistoryManagerTool())

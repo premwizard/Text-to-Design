@@ -4,9 +4,6 @@ Clean API route definitions for generation, editing, and file saving.
 Delegates all logic to generate_controller.
 """
 from fastapi import APIRouter
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
-from typing import Optional
 
 from backend.app.controllers.generate_controller import (
     stream_generation, save_files_handler, fix_jsx_stream

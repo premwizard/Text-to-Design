@@ -6,7 +6,6 @@ from backend.app.agents.adk.agents.wrapped_agents import (
     PlanningADKAgent,
     GenerationADKAgent,
     CriticADKAgent,
-    VisionADKAgent,
     OptimizationADKAgent,
     EditADKAgent,
     SanitizerADKAgent
@@ -15,6 +14,6 @@ from backend.app.agents.adk.agents.wrapped_agents import (
 __all__ = [
     "MemoryADKAgent", "PromptUnderstandingADKAgent", "RetrievalADKAgent",
     "PlanningADKAgent", "GenerationADKAgent", "CriticADKAgent",
-    "VisionADKAgent", "OptimizationADKAgent", "EditADKAgent",
+    "OptimizationADKAgent", "EditADKAgent",
     "SanitizerADKAgent"
 ]

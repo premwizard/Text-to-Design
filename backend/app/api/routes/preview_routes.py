@@ -4,7 +4,6 @@ API routes for edit history and rollback.
 Delegates all logic to preview_controller.
 """
 from fastapi import APIRouter
-from pydantic import BaseModel
 
 from backend.app.controllers.preview_controller import (
     get_edit_history_handler, rollback_handler

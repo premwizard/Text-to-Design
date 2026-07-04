@@ -4,7 +4,6 @@ API routes for user memory retrieval and settings management.
 Delegates all logic to memory_controller.
 """
 from fastapi import APIRouter
-from pydantic import BaseModel
 from typing import Optional
 
 from backend.app.controllers.memory_controller import (

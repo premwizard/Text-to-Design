@@ -1,5 +1,5 @@
 import re
-from typing import List, Dict, Tuple
+from typing import List, Dict
 from backend.app.core.logger.logger import get_logger
 
 logger = get_logger()

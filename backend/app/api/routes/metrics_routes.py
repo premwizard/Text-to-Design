@@ -3,8 +3,7 @@ routes/metrics_routes.py
 API routes for ADK metrics dashboard and debug event logging.
 Delegates all logic to metrics_controller.
 """
-from fastapi import APIRouter, Request
-from pydantic import BaseModel
+from fastapi import APIRouter
 
 from backend.app.controllers.metrics_controller import (
     get_adk_metrics_handler, log_debug_event_handler

@@ -1,6 +1,5 @@
 import json
 import logging
-import re
 from backend.app.services.ai_router import generate_ai
 
 logger = logging.getLogger("backend.app.agents.optimization")

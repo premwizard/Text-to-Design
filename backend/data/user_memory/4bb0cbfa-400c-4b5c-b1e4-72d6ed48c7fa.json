@@ -2,31 +2,39 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 3
+      "light": 8
     },
     "style": {
-      "minimal": 3
+      "minimal": 8
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "zinc": 3
+      "zinc": 8
     },
     "preferredLayouts": {
-      "navbar: top, sidebar: none": 3
+      "navbar: top, sidebar: none": 8
     },
     "commonComponents": {
-      "herosection": 3,
-      "featuressection": 2,
-      "testimonialcarousel": 3,
-      "pricingplan": 1,
+      "herosection": 6,
+      "featuressection": 4,
+      "testimonialcarousel": 6,
+      "pricingplan": 3,
       "calltoactionsection": 2,
       "footersection": 1,
-      "navbar": 1,
+      "navbar": 2,
       "bentofeatures": 1,
       "projectssection": 1,
-      "footer": 2,
-      "pricingsection": 1
+      "footer": 7,
+      "pricingsection": 1,
+      "calltoaction": 2,
+      "dashboardheader": 1,
+      "filterbar": 1,
+      "tabbeddashboardcontent": 1,
+      "filterssection": 1,
+      "metriccardssection": 1,
+      "analyticschartssection": 1,
+      "datatablesection": 1
     }
   },
   "history": [
@@ -46,6 +54,36 @@
       "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "minimal",
       "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a analytics dashboard: Analytics and data view",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a analytics dashboard: Analytics and data view",
+      "style": "minimal",
+      "theme": "minimal light",
+      "primaryColor": "zinc"
+    },
+    {
+      "prompt": "Build a e-commerce store: Online store front",
+      "style": "minimal",
+      "theme": "light",
       "primaryColor": "zinc"
     }
   ],

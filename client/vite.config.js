@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const baseUrl = (env.VITE_API_BASE_URL || '').replace(/\/$/, '')
   const backendTarget = baseUrl && baseUrl !== 'https://text-to-design.onrender.com'
     ? env.VITE_API_BASE_URL
-    : 'http://localhost:8000'
+    : 'http://127.0.0.1:8000'
 
   return {
     plugins: [react()],

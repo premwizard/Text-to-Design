@@ -96,23 +96,8 @@ class CriticADKAgent(BaseADKAgent):
 
     async def _execute(self, input_data: dict, **kwargs) -> dict:
         files = input_data.get("files")
-        vision_feedback = input_data.get("vision_feedback")
-        is_single_mode = input_data.get("is_single_mode", False)
-        from backend.app.agents.ui_critic_agent import run_ui_critic
-        return await run_ui_critic(files, vision_feedback, is_single_mode)
-
-
-@register_adk_agent("vision")
-class VisionADKAgent(BaseADKAgent):
-    def __init__(self):
-        super().__init__("vision")
-
-    async def _execute(self, input_data: dict, **kwargs) -> dict:
-        screenshot_paths = input_data.get("screenshot_paths", [])
-        metadata = input_data.get("metadata", {})
-        is_single_mode = input_data.get("is_single_mode", False)
-        from backend.app.agents.vision_agent import run_vision_agent
-        return await run_vision_agent(screenshot_paths, metadata, is_single_mode)
+        from backend.app.agents.critic_optimizer_agent import run_critic_agent
+        return await run_critic_agent(files)
 
 
 @register_adk_agent("optimization")
@@ -123,9 +108,8 @@ class OptimizationADKAgent(BaseADKAgent):
     async def _execute(self, input_data: dict, **kwargs) -> dict:
         files = input_data.get("files")
         critic_feedback = input_data.get("critic_feedback")
-        is_single_mode = input_data.get("is_single_mode", False)
-        from backend.app.agents.optimization_agent import run_optimization
-        return await run_optimization(files, critic_feedback, is_single_mode)
+        from backend.app.agents.critic_optimizer_agent import run_optimization_agent
+        return await run_optimization_agent(files, critic_feedback)
 
 
 @register_adk_agent("edit")

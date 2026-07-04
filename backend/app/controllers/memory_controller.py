@@ -5,7 +5,7 @@ Handles user memory retrieval and settings update requests.
 import logging
 from backend.app.services.memory_service import (
     get_user_memory, get_memory_preferences,
-    save_user_memory, reset_memory, set_memory_enabled
+    reset_memory, set_memory_enabled
 )
 
 logger = logging.getLogger("backend.app.controllers.memory")

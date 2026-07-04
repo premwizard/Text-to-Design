@@ -5,7 +5,6 @@ Calls generation_service and preview_service — no business logic here.
 """
 import json
 import logging
-from fastapi import Response
 from fastapi.responses import StreamingResponse
 
 from backend.app.services.generation_service import run_generation

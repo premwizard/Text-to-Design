@@ -5,7 +5,6 @@ from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from backend.app.utils.env import get_env
 
 logger = logging.getLogger("backend.app.rag")
 BASE_DIR = Path(__file__).parent
@@ -24,10 +23,24 @@ def _load_documents() -> List[Document]:
     return documents
 
 
-def _create_embeddings() -> None:
-    # RAG embeddings are currently disabled as OpenAI was removed.
-    # Return None or implement an alternative embedding model here.
-    return None
+class LocalEmbeddingsWrapper:
+    def __init__(self, model):
+        self.model = model
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return self.model.encode(texts).tolist()
+
+    def embed_query(self, text: str) -> List[float]:
+        return self.model.encode([text]).tolist()[0]
+
+
+def _create_embeddings():
+    from backend.app.repositories.chroma_service import ChromaService
+    model = ChromaService.get_instance().model
+    if not model:
+        logger.warning("No embedding model available in ChromaService.")
+        return None
+    return LocalEmbeddingsWrapper(model)
 
 
 def _build_store(embeddings) -> Chroma:

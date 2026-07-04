@@ -11,11 +11,8 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, WebSocket, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import httpx
-import websockets
 import mimetypes
 
 # Ensure .jsx files are served with the correct JavaScript MIME type
@@ -28,8 +25,6 @@ from backend.app.api.routes.preview_routes import router as preview_routes_route
 from backend.app.api.routes.metrics_routes import router as metrics_routes_router
 
 # Ensure ADK agents and tools are registered at startup
-import backend.app.agents.wrapped_agents
-import backend.app.agents.tools
 
 from backend.app.services.logger import setup_logging
 from backend.app.rag.manager import setup_rag
@@ -47,7 +42,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-import traceback
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -70,13 +64,12 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.error(f"Global unhandled exception: {exc}", exc_info=True)
-    tb_str = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
     return JSONResponse(
         status_code=500,
         content={
-            "status": "error", 
-            "message": f"An unexpected server error occurred: {str(exc)}",
-            "traceback": tb_str
+            "success": False,
+            "error": f"Internal server error: {type(exc).__name__}",
+            "details": str(exc)
         }
     )
 async def log_requests(request: Request, call_next):
@@ -88,7 +81,29 @@ async def log_requests(request: Request, call_next):
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("Starting backend and initializing RAG resources")
+    logger.info("Starting backend and initializing resources")
+    
+    try:
+        logger.info("Preloading tool registry...")
+        from backend.app.agents.tool_registry import get_tool_registry
+        registry = get_tool_registry()
+        # Getting a tool forces the dynamic import if not already loaded
+        registry.get_tool("compiler")
+        logger.info(f"Tool registry preloaded successfully. Available tools: {registry.list_tools()}")
+    except Exception as e:
+        logger.error(f"Failed to preload tool registry: {e}")
+    
+    # Initialize Vector DB & ML Models Eagerly
+    from backend.app.repositories.chroma_service import ChromaService
+    try:
+        logger.info("Eagerly loading SentenceTransformer and ChromaDB...")
+        chroma = ChromaService.get_instance()
+        app.state.embedding_model = chroma.model
+        app.state.chroma_client = chroma.client
+        logger.info("Models loaded successfully to app.state.")
+    except Exception as e:
+        logger.error(f"Failed to preload models: {e}")
+
     try:
         setup_rag()
         logger.info("RAG initialization complete")
@@ -133,7 +148,6 @@ app.include_router(metrics_routes_router, prefix="/preview")
 # --- Static Sandbox File Serving ---
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-import os
 
 assets_dir = ROOT_DIR / "sandbox" / "dist" / "assets"
 src_dir = ROOT_DIR / "sandbox" / "src"

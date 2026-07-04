@@ -2,7 +2,6 @@
 db/chroma_service.py
 ChromaDB vector database service for semantic search and design memory.
 """
-import os
 import time
 import logging
 from pathlib import Path

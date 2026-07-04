@@ -1,4 +1,3 @@
-import json
 import logging
 import re
 from backend.app.services.ai_router import generate_ai
@@ -91,83 +90,90 @@ async def run_full_app_generation(design_plan: dict, rag_json: dict, event_callb
         if sec not in planned_components:
             planned_components.append(sec)
             
-    components_list_str = "App.jsx\n" + "\n".join([f"components/{c}.jsx" for c in planned_components])
-    
+    batches = []
+    current_batch = ["App.jsx"]
+    for comp in planned_components:
+        current_batch.append(f"components/{comp}.jsx")
+        if len(current_batch) >= 3:
+            batches.append(current_batch)
+            current_batch = []
+    if current_batch:
+        batches.append(current_batch)
+        
     font_heading = styling.get("font_heading", "Space Grotesk")
     font_body = styling.get("font_body", "Inter")
     
-    sys_prompt = SYSTEM_PROMPT.format(
-        product_name=design_plan.get("productName", "App"),
-        tagline=design_plan.get("tagline", ""),
-        spacing=rules.get("spacing", "comfortable"),
-        border_radius=rules.get("borderRadius", "xl"),
-        shadow=rules.get("shadow", "medium"),
-        border=rules.get("border", "none"),
-        visual_style=rag_json.get("styleMatched", "modern"),
-        theme=styling.get("aesthetic", "premium dark"),
-        primary_color=styling.get("primary_color", "violet"),
-        bg_color=styling.get("bg_color", "bg-zinc-950"),
-        text_color=styling.get("text_color", "text-zinc-100"),
-        font_heading=font_heading,
-        font_heading_url=font_heading.replace(" ", "+"),
-        font_body=font_body,
-        font_body_url=font_body.replace(" ", "+"),
-        components_list=components_list_str
-    )
-    
-    db_logger.log("GENERATION", "SINGLE_CALL_START", f"Components: {components_list_str}")
-    
-    response = await generate_ai(
-        task_type="full_app_generator",
-        system_prompt=sys_prompt,
-        user_prompt="Generate the full React application.",
-        temperature=0.7,
-        stream=False
-    )
-    
-    output_text = response.choices[0].message.content.strip()
-    logger.debug(f"Raw model response: {output_text[:500]}...") # Log beginning to avoid giant logs
+    async def generate_batch(batch_idx, batch_files):
+        components_list_str = "\n".join(batch_files)
+        sys_prompt = SYSTEM_PROMPT.format(
+            product_name=design_plan.get("productName", "App"),
+            tagline=design_plan.get("tagline", ""),
+            spacing=rules.get("spacing", "comfortable"),
+            border_radius=rules.get("borderRadius", "xl"),
+            shadow=rules.get("shadow", "medium"),
+            border=rules.get("border", "none"),
+            visual_style=rag_json.get("styleMatched", "modern"),
+            theme=styling.get("aesthetic", "premium dark"),
+            primary_color=styling.get("primary_color", "violet"),
+            bg_color=styling.get("bg_color", "bg-zinc-950"),
+            text_color=styling.get("text_color", "text-zinc-100"),
+            font_heading=font_heading,
+            font_heading_url=font_heading.replace(" ", "+"),
+            font_body=font_body,
+            font_body_url=font_body.replace(" ", "+"),
+            components_list=components_list_str
+        )
+        
+        token_count = len(sys_prompt) // 4
+        logger.info(f"Batch {batch_idx+1} ({len(batch_files)} files) prompt size: ~{token_count} tokens")
+        
+        response = await generate_ai(
+            task_type="full_app_generator",
+            system_prompt=sys_prompt,
+            user_prompt="Generate the requested React components.",
+            temperature=0.7,
+            stream=False
+        )
+        
+        output_text = response.choices[0].message.content.strip()
+        logger.debug(f"Batch {batch_idx+1} raw model response: {output_text[:500]}...")
 
-    # Extract files using regex
-    import re
-    file_pattern = re.compile(r"===FILE:\s*(.+?)\s*===\n(.*?)(?=\n===FILE:|$)", re.DOTALL)
-    matches = file_pattern.findall(output_text)
+        import re
+        file_pattern = re.compile(r"===FILE:\s*(.+?)\s*===\n(.*?)(?=\n===FILE:|$)", re.DOTALL)
+        matches = file_pattern.findall(output_text)
 
-    if not matches:
-        error_msg = "No files found in model output. Expected ===FILE: filename=== format."
-        logger.error(error_msg)
-        logger.error(f"Raw output that failed parsing:\n{output_text}")
-        return {
-            "success": False,
-            "files": {},
-            "errors": [error_msg, f"Raw output:\n{output_text}"],
-            "warnings": []
-        }
+        batch_valid_files = {}
+        for filename, content in matches:
+            clean_name = filename.strip()
+            clean_content = content.strip()
+            clean_content = re.sub(r'^```(?:jsx|javascript|js|tsx|ts)?\s*\n?', '', clean_content, flags=re.IGNORECASE)
+            clean_content = re.sub(r'\n?```\s*$', '', clean_content)
+            clean_content = clean_content.strip()
+            if clean_name and "\n" not in clean_name:
+                batch_valid_files[clean_name] = clean_content
+        return batch_valid_files
 
+    db_logger.log("GENERATION", "MULTI_CALL_START", f"Processing {len(planned_components) + 1} files in {len(batches)} batches.")
+    
+    import asyncio
+    tasks = [generate_batch(idx, batch) for idx, batch in enumerate(batches)]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    
     valid_files = {}
     warnings = []
-    for filename, content in matches:
-        clean_name = filename.strip()
-        clean_content = content.strip()
-        
-        # Clean any markdown fences inside the block if the LLM accidentally added them
-        clean_content = re.sub(r'^```(?:jsx|javascript|js|tsx|ts)?\s*\n?', '', clean_content, flags=re.IGNORECASE)
-        clean_content = re.sub(r'\n?```\s*$', '', clean_content)
-        clean_content = clean_content.strip()
-
-        if clean_name and "\n" not in clean_name:
-            valid_files[clean_name] = clean_content
+    for idx, res in enumerate(results):
+        if isinstance(res, Exception):
+            logger.error(f"Batch {idx+1} failed: {res}")
+            warnings.append(f"Batch {idx+1} failed to generate.")
         else:
-            warning_msg = f"Skipping malformed filename: {repr(clean_name)}"
-            logger.warning(warning_msg)
-            warnings.append(warning_msg)
-            
+            valid_files.update(res)
+
     if "App.jsx" not in valid_files:
         warning_msg = "App.jsx is missing from the generated files."
         logger.warning(warning_msg)
         warnings.append(warning_msg)
             
-    db_logger.log("GENERATION", "SINGLE_CALL_COMPLETE", f"Generated {len(valid_files)} files.")
+    db_logger.log("GENERATION", "MULTI_CALL_COMPLETE", f"Generated {len(valid_files)} files.")
     return {
         "success": True,
         "files": valid_files,

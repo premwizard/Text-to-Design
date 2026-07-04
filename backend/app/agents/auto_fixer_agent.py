@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any
+from typing import Dict
 
 from backend.app.services.ai_router import generate_ai
 from backend.app.services.debug.debug_logger import DebugLogger

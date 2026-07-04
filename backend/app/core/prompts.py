@@ -160,11 +160,11 @@ REACT RULES
    1. Import every component from the sections list above
    2. Render them in order inside one root div
    3. Apply fonts via a <style> tag at the top of the return:
-      <style>{{`
+      <style dangerouslySetInnerHTML={{{{ __html: `
         @import url('https://fonts.googleapis.com/css2?family={font_heading_url}:wght@300;400;500;600;700;800&family={font_body_url}:wght@300;400;500;600&display=swap');
         body {{ font-family: '{font_body}', sans-serif; }}
         h1, h2, h3, h4, h5, h6 {{ font-family: '{font_heading}', sans-serif; }}
-      `}}</style>
+      ` }}}} />
    4. Set root background: <div className="{bg_color} min-h-screen {text_color}">
 
 ✅ Colors: use {primary_color} for buttons and accents throughout.

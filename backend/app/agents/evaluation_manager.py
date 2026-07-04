@@ -33,7 +33,7 @@ class EvaluationManager:
                         "compile_successes", "compile_total", "generations_successes",
                         "generations_total", "edits_successes", "edits_total",
                         "prompt_understanding_runs", "prompt_understanding_matches",
-                        "critic_scores", "vision_scores", "agent_runs",
+                        "critic_scores", "agent_runs",
                         "understanding_failures", "planning_failures", "pipeline_abort_count"
                     ]:
                         if key not in data:
@@ -48,7 +48,6 @@ class EvaluationManager:
             "edits_successes": 5, "edits_total": 5,
             "prompt_understanding_runs": 10, "prompt_understanding_matches": 9,
             "critic_scores": [8.0, 8.2, 8.5],
-            "vision_scores": [8.3, 8.5, 8.6],
             "agent_runs": {},
             "understanding_failures": 0, "planning_failures": 0, "pipeline_abort_count": 0
         }
@@ -109,15 +108,7 @@ class EvaluationManager:
         except Exception as e:
             logger.error(f"Failed to record critic score {score}: {e}")
 
-    def record_vision_score(self, score: float):
-        try:
-            val = float(score)
-            self.metrics["vision_scores"].append(val)
-            if len(self.metrics["vision_scores"]) > 100:
-                self.metrics["vision_scores"] = self.metrics["vision_scores"][-100:]
-            self._save_metrics()
-        except Exception as e:
-            logger.error(f"Failed to record vision score {score}: {e}")
+
 
     def record_agent_run(self, agent_name: str, duration: float, status: str, error: str = None, tool_calls: list = None):
         agent_data = self.metrics["agent_runs"].setdefault(agent_name, {
@@ -138,7 +129,6 @@ class EvaluationManager:
         prompt_acc = (self.metrics["prompt_understanding_matches"] / self.metrics["prompt_understanding_runs"]) * 100 if self.metrics["prompt_understanding_runs"] > 0 else 100.0
 
         avg_critic = sum(self.metrics["critic_scores"]) / len(self.metrics["critic_scores"]) if self.metrics["critic_scores"] else 8.2
-        avg_vision = sum(self.metrics["vision_scores"]) / len(self.metrics["vision_scores"]) if self.metrics["vision_scores"] else 8.5
 
         agent_perf = []
         for name, data in self.metrics["agent_runs"].items():
@@ -155,7 +145,6 @@ class EvaluationManager:
             "editSuccessRate": round(edit_rate, 1),
             "promptAccuracy": round(prompt_acc, 1),
             "averageCriticScore": round(avg_critic, 2),
-            "averageVisionScore": round(avg_vision, 2),
             "agentPerformance": agent_perf,
             "understandingFailures": self.metrics.get("understanding_failures", 0),
             "planningFailures": self.metrics.get("planning_failures", 0),

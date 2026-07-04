@@ -33,6 +33,9 @@ class ToolRegistry:
         self._tools = {}
 
     def register_tool(self, name: str, tool_instance: BaseADKTool):
+        if name in self._tools:
+            logger.debug(f"[ADK] Tool {name} is already registered. Skipping duplicate registration.")
+            return
         logger.info(f"[ADK] Registering tool: {name}")
         self._tools[name] = tool_instance
 

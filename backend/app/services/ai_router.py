@@ -26,6 +26,8 @@ FALLBACK_KEYWORDS = [
     "resource_exhausted", "rate limit exceeded", "connection reset", "connection aborted"
 ]
 
+NON_RETRYABLE = (ModuleNotFoundError, ImportError, SyntaxError, ValueError)
+
 MODEL_COOLDOWNS = {}
 PROMPT_CACHE = {}
 API_SEMAPHORE = asyncio.Semaphore(2)
@@ -144,6 +146,10 @@ async def _stream_ai(task_type: str, system_prompt: str, user_prompt: str, tempe
                         return
                         
                     except Exception as e:
+                        if isinstance(e, NON_RETRYABLE):
+                            logging.error(f"[Router] Permanent error on {model_name}: {e}. Raising immediately.")
+                            raise e
+                            
                         if is_rate_limited(e) and attempt < max_retries:
                             sleep_time = random.uniform(0, 1) + (2 ** attempt)
                             logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time:.2f}s... (Attempt {attempt+1}/{max_retries})")
@@ -207,6 +213,10 @@ async def _execute_ai(task_type: str, system_prompt: str, user_prompt: str, temp
                         return response
                         
                     except Exception as e:
+                        if isinstance(e, NON_RETRYABLE):
+                            logging.error(f"[Router] Permanent error on {model_name}: {e}. Raising immediately.")
+                            raise e
+                            
                         if is_rate_limited(e) and attempt < max_retries:
                             sleep_time = random.uniform(0, 1) + (2 ** attempt)
                             logging.warning(f"[Router] Rate limited on {model_name}. Retrying in {sleep_time:.2f}s... (Attempt {attempt+1}/{max_retries})")

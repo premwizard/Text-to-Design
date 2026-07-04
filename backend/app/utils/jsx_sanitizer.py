@@ -39,7 +39,7 @@ def sanitize_regex(code: str, filename: str) -> str:
 
 async def validate_ast(code: str, filename: str) -> bool:
     """
-    Validates the JSX using esbuild.
+    Validates the JSX using Babel.
     Returns True if valid, False otherwise.
     """
     temp_src_dir = SANDBOX_DIR / "src_validate_ast_temp"
@@ -47,32 +47,37 @@ async def validate_ast(code: str, filename: str) -> bool:
     
     # Just use a simple temporary filename for validation
     temp_file = temp_src_dir / "temp_component.jsx"
-    temp_outfile = temp_src_dir / "temp_out.js"
+    
+    # Add debug logging
+    print(f"[DEBUG] [JSX-Sanitizer] Starting AST validation for {filename}")
     
     try:
         temp_file.write_text(code, encoding="utf-8")
         
-        # We only want to check syntax, so we run a simple esbuild command
-        cmd = f"npx --yes esbuild {temp_file.name} --outfile={temp_outfile.name} --loader:.jsx=jsx"
+        # We run the babel_validator script
+        babel_script = BACKEND_DIR / "app" / "utils" / "babel_validator.js"
+        cmd = f"node {babel_script.name} {temp_file.name}"
+        
+        # We execute in utils dir so node can find the script, but pass the absolute path of temp_file
+        cmd = f"node {babel_script.resolve()} {temp_file.resolve()}"
         
         proc = await asyncio.create_subprocess_shell(
             cmd,
-            cwd=str(temp_src_dir),
+            # Run in sandbox dir where @babel/parser is installed in node_modules
+            cwd=str(SANDBOX_DIR),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
         stdout, stderr = await proc.communicate()
         
         if proc.returncode == 0:
+            print(f"[DEBUG] [JSX-Sanitizer] Validation successful for {filename}")
             return True
         else:
             err_msg = stderr.decode('utf-8', errors='replace')
-            # Don't fail on missing imports during single-file AST check, only syntax errors.
-            if "Could not resolve" in err_msg and "Syntax error" not in err_msg and "Expected" not in err_msg and "Unexpected" not in err_msg:
-                 return True
-            # Replace characters that might crash windows console
-            safe_err_msg = err_msg.encode('ascii', 'replace').decode('ascii')
-            print(f"[JSX-Sanitizer] Validation failed for {filename}:\n{safe_err_msg}")
+            # detailed error logs as requested
+            print(f"[JSX-Sanitizer] Validation failed for {filename}:")
+            print(err_msg)
             return False
     except Exception as e:
         print(f"[JSX-Sanitizer] AST Validation encountered an error for {filename}: {e}")
@@ -90,8 +95,11 @@ async def sanitize_jsx(code: str, filename: str) -> str:
     """
     Main entry point for JSX sanitization and validation.
     """
+    print(f"[DEBUG] [JSX-Sanitizer] Original generated file {filename}:\n{code[:300]}...\n")
+    
     # 1. Regex sanitization
     sanitized_code = sanitize_regex(code, filename)
+    print(f"[DEBUG] [JSX-Sanitizer] Sanitized file {filename}:\n{sanitized_code[:300]}...\n")
     
     # 2. AST Validation
     # We only validate files that are likely to be React components (.jsx)
@@ -99,6 +107,7 @@ async def sanitize_jsx(code: str, filename: str) -> str:
         is_valid = await validate_ast(sanitized_code, filename)
         if not is_valid:
             print(f"[JSX-Sanitizer] Validation failed. Using fallback component for {filename}.")
+            print(f"[DEBUG] Exact failure reason: Babel AST validation rejected the file. Returning FALLBACK_COMPONENT.")
             return FALLBACK_COMPONENT
             
     return sanitized_code

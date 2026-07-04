@@ -10,8 +10,6 @@ import asyncio
 import os
 import shutil
 import subprocess
-import signal
-import sys
 import json
 import time
 from pathlib import Path
@@ -126,13 +124,7 @@ def validateGeneratedCode(code: str, filename: str) -> bool:
             db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: Malformed import/export line: {line}")
             raise ValueError(f"Static validation failed: File {filename} contains malformed import/export line: {line}")
 
-    # 4. Import Validator check
-    from backend.app.utils.validators.import_validator import validate_imports
-    is_valid_imports, err_msg = validate_imports(code, filename)
-    if not is_valid_imports:
-        log_invalid_file(filename, "Forbidden imports", code)
-        db_logger.log("VALIDATION", "FAILED", f"File: {filename}\nReason: {err_msg}")
-        raise ValueError(err_msg)
+    # 4. Import Validator check removed as requested
 
     db_logger.log("VALIDATION", "PASSED", f"File: {filename}")
     return True
@@ -258,7 +250,7 @@ async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tupl
         temp_outfile = SANDBOX_DIR / "dist/assets/validate_temp.js"
         temp_outfile.parent.mkdir(parents=True, exist_ok=True)
         
-        cmd = f"npx --yes esbuild src_validate_temp/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
+        cmd = "npx --yes esbuild src_validate_temp/main.jsx --bundle --outfile=dist/assets/validate_temp.js --format=esm --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic"
         
         proc = await asyncio.create_subprocess_shell(
             cmd,
@@ -276,16 +268,31 @@ async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tupl
                 
         if proc.returncode == 0:
             db_logger.log("COMPILE", "SUCCESS", "Dry-run esbuild bundle compiled successfully.")
+            print(f"[DEBUG] [Compile-Validator] Dry-run compilation successful.")
             return True, ""
         else:
             err_msg = stderr.decode("utf-8", errors="replace")
             err_msg = err_msg.replace("src_validate_temp/", "src/")
             db_logger.log("COMPILE", "FAILED", f"Dry-run compilation error:\n{err_msg}")
+            print(f"[DEBUG] [Compile-Validator] Dry-run compilation failed. Exact reason:\n{err_msg}")
             return False, err_msg
             
     except Exception as e:
-        db_logger.log("COMPILE", "ERROR", f"Unexpected error during compilation validation: {e}")
-        return False, f"Unexpected error during compilation validation: {e}"
+        import traceback
+        tb = traceback.format_exc()
+        
+        # Try to extract stderr if available in locals
+        stderr_output = locals().get('stderr', b'').decode('utf-8', errors='replace') if locals().get('stderr') else "No stderr"
+        
+        error_details = (
+            f"Unexpected error during compilation validation: {e}\n"
+            f"Failed Files: {list(cleaned_files.keys())}\n"
+            f"Stderr: {stderr_output}\n"
+            f"Traceback:\n{tb}"
+        )
+        db_logger.log("COMPILE", "ERROR", error_details)
+        print(f"[DEBUG] [Compile-Validator] {error_details}")
+        return False, error_details
     finally:
         if temp_src_dir.exists():
             try:

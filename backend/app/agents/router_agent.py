@@ -6,7 +6,6 @@ to the correct orchestration pipeline.
 import logging
 import json
 from backend.app.agents.adk.adk_orchestrator import run_adk_orchestration_stream, run_adk_edit_orchestration_stream
-from backend.app.agents.agent_registry import get_agent_registry
 from backend.app.agents.evaluation_manager import get_evaluation_manager
 
 logger = logging.getLogger("backend.app.agents.router_agent")
@@ -67,20 +66,9 @@ class RouterAgent:
         elif request_type == "analyze_design":
             yield {"type": "timeline", "step": "Vision Analysis"}
             yield {"type": "agent_start", "agent": "vision", "message": "Performing dedicated design review..."}
-
-            from backend.app.agents.tool_registry import get_tool_registry
-            screenshot_tool = get_tool_registry().get_tool("screenshot")
-            paths = await screenshot_tool.execute()
-
-            registry = get_agent_registry()
-            vision_agent = registry.get_agent("vision")
-            vision_feedback = await vision_agent.run({
-                "screenshot_paths": paths,
-                "metadata": {},
-                "is_single_mode": True
-            })
-
-            yield {"type": "agent_complete", "agent": "vision", "output": vision_feedback}
+            
+            logger.error("Analyze design requested but Vision and Screenshot agents are deprecated and removed.")
+            yield {"type": "error", "message": "Analyze design feature has been deprecated."}
             yield {"type": "timeline", "step": "Finalizing Project"}
 
         elif request_type == "rollback":

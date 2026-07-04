@@ -120,13 +120,13 @@ class JSXPatchEngine:
             
             mount_changes = [
                 f"Import the newly created components: {', '.join(new_mounts)}.",
-                f"Mount/render the components inside the main layout block of App."
+                "Mount/render the components inside the main layout block of App."
             ]
             
             user_msg = (
                 f"Original App.jsx Code:\n{app_code}\n\n"
                 f"Required Modifications:\n" + "\n".join(f"- {m}" for m in mount_changes) + "\n\n"
-                f"Output the updated App.jsx code."
+                "Output the updated App.jsx code."
             )
             
             try:
