@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Twitter, Instagram } from 'lucide-react';
+import { User, MessageSquare, Camera } from 'lucide-react';
 
 function FooterComponent() {
   return (
@@ -15,19 +15,19 @@ function FooterComponent() {
             <ul>
               <li className="text-lg text-slate-900 mb-2">
                 <a href="#" className="flex items-center">
-                  <Facebook size={20} className="text-indigo-500 mr-2" />
+                  <User size={20} className="text-indigo-500 mr-2" />
                   <span>Facebook</span>
                 </a>
               </li>
               <li className="text-lg text-slate-900 mb-2">
                 <a href="#" className="flex items-center">
-                  <Twitter size={20} className="text-indigo-500 mr-2" />
+                  <MessageSquare size={20} className="text-indigo-500 mr-2" />
                   <span>Twitter</span>
                 </a>
               </li>
               <li className="text-lg text-slate-900 mb-2">
                 <a href="#" className="flex items-center">
-                  <Instagram size={20} className="text-indigo-500 mr-2" />
+                  <Camera size={20} className="text-indigo-500 mr-2" />
                   <span>Instagram</span>
                 </a>
               </li>
