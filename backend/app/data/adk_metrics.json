@@ -19,14 +19,14 @@
   ],
   "agent_runs": {
     "router_agent": {
-      "runs": 67,
-      "duration_sum": 1.3400000000000007,
+      "runs": 69,
+      "duration_sum": 1.3800000000000008,
       "failures": 0,
       "tool_calls_count": 0
     },
     "memory": {
-      "runs": 59,
-      "duration_sum": 288.36114144325256,
+      "runs": 61,
+      "duration_sum": 290.22381949424744,
       "failures": 0,
       "tool_calls_count": 0
     },
