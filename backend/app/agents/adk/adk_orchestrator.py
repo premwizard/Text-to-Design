@@ -93,288 +93,66 @@ async def run_adk_orchestration_stream(
         await asyncio.sleep(0.3)
 
         # ==========================================
-        # STEP 2: PROMPT UNDERSTANDING
+        # PIPELINE ENGINE EXECUTION (Phases 1-4)
         # ==========================================
-        logger.info("[ADK] Executing Agent 2: Prompt Understanding")
-        yield {"type": "timeline", "step": "Understanding Prompt"}
-        yield {"type": "agent_start", "agent": "understanding", "message": "Analyzing prompt requirements and blending design memory..."}
-        
-        understanding_agent = registry.get_agent("understanding")
-        
-        intent_res = await understanding_agent.run({"prompt": user_prompt, "memory_prefs": memory_prefs})
-        
-        if not intent_res.get("success"):
-            logger.warning("UnderstandingAgent failed. Using raw prompt fallback.")
-            intent_json = {
-                "pageType": "landing",
-                "industry": "general",
-                "theme": "modern",
-                "style": {"visualStyle": "clean"},
-                "components": ["Navbar", "Hero", "Footer"]
-            }
-        else:
-            intent_json = intent_res.get("result", {})
-
-        yield {"type": "agent_complete", "agent": "understanding", "output": intent_json}
-        await asyncio.sleep(0.3)
-
-        if generation_mode == "variation_mode":
-            # ==========================================================
-            # VARIATION MODE BRANCH
-            # ==========================================================
-            logger.info(f"[ADK] Executing variations planner for {variation_count} variations")
-            yield {"type": "timeline", "step": f"Building {variation_count} Distinct Design Plans"}
-            yield {"type": "agent_start", "agent": "planning", "message": f"Formulating {variation_count} distinct layout and style concepts..."}
-            
-            from backend.app.core.prompts import PLANNER_PROMPT, BUILDER_PROMPT
-            from backend.app.services.ai_router import generate_ai
-            
-            planner_prompt = PLANNER_PROMPT.format(user_prompt=user_prompt)
-            planner_start = time.time()
-            planner_resp = await generate_ai(
-                task_type="planner",
-                system_prompt=None,
-                user_prompt=planner_prompt,
-                temperature=1.0,
-                stream=False
-            )
-            planner_output = planner_resp.choices[0].message.content.strip()
-            
-            if planner_output.startswith("```"):
-                planner_output = re.sub(r'^```(?:json)?\s*\n?', '', planner_output, flags=re.IGNORECASE)
-                planner_output = re.sub(r'\n?```\s*$', '', planner_output)
-                planner_output = planner_output.strip()
-                
-            start_idx = planner_output.find('[')
-            end_idx = planner_output.rfind(']')
-            if start_idx != -1 and end_idx != -1:
-                plans = json.loads(planner_output[start_idx:end_idx+1])
-                if not isinstance(plans, list):
-                    plans = [plans]
-                plans = plans[:variation_count]
-            else:
-                raise ValueError("No JSON array found in planner output")
-                
-            yield {"type": "plans", "plans": plans}
-            yield {"type": "agent_complete", "agent": "planning", "output": {"plan_count": len(plans)}}
-            
-            get_evaluation_manager().record_agent_run("planning", time.time() - planner_start, "SUCCESS")
-            await asyncio.sleep(0.3)
-            
-            for i, plan in enumerate(plans):
-                variation_id = plan.get("id", f"var{i}")
-                
-                yield {"type": "timeline", "variation_id": variation_id, "step": f"Building Variation {i+1}"}
-                yield {"type": "agent_start", "agent": "generating", "variation_id": variation_id, "message": f"Creating code for Variation {i+1} ({plan.get('name', 'Design')})..."}
-                
-                font_heading = plan.get("font_heading", "Inter")
-                font_body = plan.get("font_body", "Inter")
-                sections = plan.get("sections", [])
-                if not sections:
-                    sections = ["Navbar", "Hero", "Footer"]
-                
-                sections_numbered = "1. App.jsx\n"
-                for j, sec in enumerate(sections, start=2):
-                    sections_numbered += f"{j}. components/{sec}.jsx\n"
-
-                system_instructions = BUILDER_PROMPT.format(
-                    page_type=plan.get("page_type", "landing"),
-                    product_name=plan.get("product_name", "App"),
-                    tagline=plan.get("tagline", ""),
-                    design_archetype=plan.get("design_archetype", "apple"),
-                    layout_system=plan.get("layout_system", "centered-stack"),
-                    visual_style=plan.get("visual_style", "glassmorphism"),
-                    interaction_style=plan.get("interaction_style", "hover-reveal"),
-                    design_seed=plan.get("design_seed", 1234),
-                    aesthetic=plan.get("aesthetic", "minimal"),
-                    font_heading=font_heading,
-                    font_body=font_body,
-                    font_heading_url=font_heading.replace(" ", "+"),
-                    font_body_url=font_body.replace(" ", "+"),
-                    bg_color=plan.get("bg_color", "bg-white"),
-                    primary_color=plan.get("primary_color", "blue-500"),
-                    text_color=plan.get("text_color", "text-slate-900"),
-                    layout_notes=plan.get("layout_notes", ""),
-                    sections_numbered=sections_numbered,
-                    user_prompt=user_prompt
-                )
-                
-                builder_start = time.time()
-                response = generate_ai(
-                    task_type="builder",
-                    system_prompt=system_instructions,
-                    user_prompt="Generate the code.",
-                    temperature=1.0,
-                    stream=True
-                )
-                
-                full_code = ""
-                async for chunk in response:
-                    if isinstance(chunk, dict):
-                        continue
-                    content = chunk.choices[0].delta.content if hasattr(chunk, "choices") else None
-                    if content:
-                        full_code += content
-                        yield {"chunk": content, "variation_id": variation_id}
-                
-                yield {"type": "agent_complete", "agent": "generating", "variation_id": variation_id, "output": {"variation_id": variation_id, "status": "code_generated"}}
-                get_evaluation_manager().record_agent_run("generating", time.time() - builder_start, "SUCCESS")
-                
-                yield {"type": "timeline", "variation_id": variation_id, "step": "Sandbox Render"}
-                yield {"type": "agent_start", "agent": "render", "variation_id": variation_id, "message": f"Compiling Variation {i+1} in Vite sandbox..."}
-                
-                try:
-                    cleaned = full_code.strip()
-                    cleaned = re.sub(r'^```(?:json|jsx|javascript|js|react|tsx|ts)?\s*\n?', '', cleaned, flags=re.IGNORECASE)
-                    cleaned = re.sub(r'\n?```\s*$', '', cleaned)
-                    cleaned = cleaned.strip()
-                    
-                    from backend.app.utils.jsx_parser import parse_json_robust
-                    parsed_data = parse_json_robust(cleaned)
-                    if not parsed_data:
-                        raise ValueError("No JSON object found in response")
-                    
-                    files = parsed_data.get("files", {})
-                    
-                    sanitizer_agent = registry.get_agent("sanitizer")
-                    validator_agent = registry.get_agent("code_validator")
-                    fixer_agent = registry.get_agent("auto_fixer")
-                    max_fixes = 2
-                    fix_attempts = 0
-                    while fix_attempts < max_fixes:
-                        san_res = await sanitizer_agent.run({"files": files})
-                        files = san_res.get("files", files)
-                        
-                        val_res = await validator_agent.run({"files": files})
-                        if val_res.get("valid"):
-                            break
-                        errors = val_res.get("errors", [])
-                        yield {"type": "timeline", "variation_id": variation_id, "step": f"Auto Fixing (Attempt {fix_attempts + 1})"}
-                        fix_res = await fixer_agent.run({"files": files, "errors": errors})
-                        files = fix_res.get("files", files)
-                        fix_attempts += 1
-                        await asyncio.sleep(0.3)
-                        
-                    from backend.project_runner import write_files
-                    await write_files(files, variation_id=variation_id)
-                    yield {"type": "agent_complete", "agent": "render", "variation_id": variation_id, "output": {"variation_id": variation_id, "status": "compiled"}}
-                    get_evaluation_manager().record_compile(success=True)
-                except Exception as write_err:
-                    logger.error(f"Failed to write variation {variation_id}: {write_err}")
-                    yield {"type": "agent_complete", "agent": "render", "variation_id": variation_id, "output": {"variation_id": variation_id, "status": "failed", "error": str(write_err)}}
-                    get_evaluation_manager().record_compile(success=False)
-                    
-                yield {"type": "variation_complete", "variation_id": variation_id}
-                await asyncio.sleep(0.5)
-            
-            return
-
-        # ==========================================
-        # STEP 3: DESIGN KNOWLEDGE RETRIEVAL (RAG)
-        # ==========================================
-        logger.info("[ADK] Executing Agent 3: Design Knowledge Retrieval (RAG)")
-        yield {"type": "timeline", "step": "Retrieving Design Knowledge"}
-        yield {"type": "agent_start", "agent": "retrieval", "message": "Searching Design Knowledge Base using Hybrid JSON & Semantic retrieval..."}
-        
-        retrieval_agent = registry.get_agent("retrieval")
-        rag_res = await retrieval_agent.run({"intent_json": intent_json, "prompt": user_prompt})
-        
-        if not rag_res.get("success"):
-            logger.warning("RetrievalAgent failed. Continuing without RAG.")
-            rag_json = {}
-        else:
-            rag_json = rag_res.get("result", {})
-            
-        yield {"type": "agent_complete", "agent": "retrieval", "output": rag_json}
-        await asyncio.sleep(0.3)
-
-        # ==========================================
-        # STEP 4: DESIGN PLANNING
-        # ==========================================
-        logger.info("[ADK] Executing Agent 4: Design Planning")
-        yield {"type": "timeline", "step": "Planning Design"}
-        yield {"type": "agent_start", "agent": "planning", "message": "Structuring visual styles and component architecture blueprints..."}
-        
-        planning_agent = registry.get_agent("planning")
-        
-        plan_res = await planning_agent.run({"intent_json": intent_json, "rag_json": rag_json, "prompt": user_prompt})
-        
-        if not plan_res.get("success"):
-            logger.warning("PlanningAgent failed. Attempting fallback planning using heuristics...")
-            get_evaluation_manager().record_planning_failure()
-            design_plan = build_fallback_design_plan(user_prompt, intent_json, rag_json)
-        else:
-            design_plan = plan_res.get("result", {})
-            if not design_plan.get("layout", {}).get("mainSections"):
-                logger.warning("PlanningAgent returned empty sections. Attempting fallback planning...")
-                get_evaluation_manager().record_planning_failure()
-                design_plan = build_fallback_design_plan(user_prompt, intent_json, rag_json)
-
-        plan_record = {
-            "product_name": design_plan.get("productName", "App"),
-            "tagline": design_plan.get("tagline", ""),
-            "page_type": intent_json.get("pageType", "landing"),
-            "design_archetype": rag_json.get("styleMatched", "modern"),
-            "layout_system": design_plan.get("layout", {}).get("sidebar", "none") + "-sidebar" if design_plan.get("layout", {}).get("sidebar", "none") != "none" else "centered-stack",
-            "visual_style": intent_json.get("style", {}).get("visualStyle", "modern"),
-            "interaction_style": "hover-reveal",
-            "aesthetic": intent_json.get("theme", "premium dark"),
-            "font_heading": design_plan.get("styling", {}).get("font_heading", "Space Grotesk"),
-            "font_body": design_plan.get("styling", {}).get("font_body", "Inter"),
-            "bg_color": design_plan.get("styling", {}).get("bg_color", "bg-zinc-950"),
-            "primary_color": design_plan.get("styling", {}).get("primary_color", "violet"),
-            "text_color": design_plan.get("styling", {}).get("text_color", "text-zinc-100"),
-            "sections": design_plan.get("layout", {}).get("mainSections", []),
-            "layout_notes": f"Navbar: {design_plan.get('layout', {}).get('navbar', 'top')}, Sidebar: {design_plan.get('layout', {}).get('sidebar', 'none')}"
-        }
-        yield {"type": "plan", "plan": plan_record}
-        yield {"type": "agent_complete", "agent": "planning", "output": design_plan}
-        await asyncio.sleep(0.3)
-
-        # ==========================================
-        # STEP 5: COMPONENT GENERATION
-        # ==========================================
-        logger.info("[ADK] Executing Agent 5: Component Generation")
-        yield {"type": "timeline", "step": "Generating Components"}
-        yield {"type": "agent_start", "agent": "generating", "message": "Initializing components structure from layout plan..."}
+        from backend.app.pipeline.engine import PipelineEngine
+        pipeline = PipelineEngine()
         
         event_queue = asyncio.Queue()
-        generation_agent = registry.get_agent("generating")
-        
-        async def run_gen_task():
+        async def _pipeline_callback(event):
+            await event_queue.put(event)
+            
+        async def _run_pipeline():
             try:
-                res = await generation_agent.run({
-                    "design_plan": design_plan,
-                    "rag_json": rag_json,
-                    "event_callback": event_queue.put
-                })
-                await event_queue.put(res)
+                ctx = await pipeline.process_prompt(user_prompt, event_callback=_pipeline_callback)
+                await event_queue.put({"type": "pipeline_complete", "context": ctx})
             except Exception as e:
-                await event_queue.put(e)
-                
-        asyncio.create_task(run_gen_task())
+                import traceback
+                traceback.print_exc()
+                await event_queue.put({"type": "pipeline_error", "error": str(e)})
+
+        asyncio.create_task(_run_pipeline())
         
-        generated_files = None
+        generated_files = {}
         while True:
             item = await event_queue.get()
-            if isinstance(item, Exception):
-                logger.error(f"Generation event task threw exception: {item}")
-                yield {"type": "pipeline_error", "step": "generating", "error": "Component Generation crashed."}
-                return
-            elif isinstance(item, dict) and "success" in item:
-                if not item["success"]:
-                    logger.error(f"GenerationAgent failed: {item.get('error')}")
-                    yield {"type": "pipeline_error", "step": "generating", "error": item.get("error")}
-                    return
-                # Extract files from the valid successful result
-                generated_files = item.get("result", {}).get("files", {})
-                break
-            else:
-                yield item
+            if item.get("type") == "pipeline_complete":
+                context = item["context"]
+                if context.generated_code:
+                    generated_files = context.generated_code.files
+                else:
+                    generated_files = {}
                 
-        yield {"type": "agent_complete", "agent": "generating", "output": {"file_count": len(generated_files)}}
-        await asyncio.sleep(0.3)
-
+                # Construct the plan record for frontend
+                plan_record = {
+                    "product_name": context.design_plan.product_name if context.design_plan else "App",
+                    "tagline": context.design_plan.tagline if context.design_plan else "",
+                    "page_type": context.intent.page_type if context.intent else "landing",
+                    "design_archetype": context.design_plan.layout_archetype if context.design_plan else "modern",
+                    "layout_system": context.layout_plan.grid_system if context.layout_plan else "centered-stack",
+                    "visual_style": context.theme_plan.visual_style if context.theme_plan else "modern",
+                    "interaction_style": "hover-reveal",
+                    "aesthetic": context.intent.theme if context.intent else "premium dark",
+                    "font_heading": context.theme_plan.font_heading if context.theme_plan else "Space Grotesk",
+                    "font_body": context.theme_plan.font_body if context.theme_plan else "Inter",
+                    "bg_color": context.theme_plan.bg_color if context.theme_plan else "bg-zinc-950",
+                    "primary_color": context.theme_plan.primary_color if context.theme_plan else "violet",
+                    "text_color": context.theme_plan.text_color if context.theme_plan else "text-zinc-100",
+                    "sections": context.design_plan.content_flow if context.design_plan else [],
+                    "layout_notes": ""
+                }
+                yield {"type": "plan", "plan": plan_record}
+                break
+            elif item.get("type") == "pipeline_error":
+                yield {"type": "pipeline_error", "step": "generating", "error": item["error"]}
+                return
+            else:
+                # Yield standard pipeline timeline events directly
+                if "chunk" in item:
+                    yield item # Pass through chunks if any
+                else:
+                    yield item
+                    
         # ==========================================
         # STEP 5.5: CODE VALIDATION & AUTO FIXING
         # ==========================================

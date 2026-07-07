@@ -20,40 +20,47 @@ class PipelineEngine:
         self.component_planner = ComponentPlanner()
         self.code_generator = CodeGenerator()
         
-    async def process_prompt(self, prompt: str) -> DesignContext:
+    async def process_prompt(self, prompt: str, event_callback=None) -> DesignContext:
         """
         Runs Phase 1, Phase 2, Phase 3, and Phase 4 of the pipeline.
         """
         logger.info(f"Starting new pipeline execution for prompt: {prompt[:50]}...")
         
+        async def _trigger_event(step_name: str, agent_name: str, message: str):
+            if event_callback:
+                await event_callback({"type": "timeline", "step": step_name})
+                await event_callback({"type": "agent_start", "agent": agent_name, "message": message})
+        
         context = DesignContext(prompt=prompt)
         
-        # Phase 1a: Intent Detection
+        # Phase 1: Understanding
+        await _trigger_event("Understanding Intent", "understanding", "Detecting user intent and extracting requirements...")
         context = await self.intent_detector.process(context)
-        
-        # Phase 1b: Requirement Extraction
         context = await self.requirement_extractor.process(context)
-        
+        if event_callback:
+            await event_callback({"type": "agent_complete", "agent": "understanding", "output": {"status": "success"}})
         logger.info("Phase 1 complete.")
         
-        # Phase 2a: Design Planning
+        # Phase 2: Design Strategy
+        await _trigger_event("Planning Design Strategy", "planning", "Planning structural components and visual theme...")
         context = await self.design_planner.process(context)
-        
-        # Phase 2b: Theme Planning
         context = await self.theme_planner.process(context)
-        
+        if event_callback:
+            await event_callback({"type": "agent_complete", "agent": "planning", "output": {"status": "success"}})
         logger.info("Phase 2 complete.")
 
-        # Phase 3a: Layout Planning
+        # Phase 3: Layout Architecture
+        await _trigger_event("Architecting Layout", "layout", "Constructing component hierarchy and responsive layout...")
         context = await self.layout_planner.process(context)
-        
-        # Phase 3b: Component Planning
         context = await self.component_planner.process(context)
-        
+        if event_callback:
+            await event_callback({"type": "agent_complete", "agent": "layout", "output": {"status": "success"}})
         logger.info("Phase 3 complete.")
         
         # Phase 4: Code Generation
+        await _trigger_event("Generating Code", "generator", "Translating design context into React JSX and Tailwind CSS...")
         context = await self.code_generator.process(context)
-        
+        if event_callback:
+            await event_callback({"type": "agent_complete", "agent": "generator", "output": {"status": "success"}})
         logger.info("Phase 4 complete. Pipeline finished.")
         return context
