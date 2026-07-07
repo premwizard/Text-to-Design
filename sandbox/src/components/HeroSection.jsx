@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import heroBackground from '../assets/hero-background.jpg';
+const heroBackground = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80';
 
 function HeroSection() {
   return (

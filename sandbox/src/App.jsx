@@ -7,7 +7,7 @@ import PricingSection from './components/PricingSection';
 import FooterComponent from './components/FooterComponent';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import './App.css';
+
 
 function App() {
   return (
