@@ -23,7 +23,7 @@ Curated Colors: {bg_color}, {primary_color}, {text_color}
 3. Output ONLY a valid JSON object matching the schema below. No markdown fences.
 
 {{
-  "pageType": "landing|dashboard|portfolio|ecommerce|mobile_app|other",
+  "pageType": "e-commerce|saas|portfolio|restaurant|healthcare|ai_startup|travel|fitness|education|finance|agency|real_estate|dashboard|landing_page|other",
   "theme": "premium dark|minimal light|vibrant gradient|etc",
   "productName": "Invent a specific brand name matching the domain.",
   "tagline": "A punchy one-liner headline matching the user's intent.",
@@ -31,15 +31,21 @@ Curated Colors: {bg_color}, {primary_color}, {text_color}
     "sidebar": "left|right|none",
     "navbar": "top|none",
     "mainSections": [
-      "List of specific section file basenames (PascalCase, e.g. HeroSection, BentoFeatures, Footer)"
+      "List of specific section file basenames (PascalCase). MUST INCLUDE AT LEAST 8 UNIQUE SECTIONS (e.g. Hero, Features, BentoGrid, Statistics, Testimonials, Brands, Pricing, FAQ, ProductGrid, Footer). Avoid simple linear stacking; prefer bento grids, asymmetrical layouts, overlapping elements, and masonry."
     ]
   }},
+  "assets": [
+    "List of asset instructions like 'Hero section needs a large SaaS dashboard Unsplash placeholder', 'Features section needs 3 SVG illustrations', 'Testimonials need avatar images'"
+  ],
   "styling": {{
     "font_heading": "Google Font Name matching the retrieved design knowledge",
     "font_body": "Google Font Name matching the retrieved design knowledge",
     "bg_color": "Tailwind bg class matching the retrieved design knowledge",
     "primary_color": "Tailwind primary color matching the retrieved design knowledge",
-    "text_color": "Tailwind text class matching the retrieved design knowledge"
+    "text_color": "Tailwind text class matching the retrieved design knowledge",
+    "animation": "Framer Motion styles to use (e.g., SlideUp, FadeIn)",
+    "borderRadius": "none|medium|large|full|xl",
+    "shadows": "none|soft|medium|large"
   }}
 }}
 """
@@ -86,14 +92,27 @@ async def run_unified_planning(user_prompt: str, memory_prefs: dict, rag_json: d
     except Exception as exc:
         logger.error(f"Unified Planning failed: {exc}. Falling back.")
         return {
-            "pageType": "landing",
+            "pageType": "landing_page",
             "theme": "premium dark",
             "productName": "NextGen UI",
             "tagline": "AI-Generated Interface",
             "layout": {
                 "sidebar": "none",
                 "navbar": "top",
-                "mainSections": ["HeroSection", "FeaturesSection", "FooterSection"]
+                "mainSections": ["HeroSection", "FeaturesSection", "PricingSection", "TestimonialsSection", "FAQSection", "FooterSection"]
             },
-            "styling": styling
+            "assets": [
+                "Hero section needs a large abstract placeholder",
+                "Features need illustrative SVG icons"
+            ],
+            "styling": {
+                "font_heading": styling.get("font_heading", "Space Grotesk"),
+                "font_body": styling.get("font_body", "Inter"),
+                "bg_color": styling.get("bg_color", "bg-zinc-950"),
+                "primary_color": styling.get("primary_color", "violet"),
+                "text_color": styling.get("text_color", "text-zinc-100"),
+                "animation": "FadeIn and SlideUp",
+                "borderRadius": "xl",
+                "shadows": "medium"
+            }
         }

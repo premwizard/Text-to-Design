@@ -1,0 +1,1 @@
+Static validation failed: File components/FeaturesSection.jsx contains malformed import/export line:       <p className="text-xs text-zinc-500 mt-1">Placeholder stub generated automatically to resolve missing import.</p>

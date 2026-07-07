@@ -579,7 +579,7 @@ async def run_adk_edit_orchestration_stream(
         yield {"type": "timeline", "step": "Edit Prompt Analysis"}
         yield {"type": "agent_start", "agent": "edit_planning", "message": "Analyzing natural language edit requests..."}
         
-        edit_agent = registry.get_agent("edit_planning")
+        edit_agent = registry.get_agent("edit")
         edit_res = await edit_agent.run({
             "edit_prompt": edit_prompt,
             "current_files": current_files,

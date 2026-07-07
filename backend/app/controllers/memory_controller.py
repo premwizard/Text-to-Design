@@ -11,14 +11,14 @@ from backend.app.services.memory_service import (
 logger = logging.getLogger("backend.app.controllers.memory")
 
 
-async def get_memory_handler(user_id: str = None) -> dict:
+def get_memory_handler(user_id: str = None) -> dict:
     """Return raw memory and resolved preferences for a user."""
     memory = get_user_memory(user_id)
     resolved = get_memory_preferences(user_id)
     return {"memory": memory, "resolved": resolved}
 
 
-async def update_memory_settings_handler(user_id: str, enabled: bool = None, reset: bool = False) -> dict:
+def update_memory_settings_handler(user_id: str, enabled: bool = None, reset: bool = False) -> dict:
     """Update memory enabled flag or reset memory for a user."""
     if reset:
         memory = reset_memory(user_id)

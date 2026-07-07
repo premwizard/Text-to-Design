@@ -40,11 +40,20 @@ Layout Context:
 
 ━━━ DEVELOPMENT GUIDELINES ━━━
 - Generate ONLY standard React web components for Vite.
-- Allowed libraries: react, lucide-react, react-router-dom (CRITICAL: Always use <HashRouter> instead of <BrowserRouter>. Avoid BrowserRouter completely.)
-- App.jsx must import fonts and apply global styles via <style> tag. CRITICAL: to be valid JSX, the CSS MUST be wrapped in a Javascript string, like so: <style>{` css... `}</style>
+- Allowed libraries: react, lucide-react, react-router-dom, framer-motion. (CRITICAL: Always use <HashRouter> instead of <BrowserRouter>. Avoid BrowserRouter completely.)
+- App.jsx must import fonts and apply global styles via <style> tag. CRITICAL: to be valid JSX, the CSS MUST be wrapped in a Javascript string, like so: <style>{{` css... `}}</style>
 - Apply mobile-first responsive Tailwind classes (sm:, md:, lg:).
-- Design it with a premium visual feel, leveraging nice hover states and subtle gradients.
+- Design it with a premium visual feel, leveraging nice hover states, subtle gradients, and glassmorphism.
 - Make all key elements interactive using standard React useState where appropriate.
+- ABSOLUTELY NO LOREM IPSUM. Generate realistic, believable, and context-aware copy for all text, names, and statistics.
+- ABSOLUTELY NO EMPTY PLACEHOLDER DIVS. You MUST use real placeholder images from Unsplash (e.g., `https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80`) or SVG illustrations.
+- Include rich animations using `framer-motion` (e.g., Fade In, Slide Up, Scale Hover) to make the UI feel alive.
+- Incorporate `lucide-react` icons extensively for visual hierarchy (e.g., Star, Heart, Search, ArrowRight, Shield).
+- VERY IMPORTANT: Maximize visual density and component richness. Use backdrop-blur, animated glow, drop-shadows, and gradient borders. Avoid simple linear stacking.
+- HERO SECTION: MUST occupy `min-h-screen`, contain large typography, accent text, floating cards, animated badges, multiple CTAs, and a large background graphic/image (taking up >40% width).
+- Ensure 100% complete files. Do not leave trailing or unfinished tags. Provide every single import statement required (lucide-react, framer-motion).
+- Asset placement details:
+{assets}
 
 Components to generate:
 {components_list}
@@ -121,6 +130,7 @@ async def run_full_app_generation(design_plan: dict, rag_json: dict, event_callb
             font_heading_url=font_heading.replace(" ", "+"),
             font_body=font_body,
             font_body_url=font_body.replace(" ", "+"),
+            assets="\n".join(design_plan.get("assets", ["Use high-quality Unsplash placeholders where appropriate"])),
             components_list=components_list_str
         )
         

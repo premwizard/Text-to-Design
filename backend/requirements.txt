@@ -10,3 +10,5 @@ requests>=2.31.0
 anyio>=3.7.0
 httpx>=0.24.0
 websockets>=11.0.0
+google-adk
+google-genai

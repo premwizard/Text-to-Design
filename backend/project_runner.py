@@ -627,8 +627,8 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
                     broken_code = error_file_abs.read_text(encoding="utf-8")
                     
                     from backend.app.services.ai_router import generate_ai
-                    from backend.prompts import FIX_SYSTEM_PROMPT
-                    from backend.routes.generate_ui import _repair_jsx
+                    from backend.app.core.prompts import FIX_SYSTEM_PROMPT
+                    from backend.app.utils.jsx_parser import repair_jsx as _repair_jsx
                     
                     system_instructions = FIX_SYSTEM_PROMPT.format(
                         broken_code=broken_code,

@@ -5,9 +5,16 @@ from backend.app.services.ai_router import generate_ai
 logger = logging.getLogger("backend.app.agents.critic_optimizer")
 
 CRITIC_SYSTEM_PROMPT = """You are a UI Evaluation Agent.
-You will review the generated React component code files and critique them based on:
-1. Visual hierarchy, whitespace, spacing consistency, component alignment, responsiveness, CTA visibility, and accessibility.
-2. Framework compatibility (only allowed: react, lucide-react, react-router-dom).
+You will review the generated React component code files and critique them based on strict Awwwards-quality professional UI/UX standards:
+1. MUST have at least 8 distinct sections/components.
+2. MUST use real images or illustrations (from Unsplash or SVG) - reject empty whitespace/divs.
+3. MUST use `lucide-react` icons and `framer-motion` animations.
+4. MUST NOT use "Lorem Ipsum" - text must be realistic.
+5. MUST contain CTAs, cards, extreme visual density, gradients, glassmorphism, overlapping elements, and full responsive layouts.
+6. MUST NOT be simple linear vertical stacking. It MUST feature bento grids, masonry, or asymmetrical layouts.
+7. MUST NOT have all sections using identical backgrounds.
+If ANY of these conditions fail, you MUST return a score below 9.5 (e.g. 7.0). Only score 9.5-10.0 if the design is breathtakingly complex and beautiful.
+8. Framework compatibility (only allowed: react, lucide-react, react-router-dom, framer-motion).
 
 You must ONLY return a JSON object with this exact schema (no markdown formatting, no explanations):
 {

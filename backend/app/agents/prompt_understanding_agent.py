@@ -6,6 +6,7 @@ logger = logging.getLogger("backend.app.agents.prompt_understanding")
 
 SYSTEM_PROMPT = """You are a Prompt Understanding Agent in a multi-agent UI generation pipeline.
 Analyze the user request deeply and extract the design intent into a structured JSON object.
+Crucially, you must automatically infer the precise `pageType` (e.g. saas, e-commerce, portfolio, etc.) and `industry` even if the user does not explicitly state them. Use contextual clues to make the best possible categorization.
 
 ━━━ USER PERSONALIZATION MEMORY ━━━
 The user has the following design preferences (use these to populate parameters NOT explicitly specified in the user's prompt):
@@ -17,7 +18,7 @@ The user has the following design preferences (use these to populate parameters 
 
 Output ONLY a JSON object with this exact schema (do not output any explanation or markdown fences):
 {{
-  "pageType": "landing|dashboard|portfolio|ecommerce|restaurant|mobile_app|agency|event|blog|other",
+  "pageType": "e-commerce|saas|portfolio|restaurant|healthcare|ai_startup|travel|fitness|education|finance|agency|real_estate|dashboard|landing_page|other",
   "industry": "e.g., fintech, food, fashion, education, healthcare, technology, creative, corporate",
   "theme": "e.g., premium dark, warm organic, minimal light, vibrant gradient, neon dark",
   "components": [
