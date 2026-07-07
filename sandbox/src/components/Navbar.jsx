@@ -1,27 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { IoMenu } from 'lucide-react';
+import logo from '../assets/company-logo.png';
+
 function Navbar() {
   return (
-    <nav className="bg-white shadow-md py-4 fixed top-0 left-0 w-full z-10">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-indigo-500 text-lg font-bold">
-          <span className="text-2xl font-black">NexusApp</span>
+    <nav className="fixed top-0 left-0 w-full bg-indigo-500 p-4 shadow-md z-10">
+      <div className="flex justify-between items-center">
+        <Link to="/" className="flex items-center">
+          <img src={logo} alt="Company Logo" className="w-8 h-8 mr-2" />
+          <span className="text-lg font-bold text-white">NexusApp</span>
         </Link>
-        <button className="lg:hidden flex justify-center items-center">
-          <Menu size={24} className="text-indigo-500" />
+        <button className="lg:hidden bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+          <IoMenu className="w-6 h-6" />
         </button>
-        <ul className="hidden lg:flex items-center space-x-4">
-          <li>
-            <Link to="/" className="text-slate-900 hover:text-indigo-500 transition duration-300">Home</Link>
-          </li>
-          <li>
-            <Link to="/" className="text-slate-900 hover:text-indigo-500 transition duration-300">Features</Link>
-          </li>
-          <li>
-            <Link to="/" className="text-slate-900 hover:text-indigo-500 transition duration-300">Pricing</Link>
-          </li>
-        </ul>
       </div>
     </nav>
   );
