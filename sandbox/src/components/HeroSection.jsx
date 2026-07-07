@@ -1,28 +1,35 @@
 import React from 'react';
+import lucide from 'lucide-react';
 import { motion } from 'framer-motion';
-const background = 'https://images.unsplash.com/photo-1518791843675-64a75c1610f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
-import { Icon } from 'lucide-react';
+import './index.css';
 
 function HeroSection() {
+  const bgImage = "https://images.unsplash.com/photo-1523204548574-9f5a7d1f9f8d";
+  const logo = "https://raw.githubusercontent.com/lucide-react/lucide/main/assets/logo.png";
+
   return (
-    <section className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: `url(${background})` }}>
-      <motion.h1
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="text-5xl font-playfair text-white mb-4"
-      >
-        Capture Your Story
-      </motion.h1>
-      <motion.button
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="bg-primary-color text-white py-2 px-4 rounded-lg hover:bg-secondary-color transition duration-300"
-      >
-        <Icon name="Camera" className="mr-2" />
-        Get Started
-      </motion.button>
+    <section className="h-screen bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: `url(${bgImage})` }}>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-50" />
+      <div className="container mx-auto p-4 md:p-8 lg:p-12 relative z-10">
+        <div className="flex flex-col items-center justify-center h-full">
+          <h1 className="text-5xl font-bold text-white mb-4">
+            <motion.span
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              Showcase Your Art
+            </motion.span>
+          </h1>
+          <p className="text-lg text-white mb-8">
+            Discover the world of art and creativity
+          </p>
+          <button className="bg-primary-color text-white py-2 px-4 rounded-md hover:bg-opacity-90 transition duration-300">
+            <lucide.Icon name="paint-brush" size={20} className="mr-2" />
+            Explore Now
+          </button>
+        </div>
+      </div>
     </section>
   );
 }

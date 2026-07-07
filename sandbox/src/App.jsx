@@ -1,33 +1,31 @@
 import React from 'react';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import TestimonialsComponent from './components/TestimonialsComponent';
-import PortfolioComponent from './components/PortfolioComponent';
-import FooterComponent from './components/FooterComponent';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import TestimonialsSection from './components/TestimonialsSection';
+import AboutSection from './components/AboutSection';
+import PortfolioGrid from './PortfolioGrid';
+import ContactSection from './ContactSection';
+import GridContainer from './GridContainer';
+import SpacingRules from './SpacingRules';
 import { motion } from 'framer-motion';
-import { Icon } from 'lucide-react';
-
-
 
 function App() {
   return (
     <HashRouter>
-
-      <Navbar />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Routes>
-          <Route path="/" element={<HeroSection />} />
-          <Route path="/testimonials" element={<TestimonialsComponent />} />
-          <Route path="/portfolio" element={<PortfolioComponent />} />
-          <Route path="/contact" element={<FooterComponent />} />
-        </Routes>
-      </motion.div>
-      <FooterComponent />
+      <div className="h-screen overflow-y-scroll bg-white">
+        <Navbar />
+        <GridContainer>
+          <SpacingRules />
+          <Routes>
+            <Route path="/" element={<HeroSection />} />
+            <Route path="/testimonials" element={<TestimonialsSection />} />
+            <Route path="/about" element={<AboutSection />} />
+            <Route path="/portfolio" element={<PortfolioGrid />} />
+            <Route path="/contact" element={<ContactSection />} />
+          </Routes>
+        </GridContainer>
+      </div>
     </HashRouter>
   );
 }
