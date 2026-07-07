@@ -1,35 +1,38 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 
 function Navbar() {
+  const [isOpen, setIsOpen] = React.useState(false);
+
   return (
-    <nav className="bg-zinc-900 text-zinc-100 py-4 md:py-6 lg:py-8 flex justify-between items-center">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 flex justify-between items-center">
-        <Link to="/" className="text-lg md:text-xl lg:text-2xl font-bold">
-          TechForge
+    <nav className="bg-zinc-900 text-zinc-100 py-4 md:py-6">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link to="/" className="text-2xl font-bold">
+          TechSphere
         </Link>
-        <ul className="hidden md:flex items-center space-x-4 lg:space-x-6">
+        <button
+          className="md:hidden"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <Menu size={24} />
+        </button>
+        <ul
+          className={`${
+            isOpen ? 'block' : 'hidden'
+          } md:flex md:items-center md:space-x-4`}
+        >
           <li>
-            <Link to="/" className="hover:text-zinc-200">
-              Home
-            </Link>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/" className="hover:text-zinc-200">
-              About
-            </Link>
+            <Link to="#">About</Link>
           </li>
           <li>
-            <Link to="/" className="hover:text-zinc-200">
-              Contact
-            </Link>
+            <Link to="#">Contact</Link>
           </li>
         </ul>
-        <button className="bg-zinc-100 text-zinc-900 py-2 md:py-3 lg:py-4 px-4 md:px-6 lg:px-8 rounded-md md:rounded-lg lg:rounded-xl hover:bg-zinc-200 flex items-center space-x-2">
-          <span>Get Started</span>
-          <ArrowRight size={20} />
-        </button>
       </div>
     </nav>
   );
