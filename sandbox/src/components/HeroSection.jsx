@@ -1,34 +1,35 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle } from 'lucide-react';
-const heroBackground = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80';
+import backgroundImg from 'https://source.unsplash.com/1920x1080/?background-image';
 
 function HeroSection() {
   return (
-    <section className="relative h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${heroBackground})` }}>
-      <div className="absolute top-0 left-0 w-full h-screen bg-gradient-to-b from-transparent to-indigo-500" />
-      <div className="container mx-auto p-4 md:p-8 lg:p-12 relative z-10">
-        <h1 className="text-4xl font-bold text-white leading-tight mb-4">
-          Elevate Your Business with NexusApp
-        </h1>
-        <p className="text-lg text-white leading-relaxed mb-8">
-          Unlock new opportunities and streamline your workflow with our cutting-edge solutions.
-        </p>
+    <section className="bg-cover bg-center h-screen" style={{ backgroundImage: `url(${backgroundImg})` }}>
+      <div className="container mx-auto p-12 md:p-24 lg:p-48">
+        <motion.h1
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-5xl font-playfair-display leading-tight text-white"
+        >
+          Capture Your Story
+        </motion.h1>
+        <motion.p
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-2xl font-inter leading-relaxed text-white mt-4"
+        >
+          Tell your story with FocalPoint, the ultimate platform for creatives.
+        </motion.p>
         <motion.button
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="bg-fuchsia-500 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="bg-primary text-white py-2 px-4 rounded-md hover:bg-secondary transition duration-300"
         >
           Get Started
-          <ArrowRight className="w-4 h-4 ml-2" />
         </motion.button>
-        <div className="flex items-center justify-center mt-8">
-          <CheckCircle className="w-8 h-8 text-white" />
-          <p className="text-lg text-white leading-relaxed ml-2">
-            Trusted by over 10,000 businesses worldwide
-          </p>
-        </div>
       </div>
     </section>
   );
