@@ -42,6 +42,9 @@ class ComponentPlan(BaseModel):
     components: List[ComponentSpec] = Field(description="Detailed list of all components to be built.")
     global_assets: List[str] = Field(default_factory=list, description="Global assets needed (e.g. logos).")
 
+class GeneratedCode(BaseModel):
+    files: dict[str, str] = Field(description="Dictionary mapping file paths to their raw string code content.")
+
 class DesignContext(BaseModel):
     prompt: str = Field(description="The original user prompt.")
     intent: Optional[UserIntent] = Field(default=None, description="The parsed user intent.")
@@ -52,3 +55,5 @@ class DesignContext(BaseModel):
     
     layout_plan: Optional[LayoutPlan] = Field(default=None, description="The detailed layout and grid strategy.")
     component_plan: Optional[ComponentPlan] = Field(default=None, description="The exact component specifications.")
+    
+    generated_code: Optional[GeneratedCode] = Field(default=None, description="The final generated React application code files.")

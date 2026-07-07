@@ -4,6 +4,7 @@ from .design_planning import DesignPlanner
 from .theme_planning import ThemePlanner
 from .layout_planning import LayoutPlanner
 from .component_planning import ComponentPlanner
+from .code_generation import CodeGenerator
 
 __all__ = [
     "IntentDetector", 
@@ -11,5 +12,6 @@ __all__ = [
     "DesignPlanner", 
     "ThemePlanner",
     "LayoutPlanner",
-    "ComponentPlanner"
+    "ComponentPlanner",
+    "CodeGenerator"
 ]
