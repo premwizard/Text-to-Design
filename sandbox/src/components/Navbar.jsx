@@ -1,36 +1,27 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Menu } from 'lucide-react';
+import logo from '../assets/logo.svg';
 
 function Navbar() {
-  const [isOpen, setIsOpen] = React.useState(false);
-
   return (
-    <nav className="bg-zinc-900 text-zinc-100 py-4 md:py-6">
+    <nav className="bg-white shadow-md py-4 fixed top-0 left-0 w-full z-10">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">
-          TechSphere
+        <Link to="/" className="text-indigo-500 text-lg font-bold">
+          <img src={logo} alt="NexusApp" className="h-8" />
         </Link>
-        <button
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <Menu size={24} />
+        <button className="lg:hidden flex justify-center items-center">
+          <Menu size={24} className="text-indigo-500" />
         </button>
-        <ul
-          className={`${
-            isOpen ? 'block' : 'hidden'
-          } md:flex md:items-center md:space-x-4`}
-        >
+        <ul className="hidden lg:flex items-center space-x-4">
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/" className="text-slate-900 hover:text-indigo-500 transition duration-300">Home</Link>
           </li>
           <li>
-            <Link to="#">About</Link>
+            <Link to="/" className="text-slate-900 hover:text-indigo-500 transition duration-300">Features</Link>
           </li>
           <li>
-            <Link to="#">Contact</Link>
+            <Link to="/" className="text-slate-900 hover:text-indigo-500 transition duration-300">Pricing</Link>
           </li>
         </ul>
       </div>
