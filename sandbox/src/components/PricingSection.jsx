@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import pricingTableBackground from '../assets/pricing-table-background.jpg';
-import planIcons from '../assets/plan-icons.svg';
+
 
 function PricingSection() {
   return (
@@ -55,4 +54,12 @@ function PricingSection() {
             </ul>
             <button className="bg-fuchsia-500 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded">
               Sign Up
-            </button
+            </button>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default PricingSection;

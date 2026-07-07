@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import featureIcons from '../assets/feature-icons.svg';
-import backgroundPattern from '../assets/background-pattern.svg';
+import { Star } from 'lucide-react';
 
 function FeaturesSection() {
   return (
@@ -20,7 +19,7 @@ function FeaturesSection() {
             transition={{ duration: 0.5 }}
             className="bg-white rounded shadow-md p-4"
           >
-            <img src={featureIcons} alt="Feature Icon" className="w-8 h-8 mb-2" />
+            <Star className="w-8 h-8 mb-2 text-indigo-500" />
             <h3 className="text-lg font-bold text-gray-600 mb-2">
               Feature 1
             </h3>
@@ -34,7 +33,7 @@ function FeaturesSection() {
             transition={{ duration: 0.5 }}
             className="bg-white rounded shadow-md p-4"
           >
-            <img src={featureIcons} alt="Feature Icon" className="w-8 h-8 mb-2" />
+            <Star className="w-8 h-8 mb-2 text-indigo-500" />
             <h3 className="text-lg font-bold text-gray-600 mb-2">
               Feature 2
             </h3>
@@ -48,7 +47,7 @@ function FeaturesSection() {
             transition={{ duration: 0.5 }}
             className="bg-white rounded shadow-md p-4"
           >
-            <img src={featureIcons} alt="Feature Icon" className="w-8 h-8 mb-2" />
+            <Star className="w-8 h-8 mb-2 text-indigo-500" />
             <h3 className="text-lg font-bold text-gray-600 mb-2">
               Feature 3
             </h3>
@@ -60,7 +59,7 @@ function FeaturesSection() {
       </div>
       <div className="bg-gray-100 py-4">
         <div className="container mx-auto p-4 md:p-8 lg:p-12">
-          <img src={backgroundPattern} alt="Background Pattern" className="w-full h-16" />
+          <div className="w-full h-16 bg-indigo-100 rounded-lg"></div>
         </div>
       </div>
     </section>

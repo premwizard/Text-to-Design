@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import heroBackground from '../assets/hero-background.jpg';
-import ctaButtonIcon from '../assets/cta-button-icon.svg';
-import { IoCheckmarkDone } from 'lucide-react';
+import { ArrowRight, CheckCircle } from 'lucide-react';
+const heroBackground = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80';
 
 function HeroSection() {
   return (
@@ -22,10 +21,10 @@ function HeroSection() {
           className="bg-fuchsia-500 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded"
         >
           Get Started
-          <img src={ctaButtonIcon} alt="Call-to-Action Button Icon" className="w-4 h-4 ml-2" />
+          <ArrowRight className="w-4 h-4 ml-2" />
         </motion.button>
         <div className="flex items-center justify-center mt-8">
-          <IoCheckmarkDone className="w-8 h-8 text-white" />
+          <CheckCircle className="w-8 h-8 text-white" />
           <p className="text-lg text-white leading-relaxed ml-2">
             Trusted by over 10,000 businesses worldwide
           </p>

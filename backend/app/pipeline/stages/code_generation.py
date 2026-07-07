@@ -33,6 +33,9 @@ import Navbar from './components/Navbar';
 - Include rich animations using `framer-motion` (e.g., Fade In, Slide Up, Scale Hover) to make the UI feel alive.
 - Incorporate `lucide-react` icons extensively for visual hierarchy.
 - Ensure 100% complete files. Do not leave trailing or unfinished tags. Provide every single import statement required.
+- You MUST NOT import any local assets, images, SVGs, or CSS files (like `App.css`). They do NOT exist.
+- If you need an image, use an Unsplash source URL directly as a string (e.g. `const img = "https://images.unsplash.com/...";`). Do NOT use ES module `import` for URLs.
+- Use `lucide-react` for icons. Do NOT use brand icons (Facebook, Twitter) as they might not exist. Use generic equivalents.
 """
 
 class CodeGenerator:

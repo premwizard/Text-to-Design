@@ -1,29 +1,22 @@
 import React from 'react';
-import LucideReact from 'lucide-react';
+import { HashRouter } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import Navbar from './components/Navbar';
+import HeroSection from './components/HeroSection';
+import FeaturesSection from './components/FeaturesSection';
+import PricingSection from './components/PricingSection';
 
-const { ArrowRight } = LucideReact;
-
-const data = {
-  title: 'Generated Page',
-  description: 'This is a generated page',
-};
-
-const SubComponent = () => {
+function App() {
   return (
-    <div>
-      <h1>{data.title}</h1>
-      <p>{data.description}</p>
-    </div>
-  );
-};
-
-function GeneratedPage() {
-  return (
-    <div>
-      <SubComponent />
-      <ArrowRight size={24} />
-    </div>
+    <HashRouter>
+      <div className="font-sans">
+        <Navbar />
+        <HeroSection />
+        <FeaturesSection />
+        <PricingSection />
+      </div>
+    </HashRouter>
   );
 }
 
-export default GeneratedPage;
+export default App;
