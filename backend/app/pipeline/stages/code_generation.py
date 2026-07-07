@@ -25,7 +25,7 @@ import Navbar from './components/Navbar';
 ━━━ DEVELOPMENT GUIDELINES ━━━
 - Generate ONLY standard React web components for Vite.
 - Allowed libraries: react, lucide-react, react-router-dom, framer-motion. (CRITICAL: Always use <HashRouter> instead of <BrowserRouter>. Avoid BrowserRouter completely.)
-- App.jsx MUST import fonts and apply global CSS via a <style> tag.
+- Apply global CSS by importing `import './index.css';`. Do NOT use `<style>` tags in JSX files, they will break compilation.
 - Apply mobile-first responsive Tailwind classes (sm:, md:, lg:).
 - Design it with a premium visual feel, leveraging nice hover states and smooth animations.
 - ABSOLUTELY NO LOREM IPSUM. Generate realistic copy.

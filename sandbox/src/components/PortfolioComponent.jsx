@@ -23,3 +23,10 @@ function PortfolioComponent() {
           className="flex flex-col justify-center items-center mb-4"
         >
           <img src={portfolio1} alt="Portfolio Item 1" className="w-64 h-64 object-cover rounded-lg" />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+export default PortfolioComponent;

@@ -1346,7 +1346,7 @@ var require_react_dom_development = __commonJS({
         return dispatcher;
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var React17 = require_react(), Internals = {
+      var React18 = require_react(), Internals = {
         d: {
           f: noop2,
           r: function() {
@@ -1364,7 +1364,7 @@ var require_react_dom_development = __commonJS({
         },
         p: 0,
         findDOMNode: null
-      }, REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), ReactSharedInternals = React17.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      }, REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), ReactSharedInternals = React18.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       "function" === typeof Map && null != Map.prototype && "function" === typeof Map.prototype.forEach && "function" === typeof Set && null != Set.prototype && "function" === typeof Set.prototype.clear && "function" === typeof Set.prototype.forEach || console.error(
         "React depends on Map and Set built-in types. Make sure that you load a polyfill in older browsers. https://reactjs.org/link/react-polyfills"
       );
@@ -2899,7 +2899,7 @@ var require_react_dom_client_development = __commonJS({
         "number" === type && getActiveElement(node.ownerDocument) === node || node.defaultValue === "" + value || (node.defaultValue = "" + value);
       }
       function validateOptionProps(element, props) {
-        null == props.value && ("object" === typeof props.children && null !== props.children ? React17.Children.forEach(props.children, function(child) {
+        null == props.value && ("object" === typeof props.children && null !== props.children ? React18.Children.forEach(props.children, function(child) {
           null == child || "string" === typeof child || "number" === typeof child || "bigint" === typeof child || didWarnInvalidChild || (didWarnInvalidChild = true, console.error(
             "Cannot infer the option value of complex children. Pass a `value` prop or use a plain string as children to <option>."
           ));
@@ -18531,14 +18531,14 @@ var require_react_dom_client_development = __commonJS({
         ));
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var Scheduler = require_scheduler(), React17 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.element"), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy");
+      var Scheduler = require_scheduler(), React18 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.element"), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy");
       /* @__PURE__ */ Symbol.for("react.scope");
       var REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity");
       /* @__PURE__ */ Symbol.for("react.legacy_hidden");
       /* @__PURE__ */ Symbol.for("react.tracing_marker");
       var REACT_MEMO_CACHE_SENTINEL = /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel");
       /* @__PURE__ */ Symbol.for("react.view_transition");
-      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React17.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
+      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React18.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
         pending: false,
         data: null,
         method: null,
@@ -21326,7 +21326,7 @@ var require_react_dom_client_development = __commonJS({
         }
       };
       (function() {
-        var isomorphicReactPackageVersion = React17.version;
+        var isomorphicReactPackageVersion = React18.version;
         if ("19.2.7" !== isomorphicReactPackageVersion)
           throw Error(
             'Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:\n  - react:      ' + (isomorphicReactPackageVersion + "\n  - react-dom:  19.2.7\nLearn more: https://react.dev/warnings/version-mismatch")
@@ -22283,6 +22283,9 @@ function useResolvedPath(to, { relative } = {}) {
     [to, routePathnamesJson, locationPathname, relative]
   );
 }
+function useRoutes(routes, locationArg) {
+  return useRoutesImpl(routes, locationArg);
+}
 function useRoutesImpl(routes, locationArg, dataRouterOpts) {
   invariant(
     useInRouterContext(),
@@ -22704,6 +22707,12 @@ function DataRoutes2({
     future
   });
 }
+function Route(props) {
+  invariant(
+    false,
+    `A <Route> is only ever to be used as the child of <Routes> element, never rendered directly. Please wrap your <Route> in a <Routes>.`
+  );
+}
 function Router({
   basename: basenameProp = "/",
   children = null,
@@ -22764,6 +22773,63 @@ function Router({
     return null;
   }
   return /* @__PURE__ */ React3.createElement(NavigationContext.Provider, { value: navigationContext }, /* @__PURE__ */ React3.createElement(LocationContext.Provider, { children, value: locationContext }));
+}
+function Routes({
+  children,
+  location
+}) {
+  return useRoutes(createRoutesFromChildren(children), location);
+}
+function createRoutesFromChildren(children, parentPath = []) {
+  let routes = [];
+  React3.Children.forEach(children, (element, index) => {
+    if (!React3.isValidElement(element)) {
+      return;
+    }
+    let treePath = [...parentPath, index];
+    if (element.type === React3.Fragment) {
+      routes.push.apply(
+        routes,
+        createRoutesFromChildren(element.props.children, treePath)
+      );
+      return;
+    }
+    invariant(
+      element.type === Route,
+      `[${typeof element.type === "string" ? element.type : element.type.name}] is not a <Route> component. All component children of <Routes> must be a <Route> or <React.Fragment>`
+    );
+    invariant(
+      !element.props.index || !element.props.children,
+      "An index route cannot have child routes."
+    );
+    let route = {
+      id: element.props.id || treePath.join("-"),
+      caseSensitive: element.props.caseSensitive,
+      element: element.props.element,
+      Component: element.props.Component,
+      index: element.props.index,
+      path: element.props.path,
+      middleware: element.props.middleware,
+      loader: element.props.loader,
+      action: element.props.action,
+      hydrateFallbackElement: element.props.hydrateFallbackElement,
+      HydrateFallback: element.props.HydrateFallback,
+      errorElement: element.props.errorElement,
+      ErrorBoundary: element.props.ErrorBoundary,
+      hasErrorBoundary: element.props.hasErrorBoundary === true || element.props.ErrorBoundary != null || element.props.errorElement != null,
+      shouldRevalidate: element.props.shouldRevalidate,
+      handle: element.props.handle,
+      lazy: element.props.lazy
+    };
+    if (element.props.children) {
+      route.children = createRoutesFromChildren(
+        element.props.children,
+        treePath
+      );
+    }
+    routes.push(route);
+  });
+  return routes;
 }
 function isHtmlElement(object) {
   return typeof HTMLElement !== "undefined" && object instanceof HTMLElement;
@@ -24158,6 +24224,113 @@ var init_dist = __esm({
   }
 });
 
+// node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
+var mergeClasses;
+var init_mergeClasses = __esm({
+  "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs"() {
+    mergeClasses = (...classes) => classes.filter((className, index, array) => {
+      return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
+    }).join(" ").trim();
+  }
+});
+
+// node_modules/lucide-react/dist/esm/defaultAttributes.mjs
+var defaultAttributes;
+var init_defaultAttributes = __esm({
+  "node_modules/lucide-react/dist/esm/defaultAttributes.mjs"() {
+    defaultAttributes = {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: 24,
+      height: 24,
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 2,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    };
+  }
+});
+
+// node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
+var hasA11yProp;
+var init_hasA11yProp = __esm({
+  "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs"() {
+    hasA11yProp = (props) => {
+      for (const prop in props) {
+        if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+          return true;
+        }
+      }
+      return false;
+    };
+  }
+});
+
+// node_modules/lucide-react/dist/esm/context.mjs
+var import_react, LucideContext, useLucideContext;
+var init_context = __esm({
+  "node_modules/lucide-react/dist/esm/context.mjs"() {
+    "use strict";
+    "use client";
+    import_react = __toESM(require_react(), 1);
+    LucideContext = (0, import_react.createContext)({});
+    useLucideContext = () => (0, import_react.useContext)(LucideContext);
+  }
+});
+
+// node_modules/lucide-react/dist/esm/Icon.mjs
+var import_react2, Icon;
+var init_Icon = __esm({
+  "node_modules/lucide-react/dist/esm/Icon.mjs"() {
+    "use strict";
+    "use client";
+    import_react2 = __toESM(require_react(), 1);
+    init_defaultAttributes();
+    init_hasA11yProp();
+    init_mergeClasses();
+    init_context();
+    Icon = (0, import_react2.forwardRef)(
+      ({ color: color2, size, strokeWidth, absoluteStrokeWidth, className = "", children, iconNode, ...rest }, ref) => {
+        const {
+          size: contextSize = 24,
+          strokeWidth: contextStrokeWidth = 2,
+          absoluteStrokeWidth: contextAbsoluteStrokeWidth = false,
+          color: contextColor = "currentColor",
+          className: contextClass = ""
+        } = useLucideContext() ?? {};
+        const calculatedStrokeWidth = absoluteStrokeWidth ?? contextAbsoluteStrokeWidth ? Number(strokeWidth ?? contextStrokeWidth) * 24 / Number(size ?? contextSize) : strokeWidth ?? contextStrokeWidth;
+        return (0, import_react2.createElement)(
+          "svg",
+          {
+            ref,
+            ...defaultAttributes,
+            width: size ?? contextSize ?? defaultAttributes.width,
+            height: size ?? contextSize ?? defaultAttributes.height,
+            stroke: color2 ?? contextColor,
+            strokeWidth: calculatedStrokeWidth,
+            className: mergeClasses("lucide", contextClass, className),
+            ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
+            ...rest
+          },
+          [
+            ...iconNode.map(([tag, attrs]) => (0, import_react2.createElement)(tag, attrs)),
+            ...Array.isArray(children) ? children : [children]
+          ]
+        );
+      }
+    );
+  }
+});
+
+// node_modules/lucide-react/dist/esm/lucide-react.mjs
+var init_lucide_react = __esm({
+  "node_modules/lucide-react/dist/esm/lucide-react.mjs"() {
+    "use strict";
+    init_Icon();
+  }
+});
+
 // node_modules/react/cjs/react-jsx-runtime.development.js
 var require_react_jsx_runtime_development = __commonJS({
   "node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
@@ -24372,18 +24545,18 @@ var require_react_jsx_runtime_development = __commonJS({
       function isValidElement2(object) {
         return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
       }
-      var React17 = require_react(), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), ReactSharedInternals = React17.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
+      var React18 = require_react(), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), ReactSharedInternals = React18.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
         return null;
       };
-      React17 = {
+      React18 = {
         react_stack_bottom_frame: function(callStackForError) {
           return callStackForError();
         }
       };
       var specialPropKeyWarningShown;
       var didWarnAboutElementRef = {};
-      var unknownOwnerDebugStack = React17.react_stack_bottom_frame.bind(
-        React17,
+      var unknownOwnerDebugStack = React18.react_stack_bottom_frame.bind(
+        React18,
         UnknownOwner
       )();
       var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
@@ -24427,29 +24600,61 @@ var require_jsx_runtime = __commonJS({
   }
 });
 
+// src/components/Navbar.jsx
+function Navbar() {
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", { className: "flex justify-between items-center py-4", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", { src: logo, alt: "FocalPoint Logo", className: "w-12 h-12" }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { className: "flex items-center space-x-4", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, { to: "/testimonials", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, { name: "Quote", className: "text-lg" }),
+        "Testimonials"
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, { to: "/portfolio", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, { name: "Briefcase", className: "text-lg" }),
+        "Portfolio"
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, { to: "/contact", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, { name: "Mail", className: "text-lg" }),
+        "Contact"
+      ] }) })
+    ] })
+  ] });
+}
+var import_react3, import_jsx_runtime, logo, Navbar_default;
+var init_Navbar = __esm({
+  "src/components/Navbar.jsx"() {
+    import_react3 = __toESM(require_react());
+    init_dist();
+    init_lucide_react();
+    import_jsx_runtime = __toESM(require_jsx_runtime());
+    logo = "https://images.unsplash.com/photo-1584555114411-9b3f5d5f8e4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
+    Navbar_default = Navbar;
+  }
+});
+
 // node_modules/framer-motion/dist/es/context/LayoutGroupContext.mjs
-var import_react, LayoutGroupContext;
+var import_react4, LayoutGroupContext;
 var init_LayoutGroupContext = __esm({
   "node_modules/framer-motion/dist/es/context/LayoutGroupContext.mjs"() {
     "use client";
-    import_react = __toESM(require_react(), 1);
-    LayoutGroupContext = (0, import_react.createContext)({});
+    import_react4 = __toESM(require_react(), 1);
+    LayoutGroupContext = (0, import_react4.createContext)({});
   }
 });
 
 // node_modules/framer-motion/dist/es/utils/use-constant.mjs
 function useConstant(init) {
-  const ref = (0, import_react2.useRef)(null);
+  const ref = (0, import_react5.useRef)(null);
   if (ref.current === null) {
     ref.current = init();
   }
   return ref.current;
 }
-var import_react2;
+var import_react5;
 var init_use_constant = __esm({
   "node_modules/framer-motion/dist/es/utils/use-constant.mjs"() {
     "use client";
-    import_react2 = __toESM(require_react(), 1);
+    import_react5 = __toESM(require_react(), 1);
   }
 });
 
@@ -24462,23 +24667,23 @@ var init_is_browser = __esm({
 });
 
 // node_modules/framer-motion/dist/es/utils/use-isomorphic-effect.mjs
-var import_react3, useIsomorphicLayoutEffect2;
+var import_react6, useIsomorphicLayoutEffect2;
 var init_use_isomorphic_effect = __esm({
   "node_modules/framer-motion/dist/es/utils/use-isomorphic-effect.mjs"() {
     "use client";
-    import_react3 = __toESM(require_react(), 1);
+    import_react6 = __toESM(require_react(), 1);
     init_is_browser();
-    useIsomorphicLayoutEffect2 = isBrowser3 ? import_react3.useLayoutEffect : import_react3.useEffect;
+    useIsomorphicLayoutEffect2 = isBrowser3 ? import_react6.useLayoutEffect : import_react6.useEffect;
   }
 });
 
 // node_modules/framer-motion/dist/es/context/PresenceContext.mjs
-var import_react4, PresenceContext;
+var import_react7, PresenceContext;
 var init_PresenceContext = __esm({
   "node_modules/framer-motion/dist/es/context/PresenceContext.mjs"() {
     "use client";
-    import_react4 = __toESM(require_react(), 1);
-    PresenceContext = /* @__PURE__ */ (0, import_react4.createContext)(null);
+    import_react7 = __toESM(require_react(), 1);
+    PresenceContext = /* @__PURE__ */ (0, import_react7.createContext)(null);
   }
 });
 
@@ -32441,12 +32646,12 @@ var init_es2 = __esm({
 });
 
 // node_modules/framer-motion/dist/es/context/MotionConfigContext.mjs
-var import_react5, MotionConfigContext;
+var import_react8, MotionConfigContext;
 var init_MotionConfigContext = __esm({
   "node_modules/framer-motion/dist/es/context/MotionConfigContext.mjs"() {
     "use client";
-    import_react5 = __toESM(require_react(), 1);
-    MotionConfigContext = (0, import_react5.createContext)({
+    import_react8 = __toESM(require_react(), 1);
+    MotionConfigContext = (0, import_react8.createContext)({
       transformPagePoint: (p) => p,
       isStatic: false,
       reducedMotion: "never"
@@ -32456,35 +32661,35 @@ var init_MotionConfigContext = __esm({
 
 // node_modules/framer-motion/dist/es/components/AnimatePresence/use-presence.mjs
 function usePresence(subscribe = true) {
-  const context = (0, import_react6.useContext)(PresenceContext);
+  const context = (0, import_react9.useContext)(PresenceContext);
   if (context === null)
     return [true, null];
   const { isPresent, onExitComplete, register } = context;
-  const id3 = (0, import_react6.useId)();
-  (0, import_react6.useEffect)(() => {
+  const id3 = (0, import_react9.useId)();
+  (0, import_react9.useEffect)(() => {
     if (subscribe) {
       return register(id3);
     }
   }, [subscribe]);
-  const safeToRemove = (0, import_react6.useCallback)(() => subscribe && onExitComplete && onExitComplete(id3), [id3, onExitComplete, subscribe]);
+  const safeToRemove = (0, import_react9.useCallback)(() => subscribe && onExitComplete && onExitComplete(id3), [id3, onExitComplete, subscribe]);
   return !isPresent && onExitComplete ? [false, safeToRemove] : [true];
 }
-var import_react6;
+var import_react9;
 var init_use_presence = __esm({
   "node_modules/framer-motion/dist/es/components/AnimatePresence/use-presence.mjs"() {
     "use client";
-    import_react6 = __toESM(require_react(), 1);
+    import_react9 = __toESM(require_react(), 1);
     init_PresenceContext();
   }
 });
 
 // node_modules/framer-motion/dist/es/context/LazyContext.mjs
-var import_react7, LazyContext;
+var import_react10, LazyContext;
 var init_LazyContext = __esm({
   "node_modules/framer-motion/dist/es/context/LazyContext.mjs"() {
     "use client";
-    import_react7 = __toESM(require_react(), 1);
-    LazyContext = (0, import_react7.createContext)({ strict: false });
+    import_react10 = __toESM(require_react(), 1);
+    LazyContext = (0, import_react10.createContext)({ strict: false });
   }
 });
 
@@ -32629,12 +32834,12 @@ var init_filter_props = __esm({
 });
 
 // node_modules/framer-motion/dist/es/context/MotionContext/index.mjs
-var import_react8, MotionContext;
+var import_react11, MotionContext;
 var init_MotionContext = __esm({
   "node_modules/framer-motion/dist/es/context/MotionContext/index.mjs"() {
     "use client";
-    import_react8 = __toESM(require_react(), 1);
-    MotionContext = /* @__PURE__ */ (0, import_react8.createContext)({});
+    import_react11 = __toESM(require_react(), 1);
+    MotionContext = /* @__PURE__ */ (0, import_react11.createContext)({});
   }
 });
 
@@ -32657,17 +32862,17 @@ var init_utils3 = __esm({
 
 // node_modules/framer-motion/dist/es/context/MotionContext/create.mjs
 function useCreateMotionContext(props) {
-  const { initial, animate } = getCurrentTreeVariants(props, (0, import_react9.useContext)(MotionContext));
-  return (0, import_react9.useMemo)(() => ({ initial, animate }), [variantLabelsAsDependency(initial), variantLabelsAsDependency(animate)]);
+  const { initial, animate } = getCurrentTreeVariants(props, (0, import_react12.useContext)(MotionContext));
+  return (0, import_react12.useMemo)(() => ({ initial, animate }), [variantLabelsAsDependency(initial), variantLabelsAsDependency(animate)]);
 }
 function variantLabelsAsDependency(prop) {
   return Array.isArray(prop) ? prop.join(" ") : prop;
 }
-var import_react9;
+var import_react12;
 var init_create = __esm({
   "node_modules/framer-motion/dist/es/context/MotionContext/create.mjs"() {
     "use client";
-    import_react9 = __toESM(require_react(), 1);
+    import_react12 = __toESM(require_react(), 1);
     init_MotionContext();
     init_utils3();
   }
@@ -32695,7 +32900,7 @@ function copyRawValuesOnly(target, source, props) {
   }
 }
 function useInitialMotionValues({ transformTemplate }, visualState) {
-  return (0, import_react10.useMemo)(() => {
+  return (0, import_react13.useMemo)(() => {
     const state = createHtmlRenderState();
     buildHTMLStyles(state, visualState, transformTemplate);
     return Object.assign({}, state.vars, state.style);
@@ -32722,12 +32927,12 @@ function useHTMLProps(props, visualState) {
   htmlProps.style = style;
   return htmlProps;
 }
-var import_react10;
+var import_react13;
 var init_use_props = __esm({
   "node_modules/framer-motion/dist/es/render/html/use-props.mjs"() {
     "use client";
     init_es2();
-    import_react10 = __toESM(require_react(), 1);
+    import_react13 = __toESM(require_react(), 1);
     init_create_render_state();
   }
 });
@@ -32746,7 +32951,7 @@ var init_create_render_state2 = __esm({
 
 // node_modules/framer-motion/dist/es/render/svg/use-props.mjs
 function useSVGProps(props, visualState, _isStatic, Component5) {
-  const visualProps = (0, import_react11.useMemo)(() => {
+  const visualProps = (0, import_react14.useMemo)(() => {
     const state = createSvgRenderState();
     buildSVGAttrs(state, visualState, isSVGTag(Component5), props.transformTemplate, props.style);
     return {
@@ -32761,12 +32966,12 @@ function useSVGProps(props, visualState, _isStatic, Component5) {
   }
   return visualProps;
 }
-var import_react11;
+var import_react14;
 var init_use_props2 = __esm({
   "node_modules/framer-motion/dist/es/render/svg/use-props.mjs"() {
     "use client";
     init_es2();
-    import_react11 = __toESM(require_react(), 1);
+    import_react14 = __toESM(require_react(), 1);
     init_use_props();
     init_create_render_state2();
   }
@@ -32843,20 +33048,20 @@ function useRender(Component5, props, ref, { latestValues }, isStatic, forwardMo
   const useVisualProps = isSVG ?? isSVGComponent(Component5) ? useSVGProps : useHTMLProps;
   const visualProps = useVisualProps(props, latestValues, isStatic, Component5);
   const filteredProps = filterProps(props, typeof Component5 === "string", forwardMotionProps);
-  const elementProps = Component5 !== import_react12.Fragment ? { ...filteredProps, ...visualProps, ref } : {};
+  const elementProps = Component5 !== import_react15.Fragment ? { ...filteredProps, ...visualProps, ref } : {};
   const { children } = props;
-  const renderedChildren = (0, import_react12.useMemo)(() => isMotionValue(children) ? children.get() : children, [children]);
-  return (0, import_react12.createElement)(Component5, {
+  const renderedChildren = (0, import_react15.useMemo)(() => isMotionValue(children) ? children.get() : children, [children]);
+  return (0, import_react15.createElement)(Component5, {
     ...elementProps,
     children: renderedChildren
   });
 }
-var import_react12;
+var import_react15;
 var init_use_render = __esm({
   "node_modules/framer-motion/dist/es/render/dom/use-render.mjs"() {
     "use client";
     init_es2();
-    import_react12 = __toESM(require_react(), 1);
+    import_react15 = __toESM(require_react(), 1);
     init_use_props();
     init_use_props2();
     init_filter_props();
@@ -32914,18 +33119,18 @@ function makeLatestValues(props, context, presenceContext, scrapeMotionValues) {
   }
   return values;
 }
-var import_react13, makeUseVisualState;
+var import_react16, makeUseVisualState;
 var init_use_visual_state = __esm({
   "node_modules/framer-motion/dist/es/motion/utils/use-visual-state.mjs"() {
     "use client";
     init_es2();
-    import_react13 = __toESM(require_react(), 1);
+    import_react16 = __toESM(require_react(), 1);
     init_MotionContext();
     init_PresenceContext();
     init_use_constant();
     makeUseVisualState = (config) => (props, isStatic) => {
-      const context = (0, import_react13.useContext)(MotionContext);
-      const presenceContext = (0, import_react13.useContext)(PresenceContext);
+      const context = (0, import_react16.useContext)(MotionContext);
+      const presenceContext = (0, import_react16.useContext)(PresenceContext);
       const make = () => makeState(config, props, context, presenceContext);
       return isStatic ? make() : useConstant(make);
     };
@@ -32972,12 +33177,12 @@ var init_symbol = __esm({
 
 // node_modules/framer-motion/dist/es/motion/utils/use-motion-ref.mjs
 function useMotionRef(visualState, visualElement, externalRef) {
-  const externalRefContainer = (0, import_react14.useRef)(externalRef);
-  (0, import_react14.useInsertionEffect)(() => {
+  const externalRefContainer = (0, import_react17.useRef)(externalRef);
+  (0, import_react17.useInsertionEffect)(() => {
     externalRefContainer.current = externalRef;
   });
-  const refCleanup = (0, import_react14.useRef)(null);
-  return (0, import_react14.useCallback)((instance) => {
+  const refCleanup = (0, import_react17.useRef)(null);
+  return (0, import_react17.useCallback)((instance) => {
     if (instance) {
       visualState.onMount?.(instance);
     }
@@ -33002,21 +33207,21 @@ function useMotionRef(visualState, visualElement, externalRef) {
     }
   }, [visualElement]);
 }
-var import_react14;
+var import_react17;
 var init_use_motion_ref = __esm({
   "node_modules/framer-motion/dist/es/motion/utils/use-motion-ref.mjs"() {
     "use client";
-    import_react14 = __toESM(require_react(), 1);
+    import_react17 = __toESM(require_react(), 1);
   }
 });
 
 // node_modules/framer-motion/dist/es/context/SwitchLayoutGroupContext.mjs
-var import_react15, SwitchLayoutGroupContext;
+var import_react18, SwitchLayoutGroupContext;
 var init_SwitchLayoutGroupContext = __esm({
   "node_modules/framer-motion/dist/es/context/SwitchLayoutGroupContext.mjs"() {
     "use client";
-    import_react15 = __toESM(require_react(), 1);
-    SwitchLayoutGroupContext = (0, import_react15.createContext)({});
+    import_react18 = __toESM(require_react(), 1);
+    SwitchLayoutGroupContext = (0, import_react18.createContext)({});
   }
 });
 
@@ -33031,14 +33236,14 @@ var init_is_ref_object = __esm({
 
 // node_modules/framer-motion/dist/es/motion/utils/use-visual-element.mjs
 function useVisualElement(Component5, visualState, props, createVisualElement, ProjectionNodeConstructor, isSVG) {
-  const { visualElement: parent } = (0, import_react16.useContext)(MotionContext);
-  const lazyContext = (0, import_react16.useContext)(LazyContext);
-  const presenceContext = (0, import_react16.useContext)(PresenceContext);
-  const motionConfig = (0, import_react16.useContext)(MotionConfigContext);
+  const { visualElement: parent } = (0, import_react19.useContext)(MotionContext);
+  const lazyContext = (0, import_react19.useContext)(LazyContext);
+  const presenceContext = (0, import_react19.useContext)(PresenceContext);
+  const motionConfig = (0, import_react19.useContext)(MotionConfigContext);
   const reducedMotionConfig = motionConfig.reducedMotion;
   const skipAnimations = motionConfig.skipAnimations;
-  const visualElementRef = (0, import_react16.useRef)(null);
-  const hasMountedOnce = (0, import_react16.useRef)(false);
+  const visualElementRef = (0, import_react19.useRef)(null);
+  const hasMountedOnce = (0, import_react19.useRef)(false);
   createVisualElement = createVisualElement || lazyContext.renderer;
   if (!visualElementRef.current && createVisualElement) {
     visualElementRef.current = createVisualElement(Component5, {
@@ -33056,18 +33261,18 @@ function useVisualElement(Component5, visualState, props, createVisualElement, P
     }
   }
   const visualElement = visualElementRef.current;
-  const initialLayoutGroupConfig = (0, import_react16.useContext)(SwitchLayoutGroupContext);
+  const initialLayoutGroupConfig = (0, import_react19.useContext)(SwitchLayoutGroupContext);
   if (visualElement && !visualElement.projection && ProjectionNodeConstructor && (visualElement.type === "html" || visualElement.type === "svg")) {
     createProjectionNode2(visualElementRef.current, props, ProjectionNodeConstructor, initialLayoutGroupConfig);
   }
-  const isMounted = (0, import_react16.useRef)(false);
-  (0, import_react16.useInsertionEffect)(() => {
+  const isMounted = (0, import_react19.useRef)(false);
+  (0, import_react19.useInsertionEffect)(() => {
     if (visualElement && isMounted.current) {
       visualElement.update(props, presenceContext);
     }
   });
   const optimisedAppearId = props[optimizedAppearDataAttribute];
-  const wantsHandoff = (0, import_react16.useRef)(Boolean(optimisedAppearId) && typeof window !== "undefined" && !window.MotionHandoffIsComplete?.(optimisedAppearId) && window.MotionHasOptimisedAnimation?.(optimisedAppearId));
+  const wantsHandoff = (0, import_react19.useRef)(Boolean(optimisedAppearId) && typeof window !== "undefined" && !window.MotionHandoffIsComplete?.(optimisedAppearId) && window.MotionHasOptimisedAnimation?.(optimisedAppearId));
   useIsomorphicLayoutEffect2(() => {
     hasMountedOnce.current = true;
     if (!visualElement)
@@ -33080,7 +33285,7 @@ function useVisualElement(Component5, visualState, props, createVisualElement, P
       visualElement.animationState.animateChanges();
     }
   });
-  (0, import_react16.useEffect)(() => {
+  (0, import_react19.useEffect)(() => {
     if (!visualElement)
       return;
     if (!wantsHandoff.current && visualElement.animationState) {
@@ -33124,12 +33329,12 @@ function getClosestProjectingNode(visualElement) {
     return void 0;
   return visualElement.options.allowProjection !== false ? visualElement.projection : getClosestProjectingNode(visualElement.parent);
 }
-var import_react16;
+var import_react19;
 var init_use_visual_element = __esm({
   "node_modules/framer-motion/dist/es/motion/utils/use-visual-element.mjs"() {
     "use client";
     init_es2();
-    import_react16 = __toESM(require_react(), 1);
+    import_react19 = __toESM(require_react(), 1);
     init_LazyContext();
     init_MotionConfigContext();
     init_MotionContext();
@@ -33148,7 +33353,7 @@ function createMotionComponent(Component5, { forwardMotionProps = false, type } 
   function MotionDOMComponent(props, externalRef) {
     let MeasureLayout2;
     const configAndProps = {
-      ...(0, import_react17.useContext)(MotionConfigContext),
+      ...(0, import_react20.useContext)(MotionConfigContext),
       ...props,
       layoutId: useLayoutId(props)
     };
@@ -33161,19 +33366,19 @@ function createMotionComponent(Component5, { forwardMotionProps = false, type } 
       MeasureLayout2 = layoutProjection.MeasureLayout;
       context.visualElement = useVisualElement(Component5, visualState, configAndProps, createVisualElement, layoutProjection.ProjectionNode, isSVG);
     }
-    return (0, import_jsx_runtime.jsxs)(MotionContext.Provider, { value: context, children: [MeasureLayout2 && context.visualElement ? (0, import_jsx_runtime.jsx)(MeasureLayout2, { visualElement: context.visualElement, ...configAndProps }) : null, useRender(Component5, props, useMotionRef(visualState, context.visualElement, externalRef), visualState, isStatic, forwardMotionProps, isSVG)] });
+    return (0, import_jsx_runtime2.jsxs)(MotionContext.Provider, { value: context, children: [MeasureLayout2 && context.visualElement ? (0, import_jsx_runtime2.jsx)(MeasureLayout2, { visualElement: context.visualElement, ...configAndProps }) : null, useRender(Component5, props, useMotionRef(visualState, context.visualElement, externalRef), visualState, isStatic, forwardMotionProps, isSVG)] });
   }
   MotionDOMComponent.displayName = `motion.${typeof Component5 === "string" ? Component5 : `create(${Component5.displayName ?? Component5.name ?? ""})`}`;
-  const ForwardRefMotionComponent = (0, import_react17.forwardRef)(MotionDOMComponent);
+  const ForwardRefMotionComponent = (0, import_react20.forwardRef)(MotionDOMComponent);
   ForwardRefMotionComponent[motionComponentSymbol] = Component5;
   return ForwardRefMotionComponent;
 }
 function useLayoutId({ layoutId }) {
-  const layoutGroupId = (0, import_react17.useContext)(LayoutGroupContext).id;
+  const layoutGroupId = (0, import_react20.useContext)(LayoutGroupContext).id;
   return layoutGroupId && layoutId !== void 0 ? layoutGroupId + "-" + layoutId : layoutId;
 }
 function useStrictMode(configAndProps, preloadedFeatures) {
-  const isStrict = (0, import_react17.useContext)(LazyContext).strict;
+  const isStrict = (0, import_react20.useContext)(LazyContext).strict;
   if (preloadedFeatures && isStrict) {
     const strictMessage = "You have rendered a `motion` component within a `LazyMotion` component. This will break tree shaking. Import and render a `m` component instead.";
     configAndProps.ignoreStrict ? warning2(false, strictMessage, "lazy-strict-mode") : invariant3(false, strictMessage, "lazy-strict-mode");
@@ -33190,13 +33395,13 @@ function getProjectionFunctionality(props) {
     ProjectionNode: combined.ProjectionNode
   };
 }
-var import_jsx_runtime, import_react17;
+var import_jsx_runtime2, import_react20;
 var init_motion = __esm({
   "node_modules/framer-motion/dist/es/motion/index.mjs"() {
     "use client";
-    import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+    import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
     init_es();
-    import_react17 = __toESM(require_react(), 1);
+    import_react20 = __toESM(require_react(), 1);
     init_LayoutGroupContext();
     init_LazyContext();
     init_MotionConfigContext();
@@ -33253,16 +33458,16 @@ var init_create_proxy = __esm({
 });
 
 // node_modules/framer-motion/dist/es/render/dom/create-visual-element.mjs
-var import_react18, createDomVisualElement;
+var import_react21, createDomVisualElement;
 var init_create_visual_element = __esm({
   "node_modules/framer-motion/dist/es/render/dom/create-visual-element.mjs"() {
     init_es2();
-    import_react18 = __toESM(require_react(), 1);
+    import_react21 = __toESM(require_react(), 1);
     init_is_svg_component();
     createDomVisualElement = (Component5, options) => {
       const isSVG = options.isSVG ?? isSVGComponent(Component5);
       return isSVG ? new SVGVisualElement(options) : new HTMLVisualElement(options, {
-        allowProjection: Component5 !== import_react18.Fragment
+        allowProjection: Component5 !== import_react21.Fragment
       });
     };
   }
@@ -34264,21 +34469,21 @@ var init_pan = __esm({
 // node_modules/framer-motion/dist/es/motion/features/layout/MeasureLayout.mjs
 function MeasureLayout(props) {
   const [isPresent, safeToRemove] = usePresence();
-  const layoutGroup = (0, import_react19.useContext)(LayoutGroupContext);
-  return (0, import_jsx_runtime2.jsx)(MeasureLayoutWithContext, { ...props, layoutGroup, switchLayoutGroup: (0, import_react19.useContext)(SwitchLayoutGroupContext), isPresent, safeToRemove });
+  const layoutGroup = (0, import_react22.useContext)(LayoutGroupContext);
+  return (0, import_jsx_runtime3.jsx)(MeasureLayoutWithContext, { ...props, layoutGroup, switchLayoutGroup: (0, import_react22.useContext)(SwitchLayoutGroupContext), isPresent, safeToRemove });
 }
-var import_jsx_runtime2, import_react19, hasTakenAnySnapshot, MeasureLayoutWithContext;
+var import_jsx_runtime3, import_react22, hasTakenAnySnapshot, MeasureLayoutWithContext;
 var init_MeasureLayout = __esm({
   "node_modules/framer-motion/dist/es/motion/features/layout/MeasureLayout.mjs"() {
     "use client";
-    import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+    import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
     init_es2();
-    import_react19 = __toESM(require_react(), 1);
+    import_react22 = __toESM(require_react(), 1);
     init_use_presence();
     init_LayoutGroupContext();
     init_SwitchLayoutGroupContext();
     hasTakenAnySnapshot = false;
-    MeasureLayoutWithContext = class extends import_react19.Component {
+    MeasureLayoutWithContext = class extends import_react22.Component {
       /**
        * This only mounts projection nodes for components that
        * need measuring, we might want to do it for all components
@@ -34689,450 +34894,176 @@ var init_es3 = __esm({
   }
 });
 
-// node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
-var mergeClasses;
-var init_mergeClasses = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs"() {
-    mergeClasses = (...classes) => classes.filter((className, index, array) => {
-      return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
-    }).join(" ").trim();
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
-var toKebabCase;
-var init_toKebabCase = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs"() {
-    toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs
-var toCamelCase;
-var init_toCamelCase = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs"() {
-    toCamelCase = (string) => string.replace(
-      /^([A-Z])|[\s-_]+(\w)/g,
-      (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
-    );
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs
-var toPascalCase;
-var init_toPascalCase = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs"() {
-    init_toCamelCase();
-    toPascalCase = (string) => {
-      const camelCase = toCamelCase(string);
-      return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/defaultAttributes.mjs
-var defaultAttributes;
-var init_defaultAttributes = __esm({
-  "node_modules/lucide-react/dist/esm/defaultAttributes.mjs"() {
-    defaultAttributes = {
-      xmlns: "http://www.w3.org/2000/svg",
-      width: 24,
-      height: 24,
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 2,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
-var hasA11yProp;
-var init_hasA11yProp = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs"() {
-    hasA11yProp = (props) => {
-      for (const prop in props) {
-        if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
-          return true;
-        }
-      }
-      return false;
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/context.mjs
-var import_react20, LucideContext, useLucideContext;
-var init_context = __esm({
-  "node_modules/lucide-react/dist/esm/context.mjs"() {
-    "use strict";
-    "use client";
-    import_react20 = __toESM(require_react(), 1);
-    LucideContext = (0, import_react20.createContext)({});
-    useLucideContext = () => (0, import_react20.useContext)(LucideContext);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/Icon.mjs
-var import_react21, Icon;
-var init_Icon = __esm({
-  "node_modules/lucide-react/dist/esm/Icon.mjs"() {
-    "use strict";
-    "use client";
-    import_react21 = __toESM(require_react(), 1);
-    init_defaultAttributes();
-    init_hasA11yProp();
-    init_mergeClasses();
-    init_context();
-    Icon = (0, import_react21.forwardRef)(
-      ({ color: color2, size, strokeWidth, absoluteStrokeWidth, className = "", children, iconNode, ...rest }, ref) => {
-        const {
-          size: contextSize = 24,
-          strokeWidth: contextStrokeWidth = 2,
-          absoluteStrokeWidth: contextAbsoluteStrokeWidth = false,
-          color: contextColor = "currentColor",
-          className: contextClass = ""
-        } = useLucideContext() ?? {};
-        const calculatedStrokeWidth = absoluteStrokeWidth ?? contextAbsoluteStrokeWidth ? Number(strokeWidth ?? contextStrokeWidth) * 24 / Number(size ?? contextSize) : strokeWidth ?? contextStrokeWidth;
-        return (0, import_react21.createElement)(
-          "svg",
-          {
-            ref,
-            ...defaultAttributes,
-            width: size ?? contextSize ?? defaultAttributes.width,
-            height: size ?? contextSize ?? defaultAttributes.height,
-            stroke: color2 ?? contextColor,
-            strokeWidth: calculatedStrokeWidth,
-            className: mergeClasses("lucide", contextClass, className),
-            ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
-            ...rest
-          },
-          [
-            ...iconNode.map(([tag, attrs]) => (0, import_react21.createElement)(tag, attrs)),
-            ...Array.isArray(children) ? children : [children]
-          ]
-        );
-      }
-    );
-  }
-});
-
-// node_modules/lucide-react/dist/esm/createLucideIcon.mjs
-var import_react22, createLucideIcon;
-var init_createLucideIcon = __esm({
-  "node_modules/lucide-react/dist/esm/createLucideIcon.mjs"() {
-    import_react22 = __toESM(require_react(), 1);
-    init_mergeClasses();
-    init_toKebabCase();
-    init_toPascalCase();
-    init_Icon();
-    createLucideIcon = (iconName, iconNode) => {
-      const Component5 = (0, import_react22.forwardRef)(
-        ({ className, ...props }, ref) => (0, import_react22.createElement)(Icon, {
-          ref,
-          iconNode,
-          className: mergeClasses(
-            `lucide-${toKebabCase(toPascalCase(iconName))}`,
-            `lucide-${iconName}`,
-            className
-          ),
-          ...props
-        })
-      );
-      Component5.displayName = toPascalCase(iconName);
-      return Component5;
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/arrow-right.mjs
-var __iconNode, ArrowRight;
-var init_arrow_right = __esm({
-  "node_modules/lucide-react/dist/esm/icons/arrow-right.mjs"() {
-    init_createLucideIcon();
-    __iconNode = [
-      ["path", { d: "M5 12h14", key: "1ays0h" }],
-      ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
-    ];
-    ArrowRight = createLucideIcon("arrow-right", __iconNode);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/circle-check-big.mjs
-var __iconNode2, CircleCheckBig;
-var init_circle_check_big = __esm({
-  "node_modules/lucide-react/dist/esm/icons/circle-check-big.mjs"() {
-    init_createLucideIcon();
-    __iconNode2 = [
-      ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-      ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
-    ];
-    CircleCheckBig = createLucideIcon("circle-check-big", __iconNode2);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/globe.mjs
-var __iconNode3, Globe;
-var init_globe = __esm({
-  "node_modules/lucide-react/dist/esm/icons/globe.mjs"() {
-    init_createLucideIcon();
-    __iconNode3 = [
-      ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-      ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
-      ["path", { d: "M2 12h20", key: "9i4pu4" }]
-    ];
-    Globe = createLucideIcon("globe", __iconNode3);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/menu.mjs
-var __iconNode4, Menu;
-var init_menu = __esm({
-  "node_modules/lucide-react/dist/esm/icons/menu.mjs"() {
-    init_createLucideIcon();
-    __iconNode4 = [
-      ["path", { d: "M4 5h16", key: "1tepv9" }],
-      ["path", { d: "M4 12h16", key: "1lakjw" }],
-      ["path", { d: "M4 19h16", key: "1djgab" }]
-    ];
-    Menu = createLucideIcon("menu", __iconNode4);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/star.mjs
-var __iconNode5, Star;
-var init_star = __esm({
-  "node_modules/lucide-react/dist/esm/icons/star.mjs"() {
-    init_createLucideIcon();
-    __iconNode5 = [
-      [
-        "path",
-        {
-          d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
-          key: "r04s7s"
-        }
-      ]
-    ];
-    Star = createLucideIcon("star", __iconNode5);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/lucide-react.mjs
-var init_lucide_react = __esm({
-  "node_modules/lucide-react/dist/esm/lucide-react.mjs"() {
-    "use strict";
-    init_circle_check_big();
-    init_arrow_right();
-    init_globe();
-    init_menu();
-    init_star();
-  }
-});
-
-// src/components/Navbar.jsx
-function Navbar() {
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("nav", { className: "fixed top-0 left-0 w-full bg-indigo-500 p-4 shadow-md z-10", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex justify-between items-center", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Link, { to: "/", className: "flex items-center", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Globe, { className: "w-8 h-8 mr-2 text-white" }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "text-lg font-bold text-white", children: "NexusApp" })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "lg:hidden bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Menu, { className: "w-6 h-6" }) })
-  ] }) });
-}
-var import_react23, import_jsx_runtime3, Navbar_default;
-var init_Navbar = __esm({
-  "src/components/Navbar.jsx"() {
-    import_react23 = __toESM(require_react());
-    init_dist();
-    init_lucide_react();
-    import_jsx_runtime3 = __toESM(require_jsx_runtime());
-    Navbar_default = Navbar;
-  }
-});
-
 // src/components/HeroSection.jsx
 function HeroSection() {
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "relative h-screen bg-cover bg-center bg-no-repeat", style: { backgroundImage: `url(${heroBackground})` }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "absolute top-0 left-0 w-full h-screen bg-gradient-to-b from-transparent to-indigo-500" }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "container mx-auto p-4 md:p-8 lg:p-12 relative z-10", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h1", { className: "text-4xl font-bold text-white leading-tight mb-4", children: "Elevate Your Business with NexusApp" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-lg text-white leading-relaxed mb-8", children: "Unlock new opportunities and streamline your workflow with our cutting-edge solutions." }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
-        motion.button,
-        {
-          initial: { opacity: 0, scale: 0.5 },
-          animate: { opacity: 1, scale: 1 },
-          transition: { duration: 0.5 },
-          className: "bg-fuchsia-500 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded",
-          children: [
-            "Get Started",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ArrowRight, { className: "w-4 h-4 ml-2" })
-          ]
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex items-center justify-center mt-8", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CircleCheckBig, { className: "w-8 h-8 text-white" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-lg text-white leading-relaxed ml-2", children: "Trusted by over 10,000 businesses worldwide" })
-      ] })
-    ] })
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "flex flex-col justify-center items-center h-screen bg-cover bg-center", style: { backgroundImage: `url(${background})` }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      motion.h1,
+      {
+        initial: { y: -100, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        transition: { duration: 0.5 },
+        className: "text-5xl font-playfair text-white mb-4",
+        children: "Capture Your Story"
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+      motion.button,
+      {
+        initial: { y: 100, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        transition: { duration: 0.5 },
+        className: "bg-primary-color text-white py-2 px-4 rounded-lg hover:bg-secondary-color transition duration-300",
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Icon, { name: "Camera", className: "mr-2" }),
+          "Get Started"
+        ]
+      }
+    )
   ] });
 }
-var import_react24, import_jsx_runtime4, heroBackground, HeroSection_default;
+var import_react23, import_jsx_runtime4, background, HeroSection_default;
 var init_HeroSection = __esm({
   "src/components/HeroSection.jsx"() {
-    import_react24 = __toESM(require_react());
+    import_react23 = __toESM(require_react());
     init_es3();
     init_lucide_react();
     import_jsx_runtime4 = __toESM(require_jsx_runtime());
-    heroBackground = "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1920&q=80";
+    background = "https://images.unsplash.com/photo-1518791843675-64a75c1610f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
     HeroSection_default = HeroSection;
   }
 });
 
-// src/components/FeaturesSection.jsx
-function FeaturesSection() {
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "py-12 bg-gray-100", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "container mx-auto p-4 md:p-8 lg:p-12", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "text-3xl font-bold text-indigo-500 mb-4", children: "Key Features" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-gray-600 leading-relaxed mb-8", children: "Our platform offers a range of features designed to help you succeed." }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-          motion.div,
-          {
-            initial: { opacity: 0, x: -100 },
-            animate: { opacity: 1, x: 0 },
-            transition: { duration: 0.5 },
-            className: "bg-white rounded shadow-md p-4",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Star, { className: "w-8 h-8 mb-2 text-indigo-500" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-lg font-bold text-gray-600 mb-2", children: "Feature 1" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-gray-600 leading-relaxed", children: "Description of feature 1" })
-            ]
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-          motion.div,
-          {
-            initial: { opacity: 0, x: -100 },
-            animate: { opacity: 1, x: 0 },
-            transition: { duration: 0.5 },
-            className: "bg-white rounded shadow-md p-4",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Star, { className: "w-8 h-8 mb-2 text-indigo-500" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-lg font-bold text-gray-600 mb-2", children: "Feature 2" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-gray-600 leading-relaxed", children: "Description of feature 2" })
-            ]
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-          motion.div,
-          {
-            initial: { opacity: 0, x: -100 },
-            animate: { opacity: 1, x: 0 },
-            transition: { duration: 0.5 },
-            className: "bg-white rounded shadow-md p-4",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Star, { className: "w-8 h-8 mb-2 text-indigo-500" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-lg font-bold text-gray-600 mb-2", children: "Feature 3" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-gray-600 leading-relaxed", children: "Description of feature 3" })
-            ]
-          }
-        )
-      ] })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bg-gray-100 py-4", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "container mx-auto p-4 md:p-8 lg:p-12", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "w-full h-16 bg-indigo-100 rounded-lg" }) }) })
-  ] });
-}
-var import_react25, import_jsx_runtime5, FeaturesSection_default;
-var init_FeaturesSection = __esm({
-  "src/components/FeaturesSection.jsx"() {
-    import_react25 = __toESM(require_react());
-    init_es3();
-    init_lucide_react();
-    import_jsx_runtime5 = __toESM(require_jsx_runtime());
-    FeaturesSection_default = FeaturesSection;
-  }
-});
-
-// src/components/PricingSection.jsx
-function PricingSection() {
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("section", { className: "py-12 bg-gray-100", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "container mx-auto p-4 md:p-8 lg:p-12", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { className: "text-3xl font-bold text-indigo-500 mb-4", children: "Pricing Plans" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-lg text-gray-600 leading-relaxed mb-8", children: "Choose a plan that suits your needs and budget." }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
-        motion.div,
+// src/components/TestimonialsComponent.jsx
+function TestimonialsComponent() {
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "flex flex-col justify-center items-center h-screen bg-cover bg-center", style: { backgroundImage: `url(${testimonial1})` }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      motion.h1,
+      {
+        initial: { y: -100, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        transition: { duration: 0.5 },
+        className: "text-5xl font-playfair text-white mb-4",
+        children: "What Our Clients Say"
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col justify-center items-center", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        motion.quote,
         {
-          initial: { opacity: 0, x: -100 },
-          animate: { opacity: 1, x: 0 },
+          initial: { y: 100, opacity: 0 },
+          animate: { y: 0, opacity: 1 },
           transition: { duration: 0.5 },
-          className: "bg-white rounded shadow-md p-4",
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-bold text-gray-600 mb-2", children: "Basic" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-lg text-gray-600 leading-relaxed mb-2", children: "$9.99/month" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("ul", { className: "list-disc ml-4", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { children: "Feature 1" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { children: "Feature 2" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { children: "Feature 3" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "bg-fuchsia-500 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded", children: "Sign Up" })
-          ]
+          className: "text-lg text-white mb-4",
+          children: '"FocalPoint has been a game-changer for our business. Their expertise and attention to detail have helped us achieve our goals."'
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
-        motion.div,
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        motion.quote,
         {
-          initial: { opacity: 0, x: -100 },
-          animate: { opacity: 1, x: 0 },
+          initial: { y: 100, opacity: 0 },
+          animate: { y: 0, opacity: 1 },
           transition: { duration: 0.5 },
-          className: "bg-white rounded shadow-md p-4",
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-bold text-gray-600 mb-2", children: "Premium" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-lg text-gray-600 leading-relaxed mb-2", children: "$19.99/month" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("ul", { className: "list-disc ml-4", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { children: "Feature 1" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { children: "Feature 2" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { children: "Feature 3" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("li", { children: "Feature 4" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "bg-fuchsia-500 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded", children: "Sign Up" })
-          ]
+          className: "text-lg text-white mb-4",
+          children: '"I was blown away by the quality of work FocalPoint delivered. Their team is professional, efficient, and always a pleasure to work with."'
         }
       )
     ] })
-  ] }) });
+  ] });
 }
-var import_react26, import_jsx_runtime6, PricingSection_default;
-var init_PricingSection = __esm({
-  "src/components/PricingSection.jsx"() {
-    import_react26 = __toESM(require_react());
+var import_react24, import_jsx_runtime5, testimonial1, TestimonialsComponent_default;
+var init_TestimonialsComponent = __esm({
+  "src/components/TestimonialsComponent.jsx"() {
+    import_react24 = __toESM(require_react());
+    init_es3();
+    import_jsx_runtime5 = __toESM(require_jsx_runtime());
+    testimonial1 = "https://images.unsplash.com/photo-1584555114411-9b3f5d5f8e4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
+    TestimonialsComponent_default = TestimonialsComponent;
+  }
+});
+
+// src/components/PortfolioComponent.jsx
+function PortfolioComponent() {
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "flex flex-col justify-center items-center h-screen bg-cover bg-center", style: { backgroundImage: `url(${portfolio1})` }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      motion.h1,
+      {
+        initial: { y: -100, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        transition: { duration: 0.5 },
+        className: "text-5xl font-playfair text-white mb-4",
+        children: "Our Portfolio"
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "flex flex-col justify-center items-center", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      motion.div,
+      {
+        initial: { y: 100, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        transition: { duration: 0.5 },
+        className: "flex flex-col justify-center items-center mb-4",
+        children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("img", { src: portfolio1, alt: "Portfolio Item 1", className: "w-64 h-64 object-cover rounded-lg" })
+      }
+    ) })
+  ] });
+}
+var import_react25, import_jsx_runtime6, portfolio1, PortfolioComponent_default;
+var init_PortfolioComponent = __esm({
+  "src/components/PortfolioComponent.jsx"() {
+    import_react25 = __toESM(require_react());
     init_es3();
     import_jsx_runtime6 = __toESM(require_jsx_runtime());
-    PricingSection_default = PricingSection;
+    portfolio1 = "https://images.unsplash.com/photo-1584555114411-9b3f5d5f8e4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
+    PortfolioComponent_default = PortfolioComponent;
+  }
+});
+
+// src/components/FooterComponent.jsx
+function FooterComponent() {
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("footer", { className: "bg-zinc-900 text-white p-8 text-center", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: "\xA9 2026 FocalPoint. All rights reserved." }) });
+}
+var import_react26, import_jsx_runtime7, FooterComponent_default;
+var init_FooterComponent = __esm({
+  "src/components/FooterComponent.jsx"() {
+    import_react26 = __toESM(require_react());
+    import_jsx_runtime7 = __toESM(require_jsx_runtime());
+    FooterComponent_default = FooterComponent;
   }
 });
 
 // src/App.jsx
 function App() {
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(HashRouter, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "font-sans", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Navbar_default, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(HeroSection_default, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(FeaturesSection_default, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(PricingSection_default, {})
-  ] }) });
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(HashRouter, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Navbar_default, {}),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      motion.div,
+      {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.5 },
+        children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(Routes, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Route, { path: "/", element: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(HeroSection_default, {}) }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Route, { path: "/testimonials", element: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(TestimonialsComponent_default, {}) }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Route, { path: "/portfolio", element: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(PortfolioComponent_default, {}) }),
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Route, { path: "/contact", element: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FooterComponent_default, {}) })
+        ] })
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(FooterComponent_default, {})
+  ] });
 }
-var import_react27, import_jsx_runtime7, App_default;
+var import_react27, import_jsx_runtime8, App_default;
 var init_App = __esm({
   "src/App.jsx"() {
     import_react27 = __toESM(require_react());
-    init_dist();
     init_Navbar();
     init_HeroSection();
-    init_FeaturesSection();
-    init_PricingSection();
-    import_jsx_runtime7 = __toESM(require_jsx_runtime());
+    init_TestimonialsComponent();
+    init_PortfolioComponent();
+    init_FooterComponent();
+    init_dist();
+    init_es3();
+    import_jsx_runtime8 = __toESM(require_jsx_runtime());
     App_default = App;
   }
 });
@@ -35150,9 +35081,9 @@ var require_main = __commonJS({
     var import_client = __toESM(require_client());
     init_App();
     init_index();
-    var import_jsx_runtime8 = __toESM(require_jsx_runtime());
+    var import_jsx_runtime9 = __toESM(require_jsx_runtime());
     import_client.default.createRoot(document.getElementById("root")).render(
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(import_react28.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(App_default, {}) })
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(import_react28.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(App_default, {}) })
     );
   }
 });
@@ -35228,6 +35159,19 @@ react-router-dom/dist/index.mjs:
    * @license MIT
    *)
 
+lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs:
+lucide-react/dist/esm/defaultAttributes.mjs:
+lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs:
+lucide-react/dist/esm/context.mjs:
+lucide-react/dist/esm/Icon.mjs:
+lucide-react/dist/esm/lucide-react.mjs:
+  (**
+   * @license lucide-react v1.23.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
 react/cjs/react-jsx-runtime.development.js:
   (**
    * @license React
@@ -35237,27 +35181,5 @@ react/cjs/react-jsx-runtime.development.js:
    *
    * This source code is licensed under the MIT license found in the
    * LICENSE file in the root directory of this source tree.
-   *)
-
-lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs:
-lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs:
-lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs:
-lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs:
-lucide-react/dist/esm/defaultAttributes.mjs:
-lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs:
-lucide-react/dist/esm/context.mjs:
-lucide-react/dist/esm/Icon.mjs:
-lucide-react/dist/esm/createLucideIcon.mjs:
-lucide-react/dist/esm/icons/arrow-right.mjs:
-lucide-react/dist/esm/icons/circle-check-big.mjs:
-lucide-react/dist/esm/icons/globe.mjs:
-lucide-react/dist/esm/icons/menu.mjs:
-lucide-react/dist/esm/icons/star.mjs:
-lucide-react/dist/esm/lucide-react.mjs:
-  (**
-   * @license lucide-react v1.23.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
    *)
 */
