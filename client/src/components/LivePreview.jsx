@@ -1,227 +1,170 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { normalizeApiBaseUrl, normalizeSandboxUrl } from '../lib/urlHelpers';
+import React, { useState, useEffect } from 'react';
+import {
+  SandpackProvider,
+  SandpackLayout,
+  SandpackPreview,
+  useSandpack
+} from "@codesandbox/sandpack-react";
 
-const ENABLE_DEBUG_LOGGING = false;
-
-export function LivePreview({ code, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId, sessionId }) {
-  let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
-  let SANDBOX_URL = normalizeSandboxUrl(import.meta.env.VITE_SANDBOX_URL || `${API_BASE}/preview`);
-
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    API_BASE = 'http://localhost:5173';
-    SANDBOX_URL = 'http://localhost:5173/preview';
+export function LivePreview({ files = {}, loading = false, statusText = '', generationId = 0, onRuntimeError, variationId, sessionId }) {
+  const [runtimeError, setRuntimeError] = useState(null);
+  
+  // Convert our flat files dictionary into Sandpack's expected format
+  const sandpackFiles = {};
+  for (const [filename, content] of Object.entries(files)) {
+    // Ensure all paths start with a leading slash for Sandpack
+    const path = filename.startsWith('/') ? filename : `/${filename}`;
+    sandpackFiles[path] = content;
   }
 
-  const iframeRef = useRef(null);
-  const [runtimeError, setRuntimeError] = useState(null);
-  const [reloadCounter, setReloadCounter] = useState(0);
-  const prevLoading = useRef(loading);
-  const prevCode = useRef(code);
+  // Inject a minimal Vite-like index.html if one wasn't provided by the backend
+  if (!sandpackFiles['/index.html'] && !sandpackFiles['index.html']) {
+    sandpackFiles['/index.html'] = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generated Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: {} } };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.js"></script>
+  </body>
+</html>`;
+  }
 
-  const loggingFailedRef = useRef(false);
-  const failureCountRef = useRef(0);
-
-  const postDebugEvent = async (payload) => {
-    if (!ENABLE_DEBUG_LOGGING) return;
-    if (loggingFailedRef.current) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/log-debug-event`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        failureCountRef.current = 0;
-        return;
-      }
-    } catch (e) {}
-
-    // Fallback directly to localhost ports to bypass cached/unrestarted dev server proxies
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      const fallbackPorts = ['8000', '8001'];
-      let fallbackSuccess = false;
-      for (const port of fallbackPorts) {
-        try {
-          const res = await fetch(`http://localhost:${port}/log-debug-event`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          if (res.ok) {
-            fallbackSuccess = true;
-            break;
-          }
-        } catch (e) {}
-      }
-      if (fallbackSuccess) {
-        failureCountRef.current = 0;
-        return;
-      }
-    }
-
-    // Track consecutive logging failures
-    failureCountRef.current += 1;
-    if (failureCountRef.current >= 3) {
-      loggingFailedRef.current = true;
-      console.warn("Debug logging server is offline/unavailable. Disabling preview logging to avoid console pollution.");
-    }
-  };
-
-  useEffect(() => {
-    const handleMsg = (e) => {
-      if (e.data?.type === 'runtime_error') {
-        setRuntimeError({ error: e.data.error, stack: e.data.stack });
-        if (sessionId) {
-          postDebugEvent({
-            session_id: sessionId,
-            stage: 'VITE_RUNTIME',
-            status: 'ERROR',
-            message: `React Runtime Error:\n${e.data.error}\nStack:\n${e.data.stack}`
-          });
+  // Inject minimal package.json if not present
+  if (!sandpackFiles['/package.json'] && !sandpackFiles['package.json']) {
+    sandpackFiles['/package.json'] = {
+      code: JSON.stringify({
+        name: "generated-project",
+        dependencies: {
+          "react": "^18.0.0",
+          "react-dom": "^18.0.0",
+          "react-router-dom": "^6.20.0",
+          "lucide-react": "^0.292.0",
+          "framer-motion": "^10.16.4",
+          "clsx": "^2.0.0",
+          "tailwind-merge": "^2.0.0"
         }
-      } else if (e.data?.type === 'preview_console') {
-        console.log(`[IFRAME CONSOLE] [${e.data.logType}] ${e.data.message}`);
-        if (sessionId) {
-          postDebugEvent({
-            session_id: sessionId,
-            stage: 'VITE',
-            status: e.data.logType.toUpperCase(),
-            message: e.data.message
-          });
-        }
-      } else if (e.data?.type === 'preview_rendered') {
-        console.log(`[IFRAME DOM] Rendered HTML. length: ${e.data.html.length}`);
-        if (sessionId) {
-          postDebugEvent({
-            session_id: sessionId,
-            stage: 'PREVIEW',
-            status: 'SUCCESS',
-            message: `DOM successfully rendered. Content snippet:\n${e.data.html}`
-          });
-        }
-      }
+      }, null, 2),
+      hidden: true
     };
-    window.addEventListener('message', handleMsg);
-    return () => window.removeEventListener('message', handleMsg);
-  }, [sessionId, API_BASE]);
+  }
+  
+  // Inject index.js entry point to bootstrap React 18, if not present
+  if (!sandpackFiles['/index.js'] && !sandpackFiles['index.js'] && !sandpackFiles['/main.jsx'] && !sandpackFiles['main.jsx']) {
+    sandpackFiles['/index.js'] = `import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
 
-  useEffect(() => {
-    setRuntimeError(null);
-  }, [code]);
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);`;
+  }
 
+  // Inject empty index.css if not present
+  if (!sandpackFiles['/index.css'] && !sandpackFiles['index.css']) {
+      sandpackFiles['/index.css'] = `/* Tailwind is injected via CDN in index.html */`;
+  }
+
+  // Handle logging requirements
   useEffect(() => {
-    if ((prevLoading.current && !loading) || (prevCode.current !== code && !loading)) {
-      console.log(`[DEBUG] [LivePreview] Triggering iframe reload! reloadCounter incremented. Loading transitioned: ${prevLoading.current && !loading}, Code changed: ${prevCode.current !== code && !loading}`);
-      setReloadCounter(prev => prev + 1);
+    if (Object.keys(files).length > 0) {
+      console.log(`[DEBUG] [LivePreview] Receiving final_code...`);
+      console.log(`[DEBUG] [LivePreview] Number of files: ${Object.keys(files).length}`);
+      console.log(`[DEBUG] [LivePreview] File names:`, Object.keys(files));
+      console.log(`[DEBUG] [LivePreview] Project mounted in Sandpack virtual filesystem.`);
     }
-    prevLoading.current = loading;
-    prevCode.current = code;
-  }, [loading, code]);
-
-  const iframeSrc = variationId 
-    ? `${SANDBOX_URL}/${variationId}.html?rc=${reloadCounter}`
-    : `${SANDBOX_URL}?rc=${reloadCounter}`;
-
+  }, [files]);
 
   return (
-    <div className="w-full h-full relative overflow-hidden">
-      {/* Streaming progress bar */}
+    <div className="w-full h-full relative overflow-hidden bg-white">
+      {/* Loading Overlay */}
       {loading && (
-        <div
-          className="absolute top-0 left-0 right-0 z-10 h-0.5 bg-sky-500"
-          style={{
-            animation: 'progressBar 1.8s ease-in-out infinite',
-          }}
-        />
-      )}
-
-      {/* Loading Overlay to hide broken state during generation/fixes */}
-      {loading && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-sm text-sky-400">
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-sm text-sky-400">
           <svg className="animate-spin h-8 w-8 mb-4 text-sky-500" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-sm font-semibold animate-pulse">{statusText || 'Generating layout code...'}</p>
+          <p className="text-sm font-semibold animate-pulse">{statusText || 'Generating project files...'}</p>
         </div>
       )}
 
-      <style>{`
-        @keyframes progressBar {
-          0%   { transform: scaleX(0);   transform-origin: left; }
-          50%  { transform: scaleX(0.7); transform-origin: left; }
-          100% { transform: scaleX(1);   transform-origin: left; }
-        }
-      `}</style>
-
-      {/* Empty state — shown before first generation */}
-      {!code && !loading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#070708] text-zinc-650 text-center p-6">
+      {/* Fallback Empty State */}
+      {Object.keys(files).length === 0 && !loading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#070708] text-zinc-650 text-center p-6 z-40">
           <div className="w-16 h-16 rounded-2xl border border-dashed border-zinc-800 flex items-center justify-center text-2xl">
             ✦
           </div>
           <div>
             <p className="text-sm font-semibold text-zinc-500">Live Preview</p>
             <p className="text-xs text-zinc-700 mt-1 max-w-xs leading-relaxed">
-              Enter a prompt on the left and click Generate to compile and render a React component live.
+              No files received from backend yet.
             </p>
           </div>
         </div>
       )}
 
-      {code && (
-        <iframe
-          key={`${variationId || 'default'}-${reloadCounter}`}
-          ref={iframeRef}
-          src={iframeSrc}
-          className="w-full h-full border-0 bg-transparent"
-          title="Sandbox Preview"
-          sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
-          onLoad={() => {
-            console.log(`[IFRAME] loaded src: ${iframeSrc}`);
-            if (sessionId) {
-              postDebugEvent({
-                session_id: sessionId,
-                stage: 'PREVIEW',
-                status: 'LOADED',
-                message: `iframe loaded source: ${iframeSrc}`
-              });
-            }
-          }}
-        />
-      )}
-
-      {/* Runtime Error Overlay */}
-      {runtimeError && !loading && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-6">
-          <div className="bg-zinc-900 border border-rose-500/50 rounded-xl p-6 max-w-lg w-full shadow-2xl">
-            <div className="flex items-center gap-3 text-rose-400 mb-4">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <h3 className="text-lg font-bold">React Runtime Error</h3>
-            </div>
-            <div className="bg-zinc-950 rounded-lg p-4 font-mono text-sm text-rose-300 overflow-x-auto mb-4">
-              {runtimeError.error}
-            </div>
-            <p className="text-xs text-zinc-500 mb-6 line-clamp-4 font-mono leading-relaxed overflow-hidden">
-              {runtimeError.stack}
-            </p>
-            <button 
-              onClick={() => {
-                if (onRuntimeError) onRuntimeError(runtimeError.error, runtimeError.stack);
-                setRuntimeError(null);
-              }}
-              className="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg py-2.5 font-semibold transition-colors flex items-center justify-center gap-2"
-            >
-              ✨ Auto-Fix with AI
-            </button>
-          </div>
+      {/* Sandpack Project Renderer */}
+      {Object.keys(files).length > 0 && (
+        <div className="w-full h-full absolute inset-0 z-10">
+          <SandpackProvider 
+            template="react" 
+            theme="light"
+            files={sandpackFiles}
+            options={{
+              classes: {
+                "sp-wrapper": "h-full w-full",
+                "sp-layout": "h-full w-full bg-white",
+                "sp-preview": "h-full w-full bg-white",
+                "sp-preview-container": "h-full w-full bg-white",
+                "sp-preview-iframe": "h-full w-full border-none bg-white",
+              }
+            }}
+            customSetup={{
+              dependencies: {
+                "lucide-react": "^0.344.0",
+                "framer-motion": "^11.0.0",
+                "react-router-dom": "^6.22.0",
+                "clsx": "^2.1.0",
+                "tailwind-merge": "^2.2.0"
+              }
+            }}
+          >
+            <SandpackLayout className="h-full w-full rounded-none border-none bg-white">
+              <SandpackPreview 
+                showOpenInCodeSandbox={false}
+                showRefreshButton={true}
+                className="h-full w-full flex-grow bg-white"
+              />
+              <SandpackListener />
+            </SandpackLayout>
+          </SandpackProvider>
         </div>
       )}
     </div>
   );
+}
+
+// Helper component to hook into Sandpack's internal state for logging
+function SandpackListener() {
+  const { sandpack } = useSandpack();
+  
+  useEffect(() => {
+    if (sandpack.status === 'running') {
+      console.log(`[DEBUG] [LivePreview] Project rendered by Sandpack bundler successfully.`);
+    } else if (sandpack.status === 'error') {
+      console.error(`[DEBUG] [LivePreview] Render error detected in Sandpack!`);
+    }
+  }, [sandpack.status]);
+
+  return null;
 }
 
 export default LivePreview;

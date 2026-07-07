@@ -77,6 +77,15 @@ def cleanGeneratedCode(code: str) -> str:
         code = re.sub(r'import\s+([a-zA-Z0-9_]+)\s+from\s+[\'"](https?://[^\'"]+)[\'"];?', r"const \1 = '\2';", code)
         print("[AUTO_REPAIR] Replaced remote URL imports with const declarations")
             
+    # E. Replace lucide namespace tags (e.g. <lucide:arrow-right /> to <ArrowRight />)
+    if '<lucide:' in code or '</lucide:' in code:
+        def to_pascal_case_inner(name):
+            return ''.join(p.capitalize() for p in name.split('-'))
+            
+        code = re.sub(r'<\s*lucide:([a-zA-Z0-9-]+)', lambda m: f"<{to_pascal_case_inner(m.group(1))}", code)
+        code = re.sub(r'<\s*/\s*lucide:([a-zA-Z0-9-]+)', lambda m: f"</{to_pascal_case_inner(m.group(1))}", code)
+        print("[AUTO_REPAIR] Replaced lucide namespace tags with PascalCase components")
+            
     # 6. Final strip of extra whitespace
     code = code.strip()
     return code

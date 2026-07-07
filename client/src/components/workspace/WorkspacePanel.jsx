@@ -331,7 +331,7 @@ export function WorkspacePanel({
                       </div>
                     ) : (
                       <LivePreview 
-                        code={code} 
+                        files={files} 
                         loading={loading} 
                         statusText={statusText} 
                         generationId={generationId} 

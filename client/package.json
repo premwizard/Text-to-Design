@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.20.0",
     "@gsap/react": "^2.1.2",
     "@supabase/supabase-js": "^2.107.0",
     "axios": "^1.10.0",

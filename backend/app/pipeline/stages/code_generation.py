@@ -36,6 +36,7 @@ import Navbar from './components/Navbar';
 - You MUST NOT import any local assets, images, SVGs, or CSS files (like `App.css`). They do NOT exist.
 - If you need an image, use an Unsplash source URL directly as a string (e.g. `const img = "https://images.unsplash.com/...";`). Do NOT use ES module `import` for URLs.
 - Use `lucide-react` for icons. Do NOT use brand icons (Facebook, Twitter) as they might not exist. Use generic equivalents.
+- CRITICAL: Do NOT use namespace tags for icons (e.g., `<lucide:arrow-right />`). Always import the named component exactly (e.g., `import { ArrowRight } from 'lucide-react';`) and use it as a standard JSX tag `<ArrowRight />`.
 """
 
 class CodeGenerator:

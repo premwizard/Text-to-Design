@@ -2,19 +2,20 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 30
+      "light": 34
     },
     "style": {
       "minimal": 25,
-      "centered-stack": 4,
+      "centered-stack": 8,
       "split-screen": 1
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
       "zinc": 25,
-      "indigo-500": 2,
-      "#3498db": 3
+      "indigo-500": 3,
+      "#3498db": 3,
+      "#3b82f6": 3
     },
     "preferredLayouts": {
       "navbar: top, sidebar: none": 22,
@@ -27,10 +28,10 @@
       "pricingplan": 5,
       "calltoactionsection": 2,
       "footersection": 1,
-      "navbar": 2,
+      "navbar": 5,
       "bentofeatures": 3,
       "projectssection": 1,
-      "footer": 28,
+      "footer": 32,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -42,40 +43,17 @@
       "datatablesection": 1,
       "transactiontable": 2,
       "chartssection": 1,
-      "hero": 5,
-      "features": 2,
-      "pricing": 2,
-      "testimonials": 3,
+      "hero": 9,
+      "features": 6,
+      "pricing": 6,
+      "testimonials": 7,
       "portfolio": 3,
       "about": 2,
-      "contact": 1
+      "contact": 1,
+      "call-to-action": 3
     }
   },
   "history": [
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "minimal",
-      "theme": "light",
-      "primaryColor": "zinc"
-    },
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "minimal",
-      "theme": "light",
-      "primaryColor": "zinc"
-    },
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "minimal",
-      "theme": "light",
-      "primaryColor": "zinc"
-    },
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "minimal",
-      "theme": "light",
-      "primaryColor": "zinc"
-    },
     {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "minimal",
@@ -111,6 +89,30 @@
       "style": "centered-stack",
       "theme": "creative",
       "primaryColor": "#3498db"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "indigo-500"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "#3b82f6"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "#3b82f6"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "#3b82f6"
     }
   ],
   "settings": {

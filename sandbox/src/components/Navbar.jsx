@@ -1,44 +1,37 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import lucide from 'lucide-react';
-import './index.css';
+import { Bars, X } from 'lucide-react';
 
 function Navbar() {
   return (
-    <nav className="bg-white py-4 shadow-md fixed top-0 w-full z-10">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="bg-white shadow-md py-4 flex justify-between items-center w-full">
+      <div className="flex items-center">
         <Link to="/" className="text-lg font-bold text-slate-900">
-          <lucide.Icon name="paint-brush" size={24} className="mr-2" />
-          Showcase Your Art
+          ApexLaunch
         </Link>
-        <ul className="flex items-center space-x-4">
-          <li>
-            <Link to="/" className="text-slate-900 hover:text-slate-800 transition duration-300">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/testimonials" className="text-slate-900 hover:text-slate-800 transition duration-300">
-              Testimonials
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className="text-slate-900 hover:text-slate-800 transition duration-300">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link to="/portfolio" className="text-slate-900 hover:text-slate-800 transition duration-300">
-              Portfolio
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" className="text-slate-900 hover:text-slate-800 transition duration-300">
-              Contact
-            </Link>
-          </li>
-        </ul>
       </div>
+      <div className="flex items-center space-x-4">
+        <Link to="/features" className="text-slate-900 hover:text-slate-800">
+          Features
+        </Link>
+        <Link to="/pricing" className="text-slate-900 hover:text-slate-800">
+          Pricing
+        </Link>
+        <Link to="/testimonials" className="text-slate-900 hover:text-slate-800">
+          Testimonials
+        </Link>
+      </div>
+      <div className="flex items-center space-x-4">
+        <button className="bg-slate-100 hover:bg-slate-200 text-slate-900 py-2 px-4 rounded-md">
+          Login
+        </button>
+        <button className="bg-slate-100 hover:bg-slate-200 text-slate-900 py-2 px-4 rounded-md">
+          Sign Up
+        </button>
+      </div>
+      <button className="lg:hidden bg-slate-100 hover:bg-slate-200 text-slate-900 py-2 px-4 rounded-md">
+        <X />
+      </button>
     </nav>
   );
 }

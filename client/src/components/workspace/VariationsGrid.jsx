@@ -118,7 +118,17 @@ export function VariationsGrid({ variations, onSelect, onRegenerate, onSave, onT
                 {/* Live Preview Iframe */}
                 <div className="w-full h-full transform transition-transform duration-700 group-hover:scale-[1.02] pointer-events-none">
                   <LivePreview 
-                    code={v.code} 
+                    files={(() => {
+                      if (!v.code) return {};
+                      try {
+                        let cleanedCode = v.code.trim();
+                        cleanedCode = cleanedCode.replace(/^```(?:json|jsx|js)?\s*\n?/i, '');
+                        cleanedCode = cleanedCode.replace(/\n?```\s*$/, '');
+                        return JSON.parse(cleanedCode).files || {};
+                      } catch (e) {
+                        return {};
+                      }
+                    })()} 
                     loading={isLoading} 
                     statusText="" 
                     variationId={vid}
