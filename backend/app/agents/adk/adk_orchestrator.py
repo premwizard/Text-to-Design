@@ -156,43 +156,68 @@ async def run_adk_orchestration_stream(
         # ==========================================
         # STEP 5.5: CODE VALIDATION & AUTO FIXING
         # ==========================================
-        # STEP X: BYPASS SANITIZER & VALIDATOR
-        # ==========================================
-        logger.info("[ADK] Executing Code Validation & Auto Fixing - BYPASSED FOR DEBUG")
+        logger.info("[ADK] Executing Code Validation & Auto Fixing")
         
-        # sanitizer_agent = registry.get_agent("sanitizer")
-        # validator_agent = registry.get_agent("code_validator")
-        # fixer_agent = registry.get_agent("auto_fixer")
-        # 
-        # max_fixes = 2
-        # fix_attempts = 0
-        # while fix_attempts < max_fixes:
-        #     san_res = await sanitizer_agent.run({"files": generated_files})
-        #     if san_res.get("success"):
-        #         generated_files = san_res.get("result", {}).get("files", generated_files)
-        #     
-        #     val_res = await validator_agent.run({"files": generated_files})
-        #     if not val_res.get("success"):
-        #         break # Validator failed, skip fixing
-        #         
-        #     val_result = val_res.get("result", {})
-        #     if val_result.get("valid"):
-        #         logger.info("[ADK] Code validation passed.")
-        #         break
-        #         
-        #     errors = val_result.get("errors", [])
-        #     yield {"type": "timeline", "step": f"Auto Fixing (Attempt {fix_attempts + 1})"}
-        #     yield {"type": "agent_start", "agent": "auto_fixer", "message": f"Repairing {len(errors)} broken files..."}
-        #     
-        #     fix_res = await fixer_agent.run({"files": generated_files, "errors": errors})
-        #     if fix_res.get("success"):
-        #         generated_files = fix_res.get("result", {}).get("files", generated_files)
-        #     
-        #     yield {"type": "agent_complete", "agent": "auto_fixer", "output": {"status": "fixed"}}
-        #     fix_attempts += 1
-        #     await asyncio.sleep(0.3)
+        from backend.project_runner import cleanGeneratedCode, dry_run_compile
+        from backend.app.agents.auto_fixer_agent import run_auto_fixer
+
+        # 1. Clean code first
+        generated_files = {k: cleanGeneratedCode(v) for k, v in generated_files.items()}
         
-        print("[DEBUG] Sanitizer skipped")
+        max_fixes = 3
+        fix_attempts = 0
+        is_valid = False
+        validation_error = ""
+        
+        while fix_attempts < max_fixes:
+            success, err_msg = await dry_run_compile(generated_files, variation_id=session_id)
+            if success:
+                logger.info(f"[ADK] Compilation passed on attempt {fix_attempts + 1}.")
+                is_valid = True
+                break
+                
+            validation_error = err_msg
+            logger.warning(f"[ADK] Validation failed. Attempt {fix_attempts + 1} of {max_fixes}")
+            
+            # Identify broken files from esbuild output
+            # esbuild typically formats errors like: X [ERROR] ... src/components/TestimonialCard.jsx:11:46
+            import re
+            broken_filenames = set()
+            for match in re.finditer(r'src/([\w\.\-/]+?\.jsx?):', err_msg):
+                broken_filenames.add(match.group(1))
+            if not broken_filenames:
+                broken_filenames.add("App.jsx") # fallback if we can't parse it
+                
+            errors_for_fixer = []
+            for fname in broken_filenames:
+                if fname in generated_files:
+                    errors_for_fixer.append({"filename": fname, "error": err_msg})
+                    
+            if not errors_for_fixer:
+                break
+                
+            yield {"type": "timeline", "step": f"Auto Fixing (Attempt {fix_attempts + 1})"}
+            yield {"type": "agent_start", "agent": "auto_fixer", "message": f"Repairing {len(errors_for_fixer)} broken files..."}
+            
+            generated_files = await run_auto_fixer(generated_files, errors_for_fixer)
+            generated_files = {k: cleanGeneratedCode(v) for k, v in generated_files.items()}
+            
+            yield {"type": "agent_complete", "agent": "auto_fixer", "output": {"status": "fixed"}}
+            fix_attempts += 1
+            await asyncio.sleep(0.3)
+            
+        if not is_valid:
+            logger.error(f"[ADK] Exhausted auto-fix attempts. Returning structured validation error.")
+            yield {"type": "timeline", "step": "Validation Failed"}
+            yield {"type": "agent_start", "agent": "auto_fixer", "message": "Failed to auto-repair compilation errors."}
+            
+            validation_report = {
+                "error": "Compilation Validation Failed",
+                "details": validation_error,
+                "broken_files": list(generated_files.keys())
+            }
+            yield {"type": "error", "message": "Compilation Failed", "details": validation_report}
+            return
 
         # Screenshot and Vision Steps Removed
         

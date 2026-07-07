@@ -86,6 +86,12 @@ def cleanGeneratedCode(code: str) -> str:
         code = re.sub(r'<\s*/\s*lucide:([a-zA-Z0-9-]+)', lambda m: f"</{to_pascal_case_inner(m.group(1))}", code)
         print("[AUTO_REPAIR] Replaced lucide namespace tags with PascalCase components")
             
+    # F. Repair motion.quote or other hallucinatory motion components
+    if 'motion.quote' in code:
+        code = re.sub(r'<\s*motion\.quote\b', '<motion.blockquote', code)
+        code = re.sub(r'<\s*/\s*motion\.quote\s*>', '</motion.blockquote>', code)
+        print("[AUTO_REPAIR] Replaced motion.quote with motion.blockquote")
+        
     # 6. Final strip of extra whitespace
     code = code.strip()
     return code
