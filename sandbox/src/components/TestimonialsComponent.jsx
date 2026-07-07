@@ -1,0 +1,40 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+const testimonial1 = 'https://images.unsplash.com/photo-1584555114411-9b3f5d5f8e4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
+const testimonial2 = 'https://images.unsplash.com/photo-1584555114411-9b3f5d5f8e4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
+import { Icon } from 'lucide-react';
+
+function TestimonialsComponent() {
+  return (
+    <section className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: `url(${testimonial1})` }}>
+      <motion.h1
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-5xl font-playfair text-white mb-4"
+      >
+        What Our Clients Say
+      </motion.h1>
+      <div className="flex flex-col justify-center items-center">
+        <motion.quote
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="text-lg text-white mb-4"
+        >
+          "FocalPoint has been a game-changer for our business. Their expertise and attention to detail have helped us achieve our goals."
+        </motion.quote>
+        <motion.quote
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="text-lg text-white mb-4"
+        >
+          "I was blown away by the quality of work FocalPoint delivered. Their team is professional, efficient, and always a pleasure to work with."
+        </motion.quote>
+      </div>
+    </section>
+  );
+}
+
+export default TestimonialsComponent;

@@ -70,6 +70,12 @@ def cleanGeneratedCode(code: str) -> str:
         code = re.sub(r'<\s*Text\b', '<span', code)
         code = re.sub(r'<\s*/\s*Text\s*>', '</span>', code)
         print("[AUTO_REPAIR] Replaced react-native components View -> div, Text -> span and removed react-native import")
+        
+    # D. Replace ES module imports of URLs with constant declarations
+    # E.g. import img from 'https://...' -> const img = 'https://...';
+    if 'import ' in code and 'https://' in code:
+        code = re.sub(r'import\s+([a-zA-Z0-9_]+)\s+from\s+[\'"](https?://[^\'"]+)[\'"];?', r"const \1 = '\2';", code)
+        print("[AUTO_REPAIR] Replaced remote URL imports with const declarations")
             
     # 6. Final strip of extra whitespace
     code = code.strip()

@@ -2,17 +2,19 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 27
+      "light": 29
     },
     "style": {
       "minimal": 25,
-      "centered-stack": 2
+      "centered-stack": 3,
+      "split-screen": 1
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
       "zinc": 25,
-      "indigo-500": 2
+      "indigo-500": 2,
+      "#3498db": 2
     },
     "preferredLayouts": {
       "navbar: top, sidebar: none": 22,
@@ -28,7 +30,7 @@
       "navbar": 2,
       "bentofeatures": 3,
       "projectssection": 1,
-      "footer": 26,
+      "footer": 28,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -40,9 +42,12 @@
       "datatablesection": 1,
       "transactiontable": 2,
       "chartssection": 1,
-      "hero": 2,
+      "hero": 4,
       "features": 2,
-      "pricing": 2
+      "pricing": 2,
+      "testimonials": 2,
+      "portfolio": 2,
+      "about": 1
     }
   },
   "history": [
@@ -84,18 +89,6 @@
     },
     {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "minimal",
-      "theme": "light",
-      "primaryColor": "zinc"
-    },
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "minimal",
-      "theme": "light",
-      "primaryColor": "zinc"
-    },
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "centered-stack",
       "theme": "modern",
       "primaryColor": "indigo-500"
@@ -105,6 +98,18 @@
       "style": "centered-stack",
       "theme": "modern",
       "primaryColor": "indigo-500"
+    },
+    {
+      "prompt": "Build a modern photography portfolio layout",
+      "style": "split-screen",
+      "theme": "minimalist",
+      "primaryColor": "#3498db"
+    },
+    {
+      "prompt": "Build a modern photography portfolio layout",
+      "style": "centered-stack",
+      "theme": "minimalist",
+      "primaryColor": "#3498db"
     }
   ],
   "settings": {

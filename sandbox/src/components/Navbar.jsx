@@ -1,34 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaUser, FaFile } from 'lucide-react';
-import companyLogo from 'https://source.unsplash.com/400x400/?company-logo';
+import { Icon } from 'lucide-react';
+const logo = 'https://images.unsplash.com/photo-1584555114411-9b3f5d5f8e4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
 function Navbar() {
   return (
-    <nav className="bg-white py-4 shadow-md sticky top-0 z-10">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="flex items-center">
-          <img src={companyLogo} alt="Company Logo" className="w-8 h-8 mr-2" />
-          <h1 className="text-2xl font-playfair-display">FocalPoint</h1>
-        </Link>
-        <ul className="flex items-center space-x-4">
-          <li>
-            <Link to="/" className="text-slate-900 hover:text-primary">
-              <FaHome size={20} />
-            </Link>
-          </li>
-          <li>
-            <Link to="/testimonials" className="text-slate-900 hover:text-primary">
-              <FaUser size={20} />
-            </Link>
-          </li>
-          <li>
-            <Link to="/portfolio" className="text-slate-900 hover:text-primary">
-              <FaFile size={20} />
-            </Link>
-          </li>
-        </ul>
-      </div>
+    <nav className="flex justify-between items-center py-4">
+      <Link to="/">
+        <img src={logo} alt="FocalPoint Logo" className="w-12 h-12" />
+      </Link>
+      <ul className="flex items-center space-x-4">
+        <li>
+          <Link to="/testimonials">
+            <Icon name="Quote" className="text-lg" />
+            Testimonials
+          </Link>
+        </li>
+        <li>
+          <Link to="/portfolio">
+            <Icon name="Briefcase" className="text-lg" />
+            Portfolio
+          </Link>
+        </li>
+        <li>
+          <Link to="/contact">
+            <Icon name="Mail" className="text-lg" />
+            Contact
+          </Link>
+        </li>
+      </ul>
     </nav>
   );
 }

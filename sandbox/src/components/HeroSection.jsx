@@ -1,36 +1,28 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import backgroundImg from 'https://source.unsplash.com/1920x1080/?background-image';
+const background = 'https://images.unsplash.com/photo-1518791843675-64a75c1610f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
+import { Icon } from 'lucide-react';
 
 function HeroSection() {
   return (
-    <section className="bg-cover bg-center h-screen" style={{ backgroundImage: `url(${backgroundImg})` }}>
-      <div className="container mx-auto p-12 md:p-24 lg:p-48">
-        <motion.h1
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="text-5xl font-playfair-display leading-tight text-white"
-        >
-          Capture Your Story
-        </motion.h1>
-        <motion.p
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="text-2xl font-inter leading-relaxed text-white mt-4"
-        >
-          Tell your story with FocalPoint, the ultimate platform for creatives.
-        </motion.p>
-        <motion.button
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="bg-primary text-white py-2 px-4 rounded-md hover:bg-secondary transition duration-300"
-        >
-          Get Started
-        </motion.button>
-      </div>
+    <section className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: `url(${background})` }}>
+      <motion.h1
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-5xl font-playfair text-white mb-4"
+      >
+        Capture Your Story
+      </motion.h1>
+      <motion.button
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-primary-color text-white py-2 px-4 rounded-lg hover:bg-secondary-color transition duration-300"
+      >
+        <Icon name="Camera" className="mr-2" />
+        Get Started
+      </motion.button>
     </section>
   );
 }
