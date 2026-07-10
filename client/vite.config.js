@@ -13,6 +13,10 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     // Allow raw import of .html files (used for sandbox.html?raw)
     assetsInclude: [],
+    define: {
+      // eslint-disable-next-line no-undef
+      'process.env': {}
+    },
     server: {
       port: 5173,
       strictPort: false,
