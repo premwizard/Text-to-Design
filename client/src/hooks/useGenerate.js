@@ -4,7 +4,7 @@ import { normalizeApiBaseUrl } from '../lib/urlHelpers';
 // Use Vite proxy in dev (relative path), fall back to env var for production
 let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-  API_BASE = 'http://localhost:5173';
+  API_BASE = '';
 }
 
 export function useGenerate() {

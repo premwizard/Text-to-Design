@@ -20,72 +20,7 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
   API_BASE = 'http://localhost:5173';
 }
 
-function cleanGeneratedCode(code) {
-  if (!code) return "";
-  let cleaned = code.trim();
-  cleaned = cleaned.replace(/^```(?:jsx|javascript|js|react|tsx|ts|json)?\s*\n?/i, '');
-  cleaned = cleaned.replace(/\n?```\s*$/, '');
-  cleaned = cleaned.replace(/^\s*<!--[\s\S]*?-->\s*/, '');
-  cleaned = cleaned.replace(/\s*<!--[\s\S]*?-->\s*$/, '');
-  cleaned = cleaned.replace(/^\s*(?:File|Filename):\s*[\w\.\-/]+\s*\n?/i, '');
-  cleaned = cleaned.replace(/^\s*###\s*[\w\.\-/]+\s*\n?/i, '');
-  const match = cleaned.match(/^\s*(import|export\b)/m);
-  if (match) {
-    cleaned = cleaned.slice(match.index);
-  }
-  return cleaned.trim();
-}
 
-function validateGeneratedCode(code, filename) {
-  if (!code || code.trim().length < 30) {
-    console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Code is empty or too short (length: ${code ? code.length : 0})`);
-    return false;
-  }
-  const forbiddenTokens = ["<!--", "-->", "```", "###"];
-  for (const token of forbiddenTokens) {
-    if (code.includes(token)) {
-      console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Contains forbidden token: ${token}`);
-      return false;
-    }
-  }
-  if (/\bfile:/i.test(code)) {
-    console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Contains forbidden pattern 'file:'`);
-    return false;
-  }
-  if (/\bfilename:/i.test(code)) {
-    console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Contains forbidden pattern 'filename:'`);
-    return false;
-  }
-  
-  // Highlight spans checks
-  const highlightingPatterns = [
-    /<span\s+(class|className)="text-(pink-400\s+font-semibold|amber-300|violet-300|emerald-400|sky-400|zinc-500\s+italic)"/,
-    /text-pink-400\s+font-semibold">/,
-    /text-amber-300">/,
-    /text-violet-300">/,
-    /text-emerald-400">/,
-    /text-sky-400">/,
-    /text-zinc-500\s+italic">/
-  ];
-  for (const pattern of highlightingPatterns) {
-    if (pattern.test(code)) {
-      console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Matches syntax highlighting span pattern: ${pattern.toString()}`);
-      return false;
-    }
-  }
-  
-  // Malformed import/export checks
-  const lines = code.split('\n');
-  for (const line of lines) {
-    if ((line.includes("import") || line.includes("export")) && 
-        (line.includes("<") || line.includes(">") || line.includes("class=") || line.includes("className="))) {
-      console.warn(`[VALIDATION FAILED] File: ${filename || 'unknown'}. Reason: Malformed import/export line: ${line}`);
-      return false;
-    }
-  }
-  
-  return true;
-}
 
 function Home() {
   const location = useLocation();
@@ -212,13 +147,14 @@ function Home() {
     if (!code) return;
     let files = null;
     try {
-      let cleanedCode = code.trim();
-      cleanedCode = cleanedCode.replace(/^```(?:json|jsx|js|react)?\s*\n?/i, '');
-      cleanedCode = cleanedCode.replace(/\n?```\s*$/, '');
-      cleanedCode = cleanedCode.trim();
-      if (cleanedCode.startsWith('{')) {
-        const parsed = JSON.parse(cleanedCode);
+      const trimmedCode = code.trim();
+      if (trimmedCode.startsWith('{')) {
+        const parsed = JSON.parse(trimmedCode);
         if (parsed && parsed.files) files = parsed.files;
+      } else {
+        // If not JSON, it might just be a single file string
+        // but LivePreview expects an object of files.
+        // Assuming backend is correct, we just parse what we can.
       }
       console.log("[DEBUG] [Home] Parsed files from code state:", files ? Object.keys(files) : null);
     } catch (e) {
@@ -230,26 +166,8 @@ function Home() {
       return;
     }
 
-    let hasInvalidFile = false;
-    const sanitizedFiles = {};
-    for (const [filename, fileContent] of Object.entries(files)) {
-      const cleaned = cleanGeneratedCode(fileContent);
-      if (!validateGeneratedCode(cleaned, filename)) {
-        console.warn("[DEBUG] [Home] File failed static validation frontend side:", filename);
-        hasInvalidFile = true;
-        break;
-      }
-      sanitizedFiles[filename] = cleaned;
-    }
-
-    if (hasInvalidFile) {
-      console.error("[DEBUG] [Home] Validation failed. Not passing to preview.");
-      setLocalError("Generated code validation failed.");
-      return;
-    } else {
-      setLocalError("");
-    }
-
+    const sanitizedFiles = files;
+    
     console.log("[DEBUG] [Home] Final sanitizedFiles populated into sandboxFiles state:", Object.keys(sanitizedFiles));
     setSandboxFiles(sanitizedFiles);
 
@@ -277,12 +195,9 @@ function Home() {
       
       let files = null;
       try {
-        let cleanedCode = v.code.trim();
-        cleanedCode = cleanedCode.replace(/^```(?:json|jsx|js)?\s*\n?/i, '');
-        cleanedCode = cleanedCode.replace(/\n?```\s*$/, '');
-        cleanedCode = cleanedCode.trim();
-        if (cleanedCode.startsWith('{')) {
-          const parsed = JSON.parse(cleanedCode);
+        const trimmedCode = v.code.trim();
+        if (trimmedCode.startsWith('{')) {
+          const parsed = JSON.parse(trimmedCode);
           if (parsed && parsed.files) files = parsed.files;
         }
       } catch (e) {}
@@ -291,7 +206,7 @@ function Home() {
       
       const sanitizedFiles = {};
       for (const [filename, fileContent] of Object.entries(files)) {
-        sanitizedFiles[filename] = cleanGeneratedCode(fileContent);
+        sanitizedFiles[filename] = fileContent;
       }
       
       if (Object.keys(sanitizedFiles).length > 0) {
