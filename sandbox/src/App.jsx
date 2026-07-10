@@ -1,30 +1,29 @@
 import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import Navbar from './components/NavbarComponent';
 import HeroSection from './components/HeroSection';
-import PortfolioSection from './components/PortfolioSection';
-import AboutSection from './components/AboutSection';
-import ContactSection from './components/ContactSection';
+import FeaturesSection from './components/FeaturesSection';
+import PricingSection from './components/PricingSection';
 import FooterComponent from './components/FooterComponent';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import './index.css';
 
 function App() {
   return (
     <HashRouter>
       <Navbar />
-      <Routes>
-        <Route path="/" element={
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-            <HeroSection />
-            <PortfolioSection />
-            <AboutSection />
-            <ContactSection />
-            <FooterComponent />
-          </motion.div>
-        } />
-      </Routes>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <Routes>
+          <Route path="/" element={
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <HeroSection />
+              <FeaturesSection />
+              <PricingSection />
+            </div>
+          } />
+        </Routes>
+      </motion.div>
+      <FooterComponent />
     </HashRouter>
   );
 }

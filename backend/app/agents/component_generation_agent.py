@@ -46,7 +46,7 @@ Layout Context:
   * Never generate Next.js imports
   * Never use View, Text, Pressable, ScrollView
   * Use div, section, button, span instead
-  * Use lucide-react for icons only
+  * Use lucide-react for icons only. CRITICAL: Do NOT use brand icons (Facebook, Twitter, Instagram, Linkedin, Github, etc.) as they do not exist. Use generic equivalents.
 - Examples:
   * BAD: import {{ View, Text }} from 'react-native'
     GOOD: <div><span>Hello</span></div>

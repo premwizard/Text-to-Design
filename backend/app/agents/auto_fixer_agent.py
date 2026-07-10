@@ -50,12 +50,14 @@ RULES:
 """
 
         try:
-            fixed_code = await generate_ai(
+            response = await generate_ai(
                 task_type="auto_fixer",
                 system_prompt=FIX_SYSTEM_PROMPT,
                 user_prompt=prompt,
                 temperature=0.4
             )
+            
+            fixed_code = response.choices[0].message.content.strip()
             
             # Clean up potential markdown blocks if the LLM disobeyed
             if "```" in fixed_code:

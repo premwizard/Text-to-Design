@@ -49,6 +49,7 @@ Layout Context:
 - ABSOLUTELY NO EMPTY PLACEHOLDER DIVS. You MUST use real placeholder images from Unsplash (e.g., `https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80`) or SVG illustrations.
 - Include rich animations using `framer-motion` (e.g., Fade In, Slide Up, Scale Hover) to make the UI feel alive.
 - Incorporate `lucide-react` icons extensively for visual hierarchy (e.g., Star, Heart, Search, ArrowRight, Shield).
+- CRITICAL: Do NOT use brand icons (Facebook, Twitter, Instagram, Linkedin, Github, etc.) from `lucide-react` as they were removed from the library. Use generic equivalents or SVGs.
 - VERY IMPORTANT: Maximize visual density and component richness. Use backdrop-blur, animated glow, drop-shadows, and gradient borders. Avoid simple linear stacking.
 - HERO SECTION: MUST occupy `min-h-screen`, contain large typography, accent text, floating cards, animated badges, multiple CTAs, and a large background graphic/image (taking up >40% width).
 - Ensure 100% complete files. Do not leave trailing or unfinished tags. Provide every single import statement required (lucide-react, framer-motion).

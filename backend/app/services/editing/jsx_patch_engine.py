@@ -23,7 +23,7 @@ Generate a new visual section component from scratch.
 
 Rules:
 1. Choose typography, layout classes, background themes, and accents that harmoniously match the design metadata.
-2. Use standard 'lucide-react' icons for visual interest. Do NOT use 'lucide-react-native'.
+2. Use standard 'lucide-react' icons for visual interest. Do NOT use 'lucide-react-native'. CRITICAL: Do NOT use brand icons (Facebook, Twitter, Instagram, Linkedin, Github, etc.) as they do not exist. Use generic equivalents.
 3. Do NOT import or use 'react-router-dom', 'framer-motion', 'recharts', 'chart.js', or any external packages. For links/navigation, use standard <a> tags or state toggles, NOT <Link> or useNavigate.
 4. Make the component fully responsive.
 5. Return ONLY the clean React component code.

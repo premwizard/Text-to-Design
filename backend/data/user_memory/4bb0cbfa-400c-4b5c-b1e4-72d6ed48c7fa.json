@@ -2,18 +2,18 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 36
+      "light": 37
     },
     "style": {
       "minimal": 25,
-      "centered-stack": 10,
+      "centered-stack": 11,
       "split-screen": 1
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
       "zinc": 25,
-      "indigo-500": 4,
+      "indigo-500": 5,
       "#3498db": 3,
       "#3b82f6": 4
     },
@@ -31,7 +31,7 @@
       "navbar": 6,
       "bentofeatures": 3,
       "projectssection": 1,
-      "footer": 34,
+      "footer": 35,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -43,9 +43,9 @@
       "datatablesection": 1,
       "transactiontable": 2,
       "chartssection": 1,
-      "hero": 11,
-      "features": 7,
-      "pricing": 7,
+      "hero": 12,
+      "features": 8,
+      "pricing": 8,
       "testimonials": 8,
       "portfolio": 4,
       "about": 3,
@@ -54,12 +54,6 @@
     }
   },
   "history": [
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "centered-stack",
-      "theme": "modern",
-      "primaryColor": "indigo-500"
-    },
     {
       "prompt": "Build a modern photography portfolio layout",
       "style": "split-screen",
@@ -112,6 +106,12 @@
       "prompt": "Build a portfolio website: Creative personal site",
       "style": "centered-stack",
       "theme": "minimalist",
+      "primaryColor": "indigo-500"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
       "primaryColor": "indigo-500"
     }
   ],

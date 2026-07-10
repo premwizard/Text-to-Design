@@ -59,7 +59,7 @@ export function FileExplorer({ files, onFileSelect, selectedFile }) {
           <div key={child.path} className="w-full select-none">
             <div 
               className="flex items-center px-2 py-1 hover:bg-zinc-800 cursor-pointer text-zinc-300 text-sm"
-              style={{ paddingLeft: \`\${level * 12 + 8}px\` }}
+              style={{ paddingLeft: `${level * 12 + 8}px` }}
               onClick={() => toggleFolder(child.path)}
             >
               {isExpanded ? <ChevronDown className="w-4 h-4 mr-1 opacity-70" /> : <ChevronRight className="w-4 h-4 mr-1 opacity-70" />}
@@ -78,8 +78,8 @@ export function FileExplorer({ files, onFileSelect, selectedFile }) {
       return (
         <div 
           key={child.path}
-          className={\`flex items-center px-2 py-1 cursor-pointer text-sm transition-colors \${isSelected ? 'bg-sky-500/20 text-sky-300' : 'hover:bg-zinc-800 text-zinc-400'}\`}
-          style={{ paddingLeft: \`\${level * 12 + 28}px\` }}
+          className={`flex items-center px-2 py-1 cursor-pointer text-sm transition-colors ${isSelected ? 'bg-sky-500/20 text-sky-300' : 'hover:bg-zinc-800 text-zinc-400'}`}
+          style={{ paddingLeft: `${level * 12 + 28}px` }}
           onClick={() => onFileSelect(child.path)}
         >
           <span className="mr-2">{getFileIcon(child.name)}</span>

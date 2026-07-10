@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
+// Bypass browser cache for LivePreview
 import { RefreshCw, Terminal as TerminalIcon } from 'lucide-react';
 import { webcontainerManager } from './RuntimeEngine/WebContainerManager';
 import { FileExplorer } from './RuntimeEngine/FileExplorer';
@@ -189,7 +190,7 @@ root.render(
               <RefreshCw className="w-4 h-4" />
             </button>
           )}
-          <button onClick={() => setShowTerminal(!showTerminal)} className={\`p-1.5 rounded-md transition-colors \${showTerminal ? 'bg-sky-500/20 text-sky-400' : 'text-zinc-400 hover:bg-zinc-800'}\`} title="Toggle Terminal">
+          <button onClick={() => setShowTerminal(!showTerminal)} className={`p-1.5 rounded-md transition-colors ${showTerminal ? 'bg-sky-500/20 text-sky-400' : 'text-zinc-400 hover:bg-zinc-800'}`} title="Toggle Terminal">
             <TerminalIcon className="w-4 h-4" />
           </button>
         </div>
