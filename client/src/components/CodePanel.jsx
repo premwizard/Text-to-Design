@@ -22,7 +22,6 @@ export function CodePanel({ code, onChange }) {
       }
     }
   } catch (e) /* eslint-disable-line no-unused-vars */ {
-    parseError = true;
   }
 
   // Reset active file if files change and current activeFile is not in keys
