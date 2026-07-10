@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@codesandbox/sandpack-react": "^2.20.0",
     "@gsap/react": "^2.1.2",
     "@monaco-editor/react": "^4.7.0",
     "@supabase/supabase-js": "^2.107.0",
