@@ -49,10 +49,15 @@ RULES:
 5. If the error mentions a forbidden import, replace it with an allowed equivalent (lucide-react) or remove it.
 """
 
+        formatted_sys_prompt = FIX_SYSTEM_PROMPT.format(
+            broken_code=broken_code,
+            error=error_msg
+        )
+
         try:
             response = await generate_ai(
                 task_type="auto_fixer",
-                system_prompt=FIX_SYSTEM_PROMPT,
+                system_prompt=formatted_sys_prompt,
                 user_prompt=prompt,
                 temperature=0.4
             )

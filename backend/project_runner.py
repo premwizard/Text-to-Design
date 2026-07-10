@@ -44,9 +44,9 @@ def cleanGeneratedCode(code: str) -> str:
     code = re.sub(r'^\s*(?:File|Filename):\s*[\w\.\-/]+\s*\n?', '', code, flags=re.IGNORECASE)
     code = re.sub(r'^\s*###\s*[\w\.\-/]+\s*\n?', '', code, flags=re.IGNORECASE)
     
-    # 5. Remove any leading explanatory text: slice to start with the first 'import' or 'export' statement
-    match = re.search(r'^\s*(import|export\b)', code, flags=re.MULTILINE)
-    if match:
+    # 5. Remove any leading explanatory text: slice to start with the first 'import', 'export', 'const', 'function'
+    match = re.search(r'^\s*(import\b|export\b|const\b|function\b|let\b)', code, flags=re.MULTILINE)
+    if match and match.start() < 500:
         code = code[match.start():]
     
     # 5.5. Auto Repair Layer for framework contamination:
