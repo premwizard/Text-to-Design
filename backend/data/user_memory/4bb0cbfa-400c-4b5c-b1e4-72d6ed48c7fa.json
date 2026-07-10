@@ -2,11 +2,11 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 38
+      "light": 39
     },
     "style": {
       "minimal": 25,
-      "centered-stack": 12,
+      "centered-stack": 13,
       "split-screen": 1
     },
     "borderRadius": {},
@@ -16,7 +16,7 @@
       "indigo-500": 5,
       "#3498db": 3,
       "#3b82f6": 4,
-      "blue-600": 1
+      "blue-600": 2
     },
     "preferredLayouts": {
       "navbar: top, sidebar: none": 22,
@@ -32,7 +32,7 @@
       "navbar": 6,
       "bentofeatures": 3,
       "projectssection": 1,
-      "footer": 36,
+      "footer": 37,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -44,25 +44,19 @@
       "datatablesection": 1,
       "transactiontable": 2,
       "chartssection": 1,
-      "hero": 13,
-      "features": 9,
-      "pricing": 9,
-      "testimonials": 9,
+      "hero": 14,
+      "features": 10,
+      "pricing": 10,
+      "testimonials": 10,
       "portfolio": 4,
       "about": 3,
       "contact": 2,
       "call-to-action": 4,
-      "how it works": 1,
-      "call to action": 1
+      "how it works": 2,
+      "call to action": 2
     }
   },
   "history": [
-    {
-      "prompt": "Build a modern photography portfolio layout",
-      "style": "centered-stack",
-      "theme": "minimalist",
-      "primaryColor": "#3498db"
-    },
     {
       "prompt": "Build a portfolio website: Creative personal site",
       "style": "centered-stack",
@@ -110,6 +104,12 @@
       "style": "centered-stack",
       "theme": "modern",
       "primaryColor": "indigo-500"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "blue-600"
     },
     {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
