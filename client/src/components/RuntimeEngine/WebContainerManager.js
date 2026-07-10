@@ -107,7 +107,7 @@ class WebContainerManager {
       const dir = parts.slice(0, -1).join('/');
       try {
         await instance.fs.mkdir(dir, { recursive: true });
-      } catch (e) {
+      } catch (_e) {
         // Ignore if exists
       }
     }

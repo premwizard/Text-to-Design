@@ -1,5 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { User, Palette, Bot, Zap, Code2, Bell, Keyboard, CreditCard, AlertTriangle } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';

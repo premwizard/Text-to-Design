@@ -167,7 +167,7 @@ root.render(
   const handleRefreshIframe = () => {
     const iframe = document.getElementById('preview-iframe');
     if (iframe) {
-      iframe.src = iframe.src;
+      
     }
   };
 

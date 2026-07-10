@@ -21,7 +21,7 @@ export function CodePanel({ code, onChange }) {
         }
       }
     }
-  } catch (e) {
+  } catch (_e) {
     parseError = true;
   }
 

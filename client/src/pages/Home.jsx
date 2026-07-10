@@ -178,7 +178,7 @@ function Home() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ files: sanitizedFiles }),
         });
-      } catch (err) {}
+      } catch (_err) { /* ignore */ }
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -200,7 +200,7 @@ function Home() {
           const parsed = JSON.parse(trimmedCode);
           if (parsed && parsed.files) files = parsed.files;
         }
-      } catch (e) {}
+      } catch (_e) { /* ignore */ }
       
       if (!files) return;
       

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useMemo, useEffect } from 'react';
 import themes from '../design/themes/index';
 import { getPalette } from '../design/paletteGenerator';

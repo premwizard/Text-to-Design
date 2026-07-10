@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDesignSystem } from '../context/DesignSystemContext';
+
 
 const defaultItems = [
   { title: 'Flexible layouts', description: 'Build landing pages, dashboards, and content experiences with the same system.' },

@@ -84,7 +84,7 @@ export function useGenerate() {
       const reader  = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
-      let fullCodeAccumulator = '';
+      
       let done   = false;
 
       while (!done) {
@@ -326,7 +326,7 @@ export function useGenerate() {
       const reader  = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
-      let fullCodeAccumulator = '';
+      
       let done   = false;
 
       while (!done) {

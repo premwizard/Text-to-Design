@@ -60,7 +60,7 @@ const EDIT_STEPS = [
   { id: 'final_update', label: 'Final Update', desc: 'Committing project files snapshot' }
 ];
 
-export function DesignPlanPanel({ plan, timelineStep, agentStatus = 'idle', agentOutputs = {} }) {
+export function DesignPlanPanel({ plan, agentStatus = 'idle', agentOutputs = {} }) {
   const [debugMode, setDebugMode] = useState(false);
   const [activeDebugTab, setActiveDebugTab] = useState('memory');
   const [timestamp, setTimestamp] = useState(Date.now());
