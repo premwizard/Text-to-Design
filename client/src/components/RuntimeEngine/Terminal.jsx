@@ -26,30 +26,41 @@ export function Terminal({ logs }) {
     const fitAddon = new FitAddon();
     term.loadAddon(fitAddon);
     
-    term.open(terminalRef.current);
+    let isOpened = false;
+    let openTimeout;
     
-    // Use requestAnimationFrame to ensure the DOM has settled before fitting
-    requestAnimationFrame(() => {
-      try {
-        if (terminalRef.current && terminalRef.current.clientWidth > 0) {
-          fitAddon.fit();
+    const tryOpenTerminal = () => {
+      if (!terminalRef.current) return;
+      if (terminalRef.current.clientWidth > 0 && terminalRef.current.clientHeight > 0) {
+        if (!isOpened) {
+          try {
+            term.open(terminalRef.current);
+            fitAddon.fit();
+            isOpened = true;
+          } catch (e) {
+            console.warn("xterm open/fit failed", e);
+          }
+        } else {
+          try {
+            fitAddon.fit();
+          } catch (e) {
+            console.warn("xterm fit failed", e);
+          }
         }
-      } catch (e) {
-        console.warn("xterm initial fit failed", e);
       }
-    });
+    };
+
+    // Use requestAnimationFrame with a slight delay to ensure the DOM is fully painted
+    openTimeout = setTimeout(() => {
+      requestAnimationFrame(tryOpenTerminal);
+    }, 100);
     
     xtermRef.current = term;
 
     // Use ResizeObserver instead of window resize event to catch panel resizing
     const resizeObserver = new ResizeObserver(() => {
-      try {
-        if (terminalRef.current && terminalRef.current.clientWidth > 0 && terminalRef.current.clientHeight > 0) {
-          fitAddon.fit();
-        }
-      } catch {
-        // ignore resize errors if container is hidden or too small
-      }
+      // Debounce the resize slightly to avoid crashing during rapid drag events
+      requestAnimationFrame(tryOpenTerminal);
     });
     
     if (terminalRef.current) {
@@ -57,6 +68,7 @@ export function Terminal({ logs }) {
     }
 
     return () => {
+      clearTimeout(openTimeout);
       resizeObserver.disconnect();
       term.dispose();
     };

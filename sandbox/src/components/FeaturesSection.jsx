@@ -1,100 +1,83 @@
 import React from 'react';
+import FeatureCard from './FeatureCard';
+import { Lightbulb, Cloud, ShieldCheck, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
 
-function Features() {
+const FeaturesSection = () => {
+  const features = [
+    {
+      icon: Lightbulb,
+      title: 'Creative Ideation',
+      description: 'Spark new concepts with our intuitive brainstorming tools and collaborative platforms.',
+      color: 'text-yellow-500',
+      bg: 'bg-yellow-50',
+    },
+    {
+      icon: Cloud,
+      title: 'Seamless Deployment',
+      description: 'Deploy your solutions effortlessly to the cloud with our integrated CI/CD pipelines.',
+      color: 'text-blue-500',
+      bg: 'bg-blue-50',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Robust Security',
+      description: 'Ensure your projects are protected with state-of-the-art security measures.',
+      color: 'text-green-500',
+      bg: 'bg-green-50',
+    },
+    {
+      icon: Users,
+      title: 'Team Collaboration',
+      description: 'Foster teamwork with real-time collaboration features and project management tools.',
+      color: 'text-purple-500',
+      bg: 'bg-purple-50',
+    },
+  ];
+
+  const sectionVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  };
+
   return (
-    <div className="bg-white py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-extrabold text-slate-900 sm:text-4xl">
-          Features
-        </h2>
-        <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="flex flex-col rounded-lg shadow-lg overflow-hidden">
-            <div className="flex-shrink-0">
-              <img
-                className="h-48 w-full object-cover"
-                src="https://images.unsplash.com/photo-1510771463146-e89d6ac7f2fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                alt="Feature 1"
-              />
-            </div>
-            <div className="flex-1 bg-white p-6">
-              <h3 className="text-xl font-medium text-slate-900">
-                Feature 1
-              </h3>
-              <p className="mt-4 text-lg text-slate-900">
-                Description of feature 1.
-              </p>
-              <ul className="mt-4 list-none">
-                <li className="flex items-start">
-                  <Check className="block h-5 w-5 text-indigo-500" aria-hidden="true" />
-                  <p className="ml-3 text-lg text-slate-900">Benefit 1</p>
-                </li>
-                <li className="flex items-start mt-4">
-                  <Check className="block h-5 w-5 text-indigo-500" aria-hidden="true" />
-                  <p className="ml-3 text-lg text-slate-900">Benefit 2</p>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="flex flex-col rounded-lg shadow-lg overflow-hidden">
-            <div className="flex-shrink-0">
-              <img
-                className="h-48 w-full object-cover"
-                src="https://images.unsplash.com/photo-1510771463146-e89d6ac7f2fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                alt="Feature 2"
-              />
-            </div>
-            <div className="flex-1 bg-white p-6">
-              <h3 className="text-xl font-medium text-slate-900">
-                Feature 2
-              </h3>
-              <p className="mt-4 text-lg text-slate-900">
-                Description of feature 2.
-              </p>
-              <ul className="mt-4 list-none">
-                <li className="flex items-start">
-                  <Check className="block h-5 w-5 text-indigo-500" aria-hidden="true" />
-                  <p className="ml-3 text-lg text-slate-900">Benefit 1</p>
-                </li>
-                <li className="flex items-start mt-4">
-                  <Check className="block h-5 w-5 text-indigo-500" aria-hidden="true" />
-                  <p className="ml-3 text-lg text-slate-900">Benefit 2</p>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="flex flex-col rounded-lg shadow-lg overflow-hidden">
-            <div className="flex-shrink-0">
-              <img
-                className="h-48 w-full object-cover"
-                src="https://images.unsplash.com/photo-1510771463146-e89d6ac7f2fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                alt="Feature 3"
-              />
-            </div>
-            <div className="flex-1 bg-white p-6">
-              <h3 className="text-xl font-medium text-slate-900">
-                Feature 3
-              </h3>
-              <p className="mt-4 text-lg text-slate-900">
-                Description of feature 3.
-              </p>
-              <ul className="mt-4 list-none">
-                <li className="flex items-start">
-                  <Check className="block h-5 w-5 text-indigo-500" aria-hidden="true" />
-                  <p className="ml-3 text-lg text-slate-900">Benefit 1</p>
-                </li>
-                <li className="flex items-start mt-4">
-                  <Check className="block h-5 w-5 text-indigo-500" aria-hidden="true" />
-                  <p className="ml-3 text-lg text-slate-900">Benefit 2</p>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+    <section id="features" className="py-20 bg-gray-50">
+      <div className="container mx-auto px-6">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-4xl font-bold font-heading text-gray-900 mb-4">
+            Unlock Your Potential with InnovateHub
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Discover the powerful features designed to streamline your workflow and amplify your impact.
+          </p>
+        </motion.div>
 
-export default Features;
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12"
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          {features.map((feature, index) => (
+            <FeatureCard
+              key={index}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+              color={feature.color}
+              bg={feature.bg}
+            />
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default FeaturesSection;

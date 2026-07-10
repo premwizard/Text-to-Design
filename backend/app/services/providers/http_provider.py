@@ -35,9 +35,7 @@ async def generate_text_http(base_url: str, api_key: str, model: str, messages: 
     }
     url = base_url if 'chat/completions' in base_url else f'{base_url}/chat/completions'
 
-    if 'generativelanguage' in base_url:
-        headers = {'Content-Type': 'application/json'}
-        url = f'{url}?key={api_key}'
+    # Do not strip Authorization header for Google AI Studio OpenAI proxy
 
     payload = {
         'model': model,
@@ -62,9 +60,7 @@ async def generate_stream_http(base_url: str, api_key: str, model: str, messages
     }
     url = base_url if 'chat/completions' in base_url else f'{base_url}/chat/completions'
 
-    if 'generativelanguage' in base_url:
-        headers = {'Content-Type': 'application/json'}
-        url = f'{url}?key={api_key}'
+    # Do not strip Authorization header for Google AI Studio OpenAI proxy
 
     payload = {
         'model': model,
