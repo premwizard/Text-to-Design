@@ -27,20 +27,37 @@ export function Terminal({ logs }) {
     term.loadAddon(fitAddon);
     
     term.open(terminalRef.current);
-    fitAddon.fit();
+    
+    // Use requestAnimationFrame to ensure the DOM has settled before fitting
+    requestAnimationFrame(() => {
+      try {
+        if (terminalRef.current && terminalRef.current.clientWidth > 0) {
+          fitAddon.fit();
+        }
+      } catch (e) {
+        console.warn("xterm initial fit failed", e);
+      }
+    });
+    
     xtermRef.current = term;
 
-    const handleResize = () => {
+    // Use ResizeObserver instead of window resize event to catch panel resizing
+    const resizeObserver = new ResizeObserver(() => {
       try {
-        fitAddon.fit();
+        if (terminalRef.current && terminalRef.current.clientWidth > 0 && terminalRef.current.clientHeight > 0) {
+          fitAddon.fit();
+        }
       } catch (e) {
-        // ignore resize errors if container is hidden
+        // ignore resize errors if container is hidden or too small
       }
-    };
-    window.addEventListener('resize', handleResize);
+    });
+    
+    if (terminalRef.current) {
+      resizeObserver.observe(terminalRef.current);
+    }
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
       term.dispose();
     };
   }, []);
