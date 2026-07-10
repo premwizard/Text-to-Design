@@ -1,37 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bars, X } from 'lucide-react';
+import { House } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 function Navbar() {
   return (
-    <nav className="bg-white shadow-md py-4 flex justify-between items-center w-full">
-      <div className="flex items-center">
-        <Link to="/" className="text-lg font-bold text-slate-900">
-          ApexLaunch
-        </Link>
-      </div>
-      <div className="flex items-center space-x-4">
-        <Link to="/features" className="text-slate-900 hover:text-slate-800">
-          Features
-        </Link>
-        <Link to="/pricing" className="text-slate-900 hover:text-slate-800">
-          Pricing
-        </Link>
-        <Link to="/testimonials" className="text-slate-900 hover:text-slate-800">
-          Testimonials
-        </Link>
-      </div>
-      <div className="flex items-center space-x-4">
-        <button className="bg-slate-100 hover:bg-slate-200 text-slate-900 py-2 px-4 rounded-md">
-          Login
-        </button>
-        <button className="bg-slate-100 hover:bg-slate-200 text-slate-900 py-2 px-4 rounded-md">
-          Sign Up
+    <nav className="bg-white py-4 md:py-6 lg:py-8 fixed top-0 left-0 right-0 z-10 shadow-md">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link to="/" className="text-indigo-500 text-2xl font-bold">NexusApp</Link>
+        <ul className="hidden md:flex items-center space-x-4">
+          <li>
+            <Link to="#portfolio" className="text-slate-900 hover:text-indigo-500 transition duration-300">Portfolio</Link>
+          </li>
+          <li>
+            <Link to="#about" className="text-slate-900 hover:text-indigo-500 transition duration-300">About</Link>
+          </li>
+          <li>
+            <Link to="#contact" className="text-slate-900 hover:text-indigo-500 transition duration-300">Contact</Link>
+          </li>
+        </ul>
+        <button className="md:hidden text-indigo-500 hover:text-fuchsia-500 transition duration-300">
+          <House size={24} />
         </button>
       </div>
-      <button className="lg:hidden bg-slate-100 hover:bg-slate-200 text-slate-900 py-2 px-4 rounded-md">
-        <X />
-      </button>
     </nav>
   );
 }

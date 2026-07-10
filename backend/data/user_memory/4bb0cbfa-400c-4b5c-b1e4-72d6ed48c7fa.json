@@ -2,18 +2,18 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 35
+      "light": 36
     },
     "style": {
       "minimal": 25,
-      "centered-stack": 9,
+      "centered-stack": 10,
       "split-screen": 1
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
       "zinc": 25,
-      "indigo-500": 3,
+      "indigo-500": 4,
       "#3498db": 3,
       "#3b82f6": 4
     },
@@ -31,7 +31,7 @@
       "navbar": 6,
       "bentofeatures": 3,
       "projectssection": 1,
-      "footer": 33,
+      "footer": 34,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -43,23 +43,17 @@
       "datatablesection": 1,
       "transactiontable": 2,
       "chartssection": 1,
-      "hero": 10,
+      "hero": 11,
       "features": 7,
       "pricing": 7,
       "testimonials": 8,
-      "portfolio": 3,
-      "about": 2,
-      "contact": 1,
+      "portfolio": 4,
+      "about": 3,
+      "contact": 2,
       "call-to-action": 4
     }
   },
   "history": [
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "centered-stack",
-      "theme": "modern",
-      "primaryColor": "indigo-500"
-    },
     {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "centered-stack",
@@ -113,6 +107,12 @@
       "style": "centered-stack",
       "theme": "modern",
       "primaryColor": "#3b82f6"
+    },
+    {
+      "prompt": "Build a portfolio website: Creative personal site",
+      "style": "centered-stack",
+      "theme": "minimalist",
+      "primaryColor": "indigo-500"
     }
   ],
   "settings": {

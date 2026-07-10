@@ -1,23 +1,31 @@
 import React from 'react';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import Features from './components/Features';
-import Pricing from './components/Pricing';
-import Testimonials from './components/Testimonials';
-import CallToAction from './components/CallToAction';
-import Footer from './components/Footer';
+import PortfolioSection from './components/PortfolioSection';
+import AboutSection from './components/AboutSection';
+import ContactSection from './components/ContactSection';
+import FooterComponent from './components/FooterComponent';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import './index.css';
 
 function App() {
   return (
-    <div className="flex h-screen flex-col items-center justify-between bg-white">
+    <HashRouter>
       <Navbar />
-      <HeroSection />
-      <Features />
-      <Pricing />
-      <Testimonials />
-      <CallToAction />
-      <Footer />
-    </div>
+      <Routes>
+        <Route path="/" element={
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+            <HeroSection />
+            <PortfolioSection />
+            <AboutSection />
+            <ContactSection />
+            <FooterComponent />
+          </motion.div>
+        } />
+      </Routes>
+    </HashRouter>
   );
 }
 
