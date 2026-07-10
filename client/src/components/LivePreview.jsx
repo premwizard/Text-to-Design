@@ -17,7 +17,62 @@ export function LivePreview({ files = {}, loading = false, statusText = '', gene
     sandpackFiles[path] = content;
   }
 
+  // Inject a minimal Vite-like index.html if one wasn't provided by the backend
+  if (!sandpackFiles['/index.html'] && !sandpackFiles['index.html']) {
+    sandpackFiles['/index.html'] = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generated Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: {} } };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.js"></script>
+  </body>
+</html>`;
+  }
 
+  // Inject minimal package.json if not present
+  if (!sandpackFiles['/package.json'] && !sandpackFiles['package.json']) {
+    sandpackFiles['/package.json'] = {
+      code: JSON.stringify({
+        name: "generated-project",
+        dependencies: {
+          "react": "^18.0.0",
+          "react-dom": "^18.0.0",
+          "react-router-dom": "^6.20.0",
+          "lucide-react": "0.292.0",
+          "framer-motion": "^10.16.4",
+          "clsx": "^2.0.0",
+          "tailwind-merge": "^2.0.0"
+        }
+      }, null, 2),
+      hidden: true
+    };
+  }
+  
+  // Inject index.js entry point to bootstrap React 18, if not present
+  if (!sandpackFiles['/index.js'] && !sandpackFiles['index.js'] && !sandpackFiles['/main.jsx'] && !sandpackFiles['main.jsx']) {
+    const appFile = sandpackFiles['/App.jsx'] || sandpackFiles['App.jsx'] ? './App.jsx' : './App';
+    sandpackFiles['/index.js'] = `import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "${appFile}";
+import "./index.css";
+
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);`;
+  }
+
+  // Inject empty index.css if not present
+  if (!sandpackFiles['/index.css'] && !sandpackFiles['index.css']) {
+      sandpackFiles['/index.css'] = `/* Tailwind is injected via CDN in index.html */`;
+  }
 
   // Handle logging requirements
   useEffect(() => {
@@ -61,7 +116,7 @@ export function LivePreview({ files = {}, loading = false, statusText = '', gene
       {Object.keys(files).length > 0 && (
         <div className="w-full h-full absolute inset-0 z-10">
           <SandpackProvider 
-            template="react" 
+            template="vite-react" 
             theme="light"
             files={sandpackFiles}
             options={{
@@ -75,11 +130,13 @@ export function LivePreview({ files = {}, loading = false, statusText = '', gene
             }}
             customSetup={{
               dependencies: {
-                "lucide-react": "^0.344.0",
-                "framer-motion": "^11.0.0",
-                "react-router-dom": "^6.22.0",
-                "clsx": "^2.1.0",
-                "tailwind-merge": "^2.2.0"
+                "react": "^18.0.0",
+                "react-dom": "^18.0.0",
+                "react-router-dom": "^6.20.0",
+                "lucide-react": "0.292.0",
+                "framer-motion": "^10.16.4",
+                "clsx": "^2.0.0",
+                "tailwind-merge": "^2.0.0"
               }
             }}
           >

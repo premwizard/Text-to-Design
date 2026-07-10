@@ -16,6 +16,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5173,
       strictPort: false,
+      headers: {
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Opener-Policy': 'same-origin'
+      },
       proxy: {
         '/stream-jsx': { target: backendTarget, changeOrigin: true },
         '/user-memory': { target: backendTarget, changeOrigin: true },
