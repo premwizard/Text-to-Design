@@ -66,7 +66,7 @@ export function WorkspacePanel({
           }
         }
       }
-    } catch (_e) {
+    } catch () {
       // Ignore parse errors while streaming
     }
   }, [code, selectedFile]);
@@ -87,7 +87,7 @@ export function WorkspacePanel({
       if (data.history) {
         setHistoryList(data.history);
       }
-    } catch (_e) {
+    } catch (e) {
       console.error("Failed to load edit history:", e);
     }
   };
@@ -117,7 +117,7 @@ export function WorkspacePanel({
       } else {
         alert(`Rollback failed: ${data.message}`);
       }
-    } catch (_e) {
+    } catch () {
       console.error(e);
       alert('Rollback failed');
     }
