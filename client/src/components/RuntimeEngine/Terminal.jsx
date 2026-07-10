@@ -47,7 +47,7 @@ export function Terminal({ logs }) {
         if (terminalRef.current && terminalRef.current.clientWidth > 0 && terminalRef.current.clientHeight > 0) {
           fitAddon.fit();
         }
-      } catch (e) {
+      } catch {
         // ignore resize errors if container is hidden or too small
       }
     });
