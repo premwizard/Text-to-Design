@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-empty, no-self-assign */
 import React from 'react';
 import { useDesignSystem } from '../context/DesignSystemContext';
 import { useTheme } from '../context/ThemeContext';

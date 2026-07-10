@@ -125,7 +125,7 @@ export function VariationsGrid({ variations, onSelect, onRegenerate, onSave, onT
                         cleanedCode = cleanedCode.replace(/^```(?:json|jsx|js)?\s*\n?/i, '');
                         cleanedCode = cleanedCode.replace(/\n?```\s*$/, '');
                         return JSON.parse(cleanedCode).files || {};
-                      } catch () {
+                      } catch (e) /* eslint-disable-line no-unused-vars */ {
                         return {};
                       }
                     })()} 

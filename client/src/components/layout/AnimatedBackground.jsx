@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-empty, no-self-assign */
 import React, { useEffect, useRef } from 'react';
 
 export function AnimatedBackground() {

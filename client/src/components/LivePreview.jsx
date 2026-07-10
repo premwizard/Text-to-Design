@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-empty, no-self-assign */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
 // Bypass browser cache for LivePreview

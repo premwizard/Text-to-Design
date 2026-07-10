@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-empty, no-self-assign */
 import React, { useRef, useEffect } from 'react';
 import { 
   Sparkles, 

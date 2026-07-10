@@ -107,7 +107,7 @@ class WebContainerManager {
       const dir = parts.slice(0, -1).join('/');
       try {
         await instance.fs.mkdir(dir, { recursive: true });
-      } catch () {
+      } catch (e) /* eslint-disable-line no-unused-vars */ {
         // Ignore if exists
       }
     }

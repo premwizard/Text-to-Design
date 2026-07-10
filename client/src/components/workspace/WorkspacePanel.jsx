@@ -66,7 +66,7 @@ export function WorkspacePanel({
           }
         }
       }
-    } catch () {
+    } catch (e) /* eslint-disable-line no-unused-vars */ {
       // Ignore parse errors while streaming
     }
   }, [code, selectedFile]);
@@ -117,7 +117,7 @@ export function WorkspacePanel({
       } else {
         alert(`Rollback failed: ${data.message}`);
       }
-    } catch () {
+    } catch (e) /* eslint-disable-line no-unused-vars */ {
       console.error(e);
       alert('Rollback failed');
     }

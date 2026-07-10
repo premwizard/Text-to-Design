@@ -21,7 +21,7 @@ export function CodePanel({ code, onChange }) {
         }
       }
     }
-  } catch () {
+  } catch (e) /* eslint-disable-line no-unused-vars */ {
     parseError = true;
   }
 

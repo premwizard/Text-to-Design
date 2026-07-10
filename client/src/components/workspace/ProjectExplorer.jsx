@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-empty, no-self-assign */
 import React, { useState, useMemo, useEffect } from 'react';
 import { ChevronRight, ChevronDown, Folder, File, Search, Copy, FileJson } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

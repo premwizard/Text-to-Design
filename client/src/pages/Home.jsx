@@ -178,7 +178,7 @@ function Home() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ files: sanitizedFiles }),
         });
-      } catch () { /* ignore */ }
+      } catch (e) /* eslint-disable-line no-unused-vars */ { /* ignore */ }
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -200,7 +200,7 @@ function Home() {
           const parsed = JSON.parse(trimmedCode);
           if (parsed && parsed.files) files = parsed.files;
         }
-      } catch () { /* ignore */ }
+      } catch (e) /* eslint-disable-line no-unused-vars */ { /* ignore */ }
       
       if (!files) return;
       

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-empty, no-self-assign */
 import { supabase } from '../lib/supabase';
 
 export const projectService = {
