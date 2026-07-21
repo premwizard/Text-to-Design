@@ -8,51 +8,68 @@ const HeroSection = () => {
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
   };
 
-  const textVariants = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
 
-  const buttonVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 },
-  };
-
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex items-center justify-center overflow-hidden py-20">
-      <div className="absolute inset-0 opacity-30">
-        <img
-          src="https://images.unsplash.com/photo-1517245386804-66fc1d9f5dc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
-          alt="Abstract background pattern"
-          className="w-full h-full object-cover"
-        />
+    <section className="relative bg-gradient-to-br from-indigo-50 to-white py-20 lg:py-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            className="text-center lg:text-left"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6"
+              variants={itemVariants}
+            >
+              ApexConnect: <span className="text-indigo-600">Elevate your business</span> with seamless integration.
+            </motion.h1>
+            <motion.p
+              className="text-lg sm:text-xl text-slate-700 mb-10 leading-relaxed"
+              variants={itemVariants}
+            >
+              Unlock new levels of efficiency and collaboration. ApexConnect bridges the gap between your essential tools, empowering your team to achieve more.
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4"
+              variants={itemVariants}
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-indigo-600 text-white px-8 py-3 rounded-lg shadow-lg font-semibold text-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out flex items-center justify-center"
+              >
+                Get Started Today
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-indigo-600 border-2 border-indigo-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out"
+              >
+                Learn More
+              </motion.button>
+            </motion.div>
+          </motion.div>
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          >
+            <img
+              className="w-full max-w-lg mx-auto rounded-lg shadow-2xl"
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+              alt="Product Showcase"
+            />
+          </motion.div>
+        </div>
       </div>
-      <motion.div
-        className="relative z-10 container mx-auto px-6 text-center"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.h1
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold font-heading text-gray-900 mb-6 leading-tight"
-          variants={textVariants}
-        >
-          InnovateHub: Transforming Ideas into Impactful Solutions.
-        </motion.h1>
-        <motion.p
-          className="text-lg sm:text-xl lg:text-2xl text-gray-700 mb-10 max-w-3xl mx-auto"
-          variants={textVariants}
-          transition={{ delay: 0.2 }}
-        >
-          We provide the tools, expertise, and collaborative environment to bring your most ambitious projects to life.
-        </motion.p>
-        <motion.div variants={buttonVariants} transition={{ delay: 0.4 }}>
-          <button className="flex items-center justify-center mx-auto px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105">
-            Get Started Today
-            <ArrowRight className="ml-3 w-6 h-6" />
-          </button>
-        </motion.div>
-      </motion.div>
     </section>
   );
 };

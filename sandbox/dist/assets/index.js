@@ -784,7 +784,7 @@ var require_scheduler = __commonJS({
 var require_react_dom_production = __commonJS({
   "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
     "use strict";
-    var React23 = require_react();
+    var React20 = require_react();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
       if (1 < arguments.length) {
@@ -824,7 +824,7 @@ var require_react_dom_production = __commonJS({
         implementation
       };
     }
-    var ReactSharedInternals = React23.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React20.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     function getCrossOriginStringAs(as, input) {
       if ("font" === as) return "";
       if ("string" === typeof input)
@@ -960,7 +960,7 @@ var require_react_dom_client_production = __commonJS({
   "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
     "use strict";
     var Scheduler = require_scheduler();
-    var React23 = require_react();
+    var React20 = require_react();
     var ReactDOM = require_react_dom();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
@@ -1151,7 +1151,7 @@ var require_react_dom_client_production = __commonJS({
       return null;
     }
     var isArrayImpl = Array.isArray;
-    var ReactSharedInternals = React23.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React20.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var sharedNotPendingObject = {
       pending: false,
@@ -12597,7 +12597,7 @@ var require_react_dom_client_production = __commonJS({
         0 === i && attemptExplicitHydrationTarget(target);
       }
     };
-    var isomorphicReactPackageVersion$jscomp$inline_1840 = React23.version;
+    var isomorphicReactPackageVersion$jscomp$inline_1840 = React20.version;
     if ("19.2.7" !== isomorphicReactPackageVersion$jscomp$inline_1840)
       throw Error(
         formatProdErrorMessage(
@@ -25871,132 +25871,38 @@ var init_check = __esm({
   }
 });
 
-// node_modules/lucide-react/dist/esm/icons/cloud-upload.mjs
-var __iconNode3, CloudUpload;
-var init_cloud_upload = __esm({
-  "node_modules/lucide-react/dist/esm/icons/cloud-upload.mjs"() {
-    init_createLucideIcon();
-    __iconNode3 = [
-      ["path", { d: "M12 13v8", key: "1l5pq0" }],
-      ["path", { d: "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242", key: "1pljnt" }],
-      ["path", { d: "m8 17 4-4 4 4", key: "1quai1" }]
-    ];
-    CloudUpload = createLucideIcon("cloud-upload", __iconNode3);
-  }
-});
-
 // node_modules/lucide-react/dist/esm/icons/cloud.mjs
-var __iconNode4, Cloud;
+var __iconNode3, Cloud;
 var init_cloud = __esm({
   "node_modules/lucide-react/dist/esm/icons/cloud.mjs"() {
     init_createLucideIcon();
-    __iconNode4 = [
+    __iconNode3 = [
       ["path", { d: "M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z", key: "p7xjir" }]
     ];
-    Cloud = createLucideIcon("cloud", __iconNode4);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/code.mjs
-var __iconNode5, Code;
-var init_code = __esm({
-  "node_modules/lucide-react/dist/esm/icons/code.mjs"() {
-    init_createLucideIcon();
-    __iconNode5 = [
-      ["path", { d: "m16 18 6-6-6-6", key: "eg8j8" }],
-      ["path", { d: "m8 6-6 6 6 6", key: "ppft3o" }]
-    ];
-    Code = createLucideIcon("code", __iconNode5);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/file-text.mjs
-var __iconNode6, FileText;
-var init_file_text = __esm({
-  "node_modules/lucide-react/dist/esm/icons/file-text.mjs"() {
-    init_createLucideIcon();
-    __iconNode6 = [
-      [
-        "path",
-        {
-          d: "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z",
-          key: "1oefj6"
-        }
-      ],
-      ["path", { d: "M14 2v5a1 1 0 0 0 1 1h5", key: "wfsgrz" }],
-      ["path", { d: "M10 9H8", key: "b1mrlr" }],
-      ["path", { d: "M16 13H8", key: "t4e002" }],
-      ["path", { d: "M16 17H8", key: "z1uh3a" }]
-    ];
-    FileText = createLucideIcon("file-text", __iconNode6);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/lightbulb.mjs
-var __iconNode7, Lightbulb;
-var init_lightbulb = __esm({
-  "node_modules/lucide-react/dist/esm/icons/lightbulb.mjs"() {
-    init_createLucideIcon();
-    __iconNode7 = [
-      [
-        "path",
-        {
-          d: "M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5",
-          key: "1gvzjb"
-        }
-      ],
-      ["path", { d: "M9 18h6", key: "x1upvd" }],
-      ["path", { d: "M10 22h4", key: "ceow96" }]
-    ];
-    Lightbulb = createLucideIcon("lightbulb", __iconNode7);
+    Cloud = createLucideIcon("cloud", __iconNode3);
   }
 });
 
 // node_modules/lucide-react/dist/esm/icons/menu.mjs
-var __iconNode8, Menu;
+var __iconNode4, Menu;
 var init_menu = __esm({
   "node_modules/lucide-react/dist/esm/icons/menu.mjs"() {
     init_createLucideIcon();
-    __iconNode8 = [
+    __iconNode4 = [
       ["path", { d: "M4 5h16", key: "1tepv9" }],
       ["path", { d: "M4 12h16", key: "1lakjw" }],
       ["path", { d: "M4 19h16", key: "1djgab" }]
     ];
-    Menu = createLucideIcon("menu", __iconNode8);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/quote.mjs
-var __iconNode9, Quote;
-var init_quote = __esm({
-  "node_modules/lucide-react/dist/esm/icons/quote.mjs"() {
-    init_createLucideIcon();
-    __iconNode9 = [
-      [
-        "path",
-        {
-          d: "M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z",
-          key: "rib7q0"
-        }
-      ],
-      [
-        "path",
-        {
-          d: "M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z",
-          key: "1ymkrd"
-        }
-      ]
-    ];
-    Quote = createLucideIcon("quote", __iconNode9);
+    Menu = createLucideIcon("menu", __iconNode4);
   }
 });
 
 // node_modules/lucide-react/dist/esm/icons/shield-check.mjs
-var __iconNode10, ShieldCheck;
+var __iconNode5, ShieldCheck;
 var init_shield_check = __esm({
   "node_modules/lucide-react/dist/esm/icons/shield-check.mjs"() {
     init_createLucideIcon();
-    __iconNode10 = [
+    __iconNode5 = [
       [
         "path",
         {
@@ -26006,35 +25912,53 @@ var init_shield_check = __esm({
       ],
       ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
     ];
-    ShieldCheck = createLucideIcon("shield-check", __iconNode10);
+    ShieldCheck = createLucideIcon("shield-check", __iconNode5);
   }
 });
 
 // node_modules/lucide-react/dist/esm/icons/users.mjs
-var __iconNode11, Users;
+var __iconNode6, Users;
 var init_users = __esm({
   "node_modules/lucide-react/dist/esm/icons/users.mjs"() {
     init_createLucideIcon();
-    __iconNode11 = [
+    __iconNode6 = [
       ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
       ["path", { d: "M16 3.128a4 4 0 0 1 0 7.744", key: "16gr8j" }],
       ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
       ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
     ];
-    Users = createLucideIcon("users", __iconNode11);
+    Users = createLucideIcon("users", __iconNode6);
   }
 });
 
 // node_modules/lucide-react/dist/esm/icons/x.mjs
-var __iconNode12, X;
+var __iconNode7, X;
 var init_x = __esm({
   "node_modules/lucide-react/dist/esm/icons/x.mjs"() {
     init_createLucideIcon();
-    __iconNode12 = [
+    __iconNode7 = [
       ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
       ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
     ];
-    X = createLucideIcon("x", __iconNode12);
+    X = createLucideIcon("x", __iconNode7);
+  }
+});
+
+// node_modules/lucide-react/dist/esm/icons/zap.mjs
+var __iconNode8, Zap;
+var init_zap = __esm({
+  "node_modules/lucide-react/dist/esm/icons/zap.mjs"() {
+    init_createLucideIcon();
+    __iconNode8 = [
+      [
+        "path",
+        {
+          d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
+          key: "1xq2db"
+        }
+      ]
+    ];
+    Zap = createLucideIcon("zap", __iconNode8);
   }
 });
 
@@ -26042,18 +25966,14 @@ var init_x = __esm({
 var init_lucide_react = __esm({
   "node_modules/lucide-react/dist/esm/lucide-react.mjs"() {
     "use strict";
-    init_cloud_upload();
     init_arrow_right();
     init_check();
     init_cloud();
-    init_code();
-    init_file_text();
-    init_lightbulb();
     init_menu();
-    init_quote();
     init_shield_check();
     init_users();
     init_x();
+    init_zap();
   }
 });
 
@@ -26067,91 +25987,99 @@ var init_Navbar = __esm({
     import_jsx_runtime3 = __toESM(require_jsx_runtime());
     Navbar = () => {
       const [isOpen, setIsOpen] = import_react23.default.useState(false);
-      const navItems = [
-        { name: "Features", link: "#features" },
-        { name: "How It Works", link: "#how-it-works" },
-        { name: "Testimonials", link: "#testimonials" },
-        { name: "Pricing", link: "#pricing" }
+      const navLinks = [
+        { name: "Features", href: "#features" },
+        { name: "Testimonials", href: "#testimonials" },
+        { name: "Pricing", href: "#pricing" },
+        { name: "Contact", href: "#contact" }
       ];
       const containerVariants = {
-        hidden: { opacity: 0, y: -50 },
-        visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1, delayChildren: 0.3 } }
+        hidden: { opacity: 0, height: 0 },
+        visible: { opacity: 1, height: "auto", transition: { staggerChildren: 0.1 } }
       };
-      const itemVariants = {
-        hidden: { opacity: 0, y: -20 },
+      const linkVariants = {
+        hidden: { opacity: 0, y: -10 },
         visible: { opacity: 1, y: 0 }
       };
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("nav", { className: "sticky top-0 z-50 bg-white/80 backdrop-blur-sm shadow-sm", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "container mx-auto px-6 py-4 flex justify-between items-center", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-            motion.div,
+      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("nav", { className: "sticky top-0 z-50 bg-white shadow-md", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex items-center justify-between h-16", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex items-center", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              motion.div,
+              {
+                className: "flex-shrink-0",
+                whileHover: { scale: 1.1 },
+                transition: { type: "spring", stiffness: 400, damping: 10 },
+                children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                  "img",
+                  {
+                    className: "h-10 w-auto",
+                    src: "https://via.placeholder.com/150x50?text=ApexConnect",
+                    alt: "ApexConnect Logo"
+                  }
+                )
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "hidden md:block", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "ml-10 flex items-baseline space-x-4", children: navLinks.map((link) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              "a",
+              {
+                href: link.href,
+                className: "text-slate-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out",
+                children: link.name
+              },
+              link.name
+            )) }) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "hidden md:block", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            motion.button,
             {
-              initial: { opacity: 0, scale: 0.8 },
-              animate: { opacity: 1, scale: 1 },
-              transition: { duration: 0.5 },
-              className: "flex items-center space-x-2",
+              whileHover: { scale: 1.05 },
+              whileTap: { scale: 0.95 },
+              className: "ml-4 bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out",
+              children: "Get Started"
+            }
+          ) }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "-mr-2 flex md:hidden", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            "button",
+            {
+              onClick: () => setIsOpen(!isOpen),
+              className: "bg-white inline-flex items-center justify-center p-2 rounded-md text-slate-700 hover:text-indigo-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out",
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("img", { src: "https://via.placeholder.com/40x40/0000FF/FFFFFF?text=IH", alt: "InnovateHub Logo", className: "h-8 w-8 rounded-full" }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "text-2xl font-bold font-heading text-blue-600", children: "InnovateHub" })
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "sr-only", children: "Open main menu" }),
+                !isOpen ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Menu, { className: "block h-6 w-6" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, { className: "block h-6 w-6" })
               ]
             }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "hidden md:flex items-center space-x-6", children: [
-            navItems.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-              motion.a,
-              {
-                href: item.link,
-                className: "text-gray-700 hover:text-blue-600 transition duration-300 font-medium",
-                whileHover: { scale: 1.05, color: "#2563EB" },
-                initial: { opacity: 0, y: -20 },
-                animate: { opacity: 1, y: 0 },
-                transition: { duration: 0.3, delay: index * 0.1 },
-                children: item.name
-              },
-              index
-            )),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-              motion.button,
-              {
-                className: "px-5 py-2 bg-blue-600 text-white rounded-md font-semibold shadow-md hover:bg-blue-700 transition duration-300",
-                whileHover: { scale: 1.05, boxShadow: "0px 5px 15px rgba(37, 99, 235, 0.4)" },
-                initial: { opacity: 0, y: -20 },
-                animate: { opacity: 1, y: 0 },
-                transition: { duration: 0.3, delay: navItems.length * 0.1 },
-                children: "Sign Up"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md:hidden flex items-center", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { onClick: () => setIsOpen(!isOpen), className: "text-gray-700 focus:outline-none", children: isOpen ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, { size: 24 }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Menu, { size: 24 }) }) })
-        ] }),
-        isOpen && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+          ) })
+        ] }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
           motion.div,
           {
-            className: "md:hidden bg-white shadow-lg",
-            variants: containerVariants,
+            className: "md:hidden bg-white",
             initial: "hidden",
-            animate: "visible",
-            children: [
-              navItems.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            animate: isOpen ? "visible" : "hidden",
+            variants: containerVariants,
+            transition: { duration: 0.3, ease: "easeInOut" },
+            children: isOpen && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "px-2 pt-2 pb-3 space-y-1 sm:px-3", children: [
+              navLinks.map((link) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
                 motion.a,
                 {
-                  href: item.link,
-                  className: "block px-6 py-3 text-gray-700 hover:bg-blue-50 transition duration-300 font-medium",
-                  variants: itemVariants,
-                  children: item.name
+                  href: link.href,
+                  className: "text-slate-700 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out",
+                  variants: linkVariants,
+                  children: link.name
                 },
-                index
+                link.name
               )),
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
                 motion.button,
                 {
-                  className: "block w-full px-6 py-3 bg-blue-600 text-white font-semibold text-center",
-                  variants: itemVariants,
-                  transition: { delay: navItems.length * 0.1 },
-                  children: "Sign Up"
+                  whileHover: { scale: 1.05 },
+                  whileTap: { scale: 0.95 },
+                  className: "w-full mt-4 bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out",
+                  children: "Get Started"
                 }
               )
-            ]
+            ] })
           }
         )
       ] });
@@ -26173,160 +26101,176 @@ var init_HeroSection = __esm({
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
       };
-      const textVariants = {
+      const itemVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 }
       };
-      const buttonVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: { opacity: 1, scale: 1 }
-      };
-      return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "relative bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex items-center justify-center overflow-hidden py-20", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "absolute inset-0 opacity-30", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          "img",
-          {
-            src: "https://images.unsplash.com/photo-1517245386804-66fc1d9f5dc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-            alt: "Abstract background pattern",
-            className: "w-full h-full object-cover"
-          }
-        ) }),
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("section", { className: "relative bg-gradient-to-br from-indigo-50 to-white py-20 lg:py-32", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-16 items-center", children: [
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
           motion.div,
           {
-            className: "relative z-10 container mx-auto px-6 text-center",
+            className: "text-center lg:text-left",
             variants: containerVariants,
             initial: "hidden",
             animate: "visible",
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
                 motion.h1,
                 {
-                  className: "text-5xl sm:text-6xl lg:text-7xl font-bold font-heading text-gray-900 mb-6 leading-tight",
-                  variants: textVariants,
-                  children: "InnovateHub: Transforming Ideas into Impactful Solutions."
+                  className: "text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6",
+                  variants: itemVariants,
+                  children: [
+                    "ApexConnect: ",
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "text-indigo-600", children: "Elevate your business" }),
+                    " with seamless integration."
+                  ]
                 }
               ),
               /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
                 motion.p,
                 {
-                  className: "text-lg sm:text-xl lg:text-2xl text-gray-700 mb-10 max-w-3xl mx-auto",
-                  variants: textVariants,
-                  transition: { delay: 0.2 },
-                  children: "We provide the tools, expertise, and collaborative environment to bring your most ambitious projects to life."
+                  className: "text-lg sm:text-xl text-slate-700 mb-10 leading-relaxed",
+                  variants: itemVariants,
+                  children: "Unlock new levels of efficiency and collaboration. ApexConnect bridges the gap between your essential tools, empowering your team to achieve more."
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(motion.div, { variants: buttonVariants, transition: { delay: 0.4 }, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("button", { className: "flex items-center justify-center mx-auto px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105", children: [
-                "Get Started Today",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ArrowRight, { className: "ml-3 w-6 h-6" })
-              ] }) })
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+                motion.div,
+                {
+                  className: "flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4",
+                  variants: itemVariants,
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+                      motion.button,
+                      {
+                        whileHover: { scale: 1.05 },
+                        whileTap: { scale: 0.95 },
+                        className: "bg-indigo-600 text-white px-8 py-3 rounded-lg shadow-lg font-semibold text-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out flex items-center justify-center",
+                        children: [
+                          "Get Started Today",
+                          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ArrowRight, { className: "ml-2 h-5 w-5" })
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+                      motion.button,
+                      {
+                        whileHover: { scale: 1.05 },
+                        whileTap: { scale: 0.95 },
+                        className: "bg-white text-indigo-600 border-2 border-indigo-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out",
+                        children: "Learn More"
+                      }
+                    )
+                  ]
+                }
+              )
             ]
           }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          motion.div,
+          {
+            className: "relative",
+            initial: { opacity: 0, scale: 0.9 },
+            animate: { opacity: 1, scale: 1 },
+            transition: { duration: 0.8, ease: "easeOut" },
+            children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+              "img",
+              {
+                className: "w-full max-w-lg mx-auto rounded-lg shadow-2xl",
+                src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+                alt: "Product Showcase"
+              }
+            )
+          }
         )
-      ] });
+      ] }) }) });
     };
     HeroSection_default = HeroSection;
   }
 });
 
-// src/components/FeatureCard.jsx
-var import_react25, import_jsx_runtime5, FeatureCard, FeatureCard_default;
-var init_FeatureCard = __esm({
-  "src/components/FeatureCard.jsx"() {
-    import_react25 = __toESM(require_react());
-    init_es3();
-    import_jsx_runtime5 = __toESM(require_jsx_runtime());
-    FeatureCard = ({ icon: Icon2, title, description, color: color2, bg }) => {
-      return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-        motion.div,
-        {
-          className: `p-8 rounded-xl shadow-lg transition duration-300 ease-in-out ${bg} flex flex-col items-center text-center`,
-          whileHover: { y: -10, scale: 1.03, boxShadow: "0px 15px 30px rgba(0,0,0,0.1)" },
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: `rounded-full p-4 mb-6 ${bg} ${color2} inline-flex items-center justify-center`, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Icon2, { size: 36 }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-xl font-bold font-heading text-gray-900 mb-3", children: title }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-gray-600 leading-relaxed", children: description })
-          ]
-        }
-      );
-    };
-    FeatureCard_default = FeatureCard;
-  }
-});
-
 // src/components/FeaturesSection.jsx
-var import_react26, import_jsx_runtime6, FeaturesSection, FeaturesSection_default;
+var import_react25, import_jsx_runtime5, FeaturesSection, FeaturesSection_default;
 var init_FeaturesSection = __esm({
   "src/components/FeaturesSection.jsx"() {
-    import_react26 = __toESM(require_react());
-    init_FeatureCard();
-    init_lucide_react();
+    import_react25 = __toESM(require_react());
     init_es3();
-    import_jsx_runtime6 = __toESM(require_jsx_runtime());
+    init_lucide_react();
+    import_jsx_runtime5 = __toESM(require_jsx_runtime());
     FeaturesSection = () => {
       const features = [
         {
-          icon: Lightbulb,
-          title: "Creative Ideation",
-          description: "Spark new concepts with our intuitive brainstorming tools and collaborative platforms.",
-          color: "text-yellow-500",
-          bg: "bg-yellow-50"
+          name: "Cloud Sync",
+          description: "Real-time synchronization across all your devices, ensuring you always have the latest data.",
+          icon: Cloud
         },
         {
-          icon: Cloud,
-          title: "Seamless Deployment",
-          description: "Deploy your solutions effortlessly to the cloud with our integrated CI/CD pipelines.",
-          color: "text-blue-500",
-          bg: "bg-blue-50"
+          name: "Secure Integration",
+          description: "Bank-level encryption protects your data, providing peace of mind with every connection.",
+          icon: ShieldCheck
         },
         {
-          icon: ShieldCheck,
-          title: "Robust Security",
-          description: "Ensure your projects are protected with state-of-the-art security measures.",
-          color: "text-green-500",
-          bg: "bg-green-50"
+          name: "Lightning Fast",
+          description: "Experience unparalleled speed and responsiveness, boosting your team's productivity.",
+          icon: Zap
         },
         {
-          icon: Users,
-          title: "Team Collaboration",
-          description: "Foster teamwork with real-time collaboration features and project management tools.",
-          color: "text-purple-500",
-          bg: "bg-purple-50"
+          name: "Team Collaboration",
+          description: "Enhance teamwork with shared workspaces and seamless communication tools.",
+          icon: Users
         }
       ];
-      const sectionVariants = {
+      const containerVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
       };
-      return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("section", { id: "features", className: "py-20 bg-gray-50", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "container mx-auto px-6", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
-          motion.div,
-          {
-            className: "text-center mb-16",
-            initial: { opacity: 0, y: 50 },
-            whileInView: { opacity: 1, y: 0 },
-            transition: { duration: 0.5 },
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { className: "text-4xl font-bold font-heading text-gray-900 mb-4", children: "Unlock Your Potential with InnovateHub" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-lg text-gray-600 max-w-2xl mx-auto", children: "Discover the powerful features designed to streamline your workflow and amplify your impact." })
-            ]
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      const cardVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 }
+      };
+      return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("section", { id: "features", className: "py-20 bg-gray-50", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "text-center mb-16", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            motion.h2,
+            {
+              className: "text-4xl font-extrabold text-slate-900 mb-4",
+              initial: { opacity: 0, y: -20 },
+              whileInView: { opacity: 1, y: 0 },
+              transition: { duration: 0.5 },
+              children: "Powerful Features for Your Business"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            motion.p,
+            {
+              className: "text-lg text-slate-600 max-w-3xl mx-auto",
+              initial: { opacity: 0, y: 20 },
+              whileInView: { opacity: 1, y: 0 },
+              transition: { duration: 0.5, delay: 0.2 },
+              children: "Discover how ApexConnect streamlines your workflow and enhances productivity with its robust set of tools."
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           motion.div,
           {
             className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12",
-            variants: sectionVariants,
+            variants: containerVariants,
             initial: "hidden",
             whileInView: "visible",
             viewport: { once: true },
-            children: features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-              FeatureCard_default,
+            children: features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              motion.div,
               {
-                icon: feature.icon,
-                title: feature.title,
-                description: feature.description,
-                color: feature.color,
-                bg: feature.bg
+                className: "bg-white rounded-xl shadow-lg p-8 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl",
+                variants: cardVariants,
+                transition: { duration: 0.5, delay: index * 0.1 },
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "mb-6 inline-block p-4 bg-indigo-100 rounded-full text-indigo-600", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(feature.icon, { className: "h-10 w-10" }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-2xl font-bold text-slate-900 mb-3", children: feature.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-slate-600 leading-relaxed", children: feature.description })
+                ]
               },
               index
             ))
@@ -26338,195 +26282,97 @@ var init_FeaturesSection = __esm({
   }
 });
 
-// src/components/HowItWorksSection.jsx
-var import_react27, import_jsx_runtime7, HowItWorksSection, HowItWorksSection_default;
-var init_HowItWorksSection = __esm({
-  "src/components/HowItWorksSection.jsx"() {
-    import_react27 = __toESM(require_react());
+// src/components/TestimonialsSection.jsx
+var import_react26, import_jsx_runtime6, TestimonialsSection, TestimonialsSection_default;
+var init_TestimonialsSection = __esm({
+  "src/components/TestimonialsSection.jsx"() {
+    import_react26 = __toESM(require_react());
     init_es3();
-    init_lucide_react();
-    import_jsx_runtime7 = __toESM(require_jsx_runtime());
-    HowItWorksSection = () => {
-      const steps = [
+    import_jsx_runtime6 = __toESM(require_jsx_runtime());
+    TestimonialsSection = () => {
+      const testimonials = [
         {
-          icon: FileText,
-          title: "Define Your Vision",
-          description: "Clearly articulate your project goals and requirements. We help you map out the strategy.",
-          stepNumber: 1,
-          color: "text-blue-500",
-          bg: "bg-blue-100"
+          quote: "ApexConnect has revolutionized how we manage our projects. The integration is flawless, and the team's productivity has soared.",
+          name: "Alice Johnson",
+          title: "CEO, Innovate Solutions",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a39597a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
         },
         {
-          icon: Code,
-          title: "Develop & Iterate",
-          description: "Our agile process ensures continuous development and feedback loops for optimal results.",
-          stepNumber: 2,
-          color: "text-purple-500",
-          bg: "bg-purple-100"
+          quote: "The seamless integration with our existing tools saved us countless hours. ApexConnect is a must-have for any growing business.",
+          name: "Bob Williams",
+          title: "CTO, TechForward Inc.",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a701c71f286?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
         },
         {
-          icon: CloudUpload,
-          title: "Launch & Scale",
-          description: "Deploy your solution with confidence and scale it to meet growing demands.",
-          stepNumber: 3,
-          color: "text-green-500",
-          bg: "bg-green-100"
+          quote: "Customer support is outstanding. Whenever we had a question, the ApexConnect team responded promptly and effectively.",
+          name: "Carol Davis",
+          title: "Operations Manager, Global Enterprises",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00495469ba51?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
         }
       ];
       const containerVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
       };
-      const itemVariants = {
+      const cardVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0 }
       };
-      return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("section", { id: "how-it-works", className: "py-20", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "container mx-auto px-6", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("section", { id: "testimonials", className: "py-20 bg-white", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "text-center mb-16", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            motion.h2,
+            {
+              className: "text-4xl font-extrabold text-slate-900 mb-4",
+              initial: { opacity: 0, y: -20 },
+              whileInView: { opacity: 1, y: 0 },
+              transition: { duration: 0.5 },
+              children: "What Our Clients Say"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            motion.p,
+            {
+              className: "text-lg text-slate-600 max-w-3xl mx-auto",
+              initial: { opacity: 0, y: 20 },
+              whileInView: { opacity: 1, y: 0 },
+              transition: { duration: 0.5, delay: 0.2 },
+              children: "Hear from businesses that have transformed their operations with ApexConnect."
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           motion.div,
           {
-            className: "text-center mb-16",
-            initial: { opacity: 0, y: 50 },
-            whileInView: { opacity: 1, y: 0 },
-            transition: { duration: 0.5 },
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { className: "text-4xl font-bold font-heading text-gray-900 mb-4", children: "How InnovateHub Works" }),
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-lg text-gray-600 max-w-2xl mx-auto", children: "Bringing your ideas to life is a straightforward process with our structured approach." })
-            ]
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
-          motion.div,
-          {
-            className: "relative grid grid-cols-1 md:grid-cols-3 gap-12",
+            className: "grid grid-cols-1 md:grid-cols-3 gap-12",
             variants: containerVariants,
             initial: "hidden",
             whileInView: "visible",
             viewport: { once: true },
-            children: steps.map((step, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+            children: testimonials.map((testimonial, index) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
               motion.div,
               {
-                className: "relative p-8 rounded-xl bg-white shadow-lg flex flex-col items-center text-center",
-                variants: itemVariants,
-                transition: { delay: index * 0.1 },
+                className: "bg-slate-50 rounded-xl shadow-lg p-8 text-center border border-gray-200",
+                variants: cardVariants,
+                transition: { duration: 0.5, delay: index * 0.1 },
+                whileHover: { y: -10, scale: 1.02 },
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: `rounded-full p-5 mb-6 ${step.bg} ${step.color} inline-flex items-center justify-center`, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(step.icon, { size: 40 }) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { className: "text-2xl font-bold font-heading text-gray-900 mb-3", children: step.title }),
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-gray-600 leading-relaxed", children: step.description }),
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "absolute -top-4 -right-4 bg-gray-200 text-gray-700 font-bold rounded-full h-10 w-10 flex items-center justify-center text-lg", children: step.stepNumber })
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "text-xl italic text-slate-700 mb-6 leading-relaxed", children: [
+                    '"',
+                    testimonial.quote,
+                    '"'
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                    "img",
+                    {
+                      src: testimonial.avatar,
+                      alt: testimonial.name,
+                      className: "w-24 h-24 rounded-full mx-auto mb-4 border-4 border-indigo-500"
+                    }
+                  ),
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-bold text-slate-900 mb-1", children: testimonial.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-slate-500", children: testimonial.title })
                 ]
-              },
-              index
-            ))
-          }
-        )
-      ] }) });
-    };
-    HowItWorksSection_default = HowItWorksSection;
-  }
-});
-
-// src/components/TestimonialCard.jsx
-var import_react28, import_jsx_runtime8, TestimonialCard, TestimonialCard_default;
-var init_TestimonialCard = __esm({
-  "src/components/TestimonialCard.jsx"() {
-    import_react28 = __toESM(require_react());
-    init_es3();
-    init_lucide_react();
-    import_jsx_runtime8 = __toESM(require_jsx_runtime());
-    TestimonialCard = ({ quote, name, title, image }) => {
-      return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
-        motion.div,
-        {
-          className: "bg-white p-8 rounded-xl shadow-lg flex flex-col items-center text-center",
-          whileHover: { y: -10, scale: 1.02, boxShadow: "0px 15px 30px rgba(0,0,0,0.1)" },
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Quote, { className: "text-blue-600 mb-4", size: 48 }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("p", { className: "text-gray-700 italic text-lg leading-relaxed mb-6", children: [
-              '"',
-              quote,
-              '"'
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-              "img",
-              {
-                src: image,
-                alt: name,
-                className: "w-24 h-24 rounded-full object-cover mb-4 border-4 border-blue-200"
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h3", { className: "text-xl font-bold font-heading text-gray-900", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { className: "text-gray-500", children: title })
-          ]
-        }
-      );
-    };
-    TestimonialCard_default = TestimonialCard;
-  }
-});
-
-// src/components/TestimonialsSection.jsx
-var import_react29, import_jsx_runtime9, TestimonialsSection, TestimonialsSection_default;
-var init_TestimonialsSection = __esm({
-  "src/components/TestimonialsSection.jsx"() {
-    import_react29 = __toESM(require_react());
-    init_TestimonialCard();
-    init_es3();
-    import_jsx_runtime9 = __toESM(require_jsx_runtime());
-    TestimonialsSection = () => {
-      const testimonials = [
-        {
-          quote: "InnovateHub transformed our concept into a market-ready product faster than we ever imagined. Their team's expertise is unparalleled.",
-          name: "Alice Johnson",
-          title: "CEO, TechSolutions Inc.",
-          image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
-        },
-        {
-          quote: "The collaborative environment and cutting-edge tools provided by InnovateHub were crucial for our project's success. Highly recommended!",
-          name: "Bob Williams",
-          title: "Lead Developer, Creative Minds Co.",
-          image: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
-        },
-        {
-          quote: "From initial idea to final deployment, InnovateHub provided exceptional support and guidance. They are true partners in innovation.",
-          name: "Carol Davis",
-          title: "Product Manager, Future Forward Ltd.",
-          image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
-        }
-      ];
-      const sectionVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-      };
-      return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("section", { id: "testimonials", className: "py-20 bg-gray-50", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "container mx-auto px-6", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
-          motion.div,
-          {
-            className: "text-center mb-16",
-            initial: { opacity: 0, y: 50 },
-            whileInView: { opacity: 1, y: 0 },
-            transition: { duration: 0.5 },
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { className: "text-4xl font-bold font-heading text-gray-900 mb-4", children: "What Our Clients Say" }),
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "text-lg text-gray-600 max-w-2xl mx-auto", children: "Hear from satisfied innovators who have brought their visions to life with InnovateHub." })
-            ]
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
-          motion.div,
-          {
-            className: "grid grid-cols-1 md:grid-cols-3 gap-12",
-            variants: sectionVariants,
-            initial: "hidden",
-            whileInView: "visible",
-            viewport: { once: true },
-            children: testimonials.map((testimonial, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
-              TestimonialCard_default,
-              {
-                quote: testimonial.quote,
-                name: testimonial.name,
-                title: testimonial.title,
-                image: testimonial.image
               },
               index
             ))
@@ -26538,138 +26384,103 @@ var init_TestimonialsSection = __esm({
   }
 });
 
-// src/components/PricingCard.jsx
-var import_react30, import_jsx_runtime10, PricingCard, PricingCard_default;
-var init_PricingCard = __esm({
-  "src/components/PricingCard.jsx"() {
-    import_react30 = __toESM(require_react());
-    init_es3();
-    import_jsx_runtime10 = __toESM(require_jsx_runtime());
-    PricingCard = ({ name, price, period, features, highlight, icon: Icon2 }) => {
-      return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(
-        motion.div,
-        {
-          className: `p-8 rounded-xl shadow-lg border ${highlight ? "border-purple-500 bg-purple-50 scale-105" : "bg-white border-gray-200"} flex flex-col justify-between`,
-          whileHover: { y: highlight ? 0 : -10, scale: highlight ? 1.02 : 1.03, boxShadow: highlight ? "0px 20px 40px rgba(124, 41, 185, 0.3)" : "0px 15px 30px rgba(0,0,0,0.1)" },
-          transition: { duration: 0.3 },
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "flex justify-between items-center mb-4", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { className: `text-2xl font-bold font-heading ${highlight ? "text-purple-600" : "text-gray-900"}`, children: name }),
-                highlight && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "bg-purple-200 text-purple-800 text-xs font-bold px-3 py-1 rounded-full", children: "Most Popular" })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "mb-6", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: `text-5xl font-extrabold ${highlight ? "text-purple-600" : "text-blue-600"}`, children: price }),
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "text-gray-500 font-medium", children: [
-                  "/",
-                  period
-                ] })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("ul", { className: "space-y-3 mb-8", children: features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("li", { className: "flex items-center text-gray-700", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(Icon2, { className: `w-5 h-5 mr-3 ${highlight ? "text-purple-500" : "text-blue-500"}` }),
-                feature
-              ] }, index)) })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
-              "button",
-              {
-                className: `w-full py-3 rounded-lg font-bold text-lg transition duration-300 ${highlight ? "bg-purple-600 text-white hover:bg-purple-700" : "bg-blue-600 text-white hover:bg-blue-700"}`,
-                children: "Choose Plan"
-              }
-            )
-          ]
-        }
-      );
-    };
-    PricingCard_default = PricingCard;
-  }
-});
-
 // src/components/PricingSection.jsx
-var import_react31, import_jsx_runtime11, PricingSection, PricingSection_default;
+var import_react27, import_jsx_runtime7, PricingSection, PricingSection_default;
 var init_PricingSection = __esm({
   "src/components/PricingSection.jsx"() {
-    import_react31 = __toESM(require_react());
-    init_PricingCard();
-    init_lucide_react();
+    import_react27 = __toESM(require_react());
     init_es3();
-    import_jsx_runtime11 = __toESM(require_jsx_runtime());
+    init_lucide_react();
+    import_jsx_runtime7 = __toESM(require_jsx_runtime());
     PricingSection = () => {
-      const plans = [
+      const pricingPlans = [
         {
-          name: "Starter",
+          name: "Basic",
           price: "$29",
-          period: "month",
-          features: [
-            "1 Project Limit",
-            "Basic Collaboration Tools",
-            "Standard Support",
-            "5 GB Storage"
-          ],
+          period: "per month",
+          features: ["1 Project", "5 Users", "Basic Support"],
           highlight: false
         },
         {
           name: "Pro",
           price: "$79",
-          period: "month",
-          features: [
-            "Unlimited Projects",
-            "Advanced Collaboration",
-            "Priority Support",
-            "50 GB Storage",
-            "API Access"
-          ],
+          period: "per month",
+          features: ["Unlimited Projects", "15 Users", "Priority Support", "Advanced Analytics"],
           highlight: true
         },
         {
           name: "Enterprise",
           price: "$199",
-          period: "month",
-          features: [
-            "Unlimited Projects",
-            "Dedicated Account Manager",
-            "24/7 Premium Support",
-            "1 TB Storage",
-            "Custom Integrations"
-          ],
+          period: "per month",
+          features: ["Unlimited Projects", "Unlimited Users", "Dedicated Support", "Custom Integrations"],
           highlight: false
         }
       ];
-      const sectionVariants = {
+      const containerVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
       };
-      return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("section", { id: "pricing", className: "py-20 bg-gray-50", children: /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "container mx-auto px-6", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(
+      const cardVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 }
+      };
+      return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("section", { id: "pricing", className: "py-20 bg-gray-50", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "text-center mb-16", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+            motion.h2,
+            {
+              className: "text-4xl font-extrabold text-slate-900 mb-4",
+              initial: { opacity: 0, y: -20 },
+              whileInView: { opacity: 1, y: 0 },
+              transition: { duration: 0.5 },
+              children: "Flexible Pricing Plans"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+            motion.p,
+            {
+              className: "text-lg text-slate-600 max-w-3xl mx-auto",
+              initial: { opacity: 0, y: 20 },
+              whileInView: { opacity: 1, y: 0 },
+              transition: { duration: 0.5, delay: 0.2 },
+              children: "Choose the plan that best fits your business needs. No hidden fees, just value."
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           motion.div,
           {
-            className: "text-center mb-16",
-            initial: { opacity: 0, y: 50 },
-            whileInView: { opacity: 1, y: 0 },
-            transition: { duration: 0.5 },
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h2", { className: "text-4xl font-bold font-heading text-gray-900 mb-4", children: "Flexible Pricing Plans" }),
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "text-lg text-gray-600 max-w-2xl mx-auto", children: "Choose the plan that best fits your needs and budget. Scale as you grow." })
-            ]
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
-          motion.div,
-          {
-            className: "grid grid-cols-1 md:grid-cols-3 gap-12 items-stretch",
-            variants: sectionVariants,
+            className: "grid grid-cols-1 md:grid-cols-3 gap-12",
+            variants: containerVariants,
             initial: "hidden",
             whileInView: "visible",
             viewport: { once: true },
-            children: plans.map((plan, index) => /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
-              PricingCard_default,
+            children: pricingPlans.map((plan, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+              motion.div,
               {
-                name: plan.name,
-                price: plan.price,
-                period: plan.period,
-                features: plan.features,
-                highlight: plan.highlight,
-                icon: Check
+                className: `bg-white rounded-xl shadow-lg p-8 text-center border ${plan.highlight ? "border-indigo-500 shadow-xl scale-105" : "border-gray-200"} transition duration-300 ease-in-out`,
+                variants: cardVariants,
+                transition: { duration: 0.5, delay: index * 0.1 },
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { className: `text-3xl font-bold mb-4 ${plan.highlight ? "text-indigo-600" : "text-slate-900"}`, children: plan.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mb-6", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: `text-5xl font-extrabold ${plan.highlight ? "text-indigo-600" : "text-slate-900"}`, children: plan.price }),
+                    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "text-slate-500 font-medium ml-1", children: plan.period })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("ul", { className: "text-left mb-8 space-y-3 text-slate-700", children: plan.features.map((feature, fIndex) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("li", { className: "flex items-center", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Check, { className: `h-5 w-5 mr-3 ${plan.highlight ? "text-indigo-500" : "text-teal-500"}` }),
+                    feature
+                  ] }, fIndex)) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+                    motion.button,
+                    {
+                      whileHover: { scale: 1.05 },
+                      whileTap: { scale: 0.95 },
+                      className: `w-full py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out ${plan.highlight ? "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500" : "bg-teal-500 text-white hover:bg-teal-600 focus:ring-teal-500"}`,
+                      children: "Choose Plan"
+                    }
+                  )
+                ]
               },
               index
             ))
@@ -26682,62 +26493,138 @@ var init_PricingSection = __esm({
 });
 
 // src/components/CallToActionSection.jsx
-var import_react32, import_jsx_runtime12, CallToActionSection, CallToActionSection_default;
+var import_react28, import_jsx_runtime8, CallToActionSection, CallToActionSection_default;
 var init_CallToActionSection = __esm({
   "src/components/CallToActionSection.jsx"() {
-    import_react32 = __toESM(require_react());
+    import_react28 = __toESM(require_react());
     init_es3();
     init_lucide_react();
-    import_jsx_runtime12 = __toESM(require_jsx_runtime());
+    import_jsx_runtime8 = __toESM(require_jsx_runtime());
     CallToActionSection = () => {
-      const containerVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-      };
-      return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("section", { className: "relative py-20 bg-gradient-to-br from-blue-600 to-purple-600", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "absolute inset-0 opacity-10", children: /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
-          "img",
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("section", { id: "contact", className: "py-20 bg-indigo-600", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "text-center", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          motion.h2,
           {
-            src: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-            alt: "Abstract background pattern",
-            className: "w-full h-full object-cover"
+            className: "text-4xl sm:text-5xl font-extrabold text-white mb-6",
+            initial: { opacity: 0, y: -20 },
+            whileInView: { opacity: 1, y: 0 },
+            transition: { duration: 0.5 },
+            children: "Ready to Transform Your Business?"
           }
-        ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          motion.p,
+          {
+            className: "text-lg sm:text-xl text-indigo-100 mb-10 max-w-3xl mx-auto",
+            initial: { opacity: 0, y: 20 },
+            whileInView: { opacity: 1, y: 0 },
+            transition: { duration: 0.5, delay: 0.2 },
+            children: "Join thousands of businesses already leveraging ApexConnect for seamless integration and enhanced productivity."
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           motion.div,
           {
-            className: "relative z-10 container mx-auto px-6 text-center text-white",
-            variants: containerVariants,
-            initial: "hidden",
-            whileInView: "visible",
-            viewport: { once: true },
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h2", { className: "text-4xl sm:text-5xl lg:text-6xl font-bold font-heading mb-6 leading-tight", children: "Ready to Innovate?" }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "text-lg sm:text-xl lg:text-2xl mb-10 opacity-90", children: "Let's turn your groundbreaking ideas into reality. Start your journey with InnovateHub today." }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
-                motion.button,
-                {
-                  className: "flex items-center justify-center mx-auto px-10 py-5 bg-white text-blue-600 rounded-xl font-bold text-xl shadow-xl hover:bg-gray-100 transition duration-300 transform hover:scale-105",
-                  whileHover: { scale: 1.05 },
-                  children: [
-                    "Get Started Now",
-                    /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(ArrowRight, { className: "ml-4 w-7 h-7" })
-                  ]
-                }
-              )
-            ]
+            initial: { opacity: 0, scale: 0.9 },
+            whileInView: { opacity: 1, scale: 1 },
+            transition: { duration: 0.5, delay: 0.4 },
+            children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+              motion.button,
+              {
+                whileHover: { scale: 1.05 },
+                whileTap: { scale: 0.95 },
+                className: "bg-white text-indigo-600 font-bold py-3 px-8 rounded-lg shadow-lg text-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition duration-300 ease-in-out flex items-center justify-center",
+                children: [
+                  "Sign Up for Free",
+                  /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(ArrowRight, { className: "ml-2 h-5 w-5" })
+                ]
+              }
+            )
           }
         )
-      ] });
+      ] }) }) });
     };
     CallToActionSection_default = CallToActionSection;
   }
 });
 
 // src/components/Footer.jsx
-var Footer_default;
+var import_react29, import_jsx_runtime9, Facebook, Twitter, Linkedin, Footer, Footer_default;
 var init_Footer = __esm({
   "src/components/Footer.jsx"() {
+    import_react29 = __toESM(require_react());
+    import_jsx_runtime9 = __toESM(require_jsx_runtime());
+    ({ Facebook, Twitter, Linkedin } = window.LucideReact);
+    Footer = () => {
+      const footerLinks = [
+        { name: "About Us", href: "#" },
+        { name: "Contact", href: "#" },
+        { name: "Privacy Policy", href: "#" },
+        { name: "Terms of Service", href: "#" }
+      ];
+      const socialLinks = [
+        { icon: Facebook, href: "#" },
+        { icon: Twitter, href: "#" },
+        { icon: Linkedin, href: "#" }
+      ];
+      return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("footer", { className: "bg-slate-900 text-slate-300 py-12", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+          "div",
+          {
+            className: "grid grid-cols-1 md:grid-cols-3 gap-8",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+                  "img",
+                  {
+                    className: "h-10 w-auto mb-4",
+                    src: "https://via.placeholder.com/150x50?text=ApexConnect",
+                    alt: "ApexConnect Logo"
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "text-sm", children: "ApexConnect empowers your business with seamless integration and enhanced productivity." })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h4", { className: "text-lg font-semibold text-white mb-4", children: "Quick Links" }),
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("ul", { className: "space-y-2", children: footerLinks.map((link) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+                  "a",
+                  {
+                    href: link.href,
+                    className: "text-slate-300 hover:text-white transition duration-300 ease-in-out text-sm",
+                    children: link.name
+                  }
+                ) }, link.name)) })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h4", { className: "text-lg font-semibold text-white mb-4", children: "Connect With Us" }),
+                /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "flex space-x-5", children: socialLinks.map((link, index) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+                  "a",
+                  {
+                    href: link.href,
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    className: "text-slate-300 hover:text-white transition duration-300 ease-in-out",
+                    children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(link.icon, { className: "h-6 w-6" })
+                  },
+                  index
+                )) })
+              ] })
+            ]
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+          "div",
+          {
+            className: "mt-12 pt-8 border-t border-slate-700 text-center text-sm",
+            children: [
+              "\xA9 ",
+              (/* @__PURE__ */ new Date()).getFullYear(),
+              " ApexConnect. All rights reserved."
+            ]
+          }
+        )
+      ] }) });
+    };
     Footer_default = Footer;
   }
 });
@@ -26750,34 +26637,32 @@ var init_index = __esm({
 
 // src/App.jsx
 function App() {
-  return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(HashRouter, { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "font-body bg-white text-gray-900", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Navbar_default, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("main", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(HeroSection_default, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(FeaturesSection_default, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(HowItWorksSection_default, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(TestimonialsSection_default, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(PricingSection_default, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(CallToActionSection_default, {})
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(HashRouter, { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "min-h-screen flex flex-col bg-white font-inter", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(Navbar_default, {}),
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("main", { className: "flex-grow", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(HeroSection_default, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(FeaturesSection_default, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(TestimonialsSection_default, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(PricingSection_default, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(CallToActionSection_default, {})
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Footer_default, {})
+    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(Footer_default, {})
   ] }) });
 }
-var import_react33, import_jsx_runtime13, App_default;
+var import_react30, import_jsx_runtime10, App_default;
 var init_App = __esm({
   "src/App.jsx"() {
-    import_react33 = __toESM(require_react());
+    import_react30 = __toESM(require_react());
     init_dist();
     init_Navbar();
     init_HeroSection();
     init_FeaturesSection();
-    init_HowItWorksSection();
     init_TestimonialsSection();
     init_PricingSection();
     init_CallToActionSection();
     init_Footer();
     init_index();
-    import_jsx_runtime13 = __toESM(require_jsx_runtime());
+    import_jsx_runtime10 = __toESM(require_jsx_runtime());
     App_default = App;
   }
 });
@@ -26785,13 +26670,13 @@ var init_App = __esm({
 // src/main.jsx
 var require_main = __commonJS({
   "src/main.jsx"() {
-    var import_react34 = __toESM(require_react());
+    var import_react31 = __toESM(require_react());
     var import_client = __toESM(require_client());
     init_App();
     init_index();
-    var import_jsx_runtime14 = __toESM(require_jsx_runtime());
+    var import_jsx_runtime11 = __toESM(require_jsx_runtime());
     import_client.default.createRoot(document.getElementById("root")).render(
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(import_react34.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(App_default, {}) })
+      /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_react31.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(App_default, {}) })
     );
   }
 });
@@ -26889,16 +26774,12 @@ lucide-react/dist/esm/Icon.mjs:
 lucide-react/dist/esm/createLucideIcon.mjs:
 lucide-react/dist/esm/icons/arrow-right.mjs:
 lucide-react/dist/esm/icons/check.mjs:
-lucide-react/dist/esm/icons/cloud-upload.mjs:
 lucide-react/dist/esm/icons/cloud.mjs:
-lucide-react/dist/esm/icons/code.mjs:
-lucide-react/dist/esm/icons/file-text.mjs:
-lucide-react/dist/esm/icons/lightbulb.mjs:
 lucide-react/dist/esm/icons/menu.mjs:
-lucide-react/dist/esm/icons/quote.mjs:
 lucide-react/dist/esm/icons/shield-check.mjs:
 lucide-react/dist/esm/icons/users.mjs:
 lucide-react/dist/esm/icons/x.mjs:
+lucide-react/dist/esm/icons/zap.mjs:
 lucide-react/dist/esm/lucide-react.mjs:
   (**
    * @license lucide-react v1.23.0 - ISC

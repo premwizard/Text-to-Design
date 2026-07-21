@@ -61,7 +61,6 @@ export function useGenerate() {
     });
     setStatusText('Generating layout code...');
     setGenerationId(prev => prev + 1);
-    let fullCodeAccumulator = '';
     try {
       console.log(`[DEBUG] API Request start: POST ${API_BASE}/stream-jsx`, { prompt, generationMode });
       const response = await fetch(`${API_BASE}/stream-jsx`, {
@@ -307,6 +306,7 @@ export function useGenerate() {
   }, []);
 
   const fix = useCallback(async (brokenCode, errorMessage) => {
+    let fullCodeAccumulator = '';
     setLoading(true);
     setError('');
     setStatusText('Analyzing and fixing runtime error...');

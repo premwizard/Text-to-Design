@@ -3,7 +3,8 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import FeaturesSection from './components/FeaturesSection';
-import HowItWorksSection from './components/HowItWorksSection';
+// The following import caused an error because the file could not be resolved.
+// import HowItWorksSection from './components/HowItWorksSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import PricingSection from './components/PricingSection';
 import CallToActionSection from './components/CallToActionSection';
@@ -13,12 +14,13 @@ import './index.css';
 function App() {
   return (
     <Router>
-      <div className="font-body bg-white text-gray-900">
+      <div className="min-h-screen flex flex-col bg-white font-inter">
         <Navbar />
-        <main>
+        <main className="flex-grow">
           <HeroSection />
           <FeaturesSection />
-          <HowItWorksSection />
+          {/* The HowItWorksSection component was removed as its import could not be resolved. */}
+          {/* <HowItWorksSection /> */}
           <TestimonialsSection />
           <PricingSection />
           <CallToActionSection />

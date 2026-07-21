@@ -4,27 +4,11 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  line-height: 1.6;
-  color: #1f2937; /* Default text color */
-  background-color: #ffffff; /* Default background color */
+  @apply text-slate-900 bg-white;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', sans-serif;
-  color: #111827; /* Darker heading color */
-}
-
-.font-heading {
-  font-family: 'Space Grotesk', sans-serif;
-}
-
-.font-body {
   font-family: 'Inter', sans-serif;
 }
 
 /* Add any other global styles here */
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-}

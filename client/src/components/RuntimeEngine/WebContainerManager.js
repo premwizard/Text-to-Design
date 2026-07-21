@@ -131,6 +131,33 @@ class WebContainerManager {
     const instance = await this.boot();
     instance.on('server-ready', callback);
   }
+
+  /**
+   * Checks if dependencies in package.json have changed
+   */
+  hasPackageDependenciesChanged(oldPkgStr, newPkgStr) {
+    if (!oldPkgStr || !newPkgStr) return true;
+    try {
+      const oldPkg = typeof oldPkgStr === 'string' ? JSON.parse(oldPkgStr) : oldPkgStr;
+      const newPkg = typeof newPkgStr === 'string' ? JSON.parse(newPkgStr) : newPkgStr;
+      
+      const oldDeps = { ...(oldPkg.dependencies || {}), ...(oldPkg.devDependencies || {}) };
+      const newDeps = { ...(newPkg.dependencies || {}), ...(newPkg.devDependencies || {}) };
+      
+      const oldKeys = Object.keys(oldDeps);
+      const newKeys = Object.keys(newDeps);
+      
+      if (oldKeys.length !== newKeys.length) return true;
+      
+      for (const key of newKeys) {
+        if (oldDeps[key] !== newDeps[key]) return true;
+      }
+      
+      return false;
+    } catch (e) {
+      return true;
+    }
+  }
 }
 
 export const webcontainerManager = new WebContainerManager();

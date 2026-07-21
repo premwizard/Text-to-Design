@@ -2,11 +2,11 @@
   "userId": "4bb0cbfa-400c-4b5c-b1e4-72d6ed48c7fa",
   "preferences": {
     "theme": {
-      "light": 39
+      "light": 42
     },
     "style": {
       "minimal": 25,
-      "centered-stack": 13,
+      "centered-stack": 16,
       "split-screen": 1
     },
     "borderRadius": {},
@@ -16,7 +16,8 @@
       "indigo-500": 5,
       "#3498db": 3,
       "#3b82f6": 4,
-      "blue-600": 2
+      "blue-600": 2,
+      "indigo-600": 3
     },
     "preferredLayouts": {
       "navbar: top, sidebar: none": 22,
@@ -32,7 +33,7 @@
       "navbar": 6,
       "bentofeatures": 3,
       "projectssection": 1,
-      "footer": 37,
+      "footer": 40,
       "pricingsection": 1,
       "calltoaction": 2,
       "dashboardheader": 1,
@@ -44,37 +45,19 @@
       "datatablesection": 1,
       "transactiontable": 2,
       "chartssection": 1,
-      "hero": 14,
-      "features": 10,
-      "pricing": 10,
-      "testimonials": 10,
+      "hero": 17,
+      "features": 13,
+      "pricing": 13,
+      "testimonials": 13,
       "portfolio": 4,
       "about": 3,
       "contact": 2,
       "call-to-action": 4,
       "how it works": 2,
-      "call to action": 2
+      "call to action": 5
     }
   },
   "history": [
-    {
-      "prompt": "Build a portfolio website: Creative personal site",
-      "style": "centered-stack",
-      "theme": "creative",
-      "primaryColor": "#3498db"
-    },
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "centered-stack",
-      "theme": "modern",
-      "primaryColor": "indigo-500"
-    },
-    {
-      "prompt": "Build a saas landing page: Modern SaaS landing page",
-      "style": "centered-stack",
-      "theme": "modern",
-      "primaryColor": "#3b82f6"
-    },
     {
       "prompt": "Build a saas landing page: Modern SaaS landing page",
       "style": "centered-stack",
@@ -116,6 +99,24 @@
       "style": "centered-stack",
       "theme": "modern",
       "primaryColor": "blue-600"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "indigo-600"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "indigo-600"
+    },
+    {
+      "prompt": "Build a saas landing page: Modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "modern",
+      "primaryColor": "indigo-600"
     }
   ],
   "settings": {
