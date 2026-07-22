@@ -143,8 +143,9 @@ async def startup_event():
     logger.info("=" * 80)
     logger.info("REGISTERED API ROUTES:")
     for route in app.routes:
-        methods = getattr(route, 'methods', None)
-        logger.info(f"Route Path: {route.path} | Methods: {methods}")
+        if hasattr(route, 'path'):
+            methods = getattr(route, 'methods', None)
+            logger.info(f"Route Path: {route.path} | Methods: {methods}")
     logger.info("=" * 80)
 
 
