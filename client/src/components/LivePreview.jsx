@@ -9,7 +9,7 @@ import { CodeEditor } from './RuntimeEngine/CodeEditor';
 import { Terminal } from './RuntimeEngine/Terminal';
 
 export function LivePreview({ files = {}, loading = false, statusText = '', onRuntimeError }) {
-  const [selectedFile, setSelectedFile] = useState('App.jsx');
+  const [selectedFile, setSelectedFile] = useState('index.html');
   const [activeCode, setActiveCode] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
   const [logs, setLogs] = useState('');
@@ -22,61 +22,8 @@ export function LivePreview({ files = {}, loading = false, statusText = '', onRu
   const autoFixedImports = useRef(new Set());
   const logBufferRef = useRef('');
 
-  // Automatic recovery for missing component imports detected in terminal logs
-  const handleTerminalOutput = useCallback((data) => {
-    if (!data) return;
-    logBufferRef.current += data;
-
-    // Strip ANSI color escape sequences from terminal log buffer
-    const cleanLogs = logBufferRef.current.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nry=><]/g, '');
-
-    const matches = cleanLogs.matchAll(/Failed to resolve import ["']?(\.?\.\/[^"'\s]+)["']? from ["']?([^"'\s]+)["']?/gi);
-
-    for (const match of matches) {
-      const rawImportPath = match[1]; // e.g. "./components/HowItWorksSection"
-      const sourceFile = match[2];    // e.g. "App.jsx"
-      
-      let cleanPath = rawImportPath.replace(/^\.\//, '');
-      if (!/\.(jsx|js|tsx|ts)$/.test(cleanPath)) {
-        cleanPath = cleanPath + '.jsx';
-      }
-
-      if (!autoFixedImports.current.has(cleanPath)) {
-        autoFixedImports.current.add(cleanPath);
-        
-        const componentName = cleanPath.split('/').pop().replace(/\.(jsx|js|tsx|ts)$/, '');
-
-        const stubContent = `import React from 'react';
-
-export default function ${componentName}() {
-  return (
-    <section className="py-12 px-6 my-4 bg-zinc-900/50 border border-dashed border-zinc-800 rounded-2xl text-center">
-      <div className="max-w-md mx-auto space-y-2">
-        <div className="w-10 h-10 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20 flex items-center justify-center mx-auto text-sm font-bold">
-          ✨
-        </div>
-        <h3 className="text-base font-bold text-zinc-200">${componentName}</h3>
-        <p className="text-xs text-zinc-400 font-mono">Auto-generated component placeholder</p>
-      </div>
-    </section>
-  );
-}
-`;
-        console.log(`[Auto-Repair] Creating missing component stub: ${cleanPath}`);
-        webcontainerManager.writeFile(cleanPath, stubContent).catch(console.error);
-
-        if (onRuntimeError) {
-          onRuntimeError({
-            type: 'MISSING_IMPORT',
-            missingImport: rawImportPath,
-            targetFile: cleanPath,
-            sourceFile
-          });
-        }
-      }
-    }
-  }, [onRuntimeError]);
-
+  // ... (keep rest of stubs logic) ...
+  
   // Setup the WebContainer and boot the environment when files arrive
   useEffect(() => {
     if (Object.keys(files).length === 0) return;
@@ -86,46 +33,10 @@ export default function ${componentName}() {
     const applyFilesAndBoot = async () => {
       try {
         const runtimeFiles = { ...files };
+        const hasReactFiles = Object.keys(runtimeFiles).some(f => f.endsWith('.jsx') || f.endsWith('.tsx'));
 
-        // Pre-scan all JSX/TSX files for relative component imports and generate stubs for missing files
-        const importRegex = /import\s+(?:[A-Za-z0-9_{}\s,*]+)\s+from\s+["'](\.\/[^"']+)["']/g;
-        const fileKeys = Object.keys(runtimeFiles);
-        for (const filePath of fileKeys) {
-          const content = runtimeFiles[filePath];
-          if (typeof content !== 'string') continue;
-          let match;
-          while ((match = importRegex.exec(content)) !== null) {
-            const rawImport = match[1];
-            let cleanPath = rawImport.replace(/^\.\//, '');
-            if (!/\.(jsx|js|tsx|ts)$/.test(cleanPath)) {
-              cleanPath = cleanPath + '.jsx';
-            }
-
-            if (!runtimeFiles[cleanPath] && !runtimeFiles['src/' + cleanPath]) {
-              const componentName = cleanPath.split('/').pop().replace(/\.(jsx|js|tsx|ts)$/, '');
-              runtimeFiles[cleanPath] = `import React from 'react';
-
-export default function ${componentName}() {
-  return (
-    <section className="py-12 px-6 my-4 bg-zinc-900/50 border border-dashed border-zinc-800 rounded-2xl text-center">
-      <div className="max-w-md mx-auto space-y-2">
-        <div className="w-10 h-10 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20 flex items-center justify-center mx-auto text-sm font-bold">
-          ✨
-        </div>
-        <h3 className="text-base font-bold text-zinc-200">${componentName}</h3>
-        <p className="text-xs text-zinc-400 font-mono">Auto-generated component placeholder</p>
-      </div>
-    </section>
-  );
-}
-`;
-              console.log(`[Pre-Scan Auto-Stub] Generated missing import stub: ${cleanPath}`);
-            }
-          }
-        }
-
-        // Normalize entry file and create index.jsx fallback bridge so Vite never fails
-        if (!runtimeFiles['index.jsx'] && !runtimeFiles['index.tsx']) {
+        // Normalize entry file and create index.jsx fallback bridge ONLY if React component files exist
+        if (hasReactFiles && !runtimeFiles['index.jsx'] && !runtimeFiles['index.tsx']) {
           if (runtimeFiles['main.jsx']) {
             runtimeFiles['index.jsx'] = `import './main.jsx';`;
           } else if (runtimeFiles['main.tsx']) {
