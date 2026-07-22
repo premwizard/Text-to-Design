@@ -2,23 +2,27 @@
   "userId": "test_user",
   "preferences": {
     "theme": {
-      "light": 2
+      "light": 3
     },
     "style": {
-      "centered-stack": 2
+      "centered-stack": 2,
+      "split-screen": 1
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "indigo-500": 2
+      "indigo-500": 2,
+      "indigo-600": 1
     },
     "preferredLayouts": {},
     "commonComponents": {
-      "hero": 2,
-      "features": 2,
-      "pricing": 2,
-      "testimonials": 2,
-      "footer": 2
+      "hero": 3,
+      "features": 3,
+      "pricing": 3,
+      "testimonials": 3,
+      "footer": 3,
+      "howitworks": 1,
+      "faq": 1
     }
   },
   "history": [
@@ -33,6 +37,12 @@
       "style": "centered-stack",
       "theme": "professional",
       "primaryColor": "indigo-500"
+    },
+    {
+      "prompt": "Build a SaaS landing page for an AI image generator",
+      "style": "split-screen",
+      "theme": "professional",
+      "primaryColor": "indigo-600"
     }
   ],
   "settings": {

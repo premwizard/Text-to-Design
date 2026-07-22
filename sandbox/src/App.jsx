@@ -1,14 +1,32 @@
 import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar.jsx';
-import HeroSection from './components/HeroSection.jsx';
-import FeaturesComponent from './components/FeaturesComponent.jsx';
-import PricingTable from './components/PricingTable.jsx';
-import TestimonialsSection from './components/TestimonialsSection.jsx';
-import FooterComponent from './components/FooterComponent.jsx';
 import './index.css';
 import { motion } from 'framer-motion';
 import { Home, ArrowRight } from 'lucide-react';
+
+function Navbar() {
+  return <nav>Navbar</nav>;
+}
+
+function HeroSection() {
+  return <section>HeroSection</section>;
+}
+
+function FeaturesComponent() {
+  return <section>FeaturesComponent</section>;
+}
+
+function PricingTable() {
+  return <section>PricingTable</section>;
+}
+
+function TestimonialsSection() {
+  return <section>TestimonialsSection</section>;
+}
+
+function FooterComponent() {
+  return <footer>FooterComponent</footer>;
+}
 
 function App() {
   return (

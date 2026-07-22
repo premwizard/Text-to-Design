@@ -784,7 +784,7 @@ var require_scheduler = __commonJS({
 var require_react_dom_production = __commonJS({
   "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
     "use strict";
-    var React19 = require_react();
+    var React13 = require_react();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
       if (1 < arguments.length) {
@@ -824,7 +824,7 @@ var require_react_dom_production = __commonJS({
         implementation
       };
     }
-    var ReactSharedInternals = React19.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React13.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     function getCrossOriginStringAs(as, input) {
       if ("font" === as) return "";
       if ("string" === typeof input)
@@ -960,7 +960,7 @@ var require_react_dom_client_production = __commonJS({
   "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
     "use strict";
     var Scheduler = require_scheduler();
-    var React19 = require_react();
+    var React13 = require_react();
     var ReactDOM = require_react_dom();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
@@ -1151,7 +1151,7 @@ var require_react_dom_client_production = __commonJS({
       return null;
     }
     var isArrayImpl = Array.isArray;
-    var ReactSharedInternals = React19.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React13.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var sharedNotPendingObject = {
       pending: false,
@@ -12597,7 +12597,7 @@ var require_react_dom_client_production = __commonJS({
         0 === i && attemptExplicitHydrationTarget(target);
       }
     };
-    var isomorphicReactPackageVersion$jscomp$inline_1840 = React19.version;
+    var isomorphicReactPackageVersion$jscomp$inline_1840 = React13.version;
     if ("19.2.7" !== isomorphicReactPackageVersion$jscomp$inline_1840)
       throw Error(
         formatProdErrorMessage(
@@ -15480,247 +15480,9 @@ var init_dist = __esm({
   }
 });
 
-// node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
-var mergeClasses;
-var init_mergeClasses = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs"() {
-    mergeClasses = (...classes) => classes.filter((className, index, array) => {
-      return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
-    }).join(" ").trim();
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
-var toKebabCase;
-var init_toKebabCase = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs"() {
-    toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs
-var toCamelCase;
-var init_toCamelCase = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs"() {
-    toCamelCase = (string) => string.replace(
-      /^([A-Z])|[\s-_]+(\w)/g,
-      (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
-    );
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs
-var toPascalCase;
-var init_toPascalCase = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs"() {
-    init_toCamelCase();
-    toPascalCase = (string) => {
-      const camelCase = toCamelCase(string);
-      return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/defaultAttributes.mjs
-var defaultAttributes;
-var init_defaultAttributes = __esm({
-  "node_modules/lucide-react/dist/esm/defaultAttributes.mjs"() {
-    defaultAttributes = {
-      xmlns: "http://www.w3.org/2000/svg",
-      width: 24,
-      height: 24,
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 2,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
-var hasA11yProp;
-var init_hasA11yProp = __esm({
-  "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs"() {
-    hasA11yProp = (props) => {
-      for (const prop in props) {
-        if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
-          return true;
-        }
-      }
-      return false;
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/context.mjs
-var import_react, LucideContext, useLucideContext;
-var init_context = __esm({
-  "node_modules/lucide-react/dist/esm/context.mjs"() {
-    "use strict";
-    "use client";
-    import_react = __toESM(require_react(), 1);
-    LucideContext = (0, import_react.createContext)({});
-    useLucideContext = () => (0, import_react.useContext)(LucideContext);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/Icon.mjs
-var import_react2, Icon;
-var init_Icon = __esm({
-  "node_modules/lucide-react/dist/esm/Icon.mjs"() {
-    "use strict";
-    "use client";
-    import_react2 = __toESM(require_react(), 1);
-    init_defaultAttributes();
-    init_hasA11yProp();
-    init_mergeClasses();
-    init_context();
-    Icon = (0, import_react2.forwardRef)(
-      ({ color: color2, size, strokeWidth, absoluteStrokeWidth, className = "", children, iconNode, ...rest }, ref) => {
-        const {
-          size: contextSize = 24,
-          strokeWidth: contextStrokeWidth = 2,
-          absoluteStrokeWidth: contextAbsoluteStrokeWidth = false,
-          color: contextColor = "currentColor",
-          className: contextClass = ""
-        } = useLucideContext() ?? {};
-        const calculatedStrokeWidth = absoluteStrokeWidth ?? contextAbsoluteStrokeWidth ? Number(strokeWidth ?? contextStrokeWidth) * 24 / Number(size ?? contextSize) : strokeWidth ?? contextStrokeWidth;
-        return (0, import_react2.createElement)(
-          "svg",
-          {
-            ref,
-            ...defaultAttributes,
-            width: size ?? contextSize ?? defaultAttributes.width,
-            height: size ?? contextSize ?? defaultAttributes.height,
-            stroke: color2 ?? contextColor,
-            strokeWidth: calculatedStrokeWidth,
-            className: mergeClasses("lucide", contextClass, className),
-            ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
-            ...rest
-          },
-          [
-            ...iconNode.map(([tag, attrs]) => (0, import_react2.createElement)(tag, attrs)),
-            ...Array.isArray(children) ? children : [children]
-          ]
-        );
-      }
-    );
-  }
-});
-
-// node_modules/lucide-react/dist/esm/createLucideIcon.mjs
-var import_react3, createLucideIcon;
-var init_createLucideIcon = __esm({
-  "node_modules/lucide-react/dist/esm/createLucideIcon.mjs"() {
-    import_react3 = __toESM(require_react(), 1);
-    init_mergeClasses();
-    init_toKebabCase();
-    init_toPascalCase();
-    init_Icon();
-    createLucideIcon = (iconName, iconNode) => {
-      const Component5 = (0, import_react3.forwardRef)(
-        ({ className, ...props }, ref) => (0, import_react3.createElement)(Icon, {
-          ref,
-          iconNode,
-          className: mergeClasses(
-            `lucide-${toKebabCase(toPascalCase(iconName))}`,
-            `lucide-${iconName}`,
-            className
-          ),
-          ...props
-        })
-      );
-      Component5.displayName = toPascalCase(iconName);
-      return Component5;
-    };
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/arrow-right.mjs
-var __iconNode, ArrowRight;
-var init_arrow_right = __esm({
-  "node_modules/lucide-react/dist/esm/icons/arrow-right.mjs"() {
-    init_createLucideIcon();
-    __iconNode = [
-      ["path", { d: "M5 12h14", key: "1ays0h" }],
-      ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
-    ];
-    ArrowRight = createLucideIcon("arrow-right", __iconNode);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/check.mjs
-var __iconNode2, Check;
-var init_check = __esm({
-  "node_modules/lucide-react/dist/esm/icons/check.mjs"() {
-    init_createLucideIcon();
-    __iconNode2 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-    Check = createLucideIcon("check", __iconNode2);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/copyright.mjs
-var __iconNode3, Copyright;
-var init_copyright = __esm({
-  "node_modules/lucide-react/dist/esm/icons/copyright.mjs"() {
-    init_createLucideIcon();
-    __iconNode3 = [
-      ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-      ["path", { d: "M14.83 14.83a4 4 0 1 1 0-5.66", key: "1i56pz" }]
-    ];
-    Copyright = createLucideIcon("copyright", __iconNode3);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/dollar-sign.mjs
-var __iconNode4, DollarSign;
-var init_dollar_sign = __esm({
-  "node_modules/lucide-react/dist/esm/icons/dollar-sign.mjs"() {
-    init_createLucideIcon();
-    __iconNode4 = [
-      ["line", { x1: "12", x2: "12", y1: "2", y2: "22", key: "7eqyqh" }],
-      ["path", { d: "M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", key: "1b0p4s" }]
-    ];
-    DollarSign = createLucideIcon("dollar-sign", __iconNode4);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/icons/quote.mjs
-var __iconNode5, Quote;
-var init_quote = __esm({
-  "node_modules/lucide-react/dist/esm/icons/quote.mjs"() {
-    init_createLucideIcon();
-    __iconNode5 = [
-      [
-        "path",
-        {
-          d: "M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z",
-          key: "rib7q0"
-        }
-      ],
-      [
-        "path",
-        {
-          d: "M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z",
-          key: "1ymkrd"
-        }
-      ]
-    ];
-    Quote = createLucideIcon("quote", __iconNode5);
-  }
-});
-
-// node_modules/lucide-react/dist/esm/lucide-react.mjs
-var init_lucide_react = __esm({
-  "node_modules/lucide-react/dist/esm/lucide-react.mjs"() {
-    "use strict";
-    init_arrow_right();
-    init_check();
-    init_copyright();
-    init_dollar_sign();
-    init_quote();
+// src/index.css
+var init_index = __esm({
+  "src/index.css"() {
   }
 });
 
@@ -15766,55 +15528,29 @@ var require_jsx_runtime = __commonJS({
   }
 });
 
-// src/components/Navbar.jsx
-function Navbar() {
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", { className: "bg-white shadow-sm py-4", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "max-w-7xl mx-auto flex justify-between items-center", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", className: "text-slate-900 font-bold text-lg", children: "NexusApp" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { className: "flex items-center space-x-4", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Home" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Features" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Pricing" }) })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", { className: "bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded", children: [
-      "Get Started",
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { className: "ml-2" })
-    ] })
-  ] }) });
-}
-var import_react4, import_jsx_runtime, Navbar_default;
-var init_Navbar = __esm({
-  "src/components/Navbar.jsx"() {
-    import_react4 = __toESM(require_react());
-    init_dist();
-    init_lucide_react();
-    import_jsx_runtime = __toESM(require_jsx_runtime());
-    Navbar_default = Navbar;
-  }
-});
-
 // node_modules/framer-motion/dist/es/context/LayoutGroupContext.mjs
-var import_react5, LayoutGroupContext;
+var import_react, LayoutGroupContext;
 var init_LayoutGroupContext = __esm({
   "node_modules/framer-motion/dist/es/context/LayoutGroupContext.mjs"() {
     "use client";
-    import_react5 = __toESM(require_react(), 1);
-    LayoutGroupContext = (0, import_react5.createContext)({});
+    import_react = __toESM(require_react(), 1);
+    LayoutGroupContext = (0, import_react.createContext)({});
   }
 });
 
 // node_modules/framer-motion/dist/es/utils/use-constant.mjs
 function useConstant(init) {
-  const ref = (0, import_react6.useRef)(null);
+  const ref = (0, import_react2.useRef)(null);
   if (ref.current === null) {
     ref.current = init();
   }
   return ref.current;
 }
-var import_react6;
+var import_react2;
 var init_use_constant = __esm({
   "node_modules/framer-motion/dist/es/utils/use-constant.mjs"() {
     "use client";
-    import_react6 = __toESM(require_react(), 1);
+    import_react2 = __toESM(require_react(), 1);
   }
 });
 
@@ -15827,23 +15563,23 @@ var init_is_browser = __esm({
 });
 
 // node_modules/framer-motion/dist/es/utils/use-isomorphic-effect.mjs
-var import_react7, useIsomorphicLayoutEffect2;
+var import_react3, useIsomorphicLayoutEffect2;
 var init_use_isomorphic_effect = __esm({
   "node_modules/framer-motion/dist/es/utils/use-isomorphic-effect.mjs"() {
     "use client";
-    import_react7 = __toESM(require_react(), 1);
+    import_react3 = __toESM(require_react(), 1);
     init_is_browser();
-    useIsomorphicLayoutEffect2 = isBrowser3 ? import_react7.useLayoutEffect : import_react7.useEffect;
+    useIsomorphicLayoutEffect2 = isBrowser3 ? import_react3.useLayoutEffect : import_react3.useEffect;
   }
 });
 
 // node_modules/framer-motion/dist/es/context/PresenceContext.mjs
-var import_react8, PresenceContext;
+var import_react4, PresenceContext;
 var init_PresenceContext = __esm({
   "node_modules/framer-motion/dist/es/context/PresenceContext.mjs"() {
     "use client";
-    import_react8 = __toESM(require_react(), 1);
-    PresenceContext = /* @__PURE__ */ (0, import_react8.createContext)(null);
+    import_react4 = __toESM(require_react(), 1);
+    PresenceContext = /* @__PURE__ */ (0, import_react4.createContext)(null);
   }
 });
 
@@ -23780,12 +23516,12 @@ var init_es2 = __esm({
 });
 
 // node_modules/framer-motion/dist/es/context/MotionConfigContext.mjs
-var import_react9, MotionConfigContext;
+var import_react5, MotionConfigContext;
 var init_MotionConfigContext = __esm({
   "node_modules/framer-motion/dist/es/context/MotionConfigContext.mjs"() {
     "use client";
-    import_react9 = __toESM(require_react(), 1);
-    MotionConfigContext = (0, import_react9.createContext)({
+    import_react5 = __toESM(require_react(), 1);
+    MotionConfigContext = (0, import_react5.createContext)({
       transformPagePoint: (p) => p,
       isStatic: false,
       reducedMotion: "never"
@@ -23795,35 +23531,35 @@ var init_MotionConfigContext = __esm({
 
 // node_modules/framer-motion/dist/es/components/AnimatePresence/use-presence.mjs
 function usePresence(subscribe = true) {
-  const context = (0, import_react10.useContext)(PresenceContext);
+  const context = (0, import_react6.useContext)(PresenceContext);
   if (context === null)
     return [true, null];
   const { isPresent, onExitComplete, register } = context;
-  const id3 = (0, import_react10.useId)();
-  (0, import_react10.useEffect)(() => {
+  const id3 = (0, import_react6.useId)();
+  (0, import_react6.useEffect)(() => {
     if (subscribe) {
       return register(id3);
     }
   }, [subscribe]);
-  const safeToRemove = (0, import_react10.useCallback)(() => subscribe && onExitComplete && onExitComplete(id3), [id3, onExitComplete, subscribe]);
+  const safeToRemove = (0, import_react6.useCallback)(() => subscribe && onExitComplete && onExitComplete(id3), [id3, onExitComplete, subscribe]);
   return !isPresent && onExitComplete ? [false, safeToRemove] : [true];
 }
-var import_react10;
+var import_react6;
 var init_use_presence = __esm({
   "node_modules/framer-motion/dist/es/components/AnimatePresence/use-presence.mjs"() {
     "use client";
-    import_react10 = __toESM(require_react(), 1);
+    import_react6 = __toESM(require_react(), 1);
     init_PresenceContext();
   }
 });
 
 // node_modules/framer-motion/dist/es/context/LazyContext.mjs
-var import_react11, LazyContext;
+var import_react7, LazyContext;
 var init_LazyContext = __esm({
   "node_modules/framer-motion/dist/es/context/LazyContext.mjs"() {
     "use client";
-    import_react11 = __toESM(require_react(), 1);
-    LazyContext = (0, import_react11.createContext)({ strict: false });
+    import_react7 = __toESM(require_react(), 1);
+    LazyContext = (0, import_react7.createContext)({ strict: false });
   }
 });
 
@@ -23968,12 +23704,12 @@ var init_filter_props = __esm({
 });
 
 // node_modules/framer-motion/dist/es/context/MotionContext/index.mjs
-var import_react12, MotionContext;
+var import_react8, MotionContext;
 var init_MotionContext = __esm({
   "node_modules/framer-motion/dist/es/context/MotionContext/index.mjs"() {
     "use client";
-    import_react12 = __toESM(require_react(), 1);
-    MotionContext = /* @__PURE__ */ (0, import_react12.createContext)({});
+    import_react8 = __toESM(require_react(), 1);
+    MotionContext = /* @__PURE__ */ (0, import_react8.createContext)({});
   }
 });
 
@@ -23996,17 +23732,17 @@ var init_utils3 = __esm({
 
 // node_modules/framer-motion/dist/es/context/MotionContext/create.mjs
 function useCreateMotionContext(props) {
-  const { initial, animate } = getCurrentTreeVariants(props, (0, import_react13.useContext)(MotionContext));
-  return (0, import_react13.useMemo)(() => ({ initial, animate }), [variantLabelsAsDependency(initial), variantLabelsAsDependency(animate)]);
+  const { initial, animate } = getCurrentTreeVariants(props, (0, import_react9.useContext)(MotionContext));
+  return (0, import_react9.useMemo)(() => ({ initial, animate }), [variantLabelsAsDependency(initial), variantLabelsAsDependency(animate)]);
 }
 function variantLabelsAsDependency(prop) {
   return Array.isArray(prop) ? prop.join(" ") : prop;
 }
-var import_react13;
+var import_react9;
 var init_create = __esm({
   "node_modules/framer-motion/dist/es/context/MotionContext/create.mjs"() {
     "use client";
-    import_react13 = __toESM(require_react(), 1);
+    import_react9 = __toESM(require_react(), 1);
     init_MotionContext();
     init_utils3();
   }
@@ -24034,7 +23770,7 @@ function copyRawValuesOnly(target, source, props) {
   }
 }
 function useInitialMotionValues({ transformTemplate }, visualState) {
-  return (0, import_react14.useMemo)(() => {
+  return (0, import_react10.useMemo)(() => {
     const state = createHtmlRenderState();
     buildHTMLStyles(state, visualState, transformTemplate);
     return Object.assign({}, state.vars, state.style);
@@ -24061,12 +23797,12 @@ function useHTMLProps(props, visualState) {
   htmlProps.style = style;
   return htmlProps;
 }
-var import_react14;
+var import_react10;
 var init_use_props = __esm({
   "node_modules/framer-motion/dist/es/render/html/use-props.mjs"() {
     "use client";
     init_es2();
-    import_react14 = __toESM(require_react(), 1);
+    import_react10 = __toESM(require_react(), 1);
     init_create_render_state();
   }
 });
@@ -24085,7 +23821,7 @@ var init_create_render_state2 = __esm({
 
 // node_modules/framer-motion/dist/es/render/svg/use-props.mjs
 function useSVGProps(props, visualState, _isStatic, Component5) {
-  const visualProps = (0, import_react15.useMemo)(() => {
+  const visualProps = (0, import_react11.useMemo)(() => {
     const state = createSvgRenderState();
     buildSVGAttrs(state, visualState, isSVGTag(Component5), props.transformTemplate, props.style);
     return {
@@ -24100,12 +23836,12 @@ function useSVGProps(props, visualState, _isStatic, Component5) {
   }
   return visualProps;
 }
-var import_react15;
+var import_react11;
 var init_use_props2 = __esm({
   "node_modules/framer-motion/dist/es/render/svg/use-props.mjs"() {
     "use client";
     init_es2();
-    import_react15 = __toESM(require_react(), 1);
+    import_react11 = __toESM(require_react(), 1);
     init_use_props();
     init_create_render_state2();
   }
@@ -24182,20 +23918,20 @@ function useRender(Component5, props, ref, { latestValues }, isStatic, forwardMo
   const useVisualProps = isSVG ?? isSVGComponent(Component5) ? useSVGProps : useHTMLProps;
   const visualProps = useVisualProps(props, latestValues, isStatic, Component5);
   const filteredProps = filterProps(props, typeof Component5 === "string", forwardMotionProps);
-  const elementProps = Component5 !== import_react16.Fragment ? { ...filteredProps, ...visualProps, ref } : {};
+  const elementProps = Component5 !== import_react12.Fragment ? { ...filteredProps, ...visualProps, ref } : {};
   const { children } = props;
-  const renderedChildren = (0, import_react16.useMemo)(() => isMotionValue(children) ? children.get() : children, [children]);
-  return (0, import_react16.createElement)(Component5, {
+  const renderedChildren = (0, import_react12.useMemo)(() => isMotionValue(children) ? children.get() : children, [children]);
+  return (0, import_react12.createElement)(Component5, {
     ...elementProps,
     children: renderedChildren
   });
 }
-var import_react16;
+var import_react12;
 var init_use_render = __esm({
   "node_modules/framer-motion/dist/es/render/dom/use-render.mjs"() {
     "use client";
     init_es2();
-    import_react16 = __toESM(require_react(), 1);
+    import_react12 = __toESM(require_react(), 1);
     init_use_props();
     init_use_props2();
     init_filter_props();
@@ -24253,18 +23989,18 @@ function makeLatestValues(props, context, presenceContext, scrapeMotionValues) {
   }
   return values;
 }
-var import_react17, makeUseVisualState;
+var import_react13, makeUseVisualState;
 var init_use_visual_state = __esm({
   "node_modules/framer-motion/dist/es/motion/utils/use-visual-state.mjs"() {
     "use client";
     init_es2();
-    import_react17 = __toESM(require_react(), 1);
+    import_react13 = __toESM(require_react(), 1);
     init_MotionContext();
     init_PresenceContext();
     init_use_constant();
     makeUseVisualState = (config) => (props, isStatic) => {
-      const context = (0, import_react17.useContext)(MotionContext);
-      const presenceContext = (0, import_react17.useContext)(PresenceContext);
+      const context = (0, import_react13.useContext)(MotionContext);
+      const presenceContext = (0, import_react13.useContext)(PresenceContext);
       const make = () => makeState(config, props, context, presenceContext);
       return isStatic ? make() : useConstant(make);
     };
@@ -24311,12 +24047,12 @@ var init_symbol = __esm({
 
 // node_modules/framer-motion/dist/es/motion/utils/use-motion-ref.mjs
 function useMotionRef(visualState, visualElement, externalRef) {
-  const externalRefContainer = (0, import_react18.useRef)(externalRef);
-  (0, import_react18.useInsertionEffect)(() => {
+  const externalRefContainer = (0, import_react14.useRef)(externalRef);
+  (0, import_react14.useInsertionEffect)(() => {
     externalRefContainer.current = externalRef;
   });
-  const refCleanup = (0, import_react18.useRef)(null);
-  return (0, import_react18.useCallback)((instance) => {
+  const refCleanup = (0, import_react14.useRef)(null);
+  return (0, import_react14.useCallback)((instance) => {
     if (instance) {
       visualState.onMount?.(instance);
     }
@@ -24341,21 +24077,21 @@ function useMotionRef(visualState, visualElement, externalRef) {
     }
   }, [visualElement]);
 }
-var import_react18;
+var import_react14;
 var init_use_motion_ref = __esm({
   "node_modules/framer-motion/dist/es/motion/utils/use-motion-ref.mjs"() {
     "use client";
-    import_react18 = __toESM(require_react(), 1);
+    import_react14 = __toESM(require_react(), 1);
   }
 });
 
 // node_modules/framer-motion/dist/es/context/SwitchLayoutGroupContext.mjs
-var import_react19, SwitchLayoutGroupContext;
+var import_react15, SwitchLayoutGroupContext;
 var init_SwitchLayoutGroupContext = __esm({
   "node_modules/framer-motion/dist/es/context/SwitchLayoutGroupContext.mjs"() {
     "use client";
-    import_react19 = __toESM(require_react(), 1);
-    SwitchLayoutGroupContext = (0, import_react19.createContext)({});
+    import_react15 = __toESM(require_react(), 1);
+    SwitchLayoutGroupContext = (0, import_react15.createContext)({});
   }
 });
 
@@ -24370,14 +24106,14 @@ var init_is_ref_object = __esm({
 
 // node_modules/framer-motion/dist/es/motion/utils/use-visual-element.mjs
 function useVisualElement(Component5, visualState, props, createVisualElement, ProjectionNodeConstructor, isSVG) {
-  const { visualElement: parent } = (0, import_react20.useContext)(MotionContext);
-  const lazyContext = (0, import_react20.useContext)(LazyContext);
-  const presenceContext = (0, import_react20.useContext)(PresenceContext);
-  const motionConfig = (0, import_react20.useContext)(MotionConfigContext);
+  const { visualElement: parent } = (0, import_react16.useContext)(MotionContext);
+  const lazyContext = (0, import_react16.useContext)(LazyContext);
+  const presenceContext = (0, import_react16.useContext)(PresenceContext);
+  const motionConfig = (0, import_react16.useContext)(MotionConfigContext);
   const reducedMotionConfig = motionConfig.reducedMotion;
   const skipAnimations = motionConfig.skipAnimations;
-  const visualElementRef = (0, import_react20.useRef)(null);
-  const hasMountedOnce = (0, import_react20.useRef)(false);
+  const visualElementRef = (0, import_react16.useRef)(null);
+  const hasMountedOnce = (0, import_react16.useRef)(false);
   createVisualElement = createVisualElement || lazyContext.renderer;
   if (!visualElementRef.current && createVisualElement) {
     visualElementRef.current = createVisualElement(Component5, {
@@ -24395,18 +24131,18 @@ function useVisualElement(Component5, visualState, props, createVisualElement, P
     }
   }
   const visualElement = visualElementRef.current;
-  const initialLayoutGroupConfig = (0, import_react20.useContext)(SwitchLayoutGroupContext);
+  const initialLayoutGroupConfig = (0, import_react16.useContext)(SwitchLayoutGroupContext);
   if (visualElement && !visualElement.projection && ProjectionNodeConstructor && (visualElement.type === "html" || visualElement.type === "svg")) {
     createProjectionNode2(visualElementRef.current, props, ProjectionNodeConstructor, initialLayoutGroupConfig);
   }
-  const isMounted = (0, import_react20.useRef)(false);
-  (0, import_react20.useInsertionEffect)(() => {
+  const isMounted = (0, import_react16.useRef)(false);
+  (0, import_react16.useInsertionEffect)(() => {
     if (visualElement && isMounted.current) {
       visualElement.update(props, presenceContext);
     }
   });
   const optimisedAppearId = props[optimizedAppearDataAttribute];
-  const wantsHandoff = (0, import_react20.useRef)(Boolean(optimisedAppearId) && typeof window !== "undefined" && !window.MotionHandoffIsComplete?.(optimisedAppearId) && window.MotionHasOptimisedAnimation?.(optimisedAppearId));
+  const wantsHandoff = (0, import_react16.useRef)(Boolean(optimisedAppearId) && typeof window !== "undefined" && !window.MotionHandoffIsComplete?.(optimisedAppearId) && window.MotionHasOptimisedAnimation?.(optimisedAppearId));
   useIsomorphicLayoutEffect2(() => {
     hasMountedOnce.current = true;
     if (!visualElement)
@@ -24419,7 +24155,7 @@ function useVisualElement(Component5, visualState, props, createVisualElement, P
       visualElement.animationState.animateChanges();
     }
   });
-  (0, import_react20.useEffect)(() => {
+  (0, import_react16.useEffect)(() => {
     if (!visualElement)
       return;
     if (!wantsHandoff.current && visualElement.animationState) {
@@ -24463,12 +24199,12 @@ function getClosestProjectingNode(visualElement) {
     return void 0;
   return visualElement.options.allowProjection !== false ? visualElement.projection : getClosestProjectingNode(visualElement.parent);
 }
-var import_react20;
+var import_react16;
 var init_use_visual_element = __esm({
   "node_modules/framer-motion/dist/es/motion/utils/use-visual-element.mjs"() {
     "use client";
     init_es2();
-    import_react20 = __toESM(require_react(), 1);
+    import_react16 = __toESM(require_react(), 1);
     init_LazyContext();
     init_MotionConfigContext();
     init_MotionContext();
@@ -24487,7 +24223,7 @@ function createMotionComponent(Component5, { forwardMotionProps = false, type } 
   function MotionDOMComponent(props, externalRef) {
     let MeasureLayout2;
     const configAndProps = {
-      ...(0, import_react21.useContext)(MotionConfigContext),
+      ...(0, import_react17.useContext)(MotionConfigContext),
       ...props,
       layoutId: useLayoutId(props)
     };
@@ -24500,19 +24236,19 @@ function createMotionComponent(Component5, { forwardMotionProps = false, type } 
       MeasureLayout2 = layoutProjection.MeasureLayout;
       context.visualElement = useVisualElement(Component5, visualState, configAndProps, createVisualElement, layoutProjection.ProjectionNode, isSVG);
     }
-    return (0, import_jsx_runtime2.jsxs)(MotionContext.Provider, { value: context, children: [MeasureLayout2 && context.visualElement ? (0, import_jsx_runtime2.jsx)(MeasureLayout2, { visualElement: context.visualElement, ...configAndProps }) : null, useRender(Component5, props, useMotionRef(visualState, context.visualElement, externalRef), visualState, isStatic, forwardMotionProps, isSVG)] });
+    return (0, import_jsx_runtime.jsxs)(MotionContext.Provider, { value: context, children: [MeasureLayout2 && context.visualElement ? (0, import_jsx_runtime.jsx)(MeasureLayout2, { visualElement: context.visualElement, ...configAndProps }) : null, useRender(Component5, props, useMotionRef(visualState, context.visualElement, externalRef), visualState, isStatic, forwardMotionProps, isSVG)] });
   }
   MotionDOMComponent.displayName = `motion.${typeof Component5 === "string" ? Component5 : `create(${Component5.displayName ?? Component5.name ?? ""})`}`;
-  const ForwardRefMotionComponent = (0, import_react21.forwardRef)(MotionDOMComponent);
+  const ForwardRefMotionComponent = (0, import_react17.forwardRef)(MotionDOMComponent);
   ForwardRefMotionComponent[motionComponentSymbol] = Component5;
   return ForwardRefMotionComponent;
 }
 function useLayoutId({ layoutId }) {
-  const layoutGroupId = (0, import_react21.useContext)(LayoutGroupContext).id;
+  const layoutGroupId = (0, import_react17.useContext)(LayoutGroupContext).id;
   return layoutGroupId && layoutId !== void 0 ? layoutGroupId + "-" + layoutId : layoutId;
 }
 function useStrictMode(configAndProps, preloadedFeatures) {
-  const isStrict = (0, import_react21.useContext)(LazyContext).strict;
+  const isStrict = (0, import_react17.useContext)(LazyContext).strict;
   if (false) {
     const strictMessage = "You have rendered a `motion` component within a `LazyMotion` component. This will break tree shaking. Import and render a `m` component instead.";
     configAndProps.ignoreStrict ? warning2(false, strictMessage, "lazy-strict-mode") : invariant3(false, strictMessage, "lazy-strict-mode");
@@ -24529,12 +24265,12 @@ function getProjectionFunctionality(props) {
     ProjectionNode: combined.ProjectionNode
   };
 }
-var import_jsx_runtime2, import_react21;
+var import_jsx_runtime, import_react17;
 var init_motion = __esm({
   "node_modules/framer-motion/dist/es/motion/index.mjs"() {
     "use client";
-    import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-    import_react21 = __toESM(require_react(), 1);
+    import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+    import_react17 = __toESM(require_react(), 1);
     init_LayoutGroupContext();
     init_LazyContext();
     init_MotionConfigContext();
@@ -24590,16 +24326,16 @@ var init_create_proxy = __esm({
 });
 
 // node_modules/framer-motion/dist/es/render/dom/create-visual-element.mjs
-var import_react22, createDomVisualElement;
+var import_react18, createDomVisualElement;
 var init_create_visual_element = __esm({
   "node_modules/framer-motion/dist/es/render/dom/create-visual-element.mjs"() {
     init_es2();
-    import_react22 = __toESM(require_react(), 1);
+    import_react18 = __toESM(require_react(), 1);
     init_is_svg_component();
     createDomVisualElement = (Component5, options) => {
       const isSVG = options.isSVG ?? isSVGComponent(Component5);
       return isSVG ? new SVGVisualElement(options) : new HTMLVisualElement(options, {
-        allowProjection: Component5 !== import_react22.Fragment
+        allowProjection: Component5 !== import_react18.Fragment
       });
     };
   }
@@ -25601,21 +25337,21 @@ var init_pan = __esm({
 // node_modules/framer-motion/dist/es/motion/features/layout/MeasureLayout.mjs
 function MeasureLayout(props) {
   const [isPresent, safeToRemove] = usePresence();
-  const layoutGroup = (0, import_react23.useContext)(LayoutGroupContext);
-  return (0, import_jsx_runtime3.jsx)(MeasureLayoutWithContext, { ...props, layoutGroup, switchLayoutGroup: (0, import_react23.useContext)(SwitchLayoutGroupContext), isPresent, safeToRemove });
+  const layoutGroup = (0, import_react19.useContext)(LayoutGroupContext);
+  return (0, import_jsx_runtime2.jsx)(MeasureLayoutWithContext, { ...props, layoutGroup, switchLayoutGroup: (0, import_react19.useContext)(SwitchLayoutGroupContext), isPresent, safeToRemove });
 }
-var import_jsx_runtime3, import_react23, hasTakenAnySnapshot, MeasureLayoutWithContext;
+var import_jsx_runtime2, import_react19, hasTakenAnySnapshot, MeasureLayoutWithContext;
 var init_MeasureLayout = __esm({
   "node_modules/framer-motion/dist/es/motion/features/layout/MeasureLayout.mjs"() {
     "use client";
-    import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+    import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
     init_es2();
-    import_react23 = __toESM(require_react(), 1);
+    import_react19 = __toESM(require_react(), 1);
     init_use_presence();
     init_LayoutGroupContext();
     init_SwitchLayoutGroupContext();
     hasTakenAnySnapshot = false;
-    MeasureLayoutWithContext = class extends import_react23.Component {
+    MeasureLayoutWithContext = class extends import_react19.Component {
       /**
        * This only mounts projection nodes for components that
        * need measuring, we might want to do it for all components
@@ -26026,310 +25762,60 @@ var init_es3 = __esm({
   }
 });
 
-// src/components/HeroSection.jsx
-function HeroSection() {
-  const img = "https://images.unsplash.com/photo-1519389950473-47ba27fcf35b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdfMXx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-    "section",
-    {
-      className: "bg-cover bg-center h-screen",
-      style: { backgroundImage: `url(${img})` },
-      children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
-        motion.div,
-        {
-          initial: { y: 100, opacity: 0 },
-          animate: { y: 0, opacity: 1 },
-          transition: { duration: 0.5, delay: 0.5 },
-          className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 glassmorphism",
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h1", { className: "text-5xl font-bold text-slate-900", children: "Elevate Your Business" }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-lg text-slate-900 mt-4", children: "NexusApp is the ultimate solution for your business needs." }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("button", { className: "bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-8", children: [
-              "Get Started",
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ArrowRight, { className: "ml-2" })
-            ] })
-          ]
-        }
-      )
-    }
-  );
-}
-var import_react24, import_jsx_runtime4, HeroSection_default;
-var init_HeroSection = __esm({
-  "src/components/HeroSection.jsx"() {
-    import_react24 = __toESM(require_react());
-    init_es3();
-    init_lucide_react();
-    import_jsx_runtime4 = __toESM(require_jsx_runtime());
-    HeroSection_default = HeroSection;
-  }
-});
-
-// src/components/FeaturesComponent.jsx
-function FeaturesComponent() {
-  const features = [
-    {
-      title: "Feature 1",
-      description: "This is the first feature."
-    },
-    {
-      title: "Feature 2",
-      description: "This is the second feature."
-    },
-    {
-      title: "Feature 3",
-      description: "This is the third feature."
-    }
-  ];
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 mt-12", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "text-3xl font-bold text-slate-900 mb-4", children: "Features" }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-      motion.div,
-      {
-        initial: { x: 100, opacity: 0 },
-        animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.5, delay: 0.5 },
-        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
-        children: features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-          "div",
-          {
-            className: "bg-white shadow-sm p-4 rounded glassmorphism",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-lg font-bold text-slate-900 mb-2", children: feature.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-slate-900", children: feature.description }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "list-none mt-4", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "flex items-center space-x-2", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check, { className: "text-indigo-500" }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "text-lg text-slate-900", children: "Feature description" })
-              ] }) })
-            ]
-          },
-          index
-        ))
-      }
-    )
-  ] });
-}
-var import_react25, import_jsx_runtime5, FeaturesComponent_default;
-var init_FeaturesComponent = __esm({
-  "src/components/FeaturesComponent.jsx"() {
-    import_react25 = __toESM(require_react());
-    init_es3();
-    init_lucide_react();
-    import_jsx_runtime5 = __toESM(require_jsx_runtime());
-    FeaturesComponent_default = FeaturesComponent;
-  }
-});
-
-// src/components/PricingTable.jsx
-function PricingTable() {
-  const plans = [
-    {
-      title: "Basic",
-      price: 9.99,
-      features: ["Feature 1", "Feature 2"]
-    },
-    {
-      title: "Pro",
-      price: 19.99,
-      features: ["Feature 1", "Feature 2", "Feature 3"]
-    },
-    {
-      title: "Enterprise",
-      price: 49.99,
-      features: ["Feature 1", "Feature 2", "Feature 3", "Feature 4"]
-    }
-  ];
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 mt-12", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { className: "text-3xl font-bold text-slate-900 mb-4", children: "Pricing" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-      motion.div,
-      {
-        initial: { x: 100, opacity: 0 },
-        animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.5, delay: 0.5 },
-        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
-        children: plans.map((plan, index) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
-          "div",
-          {
-            className: "bg-white shadow-sm p-4 rounded glassmorphism",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-bold text-slate-900 mb-2", children: plan.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "text-lg text-slate-900 mb-4", children: [
-                "$",
-                plan.price,
-                "/month"
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("ul", { className: "list-none", children: plan.features.map((feature, index2) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
-                "li",
-                {
-                  className: "flex items-center space-x-2 mb-2",
-                  children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(DollarSign, { className: "text-indigo-500" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-lg text-slate-900", children: feature })
-                  ]
-                },
-                index2
-              )) }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4", children: "Get Started" })
-            ]
-          },
-          index
-        ))
-      }
-    )
-  ] });
-}
-var import_react26, import_jsx_runtime6, PricingTable_default;
-var init_PricingTable = __esm({
-  "src/components/PricingTable.jsx"() {
-    import_react26 = __toESM(require_react());
-    init_es3();
-    init_lucide_react();
-    import_jsx_runtime6 = __toESM(require_jsx_runtime());
-    PricingTable_default = PricingTable;
-  }
-});
-
-// src/components/TestimonialsSection.jsx
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      quote: "This is a great product!",
-      author: "John Doe",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b11d35?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdfMXx8fGVufDB8fHx8&auto=format&fit=crop&w=634&q=80"
-    },
-    {
-      quote: "I love this product!",
-      author: "Jane Doe",
-      image: "https://images.unsplash.com/photo-1519345182561-3f588066b1f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdfMXx8fGVufDB8fHx8&auto=format&fit=crop&w=634&q=80"
-    }
-  ];
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 mt-12", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { className: "text-3xl font-bold text-slate-900 mb-4", children: "Testimonials" }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
-      motion.div,
-      {
-        initial: { x: 100, opacity: 0 },
-        animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.5, delay: 0.5 },
-        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4",
-        children: testimonials.map((testimonial, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
-          "div",
-          {
-            className: "bg-white shadow-sm p-4 rounded glassmorphism",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Quote, { className: "text-indigo-500 mb-2" }),
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { className: "text-lg text-slate-900 mb-4", children: [
-                '"',
-                testimonial.quote,
-                '"'
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center space-x-2", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
-                  "img",
-                  {
-                    src: testimonial.image,
-                    alt: testimonial.author,
-                    className: "w-12 h-12 rounded-full"
-                  }
-                ),
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "text-lg text-slate-900", children: testimonial.author })
-              ] })
-            ]
-          },
-          index
-        ))
-      }
-    )
-  ] });
-}
-var import_react27, import_jsx_runtime7, TestimonialsSection_default;
-var init_TestimonialsSection = __esm({
-  "src/components/TestimonialsSection.jsx"() {
-    import_react27 = __toESM(require_react());
-    init_es3();
-    init_lucide_react();
-    import_jsx_runtime7 = __toESM(require_jsx_runtime());
-    TestimonialsSection_default = TestimonialsSection;
-  }
-});
-
-// src/components/FooterComponent.jsx
-function FooterComponent() {
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("footer", { className: "bg-white shadow-sm py-4 mt-12", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 font-bold text-lg", children: "NexusApp" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("ul", { className: "flex items-center space-x-4", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Home" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Features" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Pricing" }) })
-      ] })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("p", { className: "text-lg text-slate-900 mt-4", children: [
-      "2023 NexusApp. All rights reserved.",
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Copyright, { className: "ml-2" })
-    ] })
-  ] }) });
-}
-var import_react28, import_jsx_runtime8, FooterComponent_default;
-var init_FooterComponent = __esm({
-  "src/components/FooterComponent.jsx"() {
-    import_react28 = __toESM(require_react());
-    init_dist();
-    init_lucide_react();
-    import_jsx_runtime8 = __toESM(require_jsx_runtime());
-    FooterComponent_default = FooterComponent;
-  }
-});
-
-// src/index.css
-var init_index = __esm({
-  "src/index.css"() {
-  }
-});
-
 // src/App.jsx
+function Navbar() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("nav", { children: "Navbar" });
+}
+function HeroSection() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("section", { children: "HeroSection" });
+}
+function FeaturesComponent() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("section", { children: "FeaturesComponent" });
+}
+function PricingTable() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("section", { children: "PricingTable" });
+}
+function TestimonialsSection() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("section", { children: "TestimonialsSection" });
+}
+function FooterComponent() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("footer", { children: "FooterComponent" });
+}
 function App() {
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(HashRouter, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Navbar_default, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(HashRouter, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Navbar, {}),
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       motion.main,
       {
         initial: { opacity: 0 },
         animate: { opacity: 1 },
         transition: { duration: 0.5 },
         className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8",
-        children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Routes, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Routes, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
           Route,
           {
             path: "/",
-            element: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(HeroSection_default, {}),
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(FeaturesComponent_default, {}),
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(PricingTable_default, {}),
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(TestimonialsSection_default, {})
+            element: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(HeroSection, {}),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FeaturesComponent, {}),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PricingTable, {}),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TestimonialsSection, {})
             ] })
           }
         ) })
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(FooterComponent_default, {})
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FooterComponent, {})
   ] });
 }
-var import_react29, import_jsx_runtime9, App_default;
+var import_react20, import_jsx_runtime3, App_default;
 var init_App = __esm({
   "src/App.jsx"() {
-    import_react29 = __toESM(require_react());
+    import_react20 = __toESM(require_react());
     init_dist();
-    init_Navbar();
-    init_HeroSection();
-    init_FeaturesComponent();
-    init_PricingTable();
-    init_TestimonialsSection();
-    init_FooterComponent();
     init_index();
     init_es3();
-    import_jsx_runtime9 = __toESM(require_jsx_runtime());
+    import_jsx_runtime3 = __toESM(require_jsx_runtime());
     App_default = App;
   }
 });
@@ -26337,13 +25823,13 @@ var init_App = __esm({
 // src/main.jsx
 var require_main = __commonJS({
   "src/main.jsx"() {
-    var import_react30 = __toESM(require_react());
+    var import_react21 = __toESM(require_react());
     var import_client = __toESM(require_client());
     init_App();
     init_index();
-    var import_jsx_runtime10 = __toESM(require_jsx_runtime());
+    var import_jsx_runtime4 = __toESM(require_jsx_runtime());
     import_client.default.createRoot(document.getElementById("root")).render(
-      /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(import_react30.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(App_default, {}) })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_react21.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(App_default, {}) })
     );
   }
 });
@@ -26417,28 +25903,6 @@ react-router-dom/dist/index.mjs:
    * LICENSE.md file in the root directory of this source tree.
    *
    * @license MIT
-   *)
-
-lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs:
-lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs:
-lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs:
-lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs:
-lucide-react/dist/esm/defaultAttributes.mjs:
-lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs:
-lucide-react/dist/esm/context.mjs:
-lucide-react/dist/esm/Icon.mjs:
-lucide-react/dist/esm/createLucideIcon.mjs:
-lucide-react/dist/esm/icons/arrow-right.mjs:
-lucide-react/dist/esm/icons/check.mjs:
-lucide-react/dist/esm/icons/copyright.mjs:
-lucide-react/dist/esm/icons/dollar-sign.mjs:
-lucide-react/dist/esm/icons/quote.mjs:
-lucide-react/dist/esm/lucide-react.mjs:
-  (**
-   * @license lucide-react v1.23.0 - ISC
-   *
-   * This source code is licensed under the ISC license.
-   * See the LICENSE file in the root directory of this source tree.
    *)
 
 react/cjs/react-jsx-runtime.production.js:

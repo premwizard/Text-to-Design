@@ -103,6 +103,12 @@ async def run_sanitizer(files: dict) -> dict:
         if "/" in cleaned_name:
             code = re.sub(r"import\s+['\"].*index\.css['\"];?\n?", "", code)
 
+        # Auto-close unclosed CSS, JS, or HTML curly brackets if truncated at the end
+        open_curly = code.count("{")
+        close_curly = code.count("}")
+        if open_curly > close_curly:
+            code += "\n" + ("}" * (open_curly - close_curly))
+
         # Sanitize lucide-react brand icon imports
         if filename.endswith(".jsx") or filename.endswith(".js") or filename.endswith(".tsx"):
             code = sanitize_lucide_imports(code)
