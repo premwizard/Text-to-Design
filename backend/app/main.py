@@ -79,6 +79,13 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+    return response
+
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException

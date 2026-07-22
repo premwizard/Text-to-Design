@@ -24,7 +24,7 @@ export function LivePreview({ files = {}, loading = false, statusText = '', onRu
 
   // ... (keep rest of stubs logic) ...
   
-  // Setup the WebContainer and boot the environment when files arrive
+  // Setup the WebContainer or Static preview when files arrive
   useEffect(() => {
     if (Object.keys(files).length === 0) return;
 
@@ -34,6 +34,34 @@ export function LivePreview({ files = {}, loading = false, statusText = '', onRu
       try {
         const runtimeFiles = { ...files };
         const hasReactFiles = Object.keys(runtimeFiles).some(f => f.endsWith('.jsx') || f.endsWith('.tsx'));
+
+        // -------------------------------------------------------------
+        // INSTANT STATIC PREVIEW ENGINE (No WebContainer/SharedArrayBuffer needed)
+        // -------------------------------------------------------------
+        if (!hasReactFiles && (runtimeFiles['index.html'] || runtimeFiles['/index.html'])) {
+          const htmlCode = runtimeFiles['index.html'] || runtimeFiles['/index.html'] || '';
+          const cssCode = runtimeFiles['style.css'] || runtimeFiles['/style.css'] || '';
+          const jsCode = runtimeFiles['script.js'] || runtimeFiles['/script.js'] || '';
+
+          let combinedDoc = htmlCode;
+          if (cssCode && !combinedDoc.includes('<style') && !combinedDoc.includes('style.css')) {
+            combinedDoc = combinedDoc.replace('</head>', `<style>\n${cssCode}\n</style>\n</head>`);
+          }
+          if (jsCode && !combinedDoc.includes('<script') && !combinedDoc.includes('script.js')) {
+            combinedDoc = combinedDoc.replace('</body>', `<script>\n${jsCode}\n</script>\n</body>`);
+          }
+
+          const blob = new Blob([combinedDoc], { type: 'text/html;charset=utf-8' });
+          const objectUrl = URL.createObjectURL(blob);
+
+          if (!isCancelled) {
+            setPreviewUrl(objectUrl);
+            setIsBooting(false);
+            setBootPhase('ready');
+            setLogs('> Pure Static HTML5/CSS3/Vanilla JS website rendered instantly.\r\n');
+          }
+          return;
+        }
 
         // Normalize entry file and create index.jsx fallback bridge ONLY if React component files exist
         if (hasReactFiles && !runtimeFiles['index.jsx'] && !runtimeFiles['index.tsx']) {
