@@ -1,11 +1,6 @@
 fastapi[standard]>=0.112.0
 uvicorn[standard]>=0.23.0
 python-dotenv>=1.0.0
-langchain>=0.0.300
-langchain-community>=0.0.300
-langchain-text-splitters>=0.2.0
-chromadb>=0.4.0
-sentence-transformers>=2.2.2
 loguru>=0.7.0
 openai>=1.0.0
 requests>=2.31.0

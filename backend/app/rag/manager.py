@@ -1,10 +1,14 @@
 import logging
 from pathlib import Path
 from typing import List
-from langchain_community.vectorstores import Chroma
-from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
+try:
+    from langchain_community.vectorstores import Chroma
+    from langchain_core.documents import Document
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    LANGCHAIN_AVAILABLE = True
+except ImportError:
+    LANGCHAIN_AVAILABLE = False
+    Chroma = Document = RecursiveCharacterTextSplitter = None
 
 logger = logging.getLogger("backend.app.rag")
 BASE_DIR = Path(__file__).parent
@@ -13,8 +17,10 @@ PERSIST_DIR = BASE_DIR / "chroma_store"
 COLLECTION_NAME = "ui_design_components"
 
 
-def _load_documents() -> List[Document]:
-    documents: List[Document] = []
+def _load_documents() -> List:
+    if not LANGCHAIN_AVAILABLE:
+        return []
+    documents = []
     for path in sorted(DOCS_DIR.glob("*.txt")):
         content = path.read_text(encoding="utf-8").strip()
         if not content:
@@ -43,7 +49,9 @@ def _create_embeddings():
     return LocalEmbeddingsWrapper(model)
 
 
-def _build_store(embeddings) -> Chroma:
+def _build_store(embeddings):
+    if not LANGCHAIN_AVAILABLE or not Chroma or not RecursiveCharacterTextSplitter:
+        return None
     documents = _load_documents()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=50)
     chunks = text_splitter.split_documents(documents)
@@ -58,6 +66,9 @@ def _build_store(embeddings) -> Chroma:
 
 
 def setup_rag() -> None:
+    if not LANGCHAIN_AVAILABLE:
+        logger.info("LangChain/ChromaDB disabled: RAG vector store setup skipped for ultra-fast startup.")
+        return
     embeddings = _create_embeddings()
     if embeddings is None:
         logger.warning("Skipping RAG setup because embeddings are unavailable")
