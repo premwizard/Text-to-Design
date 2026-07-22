@@ -36,13 +36,20 @@ import mimetypes
 mimetypes.add_type("application/javascript", ".jsx")
 mimetypes.add_type("application/javascript", ".js")
 
-from backend.app.api.routes.generate_routes import router as generate_routes_router
-from backend.app.api.routes.memory_routes import router as memory_routes_router
-from backend.app.api.routes.preview_routes import router as preview_routes_router
-from backend.app.api.routes.metrics_routes import router as metrics_routes_router
-
-from backend.app.services.logger import setup_logging
-from backend.app.rag.manager import setup_rag
+try:
+    from backend.app.api.routes.generate_routes import router as generate_routes_router
+    from backend.app.api.routes.memory_routes import router as memory_routes_router
+    from backend.app.api.routes.preview_routes import router as preview_routes_router
+    from backend.app.api.routes.metrics_routes import router as metrics_routes_router
+    from backend.app.services.logger import setup_logging
+    from backend.app.rag.manager import setup_rag
+except ModuleNotFoundError:
+    from app.api.routes.generate_routes import router as generate_routes_router
+    from app.api.routes.memory_routes import router as memory_routes_router
+    from app.api.routes.preview_routes import router as preview_routes_router
+    from app.api.routes.metrics_routes import router as metrics_routes_router
+    from app.services.logger import setup_logging
+    from app.rag.manager import setup_rag
 
 setup_logging()
 logger = logging.getLogger("backend")
@@ -110,7 +117,11 @@ async def log_requests(request: Request, call_next):
 async def _async_init_resources():
     """Background task to load heavy ML models and RAG without blocking port binding."""
     try:
-        from backend.app.repositories.chroma_service import ChromaService
+        try:
+            from backend.app.repositories.chroma_service import ChromaService
+        except ModuleNotFoundError:
+            from app.repositories.chroma_service import ChromaService
+            
         logger.info("Background loading SentenceTransformer and ChromaDB...")
         chroma = ChromaService.get_instance()
         app.state.embedding_model = chroma.model
