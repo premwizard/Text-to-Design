@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 50" fill="none">
+  <path d="M10 10 L40 10 L40 40 L10 40 Z" fill="var(--color-primary)"/>
+  <path d="M50 10 L80 10 L80 40 L50 40 Z" fill="var(--color-primary)"/>
+  <path d="M90 10 L120 10 L120 40 L90 40 Z" fill="var(--color-primary)"/>
+  <path d="M130 10 L150 10 L150 40 L130 40 Z" fill="var(--color-primary)"/>
+  <text x="10" y="35" font-family="Inter, sans-serif" font-size="16" font-weight="bold" fill="var(--color-text)">Nexus</text>
+  <text x="70" y="35" font-family="Inter, sans-serif" font-size="16" font-weight="bold" fill="var(--color-secondary)">App</text>
+</svg>

@@ -61,7 +61,7 @@ Do NOT wrap the response in markdown code fences or JSON.
 Output ONLY the three files: index.html, style.css, script.js using ===FILE: <filename>=== separators.
 """
 
-class CodeGenerator:
+class StaticWebsiteGenerator:
     def _parse_generated_files(self, raw_text: str) -> Dict[str, str]:
         """Parses the raw text response based on the ===FILE: <filename>=== delimiter."""
         files = {}
@@ -128,3 +128,6 @@ class CodeGenerator:
             })
             
         return context
+
+HTMLGenerator = StaticWebsiteGenerator
+CodeGenerator = StaticWebsiteGenerator

@@ -7,20 +7,23 @@ from pathlib import Path
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 SANDBOX_DIR = (BACKEND_DIR / "../sandbox").resolve()
 
-FALLBACK_COMPONENT = """import React from 'react';
-
-export default function SafeComponent() {
-  return (
-    <div className="flex items-center justify-center w-full min-h-[200px] bg-red-950/30 border-2 border-red-500/50 rounded-xl p-8">
-      <div className="text-center space-y-2">
-        <h2 className="text-red-400 font-bold text-xl">Component failed safely</h2>
-        <p className="text-red-400/80 text-sm max-w-md mx-auto">
-          The generated JSX was malformed and failed compilation. The fallback component is being displayed to prevent the preview from crashing.
-        </p>
-      </div>
-    </div>
-  );
-}
+FALLBACK_COMPONENT = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Safe Fallback</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #09090b; color: #f87171; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .card { background: rgba(153, 27, 27, 0.2); border: 1px solid #f87171; padding: 2rem; border-radius: 1rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>HTML Generation Fallback</h2>
+    <p>A safety fallback was rendered.</p>
+  </div>
+</body>
+</html>
 """
 
 def sanitize_regex(code: str, filename: str) -> str:

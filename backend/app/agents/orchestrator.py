@@ -161,7 +161,7 @@ async def run_orchestration_stream(user_prompt: str, user_id: str = None, genera
         # ==========================================
         log_step(5, "Generating Components", "started")
         yield {"type": "timeline", "step": "Generating Components"}
-        yield {"type": "agent_start", "agent": "generating", "message": "Creating React + Tailwind layout component-by-component"}
+        yield {"type": "agent_start", "agent": "generating", "message": "Generating production-ready HTML, CSS and Vanilla JavaScript..."}
         
         try:
             gen_response = await run_full_app_generation(design_plan, rag_json)

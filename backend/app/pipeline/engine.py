@@ -6,7 +6,7 @@ from backend.app.pipeline.stages.design_planning import DesignPlanner
 from backend.app.pipeline.stages.theme_planning import ThemePlanner
 from backend.app.pipeline.stages.layout_planning import LayoutPlanner
 from backend.app.pipeline.stages.component_planning import ComponentPlanner
-from backend.app.pipeline.stages.code_generation import CodeGenerator
+from backend.app.pipeline.stages.code_generation import StaticWebsiteGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class PipelineEngine:
         self.theme_planner = ThemePlanner()
         self.layout_planner = LayoutPlanner()
         self.component_planner = ComponentPlanner()
-        self.code_generator = CodeGenerator()
+        self.code_generator = StaticWebsiteGenerator()
         
     async def process_prompt(self, prompt: str, event_callback=None) -> DesignContext:
         """
@@ -58,7 +58,7 @@ class PipelineEngine:
         logger.info("Phase 3 complete.")
         
         # Phase 4: Code Generation
-        await _trigger_event("Generating Code", "generator", "Translating design context into React JSX and Tailwind CSS...")
+        await _trigger_event("Generating Code", "generator", "Generating production-ready HTML, CSS and Vanilla JavaScript...")
         context = await self.code_generator.process(context)
         if event_callback:
             await event_callback({"type": "agent_complete", "agent": "generator", "output": {"status": "success"}})
