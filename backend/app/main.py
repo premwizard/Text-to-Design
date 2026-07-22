@@ -107,38 +107,26 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-@app.on_event("startup")
-async def startup_event():
-    logger.info("Starting backend and initializing resources")
-    
+async def _async_init_resources():
+    """Background task to load heavy ML models and RAG without blocking port binding."""
     try:
-        logger.info("Preloading tool registry...")
-        from backend.app.agents.tool_registry import get_tool_registry
-        registry = get_tool_registry()
-        # Getting a tool forces the dynamic import if not already loaded
-        registry.get_tool("compiler")
-        logger.info(f"Tool registry preloaded successfully. Available tools: {registry.list_tools()}")
-    except Exception as e:
-        logger.error(f"Failed to preload tool registry: {e}")
-    
-    # Initialize Vector DB & ML Models Eagerly
-    from backend.app.repositories.chroma_service import ChromaService
-    try:
-        logger.info("Eagerly loading SentenceTransformer and ChromaDB...")
+        from backend.app.repositories.chroma_service import ChromaService
+        logger.info("Background loading SentenceTransformer and ChromaDB...")
         chroma = ChromaService.get_instance()
         app.state.embedding_model = chroma.model
         app.state.chroma_client = chroma.client
-        logger.info("Models loaded successfully to app.state.")
-    except Exception as e:
-        logger.error(f"Failed to preload models: {e}")
-
-    try:
         setup_rag()
-        logger.info("RAG initialization complete")
+        logger.info("Background RAG and models preloaded successfully.")
     except Exception as exc:
-        logger.error("RAG initialization failed: %s", exc)
-        logger.warning("Continuing startup without RAG retrieval")
-        
+        logger.warning(f"Background resource preload skipped: {exc}")
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Starting backend web server...")
+    
+    # Launch heavy model loading in background so server opens port IMMEDIATELY
+    asyncio.create_task(_async_init_resources())
+    
     # Print all registered FastAPI routes at startup
     logger.info("=" * 80)
     logger.info("REGISTERED API ROUTES:")
