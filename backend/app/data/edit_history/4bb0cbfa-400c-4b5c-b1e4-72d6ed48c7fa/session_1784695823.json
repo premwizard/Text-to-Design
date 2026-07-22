@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "timestamp": 1784695836,
+    "prompt": "Build a saas landing page: Modern SaaS landing page",
+    "files": {
+      "App.jsx": "import React from 'react';\n\nfunction App() { return <div>Generated Code Failed</div>; }\nexport default App;"
+    },
+    "metadata": {
+      "critic_score": 8.5,
+      "session_id": "session_1784695823"
+    }
+  }
+]
