@@ -115,8 +115,13 @@ async def log_requests(request: Request, call_next):
 
 
 async def _async_init_resources():
-    """Background task to load heavy ML models and RAG without blocking port binding."""
+    """Background task to load heavy ML models and RAG without blocking port binding or exceeding memory limits."""
     try:
+        disable_heavy = os.getenv("DISABLE_HEAVY_EMBEDDINGS", "false").lower() in ("true", "1", "t")
+        if disable_heavy:
+            logger.info("DISABLE_HEAVY_EMBEDDINGS enabled: Skipping PyTorch/SentenceTransformer load for memory efficiency (<512MB RAM).")
+            return
+
         try:
             from backend.app.repositories.chroma_service import ChromaService
         except ModuleNotFoundError:

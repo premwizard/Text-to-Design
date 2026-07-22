@@ -12,3 +12,7 @@ services:
         value: false
       - key: HOST
         value: 0.0.0.0
+      - key: DISABLE_HEAVY_EMBEDDINGS
+        value: "true"
+      - key: WEB_CONCURRENCY
+        value: "1"

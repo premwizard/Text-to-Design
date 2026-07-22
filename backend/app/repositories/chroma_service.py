@@ -26,9 +26,16 @@ class ChromaService:
         return cls._instance
 
     def __init__(self):
+        import os
         self.model = None
         self.client = None
         self.enabled = False
+
+        # Memory Guard: Check if heavy embeddings are disabled for 512MB RAM cloud tiers
+        disable_heavy = os.getenv("DISABLE_HEAVY_EMBEDDINGS", "false").lower() in ("true", "1", "t")
+        if disable_heavy:
+            logger.info("DISABLE_HEAVY_EMBEDDINGS enabled: Skipping PyTorch/SentenceTransformer load to preserve RAM (<512MB).")
+            return
 
         DB_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -44,10 +51,9 @@ class ChromaService:
             logger.info("ChromaDB vector service initialized successfully.")
 
         except Exception as e:
-            logger.error(
-                f"Failed to initialize ChromaDB vector service: {e}. "
-                "Semantic features will be disabled.",
-                exc_info=True
+            logger.warning(
+                f"Skipped ChromaDB/SentenceTransformer initialization ({e}). "
+                "Semantic features disabled for memory optimization."
             )
             self.enabled = False
 
