@@ -1,11 +1,11 @@
 import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import HeroSection from './components/HeroSection';
-import FeaturesComponent from './components/FeaturesComponent';
-import PricingTable from './components/PricingTable';
-import TestimonialsSection from './components/TestimonialsSection';
-import FooterComponent from './components/FooterComponent';
+import Navbar from './components/Navbar.jsx';
+import HeroSection from './components/HeroSection.jsx';
+import FeaturesComponent from './components/FeaturesComponent.jsx';
+import PricingTable from './components/PricingTable.jsx';
+import TestimonialsSection from './components/TestimonialsSection.jsx';
+import FooterComponent from './components/FooterComponent.jsx';
 import './index.css';
 import { motion } from 'framer-motion';
 import { Home, ArrowRight } from 'lucide-react';
