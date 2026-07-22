@@ -1,0 +1,5 @@
+langchain>=0.0.300
+langchain-community>=0.0.300
+langchain-text-splitters>=0.2.0
+chromadb>=0.4.0
+sentence-transformers>=2.2.2
