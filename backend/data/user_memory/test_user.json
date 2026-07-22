@@ -2,26 +2,32 @@
   "userId": "test_user",
   "preferences": {
     "theme": {
-      "light": 1
+      "light": 2
     },
     "style": {
-      "centered-stack": 1
+      "centered-stack": 2
     },
     "borderRadius": {},
     "spacing": {},
     "favoriteColors": {
-      "indigo-500": 1
+      "indigo-500": 2
     },
     "preferredLayouts": {},
     "commonComponents": {
-      "hero": 1,
-      "features": 1,
-      "pricing": 1,
-      "testimonials": 1,
-      "footer": 1
+      "hero": 2,
+      "features": 2,
+      "pricing": 2,
+      "testimonials": 2,
+      "footer": 2
     }
   },
   "history": [
+    {
+      "prompt": "Build a modern SaaS landing page",
+      "style": "centered-stack",
+      "theme": "professional",
+      "primaryColor": "indigo-500"
+    },
     {
       "prompt": "Build a modern SaaS landing page",
       "style": "centered-stack",

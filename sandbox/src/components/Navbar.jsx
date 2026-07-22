@@ -4,8 +4,8 @@ import { Home, ArrowRight } from 'lucide-react';
 
 function Navbar() {
   return (
-    <nav className="bg-white shadow-sm py-4 fixed top-0 left-0 w-full z-10">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="bg-white shadow-sm py-4">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link to="/" className="text-slate-900 font-bold text-lg">
           NexusApp
         </Link>

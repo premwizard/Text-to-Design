@@ -15652,12 +15652,12 @@ var init_arrow_right = __esm({
 });
 
 // node_modules/lucide-react/dist/esm/icons/check.mjs
-var __iconNode2, Check2;
+var __iconNode2, Check;
 var init_check = __esm({
   "node_modules/lucide-react/dist/esm/icons/check.mjs"() {
     init_createLucideIcon();
     __iconNode2 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-    Check2 = createLucideIcon("check", __iconNode2);
+    Check = createLucideIcon("check", __iconNode2);
   }
 });
 
@@ -15768,7 +15768,7 @@ var require_jsx_runtime = __commonJS({
 
 // src/components/Navbar.jsx
 function Navbar() {
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", { className: "bg-white shadow-sm py-4 fixed top-0 left-0 w-full z-10", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "container mx-auto flex justify-between items-center", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", { className: "bg-white shadow-sm py-4", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "max-w-7xl mx-auto flex justify-between items-center", children: [
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", className: "text-slate-900 font-bold text-lg", children: "NexusApp" }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { className: "flex items-center space-x-4", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Home" }) }),
@@ -26028,47 +26028,29 @@ var init_es3 = __esm({
 
 // src/components/HeroSection.jsx
 function HeroSection() {
-  const img = "https://images.unsplash.com/photo-1518791841217-8f162f1ee18e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdfMXx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80";
+  const img = "https://images.unsplash.com/photo-1519389950473-47ba27fcf35b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdfMXx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
     "section",
     {
-      className: "h-screen bg-cover bg-center",
+      className: "bg-cover bg-center h-screen",
       style: { backgroundImage: `url(${img})` },
-      children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "container mx-auto p-12 pt-24 md:p-24 lg:pt-48", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          motion.h1,
-          {
-            initial: { opacity: 0, y: 50 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.5, delay: 0.2 },
-            className: "text-5xl font-bold text-white",
-            children: "Elevate Your Business"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-          motion.p,
-          {
-            initial: { opacity: 0, y: 50 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.5, delay: 0.4 },
-            className: "text-lg text-white mt-4",
-            children: "NexusApp is the ultimate solution for your business needs."
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
-          motion.button,
-          {
-            initial: { opacity: 0, scale: 0.5 },
-            animate: { opacity: 1, scale: 1 },
-            transition: { duration: 0.5, delay: 0.6 },
-            className: "bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-8",
-            children: [
+      children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+        motion.div,
+        {
+          initial: { y: 100, opacity: 0 },
+          animate: { y: 0, opacity: 1 },
+          transition: { duration: 0.5, delay: 0.5 },
+          className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 glassmorphism",
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h1", { className: "text-5xl font-bold text-slate-900", children: "Elevate Your Business" }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-lg text-slate-900 mt-4", children: "NexusApp is the ultimate solution for your business needs." }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("button", { className: "bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-8", children: [
               "Get Started",
               /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ArrowRight, { className: "ml-2" })
-            ]
-          }
-        )
-      ] })
+            ] })
+          ]
+        }
+      )
     }
   );
 }
@@ -26099,46 +26081,33 @@ function FeaturesComponent() {
       description: "This is the third feature."
     }
   ];
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("section", { className: "bg-white py-12", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "container mx-auto p-12 md:p-24", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 mt-12", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "text-3xl font-bold text-slate-900 mb-4", children: "Features" }),
     /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-      motion.h2,
-      {
-        initial: { opacity: 0, y: 50 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5, delay: 0.2 },
-        className: "text-4xl font-bold text-slate-900",
-        children: "Features"
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-8 mt-8", children: features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
       motion.div,
       {
-        initial: { opacity: 0, y: 50 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5, delay: 0.2 + index * 0.1 },
-        className: "bg-white shadow-sm p-8 rounded",
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-lg font-bold text-slate-900", children: feature.title }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-slate-900 mt-4", children: feature.description }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("ul", { className: "list-none mt-4", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "flex items-center space-x-2", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check2, { className: "text-indigo-500" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "text-lg text-slate-900", children: "Feature 1" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "flex items-center space-x-2", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check2, { className: "text-indigo-500" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "text-lg text-slate-900", children: "Feature 2" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "flex items-center space-x-2", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check2, { className: "text-indigo-500" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "text-lg text-slate-900", children: "Feature 3" })
-            ] })
-          ] })
-        ]
-      },
-      index
-    )) })
-  ] }) });
+        initial: { x: 100, opacity: 0 },
+        animate: { x: 0, opacity: 1 },
+        transition: { duration: 0.5, delay: 0.5 },
+        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+        children: features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+          "div",
+          {
+            className: "bg-white shadow-sm p-4 rounded glassmorphism",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "text-lg font-bold text-slate-900 mb-2", children: feature.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-lg text-slate-900", children: feature.description }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "list-none mt-4", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "flex items-center space-x-2", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check, { className: "text-indigo-500" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "text-lg text-slate-900", children: "Feature description" })
+              ] }) })
+            ]
+          },
+          index
+        ))
+      }
+    )
+  ] });
 }
 var import_react25, import_jsx_runtime5, FeaturesComponent_default;
 var init_FeaturesComponent = __esm({
@@ -26160,50 +26129,55 @@ function PricingTable() {
       features: ["Feature 1", "Feature 2"]
     },
     {
-      title: "Premium",
+      title: "Pro",
       price: 19.99,
       features: ["Feature 1", "Feature 2", "Feature 3"]
     },
     {
       title: "Enterprise",
-      price: 29.99,
+      price: 49.99,
       features: ["Feature 1", "Feature 2", "Feature 3", "Feature 4"]
     }
   ];
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("section", { className: "bg-white py-12", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "container mx-auto p-12 md:p-24", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 mt-12", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { className: "text-3xl font-bold text-slate-900 mb-4", children: "Pricing" }),
     /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-      motion.h2,
-      {
-        initial: { opacity: 0, y: 50 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5, delay: 0.2 },
-        className: "text-4xl font-bold text-slate-900",
-        children: "Pricing"
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-8 mt-8", children: plans.map((plan, index) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
       motion.div,
       {
-        initial: { opacity: 0, y: 50 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5, delay: 0.2 + index * 0.1 },
-        className: "bg-white shadow-sm p-8 rounded",
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-bold text-slate-900", children: plan.title }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "text-lg text-slate-900 mt-4", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(DollarSign, { className: "text-indigo-500" }),
-            plan.price,
-            "/month"
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("ul", { className: "list-none mt-4", children: plan.features.map((feature, index2) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("li", { className: "flex items-center space-x-2", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Check, { className: "text-indigo-500" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-lg text-slate-900", children: feature })
-          ] }, index2)) })
-        ]
-      },
-      index
-    )) })
-  ] }) });
+        initial: { x: 100, opacity: 0 },
+        animate: { x: 0, opacity: 1 },
+        transition: { duration: 0.5, delay: 0.5 },
+        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+        children: plans.map((plan, index) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          "div",
+          {
+            className: "bg-white shadow-sm p-4 rounded glassmorphism",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-bold text-slate-900 mb-2", children: plan.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("p", { className: "text-lg text-slate-900 mb-4", children: [
+                "$",
+                plan.price,
+                "/month"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("ul", { className: "list-none", children: plan.features.map((feature, index2) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+                "li",
+                {
+                  className: "flex items-center space-x-2 mb-2",
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(DollarSign, { className: "text-indigo-500" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "text-lg text-slate-900", children: feature })
+                  ]
+                },
+                index2
+              )) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4", children: "Get Started" })
+            ]
+          },
+          index
+        ))
+      }
+    )
+  ] });
 }
 var import_react26, import_jsx_runtime6, PricingTable_default;
 var init_PricingTable = __esm({
@@ -26221,44 +26195,53 @@ function TestimonialsSection() {
   const testimonials = [
     {
       quote: "This is a great product!",
-      author: "John Doe"
+      author: "John Doe",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b11d35?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdfMXx8fGVufDB8fHx8&auto=format&fit=crop&w=634&q=80"
     },
     {
       quote: "I love this product!",
-      author: "Jane Doe"
-    },
-    {
-      quote: "This product is amazing!",
-      author: "Bob Smith"
+      author: "Jane Doe",
+      image: "https://images.unsplash.com/photo-1519345182561-3f588066b1f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdfMXx8fGVufDB8fHx8&auto=format&fit=crop&w=634&q=80"
     }
   ];
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("section", { className: "bg-white py-12", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "container mx-auto p-12 md:p-24", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8 mt-12", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { className: "text-3xl font-bold text-slate-900 mb-4", children: "Testimonials" }),
     /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
-      motion.h2,
-      {
-        initial: { opacity: 0, y: 50 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5, delay: 0.2 },
-        className: "text-4xl font-bold text-slate-900",
-        children: "Testimonials"
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-8 mt-8", children: testimonials.map((testimonial, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
       motion.div,
       {
-        initial: { opacity: 0, y: 50 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5, delay: 0.2 + index * 0.1 },
-        className: "bg-white shadow-sm p-8 rounded",
-        children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Quote, { className: "text-indigo-500 text-lg" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-lg text-slate-900 mt-4", children: testimonial.quote }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-lg text-slate-900 mt-4", children: testimonial.author })
-        ]
-      },
-      index
-    )) })
-  ] }) });
+        initial: { x: 100, opacity: 0 },
+        animate: { x: 0, opacity: 1 },
+        transition: { duration: 0.5, delay: 0.5 },
+        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4",
+        children: testimonials.map((testimonial, index) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+          "div",
+          {
+            className: "bg-white shadow-sm p-4 rounded glassmorphism",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Quote, { className: "text-indigo-500 mb-2" }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("p", { className: "text-lg text-slate-900 mb-4", children: [
+                '"',
+                testimonial.quote,
+                '"'
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center space-x-2", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+                  "img",
+                  {
+                    src: testimonial.image,
+                    alt: testimonial.author,
+                    className: "w-12 h-12 rounded-full"
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "text-lg text-slate-900", children: testimonial.author })
+              ] })
+            ]
+          },
+          index
+        ))
+      }
+    )
+  ] });
 }
 var import_react27, import_jsx_runtime7, TestimonialsSection_default;
 var init_TestimonialsSection = __esm({
@@ -26273,25 +26256,26 @@ var init_TestimonialsSection = __esm({
 
 // src/components/FooterComponent.jsx
 function FooterComponent() {
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("footer", { className: "bg-white py-12", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "container mx-auto p-12 md:p-24", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
-    motion.p,
-    {
-      initial: { opacity: 0, y: 50 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.5, delay: 0.2 },
-      className: "text-lg text-slate-900",
-      children: [
-        "2023 NexusApp. All rights reserved.",
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Copyright, { className: "text-indigo-500 ml-2" })
-      ]
-    }
-  ) }) });
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("footer", { className: "bg-white shadow-sm py-4 mt-12", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 font-bold text-lg", children: "NexusApp" }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("ul", { className: "flex items-center space-x-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Home" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Features" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { to: "/", className: "text-slate-900 hover:text-indigo-500", children: "Pricing" }) })
+      ] })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("p", { className: "text-lg text-slate-900 mt-4", children: [
+      "2023 NexusApp. All rights reserved.",
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Copyright, { className: "ml-2" })
+    ] })
+  ] }) });
 }
 var import_react28, import_jsx_runtime8, FooterComponent_default;
 var init_FooterComponent = __esm({
   "src/components/FooterComponent.jsx"() {
     import_react28 = __toESM(require_react());
-    init_es3();
+    init_dist();
     init_lucide_react();
     import_jsx_runtime8 = __toESM(require_jsx_runtime());
     FooterComponent_default = FooterComponent;
@@ -26308,27 +26292,28 @@ var init_index = __esm({
 function App() {
   return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(HashRouter, { children: [
     /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Navbar_default, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Routes, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
-      Route,
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+      motion.main,
       {
-        path: "/",
-        element: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
-          motion.div,
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.5 },
+        className: "max-w-7xl mx-auto p-4 md:p-6 lg:p-8",
+        children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Routes, { children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          Route,
           {
-            initial: { opacity: 0 },
-            animate: { opacity: 1 },
-            transition: { duration: 0.5 },
-            children: [
+            path: "/",
+            element: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(import_jsx_runtime9.Fragment, { children: [
               /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(HeroSection_default, {}),
               /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(FeaturesComponent_default, {}),
               /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(PricingTable_default, {}),
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(TestimonialsSection_default, {}),
-              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(FooterComponent_default, {})
-            ]
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(TestimonialsSection_default, {})
+            ] })
           }
-        )
+        ) })
       }
-    ) })
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(FooterComponent_default, {})
   ] });
 }
 var import_react29, import_jsx_runtime9, App_default;

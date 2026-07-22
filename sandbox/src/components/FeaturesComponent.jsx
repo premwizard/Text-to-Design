@@ -19,45 +19,38 @@ function FeaturesComponent() {
   ];
 
   return (
-    <section className="bg-white py-12">
-      <div className="container mx-auto p-12 md:p-24">
-        <motion.h2
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-4xl font-bold text-slate-900"
-        >
-          Features
-        </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-              className="bg-white shadow-sm p-8 rounded"
-            >
-              <h3 className="text-lg font-bold text-slate-900">{feature.title}</h3>
-              <p className="text-lg text-slate-900 mt-4">{feature.description}</p>
-              <ul className="list-none mt-4">
-                <li className="flex items-center space-x-2">
-                  <Check className="text-indigo-500" />
-                  <span className="text-lg text-slate-900">Feature 1</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <Check className="text-indigo-500" />
-                  <span className="text-lg text-slate-900">Feature 2</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <Check className="text-indigo-500" />
-                  <span className="text-lg text-slate-900">Feature 3</span>
-                </li>
-              </ul>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+    <section className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 mt-12">
+      <h2 className="text-3xl font-bold text-slate-900 mb-4">
+        Features
+      </h2>
+      <motion.div
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        {features.map((feature, index) => (
+          <div
+            key={index}
+            className="bg-white shadow-sm p-4 rounded glassmorphism"
+          >
+            <h3 className="text-lg font-bold text-slate-900 mb-2">
+              {feature.title}
+            </h3>
+            <p className="text-lg text-slate-900">
+              {feature.description}
+            </p>
+            <ul className="list-none mt-4">
+              <li className="flex items-center space-x-2">
+                <Check className="text-indigo-500" />
+                <span className="text-lg text-slate-900">
+                  Feature description
+                </span>
+              </li>
+            </ul>
+          </div>
+        ))}
+      </motion.div>
     </section>
   );
 }
