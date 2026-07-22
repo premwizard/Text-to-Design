@@ -5,3 +5,11 @@ client/dist/
 .DS_Store
 sandbox/dist/assets/var*
 sandbox/var*
+.env.production
+.env.developement
+backend/.env.production
+backend/.env.developement
+client/.env.production
+client/.env.developement
+.env.development
+.env.example

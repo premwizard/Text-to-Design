@@ -125,25 +125,40 @@ Returns system status.
 
 ---
 
-## 🛠️ Quick Start & Running Locally
+## 🛠️ Environments & Deployment
 
-### Prerequisites
-- Node.js (v18+)
-- Python (v3.10+)
+The project supports dedicated **Development** and **Production** environments for both backend and client.
 
-### Commands
+### Environment Files
+
+- **Backend / System**:
+  - `.env.development`: Pre-configured for local dev (`ENVIRONMENT=development`, `DEBUG=true`, `ALLOWED_ORIGINS=http://localhost:5173`).
+  - `.env.production`: Pre-configured for deployment (`ENVIRONMENT=production`, `DEBUG=false`, `ALLOWED_ORIGINS=https://yourdomain.com`).
+  - `.env.example`: Template for environment variables.
+- **Client (`client/`)**:
+  - `client/.env.development`: (`VITE_ENV=development`, `VITE_API_BASE_URL=http://127.0.0.1:8000`).
+  - `client/.env.production`: (`VITE_ENV=production`, `VITE_API_BASE_URL=https://api.yourdomain.com`).
+
+---
+
+## 💻 Commands Reference
 
 Run using `make` (or `make.bat` on Windows):
 
 ```bash
-# Install dependencies
+# 1. Install all dependencies (Frontend + Backend)
 make install
 
-# Start backend server
-make dev-backend
+# 2. Development Mode (Hot-reload, Debug logs)
+make dev-backend     # Runs FastAPI on http://127.0.0.1:8000
+make dev-client      # Runs Vite dev server on http://localhost:5173
 
-# Start client development server
-make dev-client
+# 3. Production Mode (Multi-worker Uvicorn, Security headers, Bundled client)
+make prod-backend    # Runs FastAPI in production mode (0.0.0.0:8000, 4 workers)
+make prod-client     # Builds production assets & previews client
+
+# 4. Production Build
+make build           # Bundles client assets into client/dist/
 ```
 
 ---

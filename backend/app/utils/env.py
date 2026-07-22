@@ -7,12 +7,28 @@ _env_loaded = False
 def _ensure_env_loaded():
     global _env_loaded
     if not _env_loaded:
+        app_env = os.getenv("ENVIRONMENT") or os.getenv("APP_ENV") or os.getenv("ENV_MODE") or "development"
+        root_dir = Path(__file__).resolve().parent.parent.parent.parent
         backend_dir = Path(__file__).resolve().parent.parent.parent
-        env_files = [
+        
+        env_files = []
+        if app_env.lower() == "production":
+            env_files.extend([
+                root_dir / ".env.production",
+                backend_dir / ".env.production",
+            ])
+        else:
+            env_files.extend([
+                root_dir / ".env.development",
+                backend_dir / ".env.development",
+            ])
+            
+        env_files.extend([
+            root_dir / ".env",
             backend_dir / ".env",
-            backend_dir.parent / ".env",
             Path.cwd() / ".env"
-        ]
+        ])
+        
         for env_file in env_files:
             if env_file.exists():
                 load_dotenv(dotenv_path=env_file, override=False)

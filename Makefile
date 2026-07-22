@@ -1,4 +1,4 @@
-.PHONY: help install install-client install-backend dev-client dev-backend dev build lint test clean
+.PHONY: help install install-client install-backend dev-client dev-backend dev prod-backend prod-client prod build lint test clean
 
 .DEFAULT_GOAL := help
 
@@ -13,17 +13,24 @@ install-client: ## Install client npm packages
 install-backend: ## Install backend Python dependencies
 	pip install -r backend/requirements.txt
 
-dev-client: ## Start Vite frontend development server
-	npm --prefix client run dev
+dev-client: ## Start Vite frontend development server (Development Mode)
+	npm --prefix client run dev -- --mode development
 
-dev-backend: ## Start FastAPI backend development server
+dev-backend: ## Start FastAPI backend development server (Development Mode)
 	python -m uvicorn backend.app.main:app --reload --port 8000
 
-dev: ## Alias for dev-backend
-	python -m uvicorn backend.app.main:app --reload --port 8000
+dev: dev-backend ## Start backend server in development mode
 
-build: ## Build frontend application for production
-	npm --prefix client run build
+prod-backend: ## Start FastAPI backend server in Production Mode
+	python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --workers 4
+
+prod-client: build ## Build client for production and preview build output
+	npm --prefix client run preview -- --mode production
+
+prod: prod-backend ## Start backend server in production mode
+
+build: ## Build frontend application bundle for production
+	npm --prefix client run build -- --mode production
 
 lint: ## Run ESLint code checks for frontend
 	npm --prefix client run lint

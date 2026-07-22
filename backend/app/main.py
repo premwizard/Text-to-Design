@@ -12,13 +12,19 @@ ROOT_DIR = BACKEND_DIR.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-# Early load environment variables from backend/.env or root/.env before importing services
-backend_env = BACKEND_DIR / ".env"
-if backend_env.exists():
-    load_dotenv(dotenv_path=backend_env)
-root_env = ROOT_DIR / ".env"
-if root_env.exists():
-    load_dotenv(dotenv_path=root_env)
+# Early load environment variables based on ENVIRONMENT setting
+app_env = os.getenv("ENVIRONMENT") or os.getenv("APP_ENV") or os.getenv("ENV_MODE") or "development"
+env_filename = f".env.{app_env.lower()}"
+
+for env_dir in [ROOT_DIR, BACKEND_DIR, Path.cwd()]:
+    env_file = env_dir / env_filename
+    if env_file.exists():
+        load_dotenv(dotenv_path=env_file, override=True)
+
+for env_dir in [ROOT_DIR, BACKEND_DIR, Path.cwd()]:
+    env_file = env_dir / ".env"
+    if env_file.exists():
+        load_dotenv(dotenv_path=env_file, override=False)
 load_dotenv()
 
 from fastapi import FastAPI, Request, HTTPException
@@ -34,18 +40,30 @@ from backend.app.api.routes.memory_routes import router as memory_routes_router
 from backend.app.api.routes.preview_routes import router as preview_routes_router
 from backend.app.api.routes.metrics_routes import router as metrics_routes_router
 
-# Ensure ADK agents and tools are registered at startup
-
 from backend.app.services.logger import setup_logging
 from backend.app.rag.manager import setup_rag
 
 setup_logging()
 logger = logging.getLogger("backend")
 
-app = FastAPI(title="Text to UI Design API", version="1.0.0")
+is_debug = os.getenv("DEBUG", "true").lower() in ("true", "1", "t")
+app_environment = os.getenv("ENVIRONMENT", "development").lower()
+
+app = FastAPI(
+    title="Text to UI Design API",
+    version="1.0.0",
+    debug=is_debug
+)
+
+allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "*")
+if allowed_origins_raw.strip() == "*":
+    allow_origins = ["*"]
+else:
+    allow_origins = [origin.strip() for origin in allowed_origins_raw.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
