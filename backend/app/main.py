@@ -71,10 +71,12 @@ else:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allow_origins,
+    allow_origins=allow_origins if allowed_origins_raw.strip() != "*" else [],
+    allow_origin_regex=r".*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 from fastapi.responses import JSONResponse
@@ -259,6 +261,14 @@ async def serve_preview(path: str):
         logger.info(f"Serving preview file from dist: {dist_file_path}")
         return FileResponse(dist_file_path)
         
+    # SPA Fallback: Return index.html for non-file preview requests
+    dist_index = ROOT_DIR / "sandbox" / "dist" / "index.html"
+    root_index = ROOT_DIR / "sandbox" / "index.html"
+    if dist_index.exists() and dist_index.is_file():
+        return FileResponse(dist_index)
+    elif root_index.exists() and root_index.is_file():
+        return FileResponse(root_index)
+
     logger.warning(f"Preview file not found: {file_path}")
     raise HTTPException(status_code=404, detail="The requested file does not exist in the sandbox")
 
