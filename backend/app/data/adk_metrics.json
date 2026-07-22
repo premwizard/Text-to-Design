@@ -1,8 +1,8 @@
 {
-  "compile_successes": 43,
-  "compile_total": 87,
-  "generations_successes": 30,
-  "generations_total": 59,
+  "compile_successes": 45,
+  "compile_total": 89,
+  "generations_successes": 32,
+  "generations_total": 61,
   "edits_successes": 9,
   "edits_total": 10,
   "prompt_understanding_runs": 57,
@@ -19,14 +19,14 @@
   ],
   "agent_runs": {
     "router_agent": {
-      "runs": 88,
-      "duration_sum": 1.7600000000000011,
+      "runs": 94,
+      "duration_sum": 1.8800000000000012,
       "failures": 0,
       "tool_calls_count": 0
     },
     "memory": {
-      "runs": 78,
-      "duration_sum": 297.50186467170715,
+      "runs": 84,
+      "duration_sum": 299.71943831443787,
       "failures": 0,
       "tool_calls_count": 0
     },
@@ -79,14 +79,14 @@
       "tool_calls_count": 0
     },
     "critic": {
-      "runs": 52,
-      "duration_sum": 571.7696802616119,
+      "runs": 54,
+      "duration_sum": 648.8926591873169,
       "failures": 1,
       "tool_calls_count": 0
     },
     "optimization": {
-      "runs": 38,
-      "duration_sum": 892.2191247940063,
+      "runs": 40,
+      "duration_sum": 977.5001437664032,
       "failures": 0,
       "tool_calls_count": 0
     },

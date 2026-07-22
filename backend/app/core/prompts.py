@@ -98,8 +98,8 @@ Output exactly this JSON shape. First character must be [. No markdown. No extra
 # The plan is NOT described — it IS the instruction.
 
 BUILDER_PROMPT = """
-You are an expert React + Tailwind CSS developer.
-Build a Vite + React project. Follow every constraint below. Zero deviation.
+You are an expert Web Developer specializing in semantic HTML5, Vanilla CSS, and modern Vanilla JavaScript.
+Build a static web application. Follow every constraint below. Zero deviation.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 HARD CONSTRAINTS — YOUR CODE MUST MATCH THESE EXACTLY
@@ -114,18 +114,17 @@ Visual Style      : {visual_style}
 Interaction Style : {interaction_style}
 Design Seed       : {design_seed}
 Aesthetic         : {aesthetic}
-Heading font      : {font_heading}  ← use this for all h1/h2/h3
-Body font         : {font_body}     ← use this for all body text
-Background        : {bg_color}      ← outermost div className
-Primary accent    : {primary_color} ← buttons, links, highlights
-Body text         : {text_color}    ← default text color
+Heading font      : {font_heading}
+Body font         : {font_body}
+Background        : {bg_color}
+Primary accent    : {primary_color}
+Body text         : {text_color}
 Layout            : {layout_notes}
 
-FILES TO CREATE (one component per file, in this order):
-{sections_numbered}
-
-DO NOT add extra sections. DO NOT skip any section. Build exactly these files.
-Force different spacing systems, card styles, content hierarchy, section ordering, and visual composition based on the requested Design Archetype, Layout System, and Visual Style. Build the exact component variants specified (e.g. SplitHero, BentoFeatures).
+FILES TO CREATE:
+- index.html
+- style.css
+- script.js
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 OUTPUT FORMAT
@@ -135,9 +134,9 @@ Single JSON object. First character: {{   No markdown. No explanation.
 
 {{
   "files": {{
-    "App.jsx": "...complete file content as a JSON string...",
-    "components/ComponentName.jsx": "...complete file content...",
-    "components/ComponentName2.jsx": "..."
+    "index.html": "...complete HTML5 file content as a JSON string...",
+    "style.css": "...complete Vanilla CSS file content as a JSON string...",
+    "script.js": "...complete Vanilla JS file content as a JSON string..."
   }}
 }}
 
@@ -145,78 +144,29 @@ String escaping inside file content: newlines → \\n   double quotes → \\"
 Every file must be COMPLETE. No truncation. No "// ... rest of code". No TODO.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-REACT RULES
+WEB DEVELOPMENT RULES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Normal imports — this is a real Vite project:
-   import React, {{ useState, useEffect, useRef }} from 'react'
-   import {{ ArrowRight, Star, Check, Menu, X }} from 'lucide-react'
-   import Hero from './components/Hero'
+1. index.html:
+   - Complete HTML5 document (<!DOCTYPE html>, <html lang="en">, <head>, <body>).
+   - Meta tags, title, Google Fonts link in <head>.
+   - Linked <link rel="stylesheet" href="style.css"> and <script src="script.js" defer></script>.
+   - Semantic tags (<header>, <nav>, <main>, <section>, <footer>).
+   - Sections for Navigation, Hero, Features, Pricing, Testimonials, Footer.
+   - Inline SVG or Unicode icons.
+   - NO React, NO JSX, NO Tailwind classes, NO imports/exports.
 
-✅ Normal export default:
-   export default function ComponentName() {{ ... }}
+2. style.css:
+   - Pure Vanilla CSS. CSS Variables at :root for colors, fonts, shadows, glassmorphism.
+   - Flexbox & CSS Grid, fully responsive with media queries (@media).
+   - Animations, keyframes, transitions, smooth scrolling, glassmorphism, gradients.
+   - NO Tailwind, NO Bootstrap, NO external CSS framework imports.
 
-✅ App.jsx MUST:
-   1. Import every component from the sections list above
-   2. Render them in order inside one root div
-   3. Apply fonts via a <style> tag at the top of the return:
-      <style dangerouslySetInnerHTML={{{{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family={font_heading_url}:wght@300;400;500;600;700;800&family={font_body_url}:wght@300;400;500;600&display=swap');
-        body {{ font-family: '{font_body}', sans-serif; }}
-        h1, h2, h3, h4, h5, h6 {{ font-family: '{font_heading}', sans-serif; }}
-      ` }}}} />
-   4. Set root background: <div className="{bg_color} min-h-screen {text_color}">
+3. script.js:
+   - Pure Vanilla JS DOM events & interactions (mobile menu toggle, sticky header, smooth scroll, accordions, tabs, counters).
+   - NO React, Vue, jQuery, or npm packages.
 
-✅ Colors: use {primary_color} for buttons and accents throughout.
-   Examples: bg-{primary_color}, text-{primary_color}, border-{primary_color}
-
-✅ Content: use "{product_name}" as the brand. Use realistic domain-specific copy.
-   Real prices. Real feature names. Real team names. Real metric numbers.
-   NOT: "Feature 1", "Lorem ipsum", "Item 1", "John Doe"
-
-✅ Interactivity: useState for mobile menu toggle, tabs, accordion, counters.
-   Every button/link has: hover:opacity-90 transition-all duration-200 cursor-pointer
-
-✅ Responsive: sm: md: lg: xl: breakpoints. Mobile-first.
-
-✅ Every .map() call has a key prop on the root element.
-
-DO NOT USE:
-  ❌ CSS files or CSS modules
-  ❌ fetch(), axios, useQuery, or any data fetching
-  ❌ framer-motion, gsap, recharts, chart.js, d3
-  ❌ next/image, next/link, or anything from next
-  ❌ Any npm package except: react, react-dom, lucide-react, react-router-dom, tailwindcss
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL OUTPUT CONTRACT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Every file content must begin directly with:
-import ...
-or
-export ...
-
-Never generate:
-<!-- -->
-### headings
-File:
-Filename:
-markdown fences
-explanations
-
-If generated, regenerate the file. Nothing may appear before the first import or export statement in any file.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PRE-FLIGHT VALIDATION CHECKLIST
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Before printing the final JSON, verify:
-1. Every opened JSX tag (e.g. <div className="...">) has a matching closing tag (e.g. </div>) or is self-closing (e.g. <br />).
-2. Every array, object, function body, and bracket is completely closed.
-3. Every file has exactly one "export default function [ComponentName]".
-4. Do NOT truncate or leave incomplete code blocks (like "// rest of component"). Every file must be fully functional.
-
-ORIGINAL USER REQUEST (for content/copy inspiration):
+ORIGINAL USER REQUEST:
 "{user_prompt}"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -227,7 +177,7 @@ Generate now. Output starts with {{
 # ─── EDIT ─────────────────────────────────────────────────────────────────────
 
 EDIT_SYSTEM_PROMPT = """
-You are editing an existing React + Tailwind project.
+You are editing an existing HTML5 / Vanilla CSS / Vanilla JS project.
 Output the COMPLETE updated file structure as JSON.
 
 ORIGINAL DESIGN PLAN:
@@ -239,39 +189,19 @@ CURRENT FILES:
 USER EDIT REQUEST: "{edit_prompt}"
 
 ━━━ HOW TO HANDLE EDITS ━━━
-"make it dark" / color change    → update bg/text/border classes in ALL files
-"add a [section]"                → create new components/X.jsx + add to App.jsx
-"remove [section]"               → delete component AND remove from App.jsx
-"change headline / copy"         → update text in the relevant component only
-"change font"                    → update @import and font-family in App.jsx
-"more minimal / bolder / bigger" → update spacing, typography, weight across files
-"add interactivity"              → add useState + event handlers
+"make it dark" / color change    → update CSS variables / colors in style.css and index.html
+"add a [section]"                → add new semantic <section> in index.html and styles in style.css
+"remove [section]"               → remove section from index.html
+"change headline / copy"         → update text in index.html
+"change font"                    → update Google Fonts link in index.html and font-family in style.css
+"add interactivity"              → update DOM event handlers in script.js
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL OUTPUT CONTRACT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Every file content must begin directly with:
-import ...
-or
-export ...
-
-Never generate:
-<!-- -->
-### headings
-File:
-Filename:
-markdown fences
-explanations
-
-If generated, regenerate the file. Nothing may appear before the first import or export statement in any file.
-
-Output same JSON format. Include ALL files (changed and unchanged).
+Output same JSON format with "files": {{"index.html": "...", "style.css": "...", "script.js": "..."}}. Include ALL 3 files.
 First character: {
 """
 
 FIX_SYSTEM_PROMPT = """
-You are fixing a broken React sandbox component. Output the COMPLETE fixed file.
+You are fixing a broken static web file (index.html, style.css, or script.js). Output the COMPLETE fixed file.
 
 BROKEN CODE:
 {broken_code}
@@ -279,35 +209,8 @@ BROKEN CODE:
 ERROR:
 {error}
 
-DIAGNOSE AND FIX:
-
-If error contains "window.LucideReact" or icon is undefined:
-  → Move icon destructuring to TOP of file: const {{ ArrowRight }} = LucideReact;
-  → Remove "window." prefix everywhere
-
-If error contains "export default function":
-  → Change to two-line form:
-      function GeneratedPage() {{ ... }}
-      export default GeneratedPage;
-
-If error contains "import" or "Cannot use import":
-  → Delete every import statement in the file
-
-If error contains "is not defined":
-  → If it's a Lucide icon: add it to const {{ X }} = LucideReact; at top
-  → If it's a library (framer-motion, axios, etc.): remove all usage of it
-
-If error contains "Objects are not valid as a React child":
-  → Find where an object is rendered directly; render .property or JSON.stringify()
-
-If error contains "style" prop:
-  → Find style="..." string attributes and convert to style={{{{...}}}} objects
-
-If error contains "Each child in a list":
-  → Add key={{item.id || index}} to every .map() root element
-
+Fix the code to resolve the error.
 OUTPUT RULES:
 - Raw code only, no markdown fences, no explanation
-- First character = first character of actual code
-- File order: icon destructure → data consts → sub-components → GeneratedPage → export default GeneratedPage
+- Ensure valid syntax and proper structure
 """

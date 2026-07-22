@@ -44,10 +44,13 @@ def cleanGeneratedCode(code: str) -> str:
     code = re.sub(r'^\s*(?:File|Filename):\s*[\w\.\-/]+\s*\n?', '', code, flags=re.IGNORECASE)
     code = re.sub(r'^\s*###\s*[\w\.\-/]+\s*\n?', '', code, flags=re.IGNORECASE)
     
-    # 5. Remove any leading explanatory text: slice to start with the first 'import', 'export', 'const', 'function'
-    match = re.search(r'^\s*(import\b|export\b|const\b|function\b|let\b)', code, flags=re.MULTILINE)
-    if match and match.start() < 500:
-        code = code[match.start():]
+    # 5. Remove any leading explanatory text for JS/JSX files
+    if any(code.startswith(prefix) for prefix in ['import', 'export', 'const', 'function', 'let', '<!DOCTYPE', '<html']):
+        pass
+    else:
+        match = re.search(r'^\s*(<!DOCTYPE|<html|import\b|export\b|const\b|function\b|let\b)', code, flags=re.MULTILINE)
+        if match and match.start() < 500:
+            code = code[match.start():]
     
     # 5.5. Auto Repair Layer for framework contamination:
     
@@ -234,6 +237,18 @@ async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tupl
     db_logger = DebugLogger()
     db_logger.log("COMPILE", "START", f"Dry-run compilation checking. Target variation: {variation_id}. Proposed files: {list(cleaned_files.keys())}")
     
+    # 0. Static HTML/CSS/JS mode validation
+    if "index.html" in cleaned_files or any(k.endswith(".html") for k in cleaned_files):
+        from backend.app.utils.validators.jsx_validator import validate_generated_code
+        files_list = [{"filename": fname, "content": code} for fname, code in cleaned_files.items()]
+        val_res = validate_generated_code(files_list)
+        if val_res.get("valid"):
+            db_logger.log("COMPILE", "SUCCESS", "Static HTML/CSS/JS validation passed successfully.")
+            return True, ""
+        else:
+            err_msg = "\n".join([f"src/{e.get('file')}:{e.get('message')}" for e in val_res.get("errors", [])])
+            return False, err_msg
+
     try:
         # 1. Write the proposed files to the temp directory
         for rel_path, content in cleaned_files.items():

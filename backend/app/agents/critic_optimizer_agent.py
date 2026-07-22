@@ -5,16 +5,15 @@ from backend.app.services.ai_router import generate_ai
 logger = logging.getLogger("backend.app.agents.critic_optimizer")
 
 CRITIC_SYSTEM_PROMPT = """You are a UI Evaluation Agent.
-You will review the generated React component code files and critique them based on strict Awwwards-quality professional UI/UX standards:
-1. MUST have at least 8 distinct sections/components.
+You will review the generated static web site files (index.html, style.css, script.js) and critique them based on strict Awwwards-quality professional UI/UX standards:
+1. MUST contain complete semantic HTML5 structure with navigation, hero, features, pricing, testimonials, and footer.
 2. MUST use real images or illustrations (from Unsplash or SVG) - reject empty whitespace/divs.
-3. MUST use `lucide-react` icons and `framer-motion` animations.
+3. MUST use SVG or Unicode icons and CSS keyframes/animations.
 4. MUST NOT use "Lorem Ipsum" - text must be realistic.
-5. MUST contain CTAs, cards, extreme visual density, gradients, glassmorphism, overlapping elements, and full responsive layouts.
-6. MUST NOT be simple linear vertical stacking. It MUST feature bento grids, masonry, or asymmetrical layouts.
-7. MUST NOT have all sections using identical backgrounds.
+5. MUST contain CTAs, cards, visual density, gradients, glassmorphism, overlapping elements, and responsive layouts.
+6. MUST NOT be simple linear vertical stacking. It MUST feature bento grids, grid layouts, or creative visual compositions.
+7. MUST NOT use Tailwind/Bootstrap or external frameworks. Pure Vanilla CSS & Vanilla JS only.
 If ANY of these conditions fail, you MUST return a score below 9.5 (e.g. 7.0). Only score 9.5-10.0 if the design is breathtakingly complex and beautiful.
-8. Framework compatibility (only allowed: react, lucide-react, react-router-dom, framer-motion).
 
 You must ONLY return a JSON object with this exact schema (no markdown formatting, no explanations):
 {
@@ -27,15 +26,16 @@ Output must start with { and end with }. No extra text.
 """
 
 OPTIMIZATION_SYSTEM_PROMPT = """You are a UI Optimization Agent.
-You will receive generated React component code files and a Critic Report.
+You will receive generated static web site files (index.html, style.css, script.js) and a Critic Report.
 Your task is to fix all visual issues, improve spacing, colors, typography, hierarchy, and responsiveness based on the report.
 Return the fully optimized code for ALL files.
 
 Output ONLY a JSON object with this exact schema (no markdown formatting, no explanations):
 {
   "files": {
-    "App.jsx": "...",
-    "components/Navbar.jsx": "..."
+    "index.html": "...",
+    "style.css": "...",
+    "script.js": "..."
   }
 }
 
@@ -156,7 +156,7 @@ async def run_optimization_agent(files: dict[str, str], critic_report: dict) -> 
                         optimized_files[k] = orig_content
                         continue
                     cleaned = cleanGeneratedCode(v)
-                    if len(cleaned.strip()) < 30 or ("export default" not in cleaned and orig_content):
+                    if len(cleaned.strip()) < 10:
                         optimized_files[k] = orig_content
                     else:
                         optimized_files[k] = cleaned

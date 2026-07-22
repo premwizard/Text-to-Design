@@ -9,7 +9,7 @@ SELF_CLOSING_TAGS = {"img", "input", "br", "hr", "meta", "link"}
 
 def validate_generated_code(files: List[Dict[str, str]]) -> dict:
     """
-    Validates JSX files purely in Python using regex and stacks.
+    Validates static website (HTML, CSS, JS) or JSX files purely in Python using regex and stacks.
     Files format: [{"filename": "...", "content": "..."}]
     """
     all_errors = []
@@ -17,39 +17,54 @@ def validate_generated_code(files: List[Dict[str, str]]) -> dict:
     for file in files:
         filename = file.get("filename", "unknown")
         content = file.get("content", "")
-        
         errors = []
         
-        # 1. Export Validation
-        if not re.search(r'export\s+(default|const)\s+', content):
+        if not content or len(content.strip()) < 10:
             errors.append({
                 "file": filename,
-                "type": "MISSING_EXPORT",
-                "message": "Component must have 'export default' or 'export const'"
+                "type": "EMPTY_FILE",
+                "message": f"File '{filename}' is empty or too short."
             })
-            
-        # 2. Import Validation
-        imports = re.finditer(r'import\s+.*?from\s+[\'"](.*?)[\'"]', content)
-        seen_imports = set()
-        
-        for match in imports:
-            pkg = match.group(1)
-            if pkg not in ALLOWED_IMPORTS and not pkg.startswith('.'):
+            all_errors.extend(errors)
+            continue
+
+        # For JSX/TSX files only, check exports and imports
+        if filename.endswith(('.jsx', '.tsx')):
+            if not re.search(r'export\s+(default|const)\s+', content):
                 errors.append({
                     "file": filename,
-                    "type": "INVALID_IMPORT",
-                    "message": f"'{pkg}' is not allowed"
+                    "type": "MISSING_EXPORT",
+                    "message": "Component must have 'export default' or 'export const'"
                 })
-            
-            if pkg in seen_imports:
+                
+            imports = re.finditer(r'import\s+.*?from\s+[\'"](.*?)[\'"]', content)
+            seen_imports = set()
+            for match in imports:
+                pkg = match.group(1)
+                if pkg not in ALLOWED_IMPORTS and not pkg.startswith('.'):
+                    errors.append({
+                        "file": filename,
+                        "type": "INVALID_IMPORT",
+                        "message": f"'{pkg}' is not allowed"
+                    })
+                if pkg in seen_imports:
+                    errors.append({
+                        "file": filename,
+                        "type": "DUPLICATE_IMPORT",
+                        "message": f"Duplicate import found for '{pkg}'"
+                    })
+                seen_imports.add(pkg)
+
+        # HTML specific check
+        if filename.endswith('.html'):
+            if '<html' not in content and '<!DOCTYPE' not in content:
                 errors.append({
                     "file": filename,
-                    "type": "DUPLICATE_IMPORT",
-                    "message": f"Duplicate import found for '{pkg}'"
+                    "type": "INVALID_HTML",
+                    "message": "HTML file must contain valid <!DOCTYPE html> or <html> tag."
                 })
-            seen_imports.add(pkg)
-            
-        # 3. Bracket Validation ((), {}, [])
+
+        # Bracket Validation ((), {}, [])
         bracket_pairs = {')': '(', '}': '{', ']': '['}
         bracket_stack = []
         
@@ -80,10 +95,6 @@ def validate_generated_code(files: List[Dict[str, str]]) -> dict:
                 "type": "UNCLOSED_BRACKET",
                 "message": f"Unclosed bracket '{char}' starting on line {line_num}"
             })
-            
-        # 4. Tag Validation (Stack-Based)
-        # Removed: Regex cannot reliably parse JSX tags with arrow functions (e.g. onClick={() => {}})
-        # which causes many false positive MISMATCHED_TAG errors.
             
         all_errors.extend(errors)
         

@@ -4,23 +4,22 @@ from backend.app.services.ai_router import generate_ai
 
 logger = logging.getLogger("backend.app.agents.full_app_generation")
 
-SYSTEM_PROMPT = """You are a master React + Tailwind CSS developer.
-Generate the complete React application in a single response based on the design plan.
+SYSTEM_PROMPT = """You are a master Web Developer specializing in semantic HTML5, Vanilla CSS, and modern Vanilla JavaScript.
+Generate a complete, production-ready static website in a single response based on the design plan.
 
-You must output the raw code for ALL files using the exact following format separator.
-Do NOT wrap the response in markdown code fences or JSON.
-
-Required format:
-===FILE: App.jsx===
-import React from 'react';
-import Navbar from './components/Navbar';
+You MUST output the raw code for ALL 3 files using the exact following format separator:
+===FILE: index.html===
+<!DOCTYPE html>
+<html lang="en">
 ...
+</html>
 
-===FILE: components/Navbar.jsx===
-...
+===FILE: style.css===
+/* CSS code */
 
-===FILE: components/HeroSection.jsx===
-...
+===FILE: script.js===
+// JavaScript code
+
 Layout Context:
 - Brand Name: {product_name}
 - Hero Tagline: {tagline}
@@ -39,40 +38,43 @@ Layout Context:
 - Border Details: {border}
 
 ━━━ DEVELOPMENT GUIDELINES ━━━
-- Generate ONLY standard React web components for Vite.
-- Allowed libraries: react, lucide-react, react-router-dom, framer-motion. (CRITICAL: Always use <HashRouter> instead of <BrowserRouter>. Avoid BrowserRouter completely.)
-- App.jsx must import fonts and apply global styles via <style> tag. CRITICAL: to be valid JSX, the CSS MUST be wrapped in a Javascript string, like so: <style>{{` css... `}}</style>
-- Apply mobile-first responsive Tailwind classes (sm:, md:, lg:).
-- Design it with a premium visual feel, leveraging nice hover states, subtle gradients, and glassmorphism.
-- Make all key elements interactive using standard React useState where appropriate.
-- ABSOLUTELY NO LOREM IPSUM. Generate realistic, believable, and context-aware copy for all text, names, and statistics.
-- ABSOLUTELY NO EMPTY PLACEHOLDER DIVS. You MUST use real placeholder images from Unsplash (e.g., `https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80`) or SVG illustrations.
-- Include rich animations using `framer-motion` (e.g., Fade In, Slide Up, Scale Hover) to make the UI feel alive.
-- Incorporate `lucide-react` icons extensively for visual hierarchy (e.g., Star, Heart, Search, ArrowRight, Shield).
-- CRITICAL: Do NOT use brand icons (Facebook, Twitter, Instagram, Linkedin, Github, etc.) from `lucide-react` as they were removed from the library. Use generic equivalents or SVGs.
-- VERY IMPORTANT: Maximize visual density and component richness. Use backdrop-blur, animated glow, drop-shadows, and gradient borders. Avoid simple linear stacking.
-- HERO SECTION: MUST occupy `min-h-screen`, contain large typography, accent text, floating cards, animated badges, multiple CTAs, and a large background graphic/image (taking up >40% width).
-- Ensure 100% complete files. Do not leave trailing or unfinished tags. Provide every single import statement required (lucide-react, framer-motion).
-- Asset placement details:
-{assets}
+1. index.html:
+- Complete, semantic HTML5 document (<!DOCTYPE html>, <html lang="en">, <head>, <body>).
+- Include meta tags (viewport, charset, title, description).
+- Include Google Fonts link in <head> matching heading/body fonts.
+- Link external stylesheet: <link rel="stylesheet" href="style.css">
+- Link external script: <script src="script.js" defer></script>
+- Use semantic sectioning tags (<header>, <nav>, <main>, <section>, <footer>, <article>).
+- Build sections for all planned components: {components_list}
+- Use inline SVG elements or Unicode icons for visual elements.
+- Use clean, semantic, reusable class names (e.g. class="navbar", class="hero-section", class="btn btn-primary", class="glass-card").
+- ABSOLUTELY NO React syntax, NO JSX tags, NO fragments (<>), NO React state, NO imports/exports.
 
-Components to generate:
-{components_list}
+2. style.css:
+- Pure, native Vanilla CSS.
+- Define CSS Variables at :root for colors, fonts, spacing, shadows, border-radius, glassmorphism.
+- Implement modern layout techniques using CSS Grid and Flexbox.
+- Fully responsive design using media queries (@media (max-width: 768px), etc.).
+- Include keyframes, transitions, smooth scrolling, hover effects, shadows, gradients, and glassmorphism (backdrop-filter: blur()).
+- ABSOLUTELY NO Tailwind, NO Bootstrap, NO external CSS framework imports.
+
+3. script.js:
+- Pure Vanilla JavaScript DOM manipulation.
+- Implement interactive features (mobile menu toggle, sticky header, smooth scroll, accordion, tabs, scroll animations, counters).
+- ABSOLUTELY NO React, Vue, Angular, jQuery, TypeScript, Webpack, Vite, or npm packages.
+
+Do NOT wrap the response in markdown code fences or JSON.
+Output ONLY the three files: index.html, style.css, script.js using ===FILE: <filename>=== separators.
 """
 
-AUTO_FIX_PROMPT = """You are an expert React + Tailwind code validator and repair agent.
+AUTO_FIX_PROMPT = """You are an expert HTML5 + Vanilla CSS + Vanilla JS code validator and repair agent.
 The generated code failed syntax/import validation.
 
 ━━━ VALIDATION ERRORS ━━━
 {error_context}
 
-Output the raw code for ONLY the repaired versions of the broken files using the exact following format separator.
-Do NOT output files that are not listed in the errors.
-Do NOT wrap the response in markdown code fences or JSON.
-
-Required format:
-===FILE: components/BrokenComponent.jsx===
-import React from 'react';
+Output the raw code for ONLY the repaired versions of the broken files using the exact format separator:
+===FILE: index.html===
 ...
 """
 

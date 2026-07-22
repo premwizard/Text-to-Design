@@ -154,11 +154,42 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import App from '${appImport}';
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+  componentDidCatch(error, errorInfo) {
+    this.setState({ error, errorInfo });
+    console.error("React Error Boundary Caught:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', background: '#fee2e2', color: '#991b1b', fontFamily: 'monospace', height: '100vh', overflow: 'auto' }}>
+          <h2 style={{ marginTop: 0, fontSize: '1.5rem' }}>React Runtime Error</h2>
+          <div style={{ background: '#fef2f2', padding: '15px', borderRadius: '6px', border: '1px solid #f87171' }}>
+            <strong>Message:</strong> {this.state.error?.message || 'Unknown Error'}<br/>
+            <pre style={{ marginTop: '10px', fontSize: '12px', whiteSpace: 'pre-wrap' }}>{this.state.errorInfo?.componentStack}</pre>
+          </div>
+          <p style={{ marginTop: '15px' }}>Check your browser's Developer Console (F12) for more details.</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const root = createRoot(document.getElementById('root'));
 root.render(
-  <HashRouter>
-    <App />
-  </HashRouter>
+  <ErrorBoundary>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </ErrorBoundary>
 );`;
           }
         }
@@ -173,6 +204,38 @@ root.render(
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preview</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+      window.addEventListener('error', (event) => {
+        const root = document.getElementById('root');
+        if (root) {
+          root.innerHTML = \\\`
+            <div style="padding: 20px; background: #fee2e2; color: #991b1b; font-family: monospace; height: 100vh; overflow: auto; box-sizing: border-box;">
+              <h2 style="margin-top: 0; font-size: 1.5rem;">Syntax / Module Error</h2>
+              <div style="background: #fef2f2; padding: 15px; border-radius: 6px; border: 1px solid #f87171;">
+                <strong>Message:</strong> \\\${event.message}<br/>
+                <strong>File:</strong> \\\${event.filename || 'Unknown'}<br/>
+                <strong>Line:</strong> \\\${event.lineno || 'Unknown'}: \\\${event.colno || 'Unknown'}<br/>
+              </div>
+              <p style="margin-top: 15px;">Check your browser's Developer Console (F12) for more details.</p>
+            </div>
+          \\\`;
+        }
+      });
+      window.addEventListener('unhandledrejection', (event) => {
+        const root = document.getElementById('root');
+        if (root) {
+          root.innerHTML = \\\`
+            <div style="padding: 20px; background: #fee2e2; color: #991b1b; font-family: monospace; height: 100vh; overflow: auto; box-sizing: border-box;">
+              <h2 style="margin-top: 0; font-size: 1.5rem;">Unhandled Promise Rejection</h2>
+              <div style="background: #fef2f2; padding: 15px; border-radius: 6px; border: 1px solid #f87171;">
+                <strong>Message:</strong> \\\${event.reason?.message || event.reason || 'Unknown Error'}<br/>
+              </div>
+              <p style="margin-top: 15px;">Check your browser's Developer Console (F12) for more details.</p>
+            </div>
+          \\\`;
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
@@ -319,8 +382,17 @@ export default defineConfig({
     let cleanPath = selectedFile.startsWith('/') ? selectedFile.slice(1) : selectedFile;
     if (files[cleanPath]) {
       setActiveCode(files[cleanPath]);
+    } else if (files['index.html']) {
+      setSelectedFile('index.html');
+      setActiveCode(files['index.html']);
     } else {
-      setActiveCode('/* File not found or empty */');
+      const firstFile = Object.keys(files)[0];
+      if (firstFile) {
+        setSelectedFile(firstFile);
+        setActiveCode(files[firstFile]);
+      } else {
+        setActiveCode('/* File not found or empty */');
+      }
     }
   }, [selectedFile, files]);
 

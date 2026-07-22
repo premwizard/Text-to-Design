@@ -2,15 +2,25 @@ import logging
 import sys
 import asyncio
 from pathlib import Path
+from dotenv import load_dotenv
 
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+BACKEND_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = BACKEND_DIR.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from dotenv import load_dotenv
+# Early load environment variables from backend/.env or root/.env before importing services
+backend_env = BACKEND_DIR / ".env"
+if backend_env.exists():
+    load_dotenv(dotenv_path=backend_env)
+root_env = ROOT_DIR / ".env"
+if root_env.exists():
+    load_dotenv(dotenv_path=root_env)
+load_dotenv()
+
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import mimetypes
@@ -29,7 +39,6 @@ from backend.app.api.routes.metrics_routes import router as metrics_routes_route
 from backend.app.services.logger import setup_logging
 from backend.app.rag.manager import setup_rag
 
-load_dotenv()
 setup_logging()
 logger = logging.getLogger("backend")
 
