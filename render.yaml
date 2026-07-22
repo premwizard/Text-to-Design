@@ -4,11 +4,11 @@ services:
     env: python
     region: oregon
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: fastapi run backend/app/main.py --port $PORT
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: ENVIRONMENT
         value: production
       - key: DEBUG
         value: false
-      - key: PYTHON_VERSION
-        value: 3.10.12
+      - key: HOST
+        value: 0.0.0.0

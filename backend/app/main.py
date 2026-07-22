@@ -257,3 +257,8 @@ async def serve_preview(path: str):
         
     logger.warning(f"Preview file not found: {file_path}")
     raise HTTPException(status_code=404, detail="The requested file does not exist in the sandbox")
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run("backend.app.main:app", host="0.0.0.0", port=port)
