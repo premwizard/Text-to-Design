@@ -6,6 +6,11 @@ import { Navbar } from '../components/landing/Navbar';
 import { HeroSection } from '../components/landing/HeroSection';
 import { ProductOverview } from '../components/landing/ProductOverview';
 import { GenerationProcess } from '../components/landing/GenerationProcess';
+import { FeatureShowcase } from '../components/landing/FeatureShowcase';
+import { TemplateShowcase } from '../components/landing/TemplateShowcase';
+import { WhyUs } from '../components/landing/WhyUs';
+import { FAQSection } from '../components/landing/FAQSection';
+import { CTABanner } from '../components/landing/CTABanner';
 import { Footer } from '../components/landing/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -53,6 +58,11 @@ export default function Landing() {
         <HeroSection />
         <ProductOverview />
         <GenerationProcess />
+        <FeatureShowcase />
+        <TemplateShowcase />
+        <WhyUs />
+        <FAQSection />
+        <CTABanner />
         <Footer />
       </div>
     </div>

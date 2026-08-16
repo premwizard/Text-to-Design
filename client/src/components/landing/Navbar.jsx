@@ -25,12 +25,21 @@ export function Navbar() {
 
 
         {/* Navigation Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <div className="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-400">
           <a href="#about" className="hover:text-sky-300 transition-colors">
             Product
           </a>
           <a href="#process" className="hover:text-sky-300 transition-colors">
             How It Works
+          </a>
+          <a href="#showcase" className="hover:text-sky-300 transition-colors">
+            Showcase
+          </a>
+          <a href="#templates" className="hover:text-sky-300 transition-colors">
+            Templates
+          </a>
+          <a href="#faq" className="hover:text-sky-300 transition-colors">
+            FAQ
           </a>
         </div>
 
