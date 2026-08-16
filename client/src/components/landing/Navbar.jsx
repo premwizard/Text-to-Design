@@ -24,6 +24,16 @@ export function Navbar() {
         </Link>
 
 
+        {/* Navigation Links */}
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+          <a href="#about" className="hover:text-sky-300 transition-colors">
+            Product
+          </a>
+          <a href="#process" className="hover:text-sky-300 transition-colors">
+            How It Works
+          </a>
+        </div>
+
         {/* Actions */}
         <div className="hidden md:flex items-center gap-6">
           <Link to="/login" className="text-sm font-bold text-zinc-300 hover:text-white transition-colors">Log In</Link>

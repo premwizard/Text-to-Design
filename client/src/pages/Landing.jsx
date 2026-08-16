@@ -4,6 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { Navbar } from '../components/landing/Navbar';
 import { HeroSection } from '../components/landing/HeroSection';
+import { ProductOverview } from '../components/landing/ProductOverview';
+import { GenerationProcess } from '../components/landing/GenerationProcess';
 import { Footer } from '../components/landing/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -49,6 +51,8 @@ export default function Landing() {
       <div className="relative z-10 w-full flex flex-col items-center">
         <Navbar />
         <HeroSection />
+        <ProductOverview />
+        <GenerationProcess />
         <Footer />
       </div>
     </div>
