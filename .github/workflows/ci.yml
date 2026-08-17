@@ -148,3 +148,49 @@ jobs:
           gh issue create \
             --title "$ISSUE_TITLE" \
             --body "$ISSUE_BODY"
+
+  close-ci-failure-issues:
+    name: Close Resolved CI Failure Issues
+    needs: [frontend, backend]
+    if: success()
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Close Open CI Failure Issues
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          RUN_URL="${GH_SERVER_URL:-https://github.com}/${REPO}/actions/runs/${RUN_ID}"
+          TARGET_TITLE="🚨 CI Failure — ${WORKFLOW_NAME} — ${BRANCH_NAME}"
+
+          # Find all open issues matching the title for this workflow and branch
+          OPEN_ISSUES=$(gh issue list --state open --json number,title --jq ".[] | select(.title == \"$TARGET_TITLE\") | .number")
+
+          if [ -z "$OPEN_ISSUES" ]; then
+            echo "No open CI failure issues found for branch '${BRANCH_NAME}'."
+            exit 0
+          fi
+
+          COMMENT_BODY=$(cat <<EOF
+          ✅ **CI Pipeline Resolved**
+
+          The CI pipeline for branch \`${BRANCH_NAME}\` passed successfully in [Run #${RUN_ID}](${RUN_URL}) (Commit \`${COMMIT_SHA}\`).
+
+          Automatically closing this CI failure issue.
+          EOF
+          )
+
+          for ISSUE_NUM in $OPEN_ISSUES; do
+            echo "Closing CI failure issue #${ISSUE_NUM}..."
+            gh issue close "$ISSUE_NUM" --comment "$COMMENT_BODY"
+          done
