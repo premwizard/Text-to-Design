@@ -62,3 +62,37 @@ jobs:
 
       - name: Run tests
         run: pytest tests
+
+  notify-zapier-on-failure:
+    name: Notify Zapier on Failure
+    needs: [frontend, backend]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Failure Webhook to Zapier
+        continue-on-error: true
+        env:
+          ZAPIER_WEBHOOK_URL: ${{ secrets.ZAPIER_CI_WEBHOOK_URL }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          if [ -z "$ZAPIER_WEBHOOK_URL" ]; then
+            echo "Zapier Webhook URL is not configured. Skipping notification."
+            exit 0
+          fi
+
+          curl -X POST "$ZAPIER_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d @- <<EOF
+          {
+            "repository": "${{ github.repository }}",
+            "workflow": "${{ github.workflow }}",
+            "branch": "${{ github.ref_name }}",
+            "commit_sha": "${{ github.sha }}",
+            "commit_message": $(echo -n "$COMMIT_MSG" | jq -R -s .),
+            "actor": "${{ github.actor }}",
+            "run_id": "${{ github.run_id }}",
+            "run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "event": "${{ github.event_name }}",
+            "status": "failure"
+          }
+          EOF
