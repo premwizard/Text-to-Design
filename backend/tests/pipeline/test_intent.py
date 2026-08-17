@@ -34,3 +34,7 @@ async def test_intent_detector_fallback_on_error():
     assert new_context.intent.primary_industry == "general"
     assert new_context.intent.page_type == "landing page"
     assert new_context.intent.theme == "modern"
+
+def test_intentional_ci_failure():
+    assert False, "Controlled failure to verify GitHub Issue creation on CI failure"
+
