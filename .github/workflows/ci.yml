@@ -63,36 +63,88 @@ jobs:
       - name: Run tests
         run: pytest tests
 
-  notify-zapier-on-failure:
-    name: Notify Zapier on Failure
+  create-ci-failure-issue:
+    name: Create CI Failure Issue
     needs: [frontend, backend]
     if: failure()
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - name: Send Failure Webhook to Zapier
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Issue for CI Failure
         continue-on-error: true
         env:
-          ZAPIER_WEBHOOK_URL: ${{ secrets.ZAPIER_CI_WEBHOOK_URL }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.sha }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
+          ACTOR: ${{ github.actor }}
+          RUN_ID: ${{ github.run_id }}
+          EVENT_NAME: ${{ github.event_name }}
+          FRONTEND_RESULT: ${{ needs.frontend.result }}
+          BACKEND_RESULT: ${{ needs.backend.result }}
         run: |
-          if [ -z "$ZAPIER_WEBHOOK_URL" ]; then
-            echo "Zapier Webhook URL is not configured. Skipping notification."
-            exit 0
+          RUN_URL="${GH_SERVER_URL:-https://github.com}/${REPO}/actions/runs/${RUN_ID}"
+          ISSUE_TITLE="🚨 CI Failure — ${WORKFLOW_NAME} — ${BRANCH_NAME}"
+
+          # Format job results
+          FRONTEND_STATUS="PASSED"
+          if [ "$FRONTEND_RESULT" != "success" ]; then
+            FRONTEND_STATUS="FAILED (${FRONTEND_RESULT})"
           fi
 
-          curl -X POST "$ZAPIER_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d @- <<EOF
-          {
-            "repository": "${{ github.repository }}",
-            "workflow": "${{ github.workflow }}",
-            "branch": "${{ github.ref_name }}",
-            "commit_sha": "${{ github.sha }}",
-            "commit_message": $(echo -n "$COMMIT_MSG" | jq -R -s .),
-            "actor": "${{ github.actor }}",
-            "run_id": "${{ github.run_id }}",
-            "run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "event": "${{ github.event_name }}",
-            "status": "failure"
-          }
+          BACKEND_STATUS="PASSED"
+          if [ "$BACKEND_RESULT" != "success" ]; then
+            BACKEND_STATUS="FAILED (${BACKEND_RESULT})"
+          fi
+
+          ISSUE_BODY=$(cat <<EOF
+          # 🚨 CI Failure
+
+          ## Summary
+          The GitHub Actions CI pipeline failed.
+
+          ## Repository
+          ${REPO}
+
+          ## Workflow
+          ${WORKFLOW_NAME}
+
+          ## Branch
+          ${BRANCH_NAME}
+
+          ## Commit
+          ${COMMIT_SHA}
+
+          ## Commit Message
+          ${COMMIT_MSG}
+
+          ## Triggered By
+          ${ACTOR}
+
+          ## Event
+          ${EVENT_NAME}
+
+          ## GitHub Actions Run
+          ${RUN_URL}
+
+          ## Failed Jobs
+          - **Frontend CI**: ${FRONTEND_STATUS}
+          - **Backend CI**: ${BACKEND_STATUS}
+
+          ## Next Step
+          Inspect the [GitHub Actions Run Log](${RUN_URL}) to identify the failing step and error.
+
+          ---
+          _This issue was automatically created by CI failure automation (Run ID: ${RUN_ID})._
           EOF
+          )
+
+          gh issue create \
+            --title "$ISSUE_TITLE" \
+            --body "$ISSUE_BODY"
