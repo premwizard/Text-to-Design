@@ -7,17 +7,10 @@ import {
   CheckCircle2,
   CircleDashed
 } from 'lucide-react';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import { LivePreview } from '../LivePreview';
-
-function cn(...inputs) {
-  return twMerge(clsx(inputs));
-}
 
 export function WorkspacePanel({ 
   code, 
-  setCode, 
   loading, 
   statusText, 
   generationId, 
@@ -44,7 +37,7 @@ export function WorkspacePanel({
           setFiles(parsed.files);
         }
       }
-    } catch (e) {
+    } catch {
       // Ignore parse errors while streaming
     }
   }, [code]);

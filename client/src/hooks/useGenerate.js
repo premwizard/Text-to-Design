@@ -139,7 +139,6 @@ export function useGenerate() {
                       [vid]: { ...prev[vid], code: '' }
                   }));
               } else {
-                  fullCodeAccumulator = "";
                   setCode("");
               }
             }
@@ -158,7 +157,6 @@ export function useGenerate() {
               const actualData = parsed.data || parsed.code;
               const stringified = typeof actualData === 'string' ? actualData : JSON.stringify(actualData, null, 2);
               setCode(stringified);
-              fullCodeAccumulator = stringified;
             }
             if (parsed.type === "emergency") {
               setError(parsed.message || "AI providers are temporarily busy.");
@@ -186,7 +184,6 @@ export function useGenerate() {
               }
             }
             if (parsed.chunk) {
-              fullCodeAccumulator += parsed.chunk;
               setCode(prev => prev + parsed.chunk);
             }
           } catch {

@@ -154,7 +154,7 @@ class WebContainerManager {
       }
       
       return false;
-    } catch (e) {
+    } catch {
       return true;
     }
   }

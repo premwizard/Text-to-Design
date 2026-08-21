@@ -259,7 +259,6 @@ export default defineConfig({
           setLogs(prev => prev + '\r\n> Starting Vite dev server...\r\n');
           await webcontainerManager.runCommand('npm', ['run', 'dev'], (data) => {
             setLogs(prev => prev + data);
-            handleTerminalOutput(data);
           });
         } else {
           // Hot Reloading Logic
