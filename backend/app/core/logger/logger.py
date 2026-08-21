@@ -60,5 +60,17 @@ logger.add(
     rotation="10 MB",
 )
 
+# Better Stack (Logtail) Handler Integration
+import os
+LOGTAIL_TOKEN = os.getenv("BETTERSTACK_SOURCE_TOKEN") or os.getenv("LOGTAIL_SOURCE_TOKEN")
+if LOGTAIL_TOKEN:
+    try:
+        from logtail import LogtailHandler
+        logtail_handler = LogtailHandler(source_token=LOGTAIL_TOKEN)
+        logger.add(logtail_handler, level="INFO")
+    except Exception as e:
+        sys.stderr.write(f"[BetterStack] Failed to initialize LogtailHandler: {e}\n")
+
 def get_logger():
     return logger
+

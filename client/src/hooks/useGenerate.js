@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { normalizeApiBaseUrl } from '../lib/urlHelpers';
+import { logger } from '../utils/logger';
 
 // Use Vite proxy in dev (relative path), fall back to env var for production
 let API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || 'https://text-to-design.onrender.com');
@@ -62,7 +63,7 @@ export function useGenerate() {
     setStatusText('Generating layout code...');
     setGenerationId(prev => prev + 1);
     try {
-      console.log(`[DEBUG] API Request start: POST ${API_BASE}/stream-jsx`, { prompt, generationMode });
+      logger.debug(`API Request start: POST ${API_BASE}/stream-jsx`, { prompt, generationMode });
       const response = await fetch(`${API_BASE}/stream-jsx`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,7 +80,7 @@ export function useGenerate() {
         throw new Error(`Server error ${response.status}: ${response.statusText}`);
       }
 
-      console.log(`[DEBUG] API Response received (SSE connection opened)`);
+      logger.debug(`API Response received (SSE connection opened)`);
       const reader  = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
@@ -102,7 +103,7 @@ export function useGenerate() {
           const payload = trimmed.slice(6).trim();
 
           if (payload === '[DONE]') {
-            console.log("[DEBUG] API SSE Stream finished with [DONE]");
+            logger.debug("API SSE Stream finished with [DONE]");
             done = true;
             break;
           }
@@ -112,7 +113,7 @@ export function useGenerate() {
             
             // Periodically log non-verbose events for debugging
             if (parsed.type !== 'timeline' && parsed.type !== 'agent_timeline' && !parsed.chunk) {
-               console.log(`[DEBUG] SSE Payload Received [${parsed.type || 'unknown'}]:`, parsed);
+               logger.debug(`SSE Payload Received [${parsed.type || 'unknown'}]:`, parsed);
             }
             
             if (parsed.error) {
@@ -153,7 +154,7 @@ export function useGenerate() {
               setStatusText(parsed.message || parsed.step);
             }
             if (parsed.type === "final_code") {
-              console.log("[DEBUG] Final Code Payload:", parsed);
+              logger.debug("Final Code Payload:", parsed);
               const actualData = parsed.data || parsed.code;
               const stringified = typeof actualData === 'string' ? actualData : JSON.stringify(actualData, null, 2);
               setCode(stringified);
@@ -193,7 +194,7 @@ export function useGenerate() {
       }
 
     } catch (err) {
-      console.error('Stream failed:', err);
+      logger.error('Stream failed:', err);
       setError(err.message || 'Streaming failed — check that the backend is running.');
     } finally {
       setLoading(false);
@@ -294,7 +295,7 @@ export function useGenerate() {
       }
 
     } catch (err) {
-      console.error('Edit stream failed:', err);
+      logger.error('Edit stream failed:', err);
       setError(err.message || 'Edit streaming failed.');
     } finally {
       setLoading(false);
@@ -365,7 +366,7 @@ export function useGenerate() {
 
       return fullCodeAccumulator;
     } catch (err) {
-      console.error('Fix stream failed:', err);
+      logger.error('Fix stream failed:', err);
       setError(err.message || 'Auto-fix failed.');
       return null;
     } finally {

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@logtail/browser": "^0.5.8",
     "@monaco-editor/react": "^4.7.0",
     "@supabase/supabase-js": "^2.107.0",
     "@webcontainer/api": "^1.6.4",

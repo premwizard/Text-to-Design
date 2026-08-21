@@ -9,3 +9,4 @@ httpx>=0.24.0
 websockets>=11.0.0
 google-adk
 google-genai
+logtail-python>=0.2.0
