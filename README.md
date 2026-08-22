@@ -15,6 +15,7 @@
 ## 📌 Table of Contents
 
 - [🌟 Key Features](#-key-features)
+- [💻 Tech Stack](#-tech-stack)
 - [🤖 Multi-Agent Architecture](#-multi-agent-architecture)
 - [🏗️ System Workflow](#️-system-workflow)
 - [📁 Repository Structure](#-repository-structure)
@@ -52,6 +53,46 @@
   - **Templates Gallery**: Pre-built prompt blueprints across categories (SaaS, E-commerce, Portfolio, Landing Pages, Dashboards).
   - **Recently Generated**: Timeline feed of past generations.
   - **Dark / Light Theme Support**: Sleek, customizable dark and light interface themes.
+
+---
+
+## 💻 Tech Stack
+
+SynapseAI is built with a modern, high-performance tech stack designed for speed, real-time agent orchestration, interactive workspace editing, and seamless live previews:
+
+### 🎨 Frontend (Client Workspace)
+- **Core Framework**: [React 19](https://react.dev/) + [Vite 7](https://vitejs.dev/) (Lightning-fast HMR and ESM bundling)
+- **Styling & Animations**:
+  - [Tailwind CSS v3](https://tailwindcss.com/) with PostCSS & Autoprefixer
+  - [Framer Motion](https://www.framer.com/motion/) & [GSAP](https://greensock.com/gsap/) (`@gsap/react`) for smooth UI transitions and keyframe animations
+  - [Lucide React](https://lucide.dev/) icon library
+  - `clsx` & `tailwind-merge` for dynamic utility styling
+- **Editor & Live Preview Engine**:
+  - **Monaco Code Editor** (`@monaco-editor/react`): In-browser IDE experience with syntax highlighting and multi-file tab switching
+  - **WebContainer API** (`@webcontainer/api`): Node.js WebAssembly runtime running directly inside browser tabs for zero-latency live previews
+  - **Xterm.js** (`xterm` + `xterm-addon-fit`): Integrated browser terminal emulation
+- **Routing & State Management**: [React Router v7](https://reactrouter.com/), Custom React Context (`AuthContext`, `ThemeContext`), and Custom SSE Hooks
+- **Backend Communication & Auth**: [Axios](https://axios-http.com/) & [Supabase JS Client](https://supabase.com/) (`@supabase/supabase-js`)
+- **Browser Logging**: [Logtail Browser SDK](https://betterstack.com/logtail) (`@logtail/browser`)
+
+### ⚡ Backend (AI Engine & API Services)
+- **Server Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Async Python 3.11+ web framework)
+- **ASGI & Concurrency**: [Uvicorn](https://www.uvicorn.org/) + [AnyIO](https://anyio.readthedocs.io/)
+- **AI & Multi-Agent Foundation**:
+  - [OpenAI API SDK](https://github.com/openai/openai-python) & [Google GenAI SDK](https://github.com/google-gemini/generative-ai-python)
+  - Google Agent Development Kit ([Google ADK](https://github.com/google-gemini/google-adk))
+  - Multi-stage pipeline with RAG vector search, Memory retrieval, UI Critic, and AST Code Auto-Fixer
+- **Real-Time Streaming**: Server-Sent Events (SSE) via `EventSource` async stream generators & [WebSockets](https://websockets.readthedocs.io/)
+- **Structured Logging & Observability**: [Loguru](https://github.com/Delgan/loguru) & [Logtail Python](https://betterstack.com/logtail)
+- **Testing & Quality Assurance**: [Pytest](https://docs.pytest.org/) + [Pytest-Asyncio](https://github.com/pytest-dev/pytest-asyncio)
+
+### 🚀 Infrastructure & DevOps
+- **CI/CD Pipeline**: GitHub Actions (`.github/workflows/ci.yml`) with automated test runners and failure issue management
+- **Task Runner**: `Makefile` & `make.bat` (Cross-platform build scripts for Windows & Unix)
+- **Deployment**:
+  - **Frontend Client**: [Vercel](https://vercel.com/)
+  - **Backend Server**: [Render](https://render.com/) (`render.yaml` & `Procfile`)
+
 
 ---
 
