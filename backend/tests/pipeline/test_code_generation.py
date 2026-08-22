@@ -16,7 +16,7 @@ async def test_code_generator_success():
     
     mock_response = MagicMock()
     mock_response.choices = [
-        MagicMock(message=MagicMock(content='Here is your code:\n\n===FILE: App.jsx===\nimport React from "react";\n\n===FILE: components/HeroSection.jsx===\nexport default function Hero() {}'))
+        MagicMock(message=MagicMock(content='Here is your code:\n\n===FILE: index.html===\n<!DOCTYPE html>\n<html></html>\n\n===FILE: style.css===\nbody {}'))
     ]
     
     with patch("backend.app.pipeline.stages.code_generation.generate_ai", new_callable=AsyncMock, return_value=mock_response):
@@ -24,9 +24,9 @@ async def test_code_generator_success():
         
     assert new_context.generated_code is not None
     assert len(new_context.generated_code.files) == 2
-    assert "App.jsx" in new_context.generated_code.files
-    assert "components/HeroSection.jsx" in new_context.generated_code.files
-    assert 'import React from "react";' in new_context.generated_code.files["App.jsx"]
+    assert "index.html" in new_context.generated_code.files
+    assert "style.css" in new_context.generated_code.files
+    assert '<!DOCTYPE html>' in new_context.generated_code.files["index.html"]
 
 @pytest.mark.asyncio
 async def test_code_generator_fallback():
@@ -37,5 +37,6 @@ async def test_code_generator_fallback():
         new_context = await generator.process(context)
         
     assert new_context.generated_code is not None
-    assert "App.jsx" in new_context.generated_code.files
-    assert "Generated Code Failed" in new_context.generated_code.files["App.jsx"]
+    assert "index.html" in new_context.generated_code.files
+    assert "Website Generation Fallback" in new_context.generated_code.files["index.html"]
+
