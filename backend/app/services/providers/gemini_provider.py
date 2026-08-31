@@ -2,7 +2,6 @@
 providers/gemini_provider.py
 Gemini AI provider using OpenAI-compatible API via Google AI Studio.
 """
-import os
 from backend.app.utils.env import get_env
 from backend.app.services.providers.http_provider import generate_text_http, generate_stream_http
 

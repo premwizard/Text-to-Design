@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 from loguru import logger
@@ -61,7 +62,6 @@ logger.add(
 )
 
 # Better Stack (Logtail) Handler Integration
-import os
 LOGTAIL_TOKEN = os.getenv("BETTERSTACK_SOURCE_TOKEN") or os.getenv("LOGTAIL_SOURCE_TOKEN")
 if LOGTAIL_TOKEN:
     try:

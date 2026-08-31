@@ -28,9 +28,13 @@ for env_dir in [ROOT_DIR, BACKEND_DIR, Path.cwd()]:
         load_dotenv(dotenv_path=env_file, override=False)
 load_dotenv()
 
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import mimetypes
+from fastapi import FastAPI, Request, HTTPException  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.responses import JSONResponse, FileResponse  # noqa: E402
+from fastapi.staticfiles import StaticFiles  # noqa: E402
+from fastapi.exceptions import RequestValidationError  # noqa: E402
+from starlette.exceptions import HTTPException as StarletteHTTPException  # noqa: E402
+import mimetypes  # noqa: E402
 
 # Ensure .jsx files are served with the correct JavaScript MIME type
 mimetypes.add_type("application/javascript", ".jsx")
@@ -85,10 +89,6 @@ async def add_security_headers(request: Request, call_next):
     response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
     response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
     return response
-
-from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException as StarletteHTTPException
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -188,8 +188,6 @@ app.include_router(generate_routes_router, prefix="/preview")
 app.include_router(metrics_routes_router, prefix="/preview")
 
 # --- Static Sandbox File Serving ---
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 
 assets_dir = ROOT_DIR / "sandbox" / "dist" / "assets"
 src_dir = ROOT_DIR / "sandbox" / "src"

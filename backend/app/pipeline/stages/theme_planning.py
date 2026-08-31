@@ -1,7 +1,6 @@
 import json
 import logging
 import re
-from typing import Optional
 from backend.app.pipeline.models import ThemePlan, DesignContext
 from backend.app.services.ai_router import generate_ai
 

@@ -8,6 +8,7 @@ Manages the single Vite sandbox process.
 
 import asyncio
 import os
+import re
 import shutil
 import subprocess
 import json
@@ -23,7 +24,6 @@ SRC_DIR = SANDBOX_DIR / "src"
 
 # ─── File writing & Sanitization / Validation ─────────────────────────────────
 
-import re
 
 def cleanGeneratedCode(code: str) -> str:
     if not code:
@@ -308,7 +308,7 @@ async def dry_run_compile(cleaned_files: dict, variation_id: str = None) -> tupl
                 
         if proc.returncode == 0:
             db_logger.log("COMPILE", "SUCCESS", "Dry-run esbuild bundle compiled successfully.")
-            print(f"[DEBUG] [Compile-Validator] Dry-run compilation successful.")
+            print("[DEBUG] [Compile-Validator] Dry-run compilation successful.")
             return True, ""
         else:
             err_msg = stderr.decode("utf-8", errors="replace")
@@ -416,7 +416,6 @@ async def write_files(files: dict[str, str], variation_id: str = None, bypass_va
 
     # 1. Clean every file content and validate first
     cleaned_files = {}
-    from backend.app.utils.jsx_sanitizer import sanitize_jsx
     for rel_path, content in files.items():
         cleaned_content = cleanGeneratedCode(content)
         # cleaned_content = await sanitize_jsx(cleaned_content, rel_path)

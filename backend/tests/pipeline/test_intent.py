@@ -1,7 +1,6 @@
 import pytest
-import json
 from unittest.mock import patch, MagicMock, AsyncMock
-from backend.app.pipeline.models import DesignContext, UserIntent
+from backend.app.pipeline.models import DesignContext
 from backend.app.pipeline.stages.intent_detection import IntentDetector
 
 @pytest.mark.asyncio

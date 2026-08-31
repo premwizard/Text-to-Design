@@ -74,7 +74,7 @@ async def validate_ast(code: str, filename: str) -> bool:
             )
             
         proc = await asyncio.to_thread(_run_babel)
-        stdout, stderr = proc.stdout, proc.stderr
+        stderr = proc.stderr
         
         if proc.returncode == 0:
             print(f"[DEBUG] [JSX-Sanitizer] Validation successful for {filename}")
@@ -113,7 +113,7 @@ async def sanitize_jsx(code: str, filename: str) -> str:
         is_valid = await validate_ast(sanitized_code, filename)
         if not is_valid:
             print(f"[JSX-Sanitizer] Validation failed. Using fallback component for {filename}.")
-            print(f"[DEBUG] Exact failure reason: Babel AST validation rejected the file. Returning original code for debug.")
+            print("[DEBUG] Exact failure reason: Babel AST validation rejected the file. Returning original code for debug.")
             return sanitized_code
             
     return sanitized_code

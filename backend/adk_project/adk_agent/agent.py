@@ -1,8 +1,5 @@
-import os
 import sys
-import asyncio
 from pathlib import Path
-import json
 
 # Ensure we can import from backend by adding the project root to sys.path
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -10,11 +7,11 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 # Import official ADK components
-from google.adk import Agent, Runner
-from google.adk.events import Event
-from google.adk.sessions import InMemorySessionService
-from google.genai import types
-from backend.app.services.generation_service import run_generation
+from google.adk import Agent, Runner  # noqa: E402
+from google.adk.events import Event  # noqa: E402
+from google.adk.sessions import InMemorySessionService  # noqa: E402
+from google.genai import types  # noqa: E402
+from backend.app.services.generation_service import run_generation  # noqa: E402
 
 # Initialize session service (in-memory for development)
 session_service = InMemorySessionService()

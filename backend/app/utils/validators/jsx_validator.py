@@ -65,7 +65,6 @@ def validate_generated_code(files: List[Dict[str, str]]) -> dict:
                 })
 
         # Bracket Validation ((), {}, [])
-        bracket_pairs = {')': '(', '}': '{', ']': '['}
         bracket_stack = []
         
         # Clean comments and strings for accurate bracket checking

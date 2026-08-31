@@ -2,7 +2,6 @@ import json
 import logging
 import asyncio
 import time
-import re
 from backend.app.agents.adk.agent_registry import get_agent_registry
 from backend.app.agents.adk.evaluation.evaluation_manager import get_evaluation_manager
 
@@ -207,7 +206,7 @@ async def run_adk_orchestration_stream(
             await asyncio.sleep(0.3)
             
         if not is_valid:
-            logger.error(f"[ADK] Exhausted auto-fix attempts. Returning structured validation error.")
+            logger.error("[ADK] Exhausted auto-fix attempts. Returning structured validation error.")
             yield {"type": "timeline", "step": "Validation Failed"}
             yield {"type": "agent_start", "agent": "auto_fixer", "message": "Failed to auto-repair compilation errors."}
             

@@ -2,7 +2,6 @@
 providers/openrouter_provider.py
 OpenRouter provider — access to multiple models via unified OpenAI-compatible API.
 """
-import os
 from backend.app.utils.env import get_env
 from backend.app.services.providers.http_provider import generate_text_http, generate_stream_http
 

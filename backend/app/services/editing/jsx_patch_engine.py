@@ -1,4 +1,3 @@
-import json
 import logging
 from backend.app.services.ai_router import generate_ai
 from backend.project_runner import cleanGeneratedCode
@@ -77,4 +76,3 @@ class JSXPatchEngine:
                 logger.error(f"Failed to patch file {clean_path}: {exc}")
                 
         return patched_files
-from pathlib import Path
