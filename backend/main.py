@@ -16,9 +16,6 @@ try:
 except ImportError:
     from app.main import app as app  # noqa: E402
 
-
-
-
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
