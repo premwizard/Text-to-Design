@@ -193,6 +193,7 @@ assets_dir = ROOT_DIR / "sandbox" / "dist" / "assets"
 src_dir = ROOT_DIR / "sandbox" / "src"
 dist_dir = ROOT_DIR / "sandbox" / "dist"
 
+
 # Ensure directories exist so they can be successfully mounted statically
 logger.info("Initializing static directories...")
 logger.info(f"Source directory: {src_dir} (exists: {src_dir.exists()})")
@@ -200,13 +201,16 @@ logger.info(f"Dist directory: {dist_dir} (exists: {dist_dir.exists()})")
 src_dir.mkdir(parents=True, exist_ok=True)
 dist_dir.mkdir(parents=True, exist_ok=True)
 
+
 logger.info("Mounting /src and /dist static directories unconditionally")
 app.mount("/src", StaticFiles(directory=str(src_dir)), name="src")
 app.mount("/dist", StaticFiles(directory=str(dist_dir)), name="dist")
 
+
 screenshots_dir = ROOT_DIR / "backend" / "data" / "screenshots"
 screenshots_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/screenshots", StaticFiles(directory=str(screenshots_dir)), name="screenshots")
+
 
 @app.get("/preview/assets/{filename}")
 async def serve_preview_assets(filename: str):
@@ -221,6 +225,7 @@ async def serve_preview_assets(filename: str):
         logger.info(f"Serving asset file: {file_path}")
         return FileResponse(file_path)
     
+
     # Fallback to whatever hash is currently built if the HTML is requesting an old hash
     stem = Path(filename).stem.split('-')[0] # get base name without hash
     logger.info(f"Asset file not found directly. Falling back using stem: {stem}")
@@ -238,10 +243,12 @@ async def serve_preview_assets(filename: str):
     logger.warning(f"Preview asset not found: {filename}")
     raise HTTPException(status_code=404, detail="Asset not found")
 
+
 @app.get("/preview/{path:path}")
 async def serve_preview(path: str):
     logger.info(f"Requested preview path: {path}")
     
+
     # Standardise empty or index paths
     if not path or path.strip("/") == "" or path.strip("/") == "index.html":
         # Check dist first, then root sandbox index.html
@@ -253,7 +260,8 @@ async def serve_preview(path: str):
         elif root_index.exists() and root_index.is_file():
             logger.info(f"Serving preview index file from sandbox root: {root_index}")
             return FileResponse(root_index)
-            
+
+
     file_path = ROOT_DIR / "sandbox" / path
     logger.info(f"Checking physical preview path: {file_path}")
     if file_path.exists() and file_path.is_file():

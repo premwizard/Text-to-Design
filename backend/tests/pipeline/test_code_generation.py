@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock, AsyncMock
 from backend.app.pipeline.models import DesignContext, DesignPlan, ThemePlan, LayoutPlan, ComponentPlan, ComponentSpec
 from backend.app.pipeline.stages.code_generation import CodeGenerator
 
+
 @pytest.mark.asyncio
 async def test_code_generator_success():
     context = DesignContext(
