@@ -22,7 +22,8 @@ export function CodePanel({ code, onChange }) {
         }
       }
     }
-  } catch (e) /* eslint-disable-line no-unused-vars */ {
+  } catch (_err) {
+    // Ignore JSON parse errors for incomplete streaming input
   }
 
   // Reset active file if files change and current activeFile is not in keys

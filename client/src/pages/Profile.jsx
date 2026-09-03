@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-empty, no-self-assign */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { TopNav } from '../components/layout/TopNav';
 import { LeftSidebar } from '../components/layout/LeftSidebar';

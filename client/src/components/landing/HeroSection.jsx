@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-empty, no-self-assign */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

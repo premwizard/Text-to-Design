@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-empty, no-self-assign */
+/* eslint-disable no-unused-vars */
 /**
  * Helper to attempt recovery of malformed JSON strings,
  * which may have missing braces or markdown tags.

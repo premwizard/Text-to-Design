@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-empty, no-self-assign */
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Zap, CheckCircle2, Copy, LayoutTemplate } from 'lucide-react';

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-empty, no-self-assign */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { 
   Database, 
@@ -26,23 +26,22 @@ export function PersonalizationCard({ userId }) {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  const fetchMemory = async () => {
-    try {
-      const response = await fetch(`/user-memory?userId=${userId || ''}`);
-      if (response.ok) {
-        const data = await response.json();
-        setMemory(data.memory);
-        setResolved(data.resolved);
-        setEnabled(data.memory?.settings?.enabled ?? true);
-      }
-    } catch (err) {
-      console.error("Failed to load user design memory:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchMemory = async () => {
+      try {
+        const response = await fetch(`/user-memory?userId=${userId || ''}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMemory(data.memory);
+          setResolved(data.resolved);
+          setEnabled(data.memory?.settings?.enabled ?? true);
+        }
+      } catch (err) {
+        console.error("Failed to load user design memory:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchMemory();
   }, [userId]);
 

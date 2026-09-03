@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-empty, no-self-assign */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
 // Bypass browser cache for LivePreview
@@ -347,8 +347,8 @@ export default defineConfig({
 
   const handleRefreshIframe = () => {
     const iframe = document.getElementById('preview-iframe');
-    if (iframe) {
-
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.location.reload();
     }
   };
 

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-empty, no-self-assign */
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { Bot, CheckCircle2, AlertCircle, PlayCircle } from 'lucide-react';
 import { clsx } from 'clsx';
