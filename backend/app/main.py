@@ -116,6 +116,7 @@ async def global_exception_handler(request: Request, exc: Exception):
             "details": str(exc)
         }
     )
+@app.middleware("http")
 async def log_requests(request: Request, call_next):
     logger.info(f"Incoming Request: {request.method} {request.url.path}")
     response = await call_next(request)

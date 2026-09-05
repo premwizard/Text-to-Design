@@ -95,6 +95,7 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           WORKFLOW_NAME: ${{ github.workflow }}
           BRANCH_NAME: ${{ github.ref_name }}
           REPO: ${{ github.repository }}
@@ -121,48 +122,49 @@ jobs:
           fi
 
           ISSUE_BODY=$(cat <<EOF
-          # 🚨 CI Failure
+# 🚨 CI Failure
 
-          ## Summary
-          The GitHub Actions CI pipeline failed.
+## Summary
+The GitHub Actions CI pipeline failed.
 
-          ## Repository
-          ${REPO}
+## Repository
+${REPO}
 
-          ## Workflow
-          ${WORKFLOW_NAME}
+## Workflow
+${WORKFLOW_NAME}
 
-          ## Branch
-          ${BRANCH_NAME}
+## Branch
+${BRANCH_NAME}
 
-          ## Commit
-          ${COMMIT_SHA}
+## Commit
+${COMMIT_SHA}
 
-          ## Commit Message
-          ${COMMIT_MSG}
+## Commit Message
+${COMMIT_MSG}
 
-          ## Triggered By
-          ${ACTOR}
+## Triggered By
+${ACTOR}
 
-          ## Event
-          ${EVENT_NAME}
+## Event
+${EVENT_NAME}
 
-          ## GitHub Actions Run
-          ${RUN_URL}
+## GitHub Actions Run
+${RUN_URL}
 
-          ## Failed Jobs
-          - **Frontend CI**: ${FRONTEND_STATUS}
-          - **Backend CI**: ${BACKEND_STATUS}
+## Failed Jobs
+- **Frontend CI**: ${FRONTEND_STATUS}
+- **Backend CI**: ${BACKEND_STATUS}
 
-          ## Next Step
-          Inspect the [GitHub Actions Run Log](${RUN_URL}) to identify the failing step and error.
+## Next Step
+Inspect the [GitHub Actions Run Log](${RUN_URL}) to identify the failing step and error.
 
-          ---
-          _This issue was automatically created by CI failure automation (Run ID: ${RUN_ID})._
-          EOF
+---
+_This issue was automatically created by CI failure automation (Run ID: ${RUN_ID})._
+EOF
           )
 
           gh issue create \
+            --repo "$REPO" \
             --title "$ISSUE_TITLE" \
             --body "$ISSUE_BODY"
 
@@ -181,6 +183,7 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           WORKFLOW_NAME: ${{ github.workflow }}
           BRANCH_NAME: ${{ github.ref_name }}
           REPO: ${{ github.repository }}
@@ -191,7 +194,7 @@ jobs:
           TARGET_TITLE="🚨 CI Failure — ${WORKFLOW_NAME} — ${BRANCH_NAME}"
 
           # Find all open issues matching the title for this workflow and branch
-          OPEN_ISSUES=$(gh issue list --state open --json number,title --jq ".[] | select(.title == \"$TARGET_TITLE\") | .number")
+          OPEN_ISSUES=$(gh issue list --repo "$REPO" --state open --json number,title --jq ".[] | select(.title == \"$TARGET_TITLE\") | .number")
 
           if [ -z "$OPEN_ISSUES" ]; then
             echo "No open CI failure issues found for branch '${BRANCH_NAME}'."
@@ -199,15 +202,15 @@ jobs:
           fi
 
           COMMENT_BODY=$(cat <<EOF
-          ✅ **CI Pipeline Resolved**
+✅ **CI Pipeline Resolved**
 
-          The CI pipeline for branch \`${BRANCH_NAME}\` passed successfully in [Run #${RUN_ID}](${RUN_URL}) (Commit \`${COMMIT_SHA}\`).
+The CI pipeline for branch \`${BRANCH_NAME}\` passed successfully in [Run #${RUN_ID}](${RUN_URL}) (Commit \`${COMMIT_SHA}\`).
 
-          Automatically closing this CI failure issue.
-          EOF
+Automatically closing this CI failure issue.
+EOF
           )
 
           for ISSUE_NUM in $OPEN_ISSUES; do
             echo "Closing CI failure issue #${ISSUE_NUM}..."
-            gh issue close "$ISSUE_NUM" --comment "$COMMENT_BODY"
+            gh issue close "$ISSUE_NUM" --repo "$REPO" --comment "$COMMENT_BODY"
           done
