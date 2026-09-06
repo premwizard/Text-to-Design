@@ -121,46 +121,46 @@ jobs:
             BACKEND_STATUS="FAILED (${BACKEND_RESULT})"
           fi
 
-          ISSUE_BODY=$(cat <<EOF
-# 🚨 CI Failure
+          ISSUE_BODY=$(cat <<EOF | sed 's/^[ ]*//'
+          # 🚨 CI Failure
 
-## Summary
-The GitHub Actions CI pipeline failed.
+          ## Summary
+          The GitHub Actions CI pipeline failed.
 
-## Repository
-${REPO}
+          ## Repository
+          ${REPO}
 
-## Workflow
-${WORKFLOW_NAME}
+          ## Workflow
+          ${WORKFLOW_NAME}
 
-## Branch
-${BRANCH_NAME}
+          ## Branch
+          ${BRANCH_NAME}
 
-## Commit
-${COMMIT_SHA}
+          ## Commit
+          ${COMMIT_SHA}
 
-## Commit Message
-${COMMIT_MSG}
+          ## Commit Message
+          ${COMMIT_MSG}
 
-## Triggered By
-${ACTOR}
+          ## Triggered By
+          ${ACTOR}
 
-## Event
-${EVENT_NAME}
+          ## Event
+          ${EVENT_NAME}
 
-## GitHub Actions Run
-${RUN_URL}
+          ## GitHub Actions Run
+          ${RUN_URL}
 
-## Failed Jobs
-- **Frontend CI**: ${FRONTEND_STATUS}
-- **Backend CI**: ${BACKEND_STATUS}
+          ## Failed Jobs
+          - **Frontend CI**: ${FRONTEND_STATUS}
+          - **Backend CI**: ${BACKEND_STATUS}
 
-## Next Step
-Inspect the [GitHub Actions Run Log](${RUN_URL}) to identify the failing step and error.
+          ## Next Step
+          Inspect the [GitHub Actions Run Log](${RUN_URL}) to identify the failing step and error.
 
----
-_This issue was automatically created by CI failure automation (Run ID: ${RUN_ID})._
-EOF
+          ---
+          _This issue was automatically created by CI failure automation (Run ID: ${RUN_ID})._
+          EOF
           )
 
           gh issue create \
@@ -201,13 +201,13 @@ EOF
             exit 0
           fi
 
-          COMMENT_BODY=$(cat <<EOF
-✅ **CI Pipeline Resolved**
+          COMMENT_BODY=$(cat <<EOF | sed 's/^[ ]*//'
+          ✅ **CI Pipeline Resolved**
 
-The CI pipeline for branch \`${BRANCH_NAME}\` passed successfully in [Run #${RUN_ID}](${RUN_URL}) (Commit \`${COMMIT_SHA}\`).
+          The CI pipeline for branch \`${BRANCH_NAME}\` passed successfully in [Run #${RUN_ID}](${RUN_URL}) (Commit \`${COMMIT_SHA}\`).
 
-Automatically closing this CI failure issue.
-EOF
+          Automatically closing this CI failure issue.
+          EOF
           )
 
           for ISSUE_NUM in $OPEN_ISSUES; do
