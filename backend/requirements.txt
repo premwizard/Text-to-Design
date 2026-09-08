@@ -1,4 +1,4 @@
-fastapi[standard]>=0.112.0
+fastapi[standard]>=0.141.1
 uvicorn[standard]>=0.23.0
 python-dotenv>=1.0.0
 loguru>=0.7.0
