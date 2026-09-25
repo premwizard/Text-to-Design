@@ -17,7 +17,7 @@
     "@webcontainer/api": "^1.6.4",
     "axios": "^1.10.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^13.2.0",
+    "framer-motion": "^13.4.0",
     "gsap": "^3.15.0",
     "lucide-react": "^1.17.0",
     "react": "^19.1.0",
