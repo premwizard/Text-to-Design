@@ -35,6 +35,11 @@ Output must start with {{ and end with }}. No extra text.
 """
 
 async def run_prompt_understanding(user_prompt: str, memory_prefs: dict) -> dict:
+    """
+    Parses and categorizes the user prompt into structured design intent JSON.
+    Infers pageType, industry, theme, components, and visual style using AI,
+    blending saved user personalization memory for missing parameters.
+    """
     logger.info("Running Prompt Understanding Agent with personalization details.")
     
     prefs_str = json.dumps(memory_prefs) if memory_prefs else "No saved preferences yet."

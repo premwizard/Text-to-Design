@@ -28,7 +28,15 @@ NON_RETRYABLE_ERRORS = (
 )
 
 class BaseADKAgent:
+    """
+    Abstract base class for all ADK agents.
+    Provides standard execution lifecycle, retries with exponential backoff,
+    tool invocation handling, and observability tracking.
+    """
     def __init__(self, name: str, retries: int = 1):
+        """
+        Initializes the agent with a unique name and max retry count.
+        """
         self.name = name
         self.retries = retries
         self.tool_calls = []
@@ -167,6 +175,7 @@ class BaseADKAgent:
         }
 
     async def _execute(self, input_data: dict, **kwargs) -> dict:
+        """Internal execution logic to be overridden by concrete agent subclasses."""
         raise NotImplementedError("Subclasses must implement _execute")
 
     async def call_tool(self, tool_name: str, **kwargs):
@@ -192,6 +201,7 @@ class BaseADKAgent:
             raise e
 
     def track_tool_call(self, tool_name: str, args: dict, success: bool = True, result: any = None, duration: float = 0.0):
+        """Logs and tracks metadata for executed tool calls within the agent session."""
         clean_args = {}
         for k, v in args.items():
             if isinstance(v, str) and len(v) > 200:

@@ -21,6 +21,7 @@ import datetime
 logger = logging.getLogger("backend.app.agents.orchestrator")
 
 def log_step(step_num: int, step_name: str, status: str):
+    """Logs pipeline execution step progress with timestamp and status."""
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     logger.info(f"{timestamp} [INFO] [STEP {step_num}] {step_name} {status}")
 

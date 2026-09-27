@@ -48,6 +48,10 @@ Output must start with {{ and end with }}. No extra text.
 """
 
 async def run_design_planning(intent_json: dict, rag_json: dict, user_prompt: str) -> dict:
+    """
+    Formulates page layout architecture, main component sections, and styling system.
+    Combines user intent JSON with retrieved RAG design patterns and styling tokens.
+    """
     logger.info(f"Running Design Planning Agent with RAG integration. RAG style: {rag_json.get('styleMatched')}")
     
     styling = rag_json.get("styling", {})

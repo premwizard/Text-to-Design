@@ -8,9 +8,11 @@ from backend.app.agents.adk.evaluation.evaluation_manager import get_evaluation_
 logger = logging.getLogger("backend.app.agents.adk.orchestrator")
 
 def has_error(result):
+    """Checks if the result dictionary contains an error payload."""
     return isinstance(result, dict) and result.get("error")
 
 def build_fallback_design_plan(prompt: str, intent_json: dict, rag_json: dict) -> dict:
+    """Builds a deterministic fallback design plan based on prompt keywords and RAG styling."""
     prompt_lower = prompt.lower()
     
     # Heuristics based on prompt content
@@ -57,6 +59,9 @@ async def run_adk_orchestration_stream(
     generation_mode: str = "single_mode", 
     variation_count: int = 1
 ):
+    """
+    Executes the ADK multi-agent generation pipeline, streaming timeline events,
+    agent progress outputs, and the final generated application code.
     """
     Executes the multi-agent generation pipeline using ADK agents.
     Supports single_mode and variation_mode.

@@ -43,6 +43,10 @@ Output must start with { and end with }. No extra text.
 """
 
 async def run_critic_agent(files: dict[str, str]) -> dict:
+    """
+    Evaluates generated UI files against visual quality, responsiveness, and UX metrics.
+    Returns a JSON critique report containing a numeric score, issues list, and recommendations.
+    """
     logger.info("Running UI Critic Agent on generated files")
     
     files_content = ""
@@ -106,6 +110,9 @@ async def run_critic_agent(files: dict[str, str]) -> dict:
         }
 
 async def run_optimization_agent(files: dict[str, str], critic_report: dict) -> dict[str, str]:
+    """
+    Applies automatic visual and functional enhancements to UI files based on feedback from the Critic report.
+    """
     logger.info("Running UI Optimization Agent")
     
     files_content = ""

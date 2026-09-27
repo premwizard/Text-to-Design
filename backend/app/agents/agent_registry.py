@@ -8,10 +8,14 @@ logger = logging.getLogger("backend.app.agents.registry")
 
 
 class AgentRegistry:
+    """
+    Singleton registry managing all registered ADK agents in the system.
+    """
     _instance = None
 
     @classmethod
     def get_instance(cls):
+        """Returns the AgentRegistry singleton instance."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -20,10 +24,12 @@ class AgentRegistry:
         self._agents = {}
 
     def register_agent(self, name: str, agent_class):
+        """Registers an agent class under a unique identifier."""
         logger.info(f"[ADK] Registering agent: {name}")
         self._agents[name] = agent_class
 
     def get_agent(self, name: str):
+        """Instantiates and returns a registered agent by name."""
         if not self._agents:
             logger.info("[ADK] Registry empty. Force-loading agents...")
             import importlib
@@ -38,11 +44,12 @@ class AgentRegistry:
         return agent_cls()
 
     def list_agents(self):
+        """Returns a list of all registered agent names."""
         return list(self._agents.keys())
 
 
 def register_adk_agent(name: str):
-    """Decorator to register an ADK Agent."""
+    """Decorator to register an ADK Agent class into the AgentRegistry."""
     def decorator(cls):
         AgentRegistry.get_instance().register_agent(name, cls)
         return cls
@@ -50,4 +57,5 @@ def register_adk_agent(name: str):
 
 
 def get_agent_registry():
+    """Helper function to obtain the central AgentRegistry singleton instance."""
     return AgentRegistry.get_instance()

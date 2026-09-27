@@ -15,10 +15,12 @@ class RAGRetrievalAgent:
     """
     
     def __init__(self):
+        """Initializes the RAG agent and establishes the ChromaDB vector database connection."""
         KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
         self.vector_db = ChromaService.get_instance()
         
     def _read_json_file(self, filename: str) -> list:
+        """Helper to read and parse a JSON knowledge base file from data/design_knowledge."""
         file_path = KNOWLEDGE_DIR / filename
         if not file_path.exists():
             return []
@@ -30,6 +32,7 @@ class RAGRetrievalAgent:
             return []
 
     def normalize_style(self, theme: str) -> str:
+        """Normalizes user theme strings into standardized design style categories (e.g. neo-brutalism, glassmorphism)."""
         t_lower = theme.lower()
         if "brutal" in t_lower:
             return "neo-brutalism"
@@ -44,6 +47,12 @@ class RAGRetrievalAgent:
         return "minimal"
 
     async def retrieve_design_patterns(self, intent: dict, user_prompt: str = "") -> dict:
+        """
+        Performs hybrid retrieval for design patterns combining:
+          1. Rule-based attribute matching against JSON templates.
+          2. ChromaDB semantic search on design knowledge embeddings.
+          3. Weighted scoring formula (0.4 * JSON score + 0.6 * Semantic score).
+        """
         logger.info(f"Hybrid retrieval querying for intent: {intent}")
         
         page_type = intent.get("pageType", "landing").lower()
@@ -240,5 +249,6 @@ class RAGRetrievalAgent:
         return retrieved_result
 
 async def run_rag_retrieval(intent_json: dict, user_prompt: str = "") -> dict:
+    """Convenience helper function to run RAG retrieval for given user intent and prompt."""
     agent = RAGRetrievalAgent()
     return await agent.retrieve_design_patterns(intent_json, user_prompt)
