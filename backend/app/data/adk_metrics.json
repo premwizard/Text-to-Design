@@ -119,6 +119,12 @@
       "duration_sum": 0.015967369079589844,
       "failures": 0,
       "tool_calls_count": 0
+    },
+    "TestAgent": {
+      "runs": 4,
+      "duration_sum": 0.0005304813385009766,
+      "failures": 2,
+      "tool_calls_count": 0
     }
   },
   "understanding_failures": 0,
