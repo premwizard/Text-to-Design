@@ -12,7 +12,6 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    // Allow raw import of .html files (used for sandbox.html?raw)
     assetsInclude: [],
     define: {
       'process.env': {}
