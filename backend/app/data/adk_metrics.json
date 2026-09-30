@@ -121,9 +121,9 @@
       "tool_calls_count": 0
     },
     "TestAgent": {
-      "runs": 20,
+      "runs": 22,
       "duration_sum": 0.002112150192260742,
-      "failures": 10,
+      "failures": 11,
       "tool_calls_count": 0
     }
   },
