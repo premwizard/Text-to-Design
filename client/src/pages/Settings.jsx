@@ -3,7 +3,7 @@ import { TopNav } from '../components/layout/TopNav';
 import { LeftSidebar } from '../components/layout/LeftSidebar';
 import { AnimatedBackground } from '../components/layout/AnimatedBackground';
 
-import { SettingsSidebar, SETTINGS_SECTIONS } from '../components/settings/SettingsSidebar';
+import { SettingsSidebar } from '../components/settings/SettingsSidebar';
 import { ProfileSettings } from '../components/settings/ProfileSettings';
 import { AppearanceSettings } from '../components/settings/AppearanceSettings';
 import { AIModelSettings } from '../components/settings/AIModelSettings';

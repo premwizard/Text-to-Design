@@ -62,8 +62,6 @@ async def run_adk_orchestration_stream(
     """
     Executes the ADK multi-agent generation pipeline, streaming timeline events,
     agent progress outputs, and the final generated application code.
-    """
-    Executes the multi-agent generation pipeline using ADK agents.
     Supports single_mode and variation_mode.
     """
     session_id = f"session_{int(time.time())}"

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, MoreVertical, Edit2, Copy, 
-  Trash2, Star, ChevronDown, Loader2, Play, Clock
+  Trash2, Star, ChevronDown, Loader2, Clock
 } from 'lucide-react';
 import { TopNav } from '../components/layout/TopNav';
 import { LeftSidebar } from '../components/layout/LeftSidebar';

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
-import { Sparkles, ArrowRight, Zap, Cpu } from 'lucide-react';
+import { Zap, Cpu } from 'lucide-react';
 import { AICore } from './AICore';
 
 gsap.registerPlugin(ScrollTrigger);

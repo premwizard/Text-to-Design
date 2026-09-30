@@ -11,7 +11,7 @@ import { VariationsGrid } from '../components/workspace/VariationsGrid';
 import { AnimatedBackground } from '../components/layout/AnimatedBackground';
 import { PromptComposer } from '../components/prompt/PromptComposer';
 import { PersonalizationCard } from '../components/workspace/PersonalizationCard';
-import { Layout, LayoutTemplate, Briefcase, Monitor, ShoppingCart, Smartphone, Sparkles, FolderOpen, History, ArrowRight, ChevronLeft } from 'lucide-react';
+import { Layout, LayoutTemplate, Briefcase, Monitor, ShoppingCart, Sparkles, FolderOpen, History, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { projectService } from '../services/projectService';
 import { normalizeApiBaseUrl } from '../lib/urlHelpers';

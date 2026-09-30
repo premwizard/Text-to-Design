@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Bot, CheckCircle2, AlertCircle, PlayCircle } from 'lucide-react';
+import { Bot, PlayCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 

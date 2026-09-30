@@ -2,12 +2,11 @@
 test_agents.py - Pytest unit tests for ADK tools, registries, and agents.
 """
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import patch, AsyncMock
 from backend.app.agents.tool_registry import BaseADKTool, ToolRegistry, get_tool_registry
 from backend.app.agents.agent_registry import AgentRegistry, get_agent_registry
 from backend.app.agents.base_agent import BaseADKAgent
 from backend.app.agents.tools import (
-    ChromaTool,
     CompilerTool,
     FileWriterTool,
     JSXValidatorTool,

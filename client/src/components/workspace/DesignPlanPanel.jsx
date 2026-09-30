@@ -2,13 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  CheckCircle2, 
   CircleDashed,
   LayoutTemplate,
   Palette,
-  Type,
   Layers,
-  ChevronRight,
   Sparkles,
   Component,
   AlertTriangle,
@@ -22,11 +19,6 @@ import {
   Database,
   Sliders,
   UserCheck,
-  Image,
-  Eye,
-  Tablet,
-  Smartphone,
-  Monitor,
   TrendingUp,
   History
 } from 'lucide-react';

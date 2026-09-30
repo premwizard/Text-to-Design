@@ -45,3 +45,4 @@ async def test_save_files_endpoint(api_client):
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "success"
+        mock_write.assert_called_once()

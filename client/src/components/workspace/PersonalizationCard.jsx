@@ -1,13 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { 
-  Database, 
-  Sparkles, 
-  Sliders, 
   Trash2, 
   ToggleLeft, 
   ToggleRight, 
-  Palette, 
   Layout, 
   RefreshCw,
   UserCheck

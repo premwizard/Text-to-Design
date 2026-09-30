@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Layout, Code2, Cpu, Paintbrush, ShieldCheck, Zap } from 'lucide-react';
+import { Sparkles, Layout, Code2, Cpu, Paintbrush, ShieldCheck } from 'lucide-react';
 
 export function ProductOverview() {
   const features = [
