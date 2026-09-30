@@ -61,10 +61,26 @@ logger = logging.getLogger("backend")
 is_debug = os.getenv("DEBUG", "true").lower() in ("true", "1", "t")
 app_environment = os.getenv("ENVIRONMENT", "development").lower()
 
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app_instance: FastAPI):
+    logger.info("Starting backend web server...")
+    asyncio.create_task(_async_init_resources())
+    logger.info("=" * 80)
+    logger.info("REGISTERED API ROUTES:")
+    for route in app_instance.routes:
+        if hasattr(route, 'path'):
+            methods = getattr(route, 'methods', None)
+            logger.info(f"Route Path: {route.path} | Methods: {methods}")
+    logger.info("=" * 80)
+    yield
+
 app = FastAPI(
     title="Text to UI Design API",
     version="1.0.0",
-    debug=is_debug
+    debug=is_debug,
+    lifespan=lifespan
 )
 
 allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "*")
@@ -146,21 +162,6 @@ async def _async_init_resources():
     except Exception as exc:
         logger.warning(f"Background resource preload skipped: {exc}")
 
-@app.on_event("startup")
-async def startup_event():
-    logger.info("Starting backend web server...")
-    
-    # Launch heavy model loading in background so server opens port IMMEDIATELY
-    asyncio.create_task(_async_init_resources())
-    
-    # Print all registered FastAPI routes at startup
-    logger.info("=" * 80)
-    logger.info("REGISTERED API ROUTES:")
-    for route in app.routes:
-        if hasattr(route, 'path'):
-            methods = getattr(route, 'methods', None)
-            logger.info(f"Route Path: {route.path} | Methods: {methods}")
-    logger.info("=" * 80)
 
 
 @app.get("/")
